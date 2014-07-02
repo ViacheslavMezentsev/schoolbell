@@ -1,0 +1,20 @@
+.tabcontrol > a {
+  background: #FFF;
+  padding: 2px 5px;
+  border: 1px solid #e1e1e1;
+  line-height: 20px;
+}
+
+.tabcontrol > a:first-child { border-bottom: 1px solid #fff; }
+
+.tabcontrol > a:hover { text-decoration: none; }
+
+.tabcontrol div {
+  border: 1px solid #e1e1e1;
+  padding: 5px;
+  width: 100%; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;
+  background: #FFF;
+}
+
+.tabcontrol .visible { display: block; }
+.tabcontrol .hidden { display: none; }
