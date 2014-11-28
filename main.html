@@ -40,12 +40,12 @@ $(document).ready( function() {
 
 <div class="tabcontrol">
 
-    <a onclick="DoTabChange( 'TabSettings', this );" href="javascript:void(0);" id="TabSheet1">Настройки</a>
-    <a onclick="DoTabChange( 'TabPlan', this );" href="javascript:void(0);">План</a>
-    <a onclick="DoTabChange( 'TabSchedules', this );" href="javascript:void(0);">Расписания</a>
-    <a onclick="DoTabChange( 'TabSystemLog', this );" href="javascript:void(0);">Системный журнал</a>
-    <a onclick="DoTabChange( 'TabDebug', this );" href="javascript:void(0);">Отладка</a>
-    <a onclick="DoTabChange( 'TabAbout', this );" href="javascript:void(0);">О модуле</a>
+    <a onclick="tab.Select( this, 'TabSettings' );" href="javascript:void(0);" id="TabSheet1">Настройки</a>
+    <a onclick="tab.Select( this, 'TabPlan' );" href="javascript:void(0);">План</a>
+    <a onclick="tab.Select( this, 'TabSchedules' );" href="javascript:void(0);">Расписания</a>
+    <a onclick="tab.Select( this, 'TabSystemLog' );" href="javascript:void(0);">Системный журнал</a>
+    <a onclick="tab.Select( this, 'TabDebug' );" href="javascript:void(0);">Отладка</a>
+    <a onclick="tab.Select( this, 'TabAbout' );" href="javascript:void(0);">О модуле</a>
 
     <div id="TabSettings" class="visible">
         <table>

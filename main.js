@@ -9,10 +9,13 @@ function Settings( mode, schedule, preinterval, premelody ) {
 
     this.mode = mode || MODE_MANUAL;
     this.schedule = schedule || 0;
-    this.preinterval = preinterval || 2 ;
+    this.preinterval = preinterval || 2;
     this.premelody = premelody || 0;
+}
 
-    this.Save = function() {
+Settings.prototype = {
+
+    Save: function() {
 
         try {
 
@@ -34,17 +37,16 @@ function Settings( mode, schedule, preinterval, premelody ) {
             inp = rows[4].cells[1].children[0];
             this.premelody = inp.value;
 
-            $.post( '/cgi-bin/modules/schoolbell/action.cgi',
-                { action : 'savesettings', data : JSON.stringify( this ) } );
+            $.post( ACTION, { action : 'savesettings', data : JSON.stringify( this ) } );
 
         } catch ( ex ) {
 
             console.error( ex );
         }
 
-    };
+    },
 
-    this.Load = function( values ) {
+    Load: function( values ) {
 
         try {
 
@@ -58,9 +60,9 @@ function Settings( mode, schedule, preinterval, premelody ) {
             console.error( ex );
         }
 
-    };
+    },
 
-    this.Refresh = function() {
+    Refresh:  function() {
 
         var tbody = $('#settings');
 
@@ -145,16 +147,20 @@ function Settings( mode, schedule, preinterval, premelody ) {
 
 }
 
+
 function Schedule() {
 
     this.Items = [];
+}
 
-    this.Load = function( values ) {
+Schedule.prototype = {
+
+    Load: function( values ) {
 
         this.Items = values;
-    };
+    },
 
-    this.Save = function( id ) {
+    Save: function( id ) {
 
         var rows = document.getElementById( 'schedule' ).rows;
         var str = "[";
@@ -213,9 +219,9 @@ function Schedule() {
 
         schedules.items[ id ][3] = Base64.encode( str );
 
-    };
+    },
 
-    this.AddItem = function( obj ) {
+    AddItem: function( obj ) {
 
         var tr = $('<tr>').css( 'background-color', '#EEEEEE' );
 
@@ -282,23 +288,23 @@ function Schedule() {
             // если такого не нашлось, то просто добавляем в конец.
         } else $('#schedule')[0].appendChild( tr[0] );
 
-    };
+    },
 
-    this.DeleteItem = function( obj ) {
+    DeleteItem: function( obj ) {
 
         // Удаляем элемент.
         $('#schedule')[0].removeChild( obj );
-    };
+    },
 
-    this.Clear = function() {
+    Clear: function() {
 
         var values = [['','','8','0','0']];
 
         this.Load( values );
         this.Refresh();
-    };
+    },
 
-    this.Refresh = function() {
+    Refresh: function() {
 
         var tbody = $('#schedule');
 
@@ -376,12 +382,16 @@ function Schedule() {
 
 }
 
+
 function Schedules() {
 
     this.Index = 0;
     this.items = [];
+}
 
-    this.Load = function( values ) {
+Schedules.prototype = {
+
+    Load: function( values ) {
 
         try {
 
@@ -392,23 +402,22 @@ function Schedules() {
             console.error( ex );
         }
 
-    };
+    },
 
-    this.Save = function() {
+    Save: function() {
 
         try {
 
-            $.post( '/cgi-bin/modules/schoolbell/action.cgi',
-                { action : 'saveschedules', data : JSON.stringify( this.items ) } );
+            $.post( ACTION, { action : 'saveschedules', data : JSON.stringify( this.items ) } );
 
         } catch ( ex ) {
 
             console.error( ex );
         }
 
-    };
+    },
 
-    this.Highlight = function( n ) {
+    Highlight: function( n ) {
 
         // Снимаем выделение.
         $('#schedules tr').contents('td').css( { 'border' : 'none' } );
@@ -420,9 +429,9 @@ function Schedules() {
         $('#schedules tr').eq(n).contents('td').first().css( { 'border-left' : '1px dashed #000000' } );
         $('#schedules tr').eq(n).contents('td').last().css( { 'border-right' : '1px dashed #000000' } );
 
-    };
+    },
 
-    this.Refresh = function() {
+    Refresh: function() {
 
         var tbody = $('#schedules');
 
@@ -471,9 +480,9 @@ function Schedules() {
 
         this.Highlight( this.Index );
 
-    };
+    },
 
-    this.OnDeleteSchedule = function( id ) {
+    OnDeleteSchedule: function( id ) {
 
         // Заглушка.
         return;
@@ -498,9 +507,9 @@ function Schedules() {
             this.OnClick( id );
         }
 
-    };
+    },
 
-    this.OnAddSchedule = function( id ) {
+    OnAddSchedule: function( id ) {
 
         // Заглушка.
         return;
@@ -514,9 +523,9 @@ function Schedules() {
         // Обновляем вид расписания.
         this.OnClick( id );
 
-    };
+    },
 
-    this.OnClick = function( row ) {
+    OnClick: function( row ) {
 
         // Изменяем идентификатор текущего расписания.
         this.Index = row;
@@ -541,11 +550,15 @@ function Schedules() {
 
 }
 
+
 function Melodies() {
 
     this.items = [];
+}
 
-    this.Load = function( values ) {
+Melodies.prototype = {
+
+    Load: function( values ) {
 
         try {
 
@@ -556,29 +569,33 @@ function Melodies() {
             console.error( ex );
         }
 
-    };
+    }
 
 }
+
 
 function Plan() {
 
     this.items = [];
+}
 
-    this.Save = function() {
+Plan.prototype = {
+
+
+    Save: function() {
 
         try {
 
-            $.post( '/cgi-bin/modules/schoolbell/action.cgi',
-                { action : 'saveplan', data : JSON.stringify( this.items ) } );
+            $.post( ACTION, { action : 'saveplan', data : JSON.stringify( this.items ) } );
 
         } catch ( ex ) {
 
             console.error( ex );
         }
 
-    };
+    },
 
-    this.Load = function( values ) {
+    Load: function( values ) {
 
         try {
 
@@ -589,18 +606,18 @@ function Plan() {
             console.error( ex );
         }
 
-    };
+    },
 
-    this.Clear = function() {
+    Clear: function() {
 
         for ( var i = 0; i < 12; i++ )
             for ( var j = 0; j < 31; j++ )
                 this.items[i][j] = 0;
 
         this.Refresh();
-    };
+    },
 
-    this.Refresh = function() {
+    Refresh: function() {
 
         var tbody = $('#plan');
 
@@ -696,9 +713,9 @@ function Plan() {
 
         }
 
-    };
+    },
 
-    this.OnClick = function( td, i, j ) {
+    OnClick: function( td, i, j ) {
 
         // Изменяем расписание в плане.
         plan.items[i][j] = palette.Index;
@@ -709,11 +726,15 @@ function Plan() {
 
 }
 
+
 function Palette() {
 
     this.Index = 0;
+}
 
-    this.Highlight = function( n ) {
+Palette.prototype = {
+
+    Highlight: function( n ) {
 
         // Снимаем выделение.
         $('#palette tr').contents('td').css( { 'border' : 'none' } );
@@ -725,9 +746,9 @@ function Palette() {
         $('#palette tr').eq(n).contents('td').first().css( { 'border-left' : '1px dashed #000000' } );
         $('#palette tr').eq(n).contents('td').last().css( { 'border-right' : '1px dashed #000000' } );
 
-    };
+    },
 
-    this.Refresh = function() {
+    Refresh: function() {
 
         var tbody = $('#palette');
 
@@ -753,9 +774,9 @@ function Palette() {
         }
 
         this.Highlight( this.Index );
-    };
+    },
 
-    this.OnClick = function( row ) {
+    OnClick: function( row ) {
 
         // Изменяем идентификатор текущего расписания в палитре.
         this.Index = row;
@@ -765,6 +786,119 @@ function Palette() {
     }
 
 }
+
+
+function TabControl() {
+
+    this.ItemHeader = null;
+    this.ItemName = 'TabSettings';
+}
+
+TabControl.prototype = {
+
+    OnTabChange: function() {
+
+        switch ( this.ItemName ) {
+
+            case 'TabSettings': {
+
+                // Настройки.
+                $.post( ACTION, { action : 'loadsettings' },
+                    function( data ) {
+                        settings.Load( data );
+                        settings.Refresh();
+                    }, 'json' );
+
+                break;
+            }
+
+            case 'TabPlan': {
+
+                // План.
+                $.post( ACTION, { action : 'loadplan' },
+                    function( data ) {
+
+                        plan.Load( data );
+                        plan.Refresh();
+
+                        // Палитра расписаний.
+                        palette.Refresh();
+
+                    }, 'json' );
+
+                break;
+            }
+
+            case 'TabSchedules': {
+
+                // Список расписаний.
+                $.post( ACTION, { action : 'loadschedules' },
+                    function( data ) {
+
+                        schedules.Load( data );
+                        schedules.Refresh();
+
+                        // Текущее расписание.
+                        schedule.Load( JSON.parse( Base64.decode( schedules.items[ schedules.Index ][3] ) ) );
+                        schedule.Refresh();
+
+                    }, 'json' );
+
+                break;
+            }
+
+            case 'TabSystemLog': {
+
+                // Системный журнал.
+                $.post( ACTION, { action : 'logread' },
+                    function( data ) {
+
+                        $('#SystemLog').css( { 'width': '100%', 'height' : '400' } ).val( data );
+
+                    } );
+
+                break;
+            }
+
+            case 'TabDebug': {
+
+                // Отладочный журнал.
+                $.post( ACTION, { action : 'debuglog' },
+                    function( data ) {
+
+                        $('#Debug').css( { 'width': '100%', 'height' : '400' } ).val( data );
+
+                    } );
+
+                break;
+            }
+
+        }
+
+    },
+
+    Select: function( sender, value ) {
+
+        // Скрываем текущую вкладку.
+        document.getElementById( this.ItemName ).className = 'hidden';
+
+        // Показываем заданную.
+        document.getElementById( value ).className = 'visible';
+
+        // Объединяем рамку заголовка вкладки с её содержимым.
+        if ( this.ItemHeader ) this.ItemHeader.style.borderBottomColor = '#E1E1E1';
+        sender.style.borderBottomColor = '#FFFFFF';
+
+        // Сохраняем параметры текущей вкладки.
+        this.ItemName = value;
+        this.ItemHeader = sender;
+
+        // Обновляем содержимое текущей вкладки.
+        this.OnTabChange();
+    }
+
+}
+
 
 // Глобальные объекты.
 var settings = new Settings();
@@ -784,8 +918,8 @@ var plan = new Plan();
 // Палитра расписаний.
 var palette = new Palette();
 
-var tabIndex = "TabSettings";
-var ramka;
+// Вкладки.
+var tab = new TabControl();
 
 
 function LoadSchedules() {
@@ -794,113 +928,19 @@ function LoadSchedules() {
         function( data ) { schedules.Load( data ); }, 'json' );
 }
 
+
 function LoadMelodies() {
 
     return $.post( ACTION, { action : 'loadmelodies' },
         function( data ) { melodies.Load( data );  }, 'json' );
 }
 
-function DoTabChange( x, y ) {
-
-    var mostrar = document.getElementById(x);
-    var actual = document.getElementById( tabIndex );
-
-    // Обновляем содержимое вкладки.
-    switch (x) {
-
-        case 'TabSettings': {
-
-            // Настройки.
-            $.post( ACTION, { action : 'loadsettings' },
-                function( data ) {
-                    settings.Load( data );
-                    settings.Refresh();
-                }, 'json' );
-
-            break;
-        }
-
-        case 'TabPlan': {
-
-            // План.
-            $.post( ACTION, { action : 'loadplan' },
-                function( data ) {
-
-                    plan.Load( data );
-                    plan.Refresh();
-
-                    // Палитра расписаний.
-                    palette.Refresh();
-
-                }, 'json' );
-
-            break;
-        }
-
-        case 'TabSchedules': {
-
-            // Список расписаний.
-            $.post( ACTION, { action : 'loadschedules' },
-                function( data ) {
-
-                    schedules.Load( data );
-                    schedules.Refresh();
-
-                    // Текущее расписание.
-                    schedule.Load( JSON.parse( Base64.decode( schedules.items[ schedules.Index ][3] ) ) );
-                    schedule.Refresh();
-
-                }, 'json' );
-
-            break;
-        }
-
-        case 'TabSystemLog': {
-
-            // Системный журнал.
-            $.post( ACTION, { action : 'logread' },
-                function( data ) {
-
-                    $('#SystemLog').css( { 'width': '100%', 'height' : '400' } ).val( data );
-
-                } );
-
-            break;
-        }
-
-        case 'TabDebug': {
-
-            // Отладочный журнал.
-            $.post( ACTION, { action : 'debuglog' },
-                function( data ) {
-
-                    $('#Debug').css( { 'width': '100%', 'height' : '400' } ).val( data );
-
-                } );
-
-            break;
-        }
-
-    }
-
-    if ( mostrar == actual ) { return false; }
-
-    actual.className = "hidden";
-    mostrar.className = "visible";
-    tabIndex = x;
-    document.getElementById( 'TabSheet1' ).style.borderBottomColor = '#E1E1E1';
-
-    if ( ramka ) ramka.style.borderBottomColor = '#E1E1E1';
-
-    y.style.borderBottomColor = '#FFF';
-    ramka = y;
-
-}
 
 function padStr(i) {
 
     return ( i < 10 ) ? '0' + i : '' + i;
 }
+
 
 function printDate() {
 
@@ -914,10 +954,12 @@ function printDate() {
         padStr( temp.getSeconds() );
 }
 
+
 function SetDate() {
 
     return $.post( ACTION, { action : 'setdate', value : printDate() } );
 }
+
 
 function ShowDate() {
 
@@ -934,6 +976,7 @@ function ShowDate() {
 
 }
 
+
 function StateOnClick( message, cmd ) {
 
     if ( confirm( message ) ) {
@@ -942,6 +985,7 @@ function StateOnClick( message, cmd ) {
     }
 
 }
+
 
 function ShowState() {
 
@@ -976,6 +1020,7 @@ function ShowState() {
     );
 
 }
+
 
 function Play( file ) {
 
