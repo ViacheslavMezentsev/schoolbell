@@ -1,0 +1,132 @@
+<script src="/modules/schoolbell/jquery-1.11.0.min.js"></script>
+<script src="/modules/schoolbell/webtoolkit.base64.js"></script>
+<script src="/modules/schoolbell/main.js"></script>
+
+<script language="JavaScript" type="text/javascript">
+
+// Действия после загрузки страницы.
+$(document).ready( function() {
+
+    // Расписания.
+    LoadSchedules().done( function(r) {
+
+        // Мелодии.
+        LoadMelodies().done( function(r) {
+
+            // Выводим дату.
+            ShowDate().done( function(r) {
+
+                // Выводим состояние.
+                ShowState();
+
+                // Обновляем первую вкладку.
+                $('#TabSheet1').click();
+
+            } )
+
+        } )
+
+    } )
+
+});
+
+</script>
+
+<br>"Школьник-4"
+<br>МУЗЫКАЛЬНЫЙ ПРОГРАММИРУЕМЫЙ ШКОЛЬНЫЙ ЗВОНОК
+
+<p><div id="date"></div>
+<div id="state"></div><br>
+
+<div class="tabcontrol">
+
+    <a onclick="DoTabChange( 'TabSettings', this );" href="javascript:void(0);" id="TabSheet1">Настройки</a>
+    <a onclick="DoTabChange( 'TabPlan', this );" href="javascript:void(0);">План</a>
+    <a onclick="DoTabChange( 'TabSchedules', this );" href="javascript:void(0);">Расписания</a>
+    <a onclick="DoTabChange( 'TabSystemLog', this );" href="javascript:void(0);">Системный журнал</a>
+    <a onclick="DoTabChange( 'TabDebug', this );" href="javascript:void(0);">Отладка</a>
+    <a onclick="DoTabChange( 'TabAbout', this );" href="javascript:void(0);">О модуле</a>
+
+    <div id="TabSettings" class="visible">
+        <table>
+            <tbody id="settings">
+                <tr style="background:#7F7FFF;color:#fff;">
+                    <td align="left">Параметр</td>
+                    <td align="right">Значение</td>
+                </tr>
+            </tbody>
+        </table><br>
+        <button type="button" onclick="if ( confirm( 'Сохранить настройки?' ) ) { settings.Save(); }">Сохранить</button>
+    </div>
+
+    <div id="TabPlan" class="hidden">
+        <table>
+            <tbody id="plan">
+            </tbody>
+        </table>
+        <button type="button" onclick="plan.Clear();">Очистить</button>
+        <br>
+        Расписания
+        <table>
+            <tbody id="palette">
+            </tbody>
+        </table><br>
+        <button type="button" onclick="if ( confirm( 'Сохранить план?' ) ) { plan.Save(); }">Сохранить</button>
+    </div>
+
+    <div id="TabSchedules" class="hidden">
+        <table>
+            <tbody id="schedules">
+            </tbody>
+        </table>
+        <br>
+        <table>
+            <tbody id="schedule">
+                <tr style="background:#7F7FFF;color:#fff;">
+                    <td align="center">Вкл</td>
+                    <td align="center">Предв</td>
+                    <td align="center">Часы</td>
+                    <td align="center">Минуты</td>
+                    <td align="center">Мелодия</td>
+                </tr>
+            </tbody>
+        </table>
+        <button type="button" onclick="schedule.Clear();">Очистить</button>
+        <button type="button" onclick="schedule.Save( schedules.Index );">Применить</button><br><br>
+        <button type="button" onclick="if ( confirm( 'Сохранить расписания?' ) ) { schedules.Save(); }">Сохранить</button>
+    </div>
+
+    <div id="TabSystemLog" class="hidden"><textarea id="SystemLog"></textarea></div>
+
+    <div id="TabDebug" class="hidden"><textarea id="Debug"></textarea></div>
+
+    <div id="TabAbout" class="hidden">
+        <table>
+            <tbody id="about">
+                <tr style="background:#EEEEEE">
+                    <td>Версия</td>
+                    <td>0.2.5186.21677</td>
+                </tr>
+                <tr style="background:#EEEEEE">
+                    <td>Автор</td>
+                    <td>Мезенцев Вячеслав Николаевич</td>
+                </tr>
+                <tr style="background:#EEEEEE">
+                    <td>Эл. почта</td>
+                    <td><a href="mailto:viacheslavmezentsev@gmail.com">viacheslavmezentsev@gmail.com</a></td>
+                </tr>
+                <tr style="background:#EEEEEE">
+                    <td valign="top">Пакеты</td>
+                    <td valign="top">
+                        coreutils-base64<br>
+                        kmod-sound-core<br>     
+                        kmod-usb-audio<br>           
+                        madplay
+                    <td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
