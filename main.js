@@ -673,26 +673,19 @@ Plan.prototype = {
             tbody[0].rows[ i + 1 ].cells[0].innerHTML = Months[i];
 
             var date = new Date();
-            date.setMonth(i);
-            date.setDate(1);
+            date.setMonth( i, 1 );
+            date.setHours( 0, 0, 0, 0 );
 
-            // Корректировка смещения для дня.
+            // Корректировка смещения для 1-го числа месяца.
             var day = date.getDay();
             day = ( day == 0 ) ? 7 : day--;
 
-            if ( i == 11 ) {
+            date.setMonth( ( i + 1 ) % 12 );
+            date.setYear( date.getFullYear() + ( i == 11 ) );
 
-                date.setMonth(0);
-                date.setYear( date.getYear() + 1 );
-
-            } else {
-
-                date.setMonth( date.getMonth() + 1 );
-            }
-
-            // Откатываемся на 1 день назад, чтобы получить количество
+            // Откатываемся на половину дня назад, чтобы получить количество
             // дней в текущем месяце.
-            date = new Date( date.getTime() - 24 * 3600 * 1000 );
+            date = new Date( date.getTime() - 12 * 3600 * 1000 );
 
             for ( var j = 1; j <= date.getDate(); j++ ) {
 
