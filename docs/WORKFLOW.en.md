@@ -6,7 +6,7 @@ The owner selects and accepts stages, pushes and lands branches, and publishes
 releases and Pages. Codex prepares changes, checks, documentation and signed
 commits. No new pull requests. Preserve other people's work.
 
-1. Verify the clean worktree and remote master HEAD; branch as codex/<task>.
+1. Verify the clean worktree and remote main HEAD; branch as codex/<task>.
 2. Agree scope and observable outcomes. Documentation migration changes no runtime contract.
 3. Update relevant documents, TODO and bilingual changelogs; run focused checks
    and git diff --check. Currently `python3 scripts/check-foundation.py` checks
@@ -27,9 +27,9 @@ commits. No new pull requests. Preserve other people's work.
 
 Push with `git push -u origin BRANCH`; inspect `gh run list --branch BRANCH`,
 `gh run view RUN_ID --json headSha,conclusion` and `gh run watch RUN_ID --exit-status`.
-After exact-HEAD CI passes: `git switch master`, `git pull --ff-only origin master`,
-`git merge --ff-only BRANCH`, `git push origin master`.
-The optional local git land helper is not yet verified here; do not assume main.
+After exact-HEAD CI passes: `git switch main`, `git pull --ff-only origin main`,
+`git merge --ff-only BRANCH`, `git push origin main`.
+The optional local git land helper is not yet verified here; use the explicit commands above.
 If fast-forward fails, resolve integration explicitly and rerun CI.
 
 After migration verification the owner creates a separate schoolbell workspace.

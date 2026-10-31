@@ -1,7 +1,7 @@
 name: Foundation CI
 on:
   push:
-    branches: ['master', 'codex/**']
+    branches: ['main', 'codex/**']
   workflow_dispatch:
 permissions:
   contents: read
