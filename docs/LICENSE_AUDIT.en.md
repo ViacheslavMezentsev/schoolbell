@@ -88,7 +88,6 @@ On 2026-10-31 the owner stated an intention to use MIT for own code. This prefer
 - L5: correct packaged NOTICE and notice delivery in IPK/Pages/bundle; inspect actual artifacts.
 
 The audit is complete; these closure items remain open. No new license is assigned.
-Local audio trials are documented [separately](AUDIO_EXPERIMENT.en.md), excluded
-from stock media, and do not constitute hardware acceptance.
+The owner decided to retain the stock melodies unchanged.
 
 Audit validation: full `make all` — PASS in WSL; `git diff --check` — PASS. Rebuilt IPK metadata, control and payload match the accepted 5.1.28 candidate. All stock MP3 hashes are unchanged. These are host checks, not hardware acceptance.

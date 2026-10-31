@@ -27,8 +27,15 @@ UI on the development bench, not new upload/replacement or full acceptance.
 
 Pages: корень /schoolbell/ сразу открывает интерфейс звонка; руководство и обучение отдельно. / Pages root opens the bell UI directly; guide and training stay separate.
 
-- [x] Три локальных инструментальных пробы 0.mp3 с проверкой нот/ритма/громкости / Three local instrumental 0.mp3 trials with pitch/timing/loudness checks.
-- [ ] Выбор тембра владельцем; штатные файлы пока сохранены / Owner timbre selection; stock media retained.
 - MIT — намерение владельца для собственного кода; область действия и права уточняются в L1 / MIT is the owner's own-code preference; scope and rights remain under L1.
 
-- [x] Яркие пробы электрогитары/гармошки по замечанию владельца / Bright guitar/harmonica trials following owner feedback.
+Штатные мелодии оставлены без изменений по решению владельца; подбор новых тембров закрыт. / Owner retained stock melodies unchanged; timbre exploration is closed.
+
+2026-10-31: по сообщению владельца настройка времени из браузера, похоже, работает.
+На приложенном скриншоте UI сообщает об успешной установке/проверке, разница около
+1 с, автозвонки выключены; достоверность времени ещё не подтверждена. Версия и
+целевое устройство в этом наблюдении не зафиксированы; это не новый протокол
+аппаратной приёмки. / Owner reports browser time setting appears to work. Screenshot
+shows successful setting/verification, about 1 s difference, automatic bells off and
+time trust still unconfirmed. Version/target are not recorded; this is not a new
+hardware acceptance protocol.

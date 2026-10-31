@@ -26,6 +26,5 @@ of the Schoolbell-2 microcontroller and have not changed since. This establishes
 reported recording provenance, not composition authorship. 4.mp3 and test.mp3
 were explicitly excluded; their recording sources remain unknown.
 See the [audit](../../docs/LICENSE_AUDIT.en.md) for evidence and gaps.
-[Audio trials](../../docs/AUDIO_EXPERIMENT.en.md) do not replace stock files.
 
 Source and IPK checks: `make all` (host-only).
