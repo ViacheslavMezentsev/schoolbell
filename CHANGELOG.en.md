@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+- Prepared local bright electric-guitar/effects and harmonica models for 0.mp3. Upper-mid spectral energy is comparable to 03-clear; 16 lead notes, timing and loudness retained. Stock files and devices unchanged. Full `make all` and `git diff --check` — PASS.
+
 - Instrumental trials: full `make all` and `git diff --check` — PASS; host checks only.
 
 - Prepared three local instrumental versions of 0.mp3: synthetic vibraphone, electric piano and horn/flute. Verified 16 pitches, timing, length and original -8.45 LUFS-I loudness. Stock MP3s and payload remain unchanged; no devices accessed. Recorded the owner’s MIT preference for own code in the audit.

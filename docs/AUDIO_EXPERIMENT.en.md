@@ -75,3 +75,39 @@ Stock media, package payload, specification and devices remain unchanged.
 
 This iteration: full `make all` — PASS; `git diff --check` — PASS.
 Rebuilt IPK contents match accepted 5.1.28; stock MP3s are unchanged.
+
+## Bright timbres: electric guitar and harmonica — 2026-10-31
+
+The owner found the previous instruments too muffled. The new reference is 03-clear
+from the first set. Two synthetic models were prepared:
+
+- Electric guitar: plucked-string harmonics, overdrive, 12 ms doubling and 62 ms slap.
+  Repeats are bounded by each note to preserve rests.
+- Harmonica: harmonic-rich free-reed timbre and subtle tremolo.
+
+Four-times oversampled synthesis followed by antialiasing downsampling, upper-mid
+presence EQ, amplifier saturation and a limiter without time shift. No external
+samples or original waveform are mixed in. The previous shared score is retained.
+These are instrument models, not acoustic recordings.
+
+| File | LUFS-I | dBTP | Energy 1.5–5 kHz, % of 0.2–8 kHz |
+| --- | ---: | ---: | ---: |
+| 03-clear reference | -8.45 | -0.97 | 9.88 |
+| Previous horn/flute | -8.45 | -2.51 | 5.65 |
+| Electric guitar | -8.45 | -2.76 | 10.05 |
+| Harmonica | -8.44 | -3.20 | 10.03 |
+
+Welch spectrum, 4096-sample window at 44.1 kHz, measured on decoded MP3s.
+This is a measurable brightness reference, not proof of subjective clarity or PA
+intelligibility. All 16 lead notes match; pitch deviation <1.46 cents;
+silence-separated onset deviation <1.91 ms; both legato transitions checked separately.
+Each file has 455040 decoded samples, matching the original. Final MP3s do not clip.
+
+Scripts, score, results, MP3/WAV and MIDI remain locally ignored under
+`tests/manual/04-bright-instruments/`; conditions/HISTORY under `docs/research/04-bright-instruments/`.
+Initial gain-adjusted drafts overloaded; revised saturation/limiting corrected peaks
+and final files were remeasured. Stock MP3s, package, devices and sound settings
+remain unchanged. Listening evaluation is left to the owner.
+
+Full `make all` and `git diff --check` for this iteration — PASS. Rebuilt IPK
+control/metadata/payload match accepted 5.1.28. These are host checks.

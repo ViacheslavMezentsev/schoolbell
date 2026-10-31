@@ -30,3 +30,5 @@ Pages: корень /schoolbell/ сразу открывает интерфей�
 - [x] Три локальных инструментальных пробы 0.mp3 с проверкой нот/ритма/громкости / Three local instrumental 0.mp3 trials with pitch/timing/loudness checks.
 - [ ] Выбор тембра владельцем; штатные файлы пока сохранены / Owner timbre selection; stock media retained.
 - MIT — намерение владельца для собственного кода; область действия и права уточняются в L1 / MIT is the owner's own-code preference; scope and rights remain under L1.
+
+- [x] Яркие пробы электрогитары/гармошки по замечанию владельца / Bright guitar/harmonica trials following owner feedback.
