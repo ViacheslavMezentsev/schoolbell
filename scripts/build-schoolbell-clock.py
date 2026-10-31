@@ -2,6 +2,7 @@
 """Build the optional MR3020 clock dependency directly; never install it."""
 import argparse, gzip, hashlib, io, json, os, struct, subprocess, tarfile, tempfile
 from pathlib import Path
+from license_materials import package_files
 p=argparse.ArgumentParser(description=__doc__)
 p.add_argument('--cc',required=True);p.add_argument('--include',action='append',required=True)
 p.add_argument('--out',type=Path,default=Path('out/schoolbell-clock'))
@@ -24,7 +25,9 @@ with tempfile.TemporaryDirectory(prefix='schoolbell-clock-') as tmp:
   return gzip.compress(b.getvalue(), mtime=0)
  control=b'Package: modbus-schoolbell-clock\nVersion: 1.0.0\nArchitecture: mipsel_24kc\nDepends: libc, libgcc1, liblua5.1.5\nSection: sound\nPriority: optional\nDescription: Schoolbell Lua 5.1 clock observation and durable reference storage.\n No clock-setting or NTP configuration operations.\n'
  target=a.out/'modbus-schoolbell-clock_1.0.0_mipsel_24kc.ipk'
- target.write_bytes(archive({'debian-binary':b'2.0\n','control.tar.gz':archive({'control':control}),'data.tar.gz':archive({'usr/lib/lua/schoolbell/clock_linux.so':data})}))
+ payload={'usr/lib/lua/schoolbell/clock_linux.so':data}
+ payload.update({name: body for name, (body, _) in package_files('native').items()})
+ target.write_bytes(archive({'debian-binary':b'2.0\n','control.tar.gz':archive({'control':control}),'data.tar.gz':archive(payload)}))
  manifest={'package':target.name,'sha256':hashlib.sha256(target.read_bytes()).hexdigest(),'module_bytes':len(data),'module_sha256':hashlib.sha256(data).hexdigest(),'architecture':'mipsel_24kc','lua':'5.1','target':'OpenWrt 19.07.9 ramips/mt76x8 musl','installed':False}
  (a.out/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
  print(json.dumps(manifest,indent=2))

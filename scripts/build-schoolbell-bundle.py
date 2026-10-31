@@ -2,11 +2,12 @@
 """Assemble an offline release directory. No target access, install or publication."""
 import argparse, json, pathlib, shutil, subprocess, tempfile, re, urllib.request
 from schoolbell_ipk import read, sha, closure, check_directories
+from license_materials import verify_package, write_materials, checksums, dependency_evidence, write_dependency_report
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 def build(lock_path,schoolbell,native,core,cache,out,download=False):
     lock=json.loads(pathlib.Path(lock_path).read_text());out=pathlib.Path(out);cache=pathlib.Path(cache)
     if out.exists():raise ValueError('output must be a new directory')
-    cache.mkdir(parents=True,exist_ok=True);inputs=[];metas={};entries=[]
+    cache.mkdir(parents=True,exist_ok=True);inputs=[];metas={};entries=[];evidence=[]
     for item in lock['packages']:
         name=item['filename']
         if pathlib.Path(name).name!=name or not name.endswith('.ipk'):raise ValueError('filename')
@@ -33,7 +34,11 @@ def build(lock_path,schoolbell,native,core,cache,out,download=False):
         if meta['Architecture'] not in ('all',lock['architecture']):raise ValueError('architecture')
         if pin and any(meta[k]!=pin[v] for k,v in [('Package','name'),('Version','version'),('Architecture','architecture')]):raise ValueError('pinned metadata')
         if pin and meta.get('Depends','')!=pin['depends']:raise ValueError('pinned dependencies')
-        if role in ('schoolbell','native'):check_directories(path)
+        if role in ('schoolbell','native'):
+            check_directories(path)
+            verify_package(data, role)
+        else:
+            evidence.append(dependency_evidence(meta, data, pin, role, sha(path)))
         if role=='schoolbell':
             if name!='modbus-schoolbell' or not {'preinst','postinst','prerm'}<=set(control) or 'usr/sbin/schoolbell-auto' not in data:raise ValueError('complete schoolbell required')
         if role=='core' and name!='modbus-rtu-core':raise ValueError('core required')
@@ -47,18 +52,20 @@ def build(lock_path,schoolbell,native,core,cache,out,download=False):
     closure(metas,lock['firmware'])
     commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
     dirty=bool(subprocess.check_output(['git','status','--porcelain','--untracked-files=normal'],cwd=ROOT))
-    manifest={'format':1,'openwrt':lock['openwrt'],'target':lock['target'],'architecture':lock['architecture'],'firmware':lock['firmware'],'source_commit':commit,'source_dirty':dirty,'provenance_note':'Commit identifies assembly source; supplied IPK hashes identify exact inputs, not a signed build attestation.','packages':entries,'download_bytes':sum(x['bytes'] for x in entries),'payload_bytes':sum(x['payload_bytes'] for x in entries),'file_blocks_estimate':sum(x['file_blocks_estimate'] for x in entries),'hardware_validated':False}
+    manifest={'format':1,'openwrt':lock['openwrt'],'target':lock['target'],'architecture':lock['architecture'],'firmware':lock['firmware'],'source_commit':commit,'source_dirty':dirty,'provenance_note':'Commit identifies assembly source; supplied IPK hashes identify exact inputs, not a signed build attestation.','packages':entries,'download_bytes':sum(x['bytes'] for x in entries),'payload_bytes':sum(x['payload_bytes'] for x in entries),'file_blocks_estimate':sum(x['file_blocks_estimate'] for x in entries),'hardware_validated':False,'license_materials':'licenses/','dependency_evidence':'licenses/DEPENDENCIES.json','distribution_cleared':False}
     out.parent.mkdir(parents=True,exist_ok=True)
     with tempfile.TemporaryDirectory(prefix='.schoolbell-bundle-',dir=out.parent) as temporary:
         stage=pathlib.Path(temporary)/'release';stage.mkdir()
         for path,_,_ in inputs:shutil.copyfile(path,stage/path.name)
+        write_materials(stage/'licenses', 'bundle')
+        write_dependency_report(stage/'licenses', evidence, lock['firmware'])
         (stage/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
         shutil.copyfile(lock_path,stage/'dependencies.lock.json')
         for lang in ('md','en.md'):
             guide=(ROOT/('docs/PACKAGING.'+lang)).read_text().replace('(PACKAGING.md)','(README.md)').replace('(PACKAGING.en.md)','(README.en.md)')
             (stage/('README.'+lang)).write_text(guide)
         shutil.copyfile(ROOT/'packaging/offline/check.sh',stage/'check.sh')
-        (stage/'SHA256SUMS').write_text(''.join(sha(p)+'  '+p.name+'\n' for p in sorted(stage.iterdir()) if p.is_file()))
+        (stage/'SHA256SUMS').write_text(checksums(stage))
         stage.rename(out)
     print(json.dumps({k:manifest[k] for k in ('source_commit','source_dirty','download_bytes','payload_bytes','file_blocks_estimate')},indent=2))
     return manifest

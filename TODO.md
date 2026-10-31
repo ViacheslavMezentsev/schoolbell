@@ -14,7 +14,8 @@
 - [ ] Приёмка опубликованных Pages владельцем / Owner acceptance of published Pages.
 - [x] Аудит происхождения кода, 33 IPK и аудио / Audit code, 33 IPKs and audio provenance.
 - [x] L1: MIT собственного кода и документации с явными исключениями / MIT for own code/documentation with explicit exclusions.
-- [ ] Закрыть L2–L5 аудита: зависимости, права на аудио и доставка лицензий/NOTICE / Close audit L2–L5: dependencies, audio rights and license/NOTICE delivery. См. / See [audit](docs/LICENSE_AUDIT.md).
+- [x] L3: закреплённые данные LuCI; L5: доставка собственного MIT/NOTICE во все артефакты / Pinned LuCI data and own MIT/NOTICE delivery in all artifacts.
+- [ ] L2/L4: полные материалы зависимостей и права на аудио; повторная проверка окончательного релизного набора / Complete dependency materials and audio rights; final release review. См. / See [audit](docs/LICENSE_AUDIT.md).
 - [x] Обновление 5.1.27 → 5.1.28 на разрешённом стенде: бэкап, сохранность данных, native и auto-off / Authorized bench upgrade: backup, data preservation, native and auto-off.
 - [x] Подтверждение интерфейса владельцем после миграции / Owner UI confirmation after migration.
 - [ ] Проверить реальный откат с данными и новую установку отдельно / Separately verify actual data-preserving downgrade and fresh installation.

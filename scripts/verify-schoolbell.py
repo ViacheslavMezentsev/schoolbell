@@ -20,6 +20,8 @@ out = Path(sys.argv[1]) if len(sys.argv) > 1 else root / 'out'
 packages = list(out.glob('modbus-schoolbell_*.ipk'))
 assert packages, 'schoolbell IPK missing'
 from schoolbell_ipk import read, check_directories
+from license_materials import verify_package
+current_version=re.search(r"^Version: (.+)$",(root/"packaging/openwrt/package/CONTROL/control").read_text(),re.M)[1]
 for package in packages:
     meta,control,data=read(package)
     if 'usr/sbin/schoolbell-auto' not in data:
@@ -28,6 +30,8 @@ for package in packages:
         assert tuple(map(int,meta['Version'].split('.'))) < (5,0,28), 'current package cannot be preview'
     else:
         check_directories(package)
+        if meta["Version"] == current_version:
+            verify_package(data, "schoolbell")
         # Check literal runtime dependencies from the actual archive, not source files.
         for path, (body, mode) in data.items():
             if not (path.endswith('.lua') or path.startswith('usr/sbin/')):

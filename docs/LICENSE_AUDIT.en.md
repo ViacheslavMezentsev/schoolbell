@@ -13,7 +13,7 @@ compliance. Specification, runtime, IPK payload and stock audio remain unchanged
 | --- | --- | --- |
 | Lua/C/JS, UI, packaging, tests and migrated documentation | core `243a7ccad6aeb2499d3efd5d0c4cef9e822d393e`; paths/hashes in [source map](source-map.json); adaptations in schoolbell history | No overall license at audit baseline; the owner subsequently licensed own schoolbell materials under MIT, see [scope](LICENSING.en.md) |
 | strict JSON | Same core revision, `pkg/usr/lib/modbus/json_strict.lua` → `vendor/modbus/json_strict.lua` | The owner subsequently included this own-code copy under MIT; historical core unchanged |
-| Pages time zones | LuCI openwrt-19.07; URL/date/hash in `site/portable-zones.NOTICE` | NOTICE states Apache-2.0, text in `site/LUCI-LICENSE`; builder copies both. Mutable branch URL still needs a pinned revision and attribution review |
+| Pages time zones | LuCI openwrt-19.07; URL/date/hash in `site/portable-zones.NOTICE` | NOTICE states Apache-2.0, text in `site/LUCI-LICENSE`; builder copies both. Now pinned to 712bc8e52d73720dc42577c08eb80ce7b1548b1e; hash/all pairs verified and original header retained |
 | Schoolbell-4 archive | schoolbell `c4bbecd1bd5136051cc12858801fb9bed7222cc2`, 20 hashed files | Immutable history, not a license grant for all contents |
 | SDK, Lua headers, patches | URLs/hashes in `packaging/offline/toolchain-19.07.9.json` | Build-time inputs, not an SDK distributed in Git/the 35 IPKs; these archives are not complete corresponding sources for all dependencies |
 
@@ -69,13 +69,9 @@ melodies.json titles are historical labels, not verified composition identificat
 Do not infer public-domain status from «Бах» or «Князь Игорь». Timbre processing
 alone does not resolve composition/recording provenance gaps.
 
-The packaged NOTICE mainly describes test.mp3 and references a repository-only
-`assets/melodies/manifest.json`; its installed location is
-`/usr/share/modbus-schoolbell/media-manifest.json`. The word original is not proof
-of authorship. It does not cover runtime/dependency licensing. The new root
-[NOTICE](../NOTICE) records repository evidence and limitations; it is not automatically
-shipped in IPK/Pages. The packaged NOTICE stays part of the verified 5.1.28 payload;
-correcting it and distributing notices requires a subsequent packaging iteration.
+The original packaged NOTICE was incomplete. Builders now deliver current
+LICENSE/NOTICE, standalone scope and an audio notice referencing the correct
+media-manifest.json location. See [delivery and verified gaps](LICENSE_DELIVERY.en.md).
 
 ## Open items before distribution
 
@@ -84,12 +80,12 @@ On 2026-10-31 the owner authorized MIT for own code. Added standard [LICENSE](..
 - L1: completed for own schoolbell code/documentation by owner decision: MIT with explicit scope; excluded materials are not relicensed.
 - L2: collect exact dependency sources/notices, resolve GPL/LGPL/GCC exception terms,
   and include compliance materials in release artifacts.
-- L3: pin the time-zone source revision and review attribution in generated Pages.
+- L3: complete for timezone data: revision, source hash/header and transformation verified; Apache-2.0 delivered in Pages.
 - L4: establish rights/provenance for each recording and composition, especially 4/test;
   agree replacement or exclusion where evidence is missing.
-- L5: correct packaged NOTICE and notice delivery in IPK/Pages/bundle; inspect actual artifacts.
+- L5: own LICENSE/NOTICE/scope and known notices delivered and checked in IPK/native/Pages/bundle. Complete release materials still depend on L2/L4.
 
-The audit is complete; L1 is formalized, L2–L5 remain open. MIT applies only within the documented scope.
+The audit is complete; L1/L3 and L5 delivery completed; L2/L4 remain open. MIT applies only within the documented scope.
 The owner decided to retain the stock melodies unchanged.
 
 Audit validation: full `make all` — PASS in WSL; `git diff --check` — PASS. Rebuilt IPK metadata, control and payload match the accepted 5.1.28 candidate. All stock MP3 hashes are unchanged. These are host checks, not hardware acceptance.

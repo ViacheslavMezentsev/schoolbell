@@ -4,6 +4,10 @@
 
 ## Unreleased
 
+- License delivery validation: full `make all`, missing/stale-notice refusals, nested SHA256SUMS and links — PASS. Real MIPS bundle and Lua module loading under QEMU verified; not hardware acceptance.
+
+- Deliver licenses/NOTICE in main/native IPKs, Pages and offline bundle; SHA256SUMS covers nested documents. Added actual dependency evidence with open gaps. Pinned/verified LuCI timezone source. Documentation additions retain versions 5.1.28/1.0.0; IPK hashes changed, runtime/audio retained. No devices accessed.
+
 - Licensed own code/documentation under MIT: LICENSE, RU/EN scope, README, NOTICE and vendor. Audio, archive and third-party components excluded; L1 closed, L2–L5 remain open. Owner identifies 4.mp3 as an excerpt from «Усатый нянь». Package payload/versions and devices unchanged. Validation: full `make all`, links and `git diff --check` — PASS; MIT text matches the standard, stock audio and IPK payload unchanged.
 
 - Owner retained stock melodies; removed audio-experiment documents/links and closed timbre exploration. License audit, audio provenance and MIT preference retained. Recorded the owner’s browser time-setting observation with its limitations; no devices accessed. Full `make all`, link checks and `git diff --check` — PASS; stock MP3s and IPK payload unchanged.

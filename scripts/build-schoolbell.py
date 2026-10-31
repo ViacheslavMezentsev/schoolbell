@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Build the complete script package from the same payload used for commissioning."""
 import argparse, io, os, pathlib, subprocess, tarfile, tempfile
+from license_materials import package_files
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 def tar_bytes(files):
     out=io.BytesIO()
@@ -27,6 +28,7 @@ def build(out,version=None):
     source=ROOT/'packaging/openwrt/package'
     for p in (source/'usr').rglob('*'):
         if p.is_file():data[p.relative_to(source).as_posix()]=(p.read_bytes(),0o644)
+    data.update(package_files('schoolbell'))
     controls={p.name:(p.read_bytes(),0o644 if p.name=='control' else 0o755) for p in (source/'CONTROL').iterdir() if p.is_file()}
     installed=sum(len(v[0]) for v in data.values())
     controls['control']=((control+'Installed-Size: '+str(installed)+'\n').encode(),0o644)

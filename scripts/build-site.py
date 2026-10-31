@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 """Static GitHub Pages, sharing the router UI sources; no network or device calls."""
 from pathlib import Path
+from license_materials import write_materials, materials
 import html, re, shutil, sys, subprocess, datetime, json, hashlib
 root=Path(__file__).resolve().parent.parent
 out=Path(sys.argv[1]) if len(sys.argv)>1 else root/'out/site'
 out.mkdir(parents=True,exist_ok=True)
+write_materials(out/'licenses', 'pages')
+license_links=''.join('<li><a href="'+html.escape(name)+'">'+html.escape(name)+'</a></li>' for name in sorted(materials('pages')))
+(out/'licenses/index.html').write_text('<!doctype html><html lang="ru"><meta charset="utf-8"><title>Лицензии / Licenses</title><h1>Лицензии / Licenses</h1><p>Собственный код — MIT. Аудио и сторонние материалы имеют отдельный статус. Own code is MIT; audio and third-party materials have separate terms.</p><ul>'+license_links+'</ul><p><a href="../">Вернуться в интерфейс / Back to demo</a></p></html>')
 try:
  commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip()
  dirty=bool(subprocess.check_output(['git','status','--porcelain','--untracked-files=no'],cwd=root,text=True).strip())
@@ -34,6 +38,7 @@ shutil.copyfile(root/'site/demo.js',assets/'demo.js')
 for name in ['test','0','1','2','3','4']:
  shutil.copyfile(root/('assets/melodies/'+name+'.mp3'),assets/(name+'.mp3'))
 shutil.copyfile(root/'packaging/openwrt/package/usr/share/modbus-schoolbell/NOTICE',assets/'NOTICE.txt')
+shutil.copyfile(root/'assets/melodies/manifest.json',assets/'media-manifest.json')
 for name in ['codec','export','preview']:
  shutil.copyfile(root/('src/portable-plan/'+name+'.js'),assets/('portable-'+name+'.js'))
 for name in ['portable-pages.js','portable-ui.js','portable.css','portable-zones.NOTICE','LUCI-LICENSE']:
@@ -75,7 +80,7 @@ author_marker='Соавтор: Codex (OpenAI), ИИ-помощник в разр
 assert text.count(author_marker)==1
 build_details='<div id="feedback-build" class="feedback-build"><strong>Сборка демо Pages</strong><p>Дата (UTC): '+html.escape(built)+'</p><p>Git commit: <code>'+html.escape(commit)+'</code></p>'+('<p>Собрано с локальными изменениями.</p>' if dirty else '')+'</div>'
 text=text.replace(author_marker,author_marker+build_details,1)
-text=text.replace('</footer>',provenance+'</footer>')
+text=text.replace('</footer>','<p><a href="./licenses/">Лицензии / Licenses</a></p>'+provenance+'</footer>')
 (demo/'index.html').write_text(text)
 print('Built static site:',out)
 

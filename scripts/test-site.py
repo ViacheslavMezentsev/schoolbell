@@ -41,3 +41,15 @@ for name in ['style.css','theme.js','ranges.js']:
  assert (out/'assets'/name).read_bytes()==(root/'ui/root/www/schoolbell-test'/name).read_bytes()
 assert not list(out.rglob('*.bin')) and not list(out.rglob('*.ipk')) and not list(out.rglob('*.sbb'))
 print('PASS Pages: root UI, guide/training/device routes and anchors, shared assets, media bytes, build provenance, no firmware or device API panels')
+
+assert './licenses/' in home
+assert (out/'licenses/LICENSE').read_bytes()==(root/'LICENSE').read_bytes()
+assert (out/'licenses/NOTICE').read_bytes()==(root/'NOTICE').read_bytes()
+assert (out/'licenses/LICENSE-SCOPE.txt').read_bytes()==(root/'packaging/licenses/SCOPE.txt').read_bytes()
+assert (out/'licenses/AUDIO-NOTICE.txt').read_bytes()==(root/'packaging/openwrt/package/usr/share/modbus-schoolbell/NOTICE').read_bytes()
+assert (out/'licenses/media-manifest.json').read_bytes()==(root/'assets/melodies/manifest.json').read_bytes()
+for name in ['LUCI-LICENSE','portable-zones.NOTICE']:
+ assert (out/'licenses'/name).read_bytes()==(root/'site'/name).read_bytes()
+ assert (out/'assets'/name).read_bytes()==(root/'site'/name).read_bytes()
+assert (out/'assets/media-manifest.json').read_bytes()==(root/'assets/melodies/manifest.json').read_bytes()
+print('PASS Pages license navigation, MIT, scope, audio manifest and LuCI notice delivery')

@@ -1,0 +1,30 @@
+Schoolbell / Школьник — artifact license scope / область лицензии
+
+Own code and associated documentation: MIT, Copyright (c) 2026 Viacheslav Mezentsev.
+Keep LICENSE with copies or substantial portions. NOTICE records provenance;
+it is not a substitute for license texts. Paths in NOTICE refer to the source
+repository https://github.com/ViacheslavMezentsev/schoolbell unless stated otherwise.
+
+MIT covers own Lua/C/JS, UI, scripts, tests, packaging/configuration, documentation
+and the own strict JSON decoder migrated from core. It does not relicense:
+- any audio recording or underlying composition (including test.mp3 and 0–4.mp3);
+- the historical docs/archive tree;
+- LuCI time-zone data (separate Apache-2.0 notices);
+- OpenWrt dependencies, SDK/toolchain, firmware or other third-party components.
+
+Собственный код и документация: MIT. Текст LICENSE сохраняется при передаче копий
+или существенных частей. NOTICE фиксирует происхождение и не заменяет лицензии.
+MIT не распространяется на аудио и композиции, исторический архив, данные LuCI,
+сторонние зависимости, SDK и прошивки. Пути NOTICE относятся к исходному репозиторию.
+
+Native package contains no melodies or time-zone data. Main IPK and Pages include
+stock melodies; their inclusion is not proof of distribution rights. No new audio
+license is assigned. The offline bundle's DEPENDENCIES.json reports actual package
+metadata and missing materials. distribution_cleared=false means this is not a
+completed compliance/source kit. Binary download URLs are not corresponding sources.
+
+Native-пакет не содержит мелодий и данных часовых поясов. Основной IPK и Pages
+содержат штатное аудио; права на его распространение остаются отдельным вопросом.
+DEPENDENCIES.json автономного комплекта перечисляет фактические пакеты и пробелы;
+distribution_cleared=false не позволяет считать его завершённым комплектом лицензий
+и исходников. URL бинарных IPK не заменяют соответствующие исходники.

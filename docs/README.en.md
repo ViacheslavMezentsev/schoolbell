@@ -124,3 +124,5 @@ separately; this branch neither publishes the site nor changes devices.
 [License and provenance audit](LICENSE_AUDIT.en.md)
 
 [MIT license and scope](LICENSING.en.md)
+
+[License delivery and dependency gaps](LICENSE_DELIVERY.en.md)

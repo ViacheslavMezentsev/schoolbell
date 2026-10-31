@@ -1014,8 +1014,8 @@
       "source": "packages/schoolbell/tests/test_offline_bundle.py",
       "destination": "tests/test_offline_bundle.py",
       "source_sha256": "6b6f895bde333cfa479a5710fc2a8ba6061372374fe480a9216e62f37692382c",
-      "changes": "adapted; review destination against pinned source",
-      "destination_sha256": "2feae52dffd9c43937acf874c6db8b5a96f9b040facf8436c04caefe86f1f6e9"
+      "changes": "adapted; review destination against pinned source; 2026-10-31 license delivery: shared artifact notices and verification",
+      "destination_sha256": "3bef3325ee22cc195e452d01cb763daa88f0f094640ce4ae1f06fad3b3276c9f"
     },
     {
       "source": "packages/schoolbell/tests/test_package_lifecycle.py",
@@ -1189,8 +1189,8 @@
       "source": "pkg-schoolbell/usr/share/modbus-schoolbell/NOTICE",
       "destination": "packaging/openwrt/package/usr/share/modbus-schoolbell/NOTICE",
       "source_sha256": "c0ce9a427b469ff099eba82b5a8dda8b0a285db3aca86b464d71fd4765d0a5f3",
-      "changes": "adapted; review destination against pinned source",
-      "destination_sha256": "db80795fd7009d7cf8d12649e26d7c62c3449be2256ebc50ac8544d6f17c0311"
+      "changes": "adapted; review destination against pinned source; 2026-10-31 license delivery: shared artifact notices and verification",
+      "destination_sha256": "38f06d784b20254dbef950335fefc01393f859c99043308f5890ed943f5a28db"
     },
     {
       "source": "pkg-schoolbell/usr/share/modbus-schoolbell/melodies/test.mp3",
@@ -1210,22 +1210,22 @@
       "source": "scripts/build-schoolbell-bundle.py",
       "destination": "scripts/build-schoolbell-bundle.py",
       "source_sha256": "de9e84baa10c73dcfd7153380682346c143898fdf686f89bb9cc47b40d72f9bb",
-      "changes": "adapted; review destination against pinned source",
-      "destination_sha256": "66f1a7747f46fb9437825188a2b282701f5648b340c12a7607976135fa7bdd80"
+      "changes": "adapted; review destination against pinned source; 2026-10-31 license delivery: shared artifact notices and verification",
+      "destination_sha256": "c22f77bb50b77cc93bea88f5036ffea5288e6113df1f462cdc4d06f5477fc86d"
     },
     {
       "source": "scripts/build-schoolbell-clock.py",
       "destination": "scripts/build-schoolbell-clock.py",
       "source_sha256": "e913de627818a961a9b1d034ecbf03d8264291bc2a4741d643217a58c927cc84",
-      "changes": "adapted; review destination against pinned source; standalone target migration: deterministic native gzip / pinned-input tests",
-      "destination_sha256": "76711dccf6280c245974865674df7763bd01c10b0f067a1bab341afe59217d1e"
+      "changes": "adapted; review destination against pinned source; standalone target migration: deterministic native gzip / pinned-input tests; 2026-10-31 license delivery: shared artifact notices and verification",
+      "destination_sha256": "63afd5817ad013d346e52bbe5be8b08135e4d86ccece6b4312a24bbf2c45681d"
     },
     {
       "source": "scripts/build-schoolbell.py",
       "destination": "scripts/build-schoolbell.py",
       "source_sha256": "13711a3803374554963e567ea5d4c8fda37b03d65689363e4fe047594e5ea5b5",
-      "changes": "adapted; review destination against pinned source",
-      "destination_sha256": "34a4e10ead24b1184b8d5e0f8818057b96beb413e9dcadda6d994d66d2d61ac9"
+      "changes": "adapted; review destination against pinned source; 2026-10-31 license delivery: shared artifact notices and verification",
+      "destination_sha256": "dbfa12e3758d677d83b0785179cbf59565e4e0b9822246759e732e59119c6543"
     },
     {
       "source": "scripts/schoolbell_ipk.py",
@@ -1350,8 +1350,8 @@
       "source": "scripts/verify-schoolbell.py",
       "destination": "scripts/verify-schoolbell.py",
       "source_sha256": "05c2fd9969fd13ad8bdce895751dfc1379e0e606a232ac6e6de8d5de108d6889",
-      "changes": "adapted; review destination against pinned source",
-      "destination_sha256": "19b18f0de94c59b5aa3cd385c8580b278189e487f8798784f44bd9ae7e28634a"
+      "changes": "adapted; review destination against pinned source; 2026-10-31 license delivery: shared artifact notices and verification",
+      "destination_sha256": "ca199dadb819f17fb845d68a5981944339d21e62126b2a80826be171d5c4d75d"
     },
     {
       "source": "site/LUCI-LICENSE",
@@ -2082,8 +2082,8 @@
       "source": "scripts/build-site.py",
       "destination": "scripts/build-site.py",
       "source_sha256": "7b581e66a713901cc092b9afcd5ff99155aaaa2bbf8d292dd251a3680f9247b9",
-      "destination_sha256": "2b1928a03deb14905c7a008b2fc76c0adc5d55d21c50ec0af10cfce67eff080c",
-      "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer"
+      "destination_sha256": "2339fb169232ffcdad27ad53c4b578a23568103646f692c0bc97456ae1dae399",
+      "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer; 2026-10-31 license delivery: shared artifact notices and verification"
     },
     {
       "source": "site/devices/index.en.html",
@@ -2166,8 +2166,8 @@
       "source": "site/portable-zones.NOTICE",
       "destination": "site/portable-zones.NOTICE",
       "source_sha256": "1b88e715186e3f6d5c95c5f06ac1d90e83373689f645af6d3d83c1cd9cbd01c9",
-      "destination_sha256": "1b88e715186e3f6d5c95c5f06ac1d90e83373689f645af6d3d83c1cd9cbd01c9",
-      "changes": "none"
+      "destination_sha256": "b7778a42aa114528f3ca5dc2b02acd889010701c5c0518317db667aa9bc0f3ae",
+      "changes": "none; 2026-10-31 license delivery: shared artifact notices and verification"
     },
     {
       "source": "site/portable.css",

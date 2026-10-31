@@ -10,6 +10,7 @@ import subprocess
 import tempfile
 import urllib.request
 from schoolbell_ipk import read, sha
+from license_materials import checksums
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -119,7 +120,7 @@ def main():
                       'qemu_smoke': smoke, 'hardware_validated': False}
         (result / 'build-provenance.json').write_text(json.dumps(provenance, indent=2) + '\n')
         (result / 'bundle/build-provenance.json').write_bytes((result / 'build-provenance.json').read_bytes())
-        (result / 'bundle/SHA256SUMS').write_text(''.join(sha(p) + '  ' + p.name + '\n' for p in sorted((result / 'bundle').iterdir()) if p.is_file() and p.name != 'SHA256SUMS'))
+        (result / 'bundle/SHA256SUMS').write_text(checksums(result / 'bundle'))
         result.rename(out)
     print('BUILD COMPLETE: ' + str(out) + ' (not installed or hardware validated)')
 

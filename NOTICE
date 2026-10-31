@@ -37,4 +37,5 @@ Dependencies retain their own terms. License metadata is not a complete
 license/source distribution kit. See docs/LICENSE_DEPENDENCIES.md.
 Полный аудит и открытые пункты / Full audit and open items:
 docs/LICENSE_AUDIT.md, docs/LICENSE_AUDIT.en.md.
-This repository notice is not automatically included in IPK or Pages artifacts.
+This notice ships with LICENSE and LICENSE-SCOPE.txt in built artifacts.
+Paths above refer to source repository files; artifact scope is described in LICENSE-SCOPE.txt.

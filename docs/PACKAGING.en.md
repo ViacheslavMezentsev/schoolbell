@@ -64,3 +64,11 @@ prerequisites, not forced replacement packages. Release from a clean signed HEAD
 the manifest reports dirty state. SDK/downloads/IPKs stay in ignored out, not Git.
 Publication, distribution license review and bench install/upgrade/rollback remain
 separate steps.
+
+## Licenses in artifacts
+
+Builders deliver LICENSE/NOTICE, MIT scope and a separate audio notice. Bundle
+licenses/DEPENDENCIES.json records actual inputs and gaps; distribution_cleared=false.
+SHA256SUMS includes nested documents. Old IPKs lacking current notices are rejected;
+rebuild them. See repository docs/LICENSE_DELIVERY.en.md. Versions retained, new IPK
+hashes differ.

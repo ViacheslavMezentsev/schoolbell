@@ -47,8 +47,8 @@ When conveying own code or substantial portions, retain the copyright notice and
 full MIT text. Excluded materials follow their separate terms. NOTICE helps identify
 components, but does not replace LICENSE.
 
-This iteration licenses the source repository. The verified 5.1.28 payload, IPK
-version and archive are unchanged; new LICENSE/NOTICE files are not automatically
-included in the old IPK. Delivery of current licenses/notices in IPK, native package,
-Pages and offline bundle remains L5 before distributing new artifacts. Audit L2–L4
-also remain open. Runtime requirements are unchanged.
+Builders now deliver LICENSE/NOTICE and scope in main/native IPKs, Pages and the
+offline bundle. See [contents and validation](LICENSE_DELIVERY.en.md). Package
+versions are retained for documentation-only changes; hashes changed. L2 (complete
+dependency materials) and L4 (audio rights) remain open. Runtime requirements and
+devices are unchanged.
