@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+- Original AB13X direct/OHCI passed 100 consecutive launches (415.94 s), with no failures or new URB errors; one cannot get freq message is retained in the report. Gain -60 dB, automatic off, player and lock released. Both cards passed direct connection after failing through the original hub. No code/package changes; full make all — PASS.
+
 - Replacement card through the hub failed again on attempt 7. Direct OHCI connection of the same card achieved 100 consecutive successes (417.93 s), no new kernel messages or retained process/lock. Gain stayed -60 dB, automatic playback off. No code/package changes; original hub configuration remains failing and schedule endurance is still pending. Full make all — PASS.
 
 - Owner-authorized 100 consecutive playback attempts on the 5.1.28 bench: 96 completions, 4 madplay failures (exit=4) and four new USB URB -27 error groups. Gain reduced to -60 dB on request. Documented actual route and open reliability work; no fix or endurance acceptance claimed. Runtime/IPK unchanged.

@@ -91,3 +91,25 @@ transactions. Replacing the card alone was insufficient. Direct connection does
 not validate the original hub or replace schedule endurance acceptance. If a hub
 is required, its compatibility needs a separate trial; this experiment does not
 claim a software USB-driver fix.
+
+## Original AB13X directly connected — 2026-10-31
+
+The owner separately requested a trial of the original AB13X connected directly
+via OHCI. Same installed adapter, test.mp3, 48000 Hz and 0.5 s pause. Card/route,
+-60 dB and automatic-off are checked before each attempt; the series stops on
+its first failure. No code or setting changes.
+
+**100 consecutive successful launches, 0 failures**, in 415.94 s. All attempts:
+`completed`, `waitpid: exited`, exit=0, without retries. No new URB errors.
+One new kernel message, `cannot get freq at ep 0x3`, appeared near series startup;
+it was not accompanied by a failed player completion. This is therefore not
+reported as a completely clean diagnostic log.
+
+No madplay process or playback lock remained; -60 dB and automatic-off were retained.
+`make all`, links and `git diff --check` — PASS. Acoustic output was not measured;
+schedule endurance was not tested.
+
+Both tested cards passed separate 100-launch direct-OHCI series. Both previously
+failed through the original hub/EHCI route. This strengthens localization to the
+USB route but does not distinguish hub, power/cable and controller implementation.
+The first hub-based trial alone does not justify declaring the original AB13X faulty.

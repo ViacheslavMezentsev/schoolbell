@@ -2,6 +2,8 @@
 
 ## Приоритет: надёжная подача звонков / Priority: reliable playback
 
+- [x] Прежняя AB13X напрямую/OHCI: 100 успехов подряд, −60 дБ, auto-off; без новых ошибок URB, одна запись cannot get freq / Original AB13X direct/OHCI: 100 consecutive successes, -60 dB, auto off; no new URB errors, one cannot get freq message.
+
 - [x] 100 успешных запусков подряд при прямом подключении GeneralPlus/OHCI, −60 дБ, auto-off; без новых ошибок ядра / 100 consecutive successful direct GeneralPlus/OHCI launches at -60 dB, auto off, no new kernel errors.
 - [ ] Отдельно проверить совместимый хаб: замена карты при прежней топологии EHCI не устранила отказ / Separately validate a compatible hub: replacing the card with the same EHCI topology did not eliminate failure.
 
