@@ -62,7 +62,7 @@ html[data-theme="dark"] .automatic-badge[data-tone="success"]{background:#143b27
 
 .traffic-panel summary{cursor:pointer;font-weight:600}.traffic-panel[open] summary{margin-bottom:16px}.traffic-panel select{max-width:360px}.traffic-panel:not([open])>:not(summary){display:none!important}
 
-.cpu-monitor{max-width:400px;margin:8px 0 12px;font-size:12px;color:var(--muted)}#cpu-line{height:4px;background:var(--border);margin-top:6px;border-radius:3px}#cpu-line i{display:block;width:var(--cpu-fill,0%);height:100%;background:#238636;border-radius:3px}#cpu-line[data-tone=warning] i{background:#bf8700}#cpu-line[data-tone=danger] i{background:#da3633}#cpu-line[data-tone=unknown]{opacity:.5}
+.cpu-monitor{position:relative;width:320px;max-width:100%;padding-bottom:calc(3.2em + 8px);margin:8px 0 12px;font-size:12px;color:var(--muted)}#cpu-line{height:4px;background:var(--border);margin-top:6px;border-radius:3px}#cpu-line i{display:block;width:var(--cpu-fill,0%);height:100%;background:#238636;border-radius:3px}#cpu-line[data-tone=warning] i{background:#bf8700}#cpu-line[data-tone=danger] i{background:#da3633}#cpu-line[data-tone=unknown]{opacity:.5}
 
 .traffic-running{stroke:#238636;fill:#238636}.traffic-panel polyline.traffic-running{fill:none}
 
@@ -107,4 +107,4 @@ html[data-theme="dark"] .automatic-badge[data-tone="success"]{background:#143b27
 
 .flash-labels{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-top:8px;flex-wrap:wrap}.flash-labels #device-uptime{margin:0 0 0 auto}#flash-line{height:4px;background:var(--border);border-radius:3px;margin-top:6px}#flash-line i{display:block;height:100%;width:var(--cpu-fill,0%);background:var(--accent);border-radius:3px}#flash-line[data-tone=warning] i{background:#bf8700}#flash-line[data-tone=danger] i{background:#da3633}#flash-line[data-tone=unknown]{opacity:.5}
 
-.audio-labels{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;margin-top:8px}#audio-route{min-width:0;overflow-wrap:anywhere;flex:1 1 200px}#audio-volume{margin-left:auto;white-space:nowrap}
+.audio-labels{position:absolute;left:0;right:0;bottom:0;height:3.2em;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:8px}#audio-route{min-width:0;overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;max-height:3.2em}#audio-volume{white-space:nowrap}

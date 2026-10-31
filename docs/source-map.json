@@ -510,8 +510,8 @@
       "source": "packages/schoolbell/router-page/root/usr/lib/lua/luci/view/schoolbell_test.htm",
       "destination": "ui/root/usr/lib/lua/luci/view/schoolbell_test.htm",
       "source_sha256": "526214f183ea8526785239074189d00cc03e7251323ee4146f75f0a53a015a54",
-      "changes": "none; default audio status and blue Flash (5.1.29)",
-      "destination_sha256": "648ad4dd693dcf96c5aab9d7dd8cd312ab612d5f610d912b8de0c1143088813e"
+      "changes": "none; default audio status and blue Flash (5.1.29); wider header and CSS cache key (5.1.30)",
+      "destination_sha256": "e8172dd2dca5b489ebde8019d0b3d5e7adbb48355ff3c2da17ce62b03beb758a"
     },
     {
       "source": "packages/schoolbell/router-page/root/usr/lib/lua/schoolbell/backup_web.lua",
@@ -671,8 +671,8 @@
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/style.css",
       "destination": "ui/root/www/schoolbell-test/style.css",
       "source_sha256": "046d8f5ba5461e83f8c4412b368b227ae34a98eef741d500af2117eefa4ff0ba",
-      "changes": "none; default audio status and blue Flash (5.1.29)",
-      "destination_sha256": "1ea98a178116a6f155fec00939555a2d368a87ebdd96c0443423503224f4a09a"
+      "changes": "none; default audio status and blue Flash (5.1.29); wider header and CSS cache key (5.1.30); stable two-line audio layer",
+      "destination_sha256": "f20134b3927cba6729409a7af5e627a48a21696e0f071953fa947e7a7baba695"
     },
     {
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/theme.js",
@@ -1161,8 +1161,8 @@
       "source": "pkg-schoolbell/CONTROL/control",
       "destination": "packaging/openwrt/package/CONTROL/control",
       "source_sha256": "8183c1fee37c5c6579f32cc2570317640935b5a2598495d8bbb4081e6bb78141",
-      "changes": "adapted; review destination against pinned source; default audio status and blue Flash (5.1.29)",
-      "destination_sha256": "79b888d501330237ad745a2764f8b54bf4262e0f8dde43a1517f01b0f654ce74"
+      "changes": "adapted; review destination against pinned source; default audio status and blue Flash (5.1.29); wider header and CSS cache key (5.1.30)",
+      "destination_sha256": "1135f44b49a49785b8b887ec5d49a3fdeaf532ed934cf481a26b96544cbdbbe5"
     },
     {
       "source": "pkg-schoolbell/CONTROL/postinst",

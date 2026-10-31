@@ -58,3 +58,6 @@ hardware acceptance protocol.
 - [x] Строка аудио /dev/dsp под Flash, имя карты и сохранённое усиление; синий Flash до 75% — исходники 5.1.29 / Default audio status, card name and saved gain; blue Flash up to 75% — 5.1.29 sources.
 - [x] 5.1.29 установлена на разрешённый стенд: 78 файлов, бэкап, GET-контроллер шапки и форматирование живого ответа проверены; −60 дБ, auto-off / 5.1.29 installed on the authorized bench: 78 files, backup, header GET controller and live-response formatting verified; -60 dB, auto off.
 - [ ] Подтвердить внешний вид новой шапки в браузере после Ctrl+F5; инструмент браузера недоступен / Confirm header appearance in browser after Ctrl+F5; browser tool unavailable.
+
+- [x] Расширить линии шапки и обновить ключ кеша CSS (5.1.30) / Widen header bars and update the CSS cache key (5.1.30).
+- [x] Постоянная высота аудиостроки без сдвига интерфейса при переносе / Fixed-height audio status prevents layout shifts when text wraps.
