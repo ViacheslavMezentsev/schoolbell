@@ -1,0 +1,9 @@
+/out/
+/build/
+/tests/manual/
+/docs/research/
+__pycache__/
+*.pyc
+*.ipk
+*.sbb
+*.sbp

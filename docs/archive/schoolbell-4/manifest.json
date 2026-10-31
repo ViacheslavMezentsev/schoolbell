@@ -1,0 +1,106 @@
+{
+  "source_repository": "https://github.com/ViacheslavMezentsev/schoolbell",
+  "source_commit": "c4bbecd1bd5136051cc12858801fb9bed7222cc2",
+  "files": [
+    {
+      "path": "0.mp3",
+      "sha256": "3821035954269a1ba9bacd0a5ab528c61817acb6d623de835f1936ebaebc7d5c",
+      "bytes": 41273
+    },
+    {
+      "path": "1.mp3",
+      "sha256": "e836c3f00c25ec0d2b91c258d6c8057daa7622e029e8ec5b62b911a27f3cf51a",
+      "bytes": 63321
+    },
+    {
+      "path": "2.mp3",
+      "sha256": "9ced774a35d0dec99b963c9b0a6fe2cd67dd23d1df13338c21e44ea7e519b149",
+      "bytes": 69904
+    },
+    {
+      "path": "3.mp3",
+      "sha256": "e561d0205694f8776a9e6389e6a99ffa642a4c680fc076a02dadd3d94b97dc5d",
+      "bytes": 68023
+    },
+    {
+      "path": "4.mp3",
+      "sha256": "ef1adc39a49ca75aa085ef8fb88491b1f44e20de03fa06c52285ac9654136264",
+      "bytes": 82368
+    },
+    {
+      "path": "jquery-1.11.0.min.js",
+      "sha256": "b294e973896f8f874e90a8eb1a8908ac790980d034c4c4bdf0fc3d37b8abf682",
+      "bytes": 96381
+    },
+    {
+      "path": "log.txt",
+      "sha256": "108ff1736321ba0388ae783dcdb46a3cdddacc037865d657b54218eb2da0c892",
+      "bytes": 943
+    },
+    {
+      "path": "main.html",
+      "sha256": "832c20694e308e700e79e83f6d7a61e31810aad7facf078658178c2290772e48",
+      "bytes": 4797
+    },
+    {
+      "path": "main.js",
+      "sha256": "8c7496630a30342acf9447d9140c6e720eb777179cea1d3bd1a64ad7f36b30d4",
+      "bytes": 27708
+    },
+    {
+      "path": "melodies.json",
+      "sha256": "8fc2aba4dfa278ac451197c48c4f931acbf3381daed0a20a4f34d85d3c66070f",
+      "bytes": 127
+    },
+    {
+      "path": "plan.json",
+      "sha256": "ccc104373954c3cfed3a924e47a74e36448d422118b77289db73da1b5954e740",
+      "bytes": 770
+    },
+    {
+      "path": "schedules.json",
+      "sha256": "2c723bbdf98ce97b53bbfc98beb6767eeb7d3aa51b044bdbfd3d775c4e3a1e32",
+      "bytes": 888
+    },
+    {
+      "path": "settings.json",
+      "sha256": "e0b005357c27056dca8b53f03e9fd68bf2ea0a8a948c57c0ee37f8da80d5fa0a",
+      "bytes": 62
+    },
+    {
+      "path": "sh/action.cgi",
+      "sha256": "0f453111e5013f4cd006011b05454c04fb5223a090e9025b7f7cb79e5e20f4d7",
+      "bytes": 3278
+    },
+    {
+      "path": "sh/index.cgi",
+      "sha256": "a9d555ef96e9928d03f70c1f8735d16caaa0d66a5397470c4d155662ec630d39",
+      "bytes": 376
+    },
+    {
+      "path": "sh/json.cgi",
+      "sha256": "265064c2fb2c1c282731592ea47d14ad99a5438821048e6c7cba5da7b176e3c4",
+      "bytes": 4027
+    },
+    {
+      "path": "sh/scheduler.cgi",
+      "sha256": "a70c3392e51be55b22a49bc29f2b26d3e596d9e1c878249b67589681aca39ddd",
+      "bytes": 4213
+    },
+    {
+      "path": "style.css",
+      "sha256": "90a009a4d9cf9df38c336834b1b52a28ce8c98e308c7a6941a1ad5f0110ec4b9",
+      "bytes": 490
+    },
+    {
+      "path": "test.mp3",
+      "sha256": "1ae57af4d27698b0cd3795de7287c0dd1b5e2b336e8d9e8dcc9b853cbd8b4e0d",
+      "bytes": 13104
+    },
+    {
+      "path": "webtoolkit.base64.js",
+      "sha256": "54a30bd26ef9fadb9b52457bd7769f0e4052bbae87520e2251264d0e05484189",
+      "bytes": 3002
+    }
+  ]
+}
