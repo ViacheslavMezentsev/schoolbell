@@ -4,6 +4,10 @@
 
 ## Unreleased
 
+- Instrumental trials: full `make all` and `git diff --check` — PASS; host checks only.
+
+- Prepared three local instrumental versions of 0.mp3: synthetic vibraphone, electric piano and horn/flute. Verified 16 pitches, timing, length and original -8.45 LUFS-I loudness. Stock MP3s and payload remain unchanged; no devices accessed. Recorded the owner’s MIT preference for own code in the audit.
+
 - License audit records code provenance, 33 IPK metadata entries, Schoolbell-2 audio testimony and open items L1–L5. Added a repository NOTICE; stock MP3s, payload and package versions are unchanged. Prepared three local 0.mp3 timbre trials at measured source loudness; no devices accessed.
 
 - Audit validation: full `make all` — PASS in WSL; `git diff --check` — PASS. Rebuilt IPK metadata, control and payload match the accepted 5.1.28 candidate. All stock MP3 hashes are unchanged. These are host checks, not hardware acceptance.

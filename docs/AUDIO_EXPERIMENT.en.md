@@ -37,3 +37,41 @@ Reproduction script, measurements and audio remain locally ignored under
 Stock files are unchanged; variants are not included in IPK or Pages. Composition
 rights/provenance remain open in the [audit](LICENSE_AUDIT.en.md). A future instrument
 resynthesis experiment could recover notes/envelopes, with separate melody-fidelity checks.
+
+## Instrumental resynthesis — 2026-10-31
+
+At the owner's next request, three entirely synthesized variants were produced,
+without mixing in the original recording or third-party samples. A shared score
+was recovered from original 0.mp3 to avoid bias from earlier filtering.
+16 notes: Eb5, E4, F4, Ab4, C5, Eb5, F5, F4, G4, Ab4, C5, Eb5, Ab5, F5, G5, Eb5.
+This is automatic transcription, not an authenticated composer score.
+
+| Variant | Synthesis and palette | LUFS-I | dBTP |
+| --- | --- | ---: | ---: |
+| 01-vibraphone | Synthetic vibraphone: decaying harmonics and subtle tremolo | -8.45 | -2.67 |
+| 02-electric-piano | Synthetic electric piano: harmonic FM, soft attack, quiet lower octave | -8.45 | -1.51 |
+| 03-horn-flute | Synthetic horn/flute: gradually developing harmonics and upper octave | -8.45 | -2.51 |
+
+These are timbre models, not acoustic instrument recordings. Measured lead frequencies
+are retained; additional octaves do not change the note sequence. All variants share
+one note/timing list. Short 3–8 ms attacks and 12 ms releases preserve rests without
+reverb tails. The final phrase fades. The source waveform is not used for synthesis.
+
+Decoded final MP3 checks: all 16 lead pitches match MIDI notes; maximum measured
+lead-frequency deviation from the source is <0.73 cents (100 cents = one semitone).
+Silence-separated onsets differ by at most 1.66 ms at the envelope threshold;
+the two near-legato transitions are independently checked by spectral pitch changes
+(maximum difference 4.36 ms).
+Each decoded file has 455040 samples at 44.1 kHz (10.318367 s), matching the original.
+Final MP3 loudness is -8.45 LUFS-I, with no clipping. These are algorithmic measurements,
+not listening-comfort evaluation or school PA audibility verification.
+
+Local extract-notes.py, synthesize.py, validate.py, notes.json, results.json,
+validation.json, MP3/WAV and time-reference.mid are preserved in ignored
+`tests/manual/03-instrumental-audio/`; conditions/HISTORY in
+`docs/research/03-instrumental-audio/`. MIDI retains note timing for further arranging;
+JSON preserves measured frequencies, whereas MIDI rounds to semitone pitches.
+Stock media, package payload, specification and devices remain unchanged.
+
+This iteration: full `make all` — PASS; `git diff --check` — PASS.
+Rebuilt IPK contents match accepted 5.1.28; stock MP3s are unchanged.

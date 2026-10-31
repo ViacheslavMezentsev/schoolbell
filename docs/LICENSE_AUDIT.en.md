@@ -76,8 +76,10 @@ correcting it and distributing notices requires a subsequent packaging iteration
 
 ## Open items before distribution
 
-- L1: owner establishes authorship/rights and selects the own-code license and scope,
-  separately from third-party components.
+On 2026-10-31 the owner stated an intention to use MIT for own code. This preference is recorded; scope and contribution rights still need confirmation before adding LICENSE. It does not automatically cover dependencies, compositions or recordings.
+
+- L1: owner establishes authorship/rights and formalizes the selected MIT license
+  and its own-code scope, separately from third-party components.
 - L2: collect exact dependency sources/notices, resolve GPL/LGPL/GCC exception terms,
   and include compliance materials in release artifacts.
 - L3: pin the time-zone source revision and review attribution in generated Pages.
