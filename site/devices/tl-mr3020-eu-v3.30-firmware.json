@@ -1,0 +1,19 @@
+{
+  "device": "tplink-tl-mr3020-eu-v3.30",
+  "region": "EU",
+  "hardware_revision": "3.30",
+  "firmware_version": "1.8.0 0.9.1 Build 250625",
+  "checked_on": "2026-10-31",
+  "source_page": "https://www.tp-link.com/en/support/download/tl-mr3020/",
+  "archive_url": "https://static.tp-link.com/upload/firmware/2025/202507/20250714/TL-MR3020_3.0_1.7.0%20Build%20250625.zip",
+  "archive_original_name": "TL-MR3020_3.0_1.7.0 Build 250625.zip",
+  "archive_bytes": 6978284,
+  "archive_sha256": "c01e8ad8c882ee2cc5dbb2899111f111c37aa356d366f0b6098f6c5f139bacea",
+  "image_name": "TL-MR3020v3_1.8.0_0.9.1_up_boot(250625)_2025-06-25_15.54.16.bin",
+  "image_bytes": 8126976,
+  "image_sha256": "1141467bd4b7b8292e2a50811a388eb999f4cbf207365e1be47718ebc6143d2f",
+  "transformation": "none",
+  "bootloader_recovery_status": "not-tested",
+  "mirror_url": null,
+  "hash_note": "Locally computed after HTTPS download; not a publisher signature."
+}

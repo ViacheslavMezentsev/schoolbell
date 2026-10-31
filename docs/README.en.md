@@ -5,7 +5,7 @@
 ## Current state
 
 The standalone candidate is **5.1.28**. Sources and 81 documents were transferred
-from pinned 5.1.27. Host builds and tests passed; Pages migration, the target MIPS
+from pinned 5.1.27. Host builds and tests passed; Pages publication, the target MIPS
 bundle and new hardware acceptance are not complete. The future Pages root opens
 the bell interface directly.
 
@@ -117,3 +117,5 @@ separately; this branch neither publishes the site nor changes devices.
 | Schoolbell package | [RU](history/README.md) · [EN](history/README.en.md) |
 
 [Legacy implementation archive](archive/schoolbell-4/README.en.md) · [Source inventory](migration-inventory.json) · [Source hashes and path map](source-map.json)
+
+[Pages build and publication](../site/README.en.md)

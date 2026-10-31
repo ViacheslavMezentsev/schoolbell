@@ -1322,8 +1322,8 @@
       "source": "scripts/test-schoolbell-traffic.js",
       "destination": "scripts/test-schoolbell-traffic.js",
       "source_sha256": "aae9fafa4a56770b6d9d960f071606f843a6ac2b44b0a4e5015085a7dfff1fb4",
-      "changes": "adapted; review destination against pinned source",
-      "destination_sha256": "005d6d26bdee6053031108f232aa570c77b2a4c21502230f83433fcb5eef0c40"
+      "changes": "Host paths adapted; Pages script-order coverage now in test-site.py",
+      "destination_sha256": "43968c809963f737bca4cc6db9b47003a1c6d698796cb4eff7e4184ad44ba64b"
     },
     {
       "source": "scripts/test-schoolbell.sh",
@@ -1364,15 +1364,15 @@
       "source": "site/README.md",
       "destination": "site/README.md",
       "source_sha256": "411ead0a2d3e281f493c20f1172f8a63d8299f35968d1e4f92a6ed32d660ddf4",
-      "changes": "adapted; review destination against pinned source",
-      "destination_sha256": "73f23f05e66481b2dd26a86bd999d0d73fe090880bec8b79651d222347c18380"
+      "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer",
+      "destination_sha256": "44563f49d951a814d6154c1c2c42392876da1b411b96510b374d6fbdad141f85"
     },
     {
       "source": "site/demo.js",
       "destination": "site/demo.js",
       "source_sha256": "e188761949f7a69432ec440c619a95bf1f36d721c910f3a6c866a7c194677f5f",
-      "changes": "none",
-      "destination_sha256": "e188761949f7a69432ec440c619a95bf1f36d721c910f3a6c866a7c194677f5f"
+      "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer",
+      "destination_sha256": "159811778b64e4e2493abf783cfb726f4a3cd0abb1258eb984c319386f0478f0"
     },
     {
       "source": "site/portable-pages.js",
@@ -2056,6 +2056,167 @@
       "destination_sha256": "3f568993da623ba933b49317c283ae4e3fe5ae8ae99a61a2ecf28f5c690cf763",
       "changes": "Markdown link destinations only; original text and requirement/TC IDs preserved",
       "prose_sha256": "3d8d69c4d89c627f85c1db40f3e4b2e8e1222460ef7ab761eb50e2bdb05ed600"
+    },
+    {
+      "source": ".github/ISSUE_TEMPLATE/bug_report.yml",
+      "destination": ".github/ISSUE_TEMPLATE/bug_report.yml",
+      "source_sha256": "42530fa9d5c8396ab37e6b06d7f995ca4a5228e687d147d3c3c6d3888d689298",
+      "destination_sha256": "42530fa9d5c8396ab37e6b06d7f995ca4a5228e687d147d3c3c6d3888d689298",
+      "changes": "none"
+    },
+    {
+      "source": ".github/ISSUE_TEMPLATE/config.yml",
+      "destination": ".github/ISSUE_TEMPLATE/config.yml",
+      "source_sha256": "13064e7bea658e01e718b414fbb7b3b244f36411fe25ee2055c151f7b534547a",
+      "destination_sha256": "13064e7bea658e01e718b414fbb7b3b244f36411fe25ee2055c151f7b534547a",
+      "changes": "none"
+    },
+    {
+      "source": ".github/ISSUE_TEMPLATE/feature_request.yml",
+      "destination": ".github/ISSUE_TEMPLATE/feature_request.yml",
+      "source_sha256": "00f110ffb7e269e62da140c48702d4955fb1defc86699a8382f75775451a636d",
+      "destination_sha256": "00f110ffb7e269e62da140c48702d4955fb1defc86699a8382f75775451a636d",
+      "changes": "none"
+    },
+    {
+      "source": "scripts/build-site.py",
+      "destination": "scripts/build-site.py",
+      "source_sha256": "7b581e66a713901cc092b9afcd5ff99155aaaa2bbf8d292dd251a3680f9247b9",
+      "destination_sha256": "2b1928a03deb14905c7a008b2fc76c0adc5d55d21c50ec0af10cfce67eff080c",
+      "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer"
+    },
+    {
+      "source": "site/devices/index.en.html",
+      "destination": "site/devices/index.en.html",
+      "source_sha256": "61810fb20c98cbdb9a080174f8f38b6ad67e550fc053a444e21a0aee647d37bb",
+      "destination_sha256": "79b9cddb6ca40a9d40639fccf41fda79343e3e25a5f5be4afe9852e72b97cd6d",
+      "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer"
+    },
+    {
+      "source": "site/devices/index.html",
+      "destination": "site/devices/index.html",
+      "source_sha256": "394bb4765dbe3ed1d3e998b36882a3b2f3282cb7ce095ee7c47d90e8463290f4",
+      "destination_sha256": "ae8a66cba8c358ed9f44bcb1666a6017dbfb659994094cd2993047263763568b",
+      "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer"
+    },
+    {
+      "source": "site/devices/tl-mr3020-eu-v3.30-firmware.json",
+      "destination": "site/devices/tl-mr3020-eu-v3.30-firmware.json",
+      "source_sha256": "85d202dce3d3190fb0d5c61b6cc6b5e1974e6f6ab6d8ce6cef2c536b71315460",
+      "destination_sha256": "85d202dce3d3190fb0d5c61b6cc6b5e1974e6f6ab6d8ce6cef2c536b71315460",
+      "changes": "none"
+    },
+    {
+      "source": "site/devices/tl-mr3020-eu-v3.30.en.html",
+      "destination": "site/devices/tl-mr3020-eu-v3.30.en.html",
+      "source_sha256": "5d5b12ce4f8dc4268f86a472f9eee25f0a3b5faea8448ddee189e6efe9af9fb5",
+      "destination_sha256": "3982d1322b2b5248e98c47069f3ac86dc04a1d9115f51caa99bac6873a479df4",
+      "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer"
+    },
+    {
+      "source": "site/devices/tl-mr3020-eu-v3.30.html",
+      "destination": "site/devices/tl-mr3020-eu-v3.30.html",
+      "source_sha256": "b5e8daca22a6008514029af74ce160be33ffbee38ce0c933d54960d70f42b24c",
+      "destination_sha256": "27112859b178b90ca354cf6e62eb2b52699b40b7f4a46a22ea69134e469e1cc2",
+      "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer"
+    },
+    {
+      "source": "site/diagrams/audio.en.svg",
+      "destination": "site/diagrams/audio.en.svg",
+      "source_sha256": "76a5bbf33379153a421d6abe29ae316393d871ae0212727f3bf05bc2963b7b1e",
+      "destination_sha256": "76a5bbf33379153a421d6abe29ae316393d871ae0212727f3bf05bc2963b7b1e",
+      "changes": "none"
+    },
+    {
+      "source": "site/diagrams/audio.ru.svg",
+      "destination": "site/diagrams/audio.ru.svg",
+      "source_sha256": "c12c68f5c38827401ee204bf87f3fd6ab0cfd4f187c56ab1087fb982c9be7908",
+      "destination_sha256": "c12c68f5c38827401ee204bf87f3fd6ab0cfd4f187c56ab1087fb982c9be7908",
+      "changes": "none"
+    },
+    {
+      "source": "site/diagrams/bench.en.svg",
+      "destination": "site/diagrams/bench.en.svg",
+      "source_sha256": "4d267d23f75dfc77568a2174f6e3826dc3f55f9dcb2dfcc396d5ba793fc5b41f",
+      "destination_sha256": "4d267d23f75dfc77568a2174f6e3826dc3f55f9dcb2dfcc396d5ba793fc5b41f",
+      "changes": "none"
+    },
+    {
+      "source": "site/diagrams/bench.ru.svg",
+      "destination": "site/diagrams/bench.ru.svg",
+      "source_sha256": "f299447fbced26f003630876de9fa75dbf36ed22bd30bd13b0372158cb5961b0",
+      "destination_sha256": "f299447fbced26f003630876de9fa75dbf36ed22bd30bd13b0372158cb5961b0",
+      "changes": "none"
+    },
+    {
+      "source": "site/guide.css",
+      "destination": "site/guide.css",
+      "source_sha256": "6279b59b843d17c84b6e83b3c20034b8fce89f2776d45201830d58a6dc00467c",
+      "destination_sha256": "6279b59b843d17c84b6e83b3c20034b8fce89f2776d45201830d58a6dc00467c",
+      "changes": "none"
+    },
+    {
+      "source": "site/portable-panel.html",
+      "destination": "site/portable-panel.html",
+      "source_sha256": "4567dcfbbc7ca8165f6c2a50db91d27ae007d6be75892f2c91f18e8b33b29c27",
+      "destination_sha256": "4567dcfbbc7ca8165f6c2a50db91d27ae007d6be75892f2c91f18e8b33b29c27",
+      "changes": "none"
+    },
+    {
+      "source": "site/portable-zones.NOTICE",
+      "destination": "site/portable-zones.NOTICE",
+      "source_sha256": "1b88e715186e3f6d5c95c5f06ac1d90e83373689f645af6d3d83c1cd9cbd01c9",
+      "destination_sha256": "1b88e715186e3f6d5c95c5f06ac1d90e83373689f645af6d3d83c1cd9cbd01c9",
+      "changes": "none"
+    },
+    {
+      "source": "site/portable.css",
+      "destination": "site/portable.css",
+      "source_sha256": "7193e28e1c209f633435c8b7728886a92f99a7c27261a8617f4ed94ae228cd2c",
+      "destination_sha256": "7193e28e1c209f633435c8b7728886a92f99a7c27261a8617f4ed94ae228cd2c",
+      "changes": "none"
+    },
+    {
+      "source": "site/schoolbell-guide.en.html",
+      "destination": "site/schoolbell-guide.en.html",
+      "source_sha256": "18683743a71f8fa8592cde379dd2e17917bb29ed1198ea23fd1cf34abdcc1800",
+      "destination_sha256": "2777f55727eed2602b7f2a38690bcba910adbee37b0b2dfaeaeb270614605a79",
+      "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer"
+    },
+    {
+      "source": "site/schoolbell-guide.html",
+      "destination": "site/schoolbell-guide.html",
+      "source_sha256": "225d8a980bcc59a786451fdc67acf26afe0065a7ea2b2a9a50990304817da702",
+      "destination_sha256": "1c0cdf5867761bc239b1309c4c3d7b740a452b6ebacf68652b36d52990ea7fd1",
+      "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer"
+    },
+    {
+      "source": "site/schoolbell-training.en.html",
+      "destination": "site/schoolbell-training.en.html",
+      "source_sha256": "6c4db8d94dc8678fde27be05210660648cbde61b2b7fd0ad3d1ac6ac9e65d50e",
+      "destination_sha256": "1ba5efde63220b6b7bdf701c0818df0b35fa5410eb2ec84987da59e2e22c0427",
+      "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer"
+    },
+    {
+      "source": "site/schoolbell-training.html",
+      "destination": "site/schoolbell-training.html",
+      "source_sha256": "380923c0532e2428a9f5007fc05e3946a73eba853417b9a1eb223c8df572f2e6",
+      "destination_sha256": "6146f4775e18e0ccf44ffd6b00529d3ddfa3673a84ef0d01ae7a4553db41652b",
+      "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer"
+    },
+    {
+      "source": "site/style.css",
+      "destination": "site/style.css",
+      "source_sha256": "85d3aefe30d3598aca1fcf515e799e4b45e2f49cd08baa3d3cd0b123dc4fdeef",
+      "destination_sha256": "85d3aefe30d3598aca1fcf515e799e4b45e2f49cd08baa3d3cd0b123dc4fdeef",
+      "changes": "none"
+    },
+    {
+      "source": ".github/workflows/pages.yml",
+      "destination": ".github/workflows/pages.yml",
+      "source_sha256": "16f16878438cf536182852419c35c78184a8e5652958c909361eee9c6f749b8e",
+      "destination_sha256": "e8d689a6f96aa1eb7d0b81b0ecb82139c32c02d1ecbedc9aa140349c7ac4312b",
+      "changes": "Standalone paths and Node version; remains manually triggered"
     }
   ]
 }

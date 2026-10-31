@@ -72,5 +72,5 @@ const {create,observe}=require('../ui/root/www/schoolbell-test/traffic.js');
 const html=fs.readFileSync('ui/root/usr/lib/lua/luci/view/schoolbell_test.htm','utf8');
  assert.ok(html.indexOf('/schoolbell-test/traffic.js')<html.indexOf('/schoolbell-test/session.js'));
  assert.ok(html.includes('id="traffic-chart"'));assert.ok(html.includes('не внутренние обмены исполнителя'));
- console.log('PASS traffic: 5s boundaries, 12-slot retention, late/duplicate completions, latency, HTTP/rejection/abort, pass-through, no retries, device script order (Pages build order deferred to M3)');
+ console.log('PASS traffic: 5s boundaries, 12-slot retention, late/duplicate completions, latency, HTTP/rejection/abort, pass-through, no retries, device script order (Pages build order checked by test-site.py)');
 })().catch(e=>{console.error(e);process.exit(1);});

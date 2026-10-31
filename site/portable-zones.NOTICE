@@ -1,0 +1,4 @@
+Derived from OpenWrt LuCI openwrt-19.07 modules/luci-base/luasrc/sys/zoneinfo/tzdata.lua
+https://raw.githubusercontent.com/openwrt/luci/openwrt-19.07/modules/luci-base/luasrc/sys/zoneinfo/tzdata.lua
+Retrieved 2026-10-29; source SHA256 6737c7e313f858ac041bdd62582fe36aeb4c4ed2f676f4ba06108e68301a67fb
+Apache-2.0; see LUCI-LICENSE. Name/POSIX pairs extracted without changing names (including spaces). UTC=UTC added to match schoolbell.timezone. Not current worldwide civil-time policy.

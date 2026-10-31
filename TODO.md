@@ -10,7 +10,8 @@
 - [x] M1: CI точного HEAD и принятие владельцем / Exact-HEAD CI and owner acceptance.
 - [x] Перенесены требования, история, руководства и программа приёмки / Requirements, history, guides and acceptance programme transferred.
 - [ ] Актуализировать команды и отдельный протокол под будущие артефакты приёмки / Update commands and create a separate protocol for future acceptance artifacts.
-- [ ] Pages: guide/training/demo и перенос localStorage / Pages and deliberate localStorage migration.
+- [x] Исходники Pages: корневой UI, guide/training/devices, явный перенос localStorage / Pages sources and explicit localStorage transfer.
+- [ ] Приёмка опубликованных Pages владельцем / Owner acceptance of published Pages.
 - [ ] Проверить лицензии и NOTICE / Review licenses and notices.
 - [ ] Проверить обновление/откат с данными; отдельно разрешённый стенд / Data-preserving upgrade/rollback and separately authorized bench.
 - [ ] Публикация владельцем и ссылки из core / Owner publication and core redirects.

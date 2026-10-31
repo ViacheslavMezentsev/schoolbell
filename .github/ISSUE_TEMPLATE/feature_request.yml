@@ -1,0 +1,43 @@
+name: Предложение / Feature request
+description: Предложить улучшение / Suggest an improvement
+title: "[Feature]: "
+body:
+  - type: markdown
+    attributes:
+      value: "Проверьте существующие Issues. Опишите потребность, а не только вариант реализации. / Check existing issues and explain the need, not only an implementation."
+  - type: dropdown
+    id: component
+    attributes:
+      label: Компонент / Component
+      options:
+        - schoolbell
+        - core
+        - demo
+        - rover
+        - documentation / other
+    validations:
+      required: true
+  - type: textarea
+    id: need
+    attributes:
+      label: Задача пользователя / User need
+      description: "Кому и в каком сценарии это поможет? / Who benefits and in what scenario?"
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Предлагаемое поведение / Proposed behavior
+      description: "Как будет выглядеть успешный результат? / What would success look like?"
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Альтернативы и ограничения / Alternatives and constraints
+      description: "Необязательно: обходные пути, оборудование, автономная работа, память. / Optional workarounds, hardware, offline use, memory constraints."
+  - type: textarea
+    id: context
+    attributes:
+      label: Версии и примеры / Versions and examples
+      description: "Если полезно, добавьте версии, макет или снимок без личных данных. / Add relevant versions, a mockup or a screenshot without personal data."

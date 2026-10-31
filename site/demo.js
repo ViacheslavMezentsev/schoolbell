@@ -8,7 +8,7 @@ function queueDemo(record,ok){
  if(record){var b=queueBins.find(function(b){return b.key===key;});if(!b){b={key:key,depth:1,running:1,processed:0,failed:0,expired:0,wait_count:0,wait_sum:0,wait_max:0};queueBins.push(b);}b.processed++;b.wait_count++;if(!ok)b.failed++;}
  return {available:true,simulated:true,epoch:'demo',now:now,at:now,depth:0,running:0,bins:queueBins};
 }
-var key='openwrt-schoolbell-public-demo-v1',memory=null;
+var key='schoolbell-public-demo-v1',legacyKey='openwrt-schoolbell-public-demo-v1',memory=null;
 function clone(v){return JSON.parse(JSON.stringify(v));}
 function iso(d){return d.toISOString().slice(0,10);}
 function nextDate(day){var d=new Date(day+'T00:00:00Z');d.setUTCDate(d.getUTCDate()+1);return iso(d);}
@@ -95,6 +95,26 @@ window.fetch=async function(url,options){
  if(name==='clock-trust'&&options&&options.method==='POST')queueDemo(true,out.ok);
  return new Response(JSON.stringify(out),{status:200,headers:{'Content-Type':'application/json'}});
 };
+// Copy only on explicit consent; never overwrite new-site data or erase the old key.
+var migrationButton=document.getElementById('demo-migrate'),migrationStatus=document.getElementById('demo-migration-status');
+function legacyCandidate(){
+ if(localStorage.getItem(key)!==null)return null;
+ var raw=localStorage.getItem(legacyKey);if(raw===null)return null;
+ var v=JSON.parse(raw);
+ if(!v || v.format!==1 || !Number.isSafeInteger(v.revision) || v.revision<1 || !Array.isArray(v.log) || !Number.isSafeInteger(v.seq) || typeof v.zone!=='string' || !valid(v.data))throw new Error('legacy_invalid');
+ return v;
+}
+try{if(legacyCandidate()){migrationButton.hidden=false;migrationStatus.textContent='Найден черновик прежнего демо. Можно скопировать его сюда; старая копия сохранится.';}}catch(_){migrationStatus.textContent='Прежнее хранилище недоступно или не прошло проверку. Оно не изменено; используйте экспорт .sbp из прежнего демо.';}
+migrationButton.addEventListener('click',function(){
+ var editor=window.schoolbellEditor,snapshot=editor && editor.portableSnapshot?editor.portableSnapshot():null;
+ if(snapshot && (snapshot.dirty || snapshot.formPending || snapshot.busy || snapshot.reconcile)){migrationStatus.textContent='Сначала сохраните или отмените текущие правки демо.';return;}
+ if(!confirm('Скопировать черновик прежнего демо? Старые данные останутся на месте. Имитация автозвонков будет выключена.'))return;
+ try{var old=legacyCandidate();if(!old){migrationButton.hidden=true;migrationStatus.textContent='Перенос отменён: здесь уже есть сохранённые данные или прежний черновик отсутствует.';return;}
+  var next=clone(old);next.autoEnabled=false;
+  var raw=JSON.stringify(next);localStorage.setItem(key,raw);if(localStorage.getItem(key)!==raw)throw new Error('storage');
+  memory=next;location.reload();
+ }catch(_){migrationStatus.textContent='Не удалось перенести черновик. Прежнее демо не изменено; можно экспортировать .sbp на его странице.';}
+});
 document.getElementById('demo-reset').addEventListener('click',function(){if(confirm('Сбросить только данные этого демо в вашем браузере?')){write(seed());location.reload();}});
 document.getElementById('browser-audio').addEventListener('ended',function(){log(read(),'sample_requested');});
 }());

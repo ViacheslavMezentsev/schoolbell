@@ -1,0 +1,16 @@
+<details id="portable-panel" class="plan-workflow">
+ <summary><strong>Перенос календарных планов · .sbp</strong><span class="collapse-hint">Подробности ▾</span></summary>
+ <p>Создайте планы в календаре, затем выберите их для экспорта. В файл войдут связанные расписания, цвета и предзвонок. Pages поддерживает только штатные мелодии. Файлы обрабатываются в браузере, без отправки на сервер.</p>
+ <p>На этом этапе импорт только проверяется: существующие планы не изменяются. Для добавления используйте «Календарь → Импорт календарного плана .sbp» на совместимом устройстве. Здесь доступен только предварительный просмотр без записи.</p>
+ <label for="portable-zone">Часовой пояс переносимого плана и проверки импорта</label>
+ <select id="portable-zone"><option value="">Выберите явно…</option></select>
+ <p id="portable-zone-hint" class="muted"></p>
+ <fieldset><legend>Планы для экспорта</legend><div id="portable-plans"></div></fieldset>
+ <button id="portable-export" type="button">Скачать выбранные планы .sbp</button>
+ <p>Экспортируется текущий черновик, включая несохранённые правки. Сначала примените введённые название и даты плана. Экспорт не сохраняет и не включает план.</p>
+ <label for="portable-file">Файл для предварительной проверки</label><input id="portable-file" type="file" accept=".sbp">
+ <div id="portable-names"></div>
+ <button id="portable-preview" type="button" disabled>Проверить добавление без записи</button>
+ <p id="portable-status" role="status">Выберите планы и часовой пояс для экспорта либо файл для проверки.</p>
+ <ul id="portable-result"></ul>
+</details>

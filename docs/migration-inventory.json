@@ -9,21 +9,24 @@
       "proposed_destination": null,
       "category": "shared-review",
       "sha256": "42530fa9d5c8396ab37e6b06d7f995ca4a5228e687d147d3c3c6d3888d689298",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": ".github/ISSUE_TEMPLATE/bug_report.yml"
     },
     {
       "source": ".github/ISSUE_TEMPLATE/config.yml",
       "proposed_destination": null,
       "category": "shared-review",
       "sha256": "13064e7bea658e01e718b414fbb7b3b244f36411fe25ee2055c151f7b534547a",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": ".github/ISSUE_TEMPLATE/config.yml"
     },
     {
       "source": ".github/ISSUE_TEMPLATE/feature_request.yml",
       "proposed_destination": null,
       "category": "shared-review",
       "sha256": "00f110ffb7e269e62da140c48702d4955fb1defc86699a8382f75775451a636d",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": ".github/ISSUE_TEMPLATE/feature_request.yml"
     },
     {
       "source": ".github/workflows/ci.yml",
@@ -37,7 +40,8 @@
       "proposed_destination": null,
       "category": "shared-review",
       "sha256": "16f16878438cf536182852419c35c78184a8e5652958c909361eee9c6f749b8e",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": ".github/workflows/pages.yml"
     },
     {
       "source": "AGENTS.md",
@@ -2275,7 +2279,8 @@
       "proposed_destination": "scripts/build-site.py",
       "category": "tooling-review",
       "sha256": "7b581e66a713901cc092b9afcd5ff99155aaaa2bbf8d292dd251a3680f9247b9",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "scripts/build-site.py"
     },
     {
       "source": "scripts/schoolbell_ipk.py",
@@ -2441,70 +2446,80 @@
       "proposed_destination": "site/devices/index.en.html",
       "category": "site-review",
       "sha256": "61810fb20c98cbdb9a080174f8f38b6ad67e550fc053a444e21a0aee647d37bb",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "site/devices/index.en.html"
     },
     {
       "source": "site/devices/index.html",
       "proposed_destination": "site/devices/index.html",
       "category": "site-review",
       "sha256": "394bb4765dbe3ed1d3e998b36882a3b2f3282cb7ce095ee7c47d90e8463290f4",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "site/devices/index.html"
     },
     {
       "source": "site/devices/tl-mr3020-eu-v3.30-firmware.json",
       "proposed_destination": "site/devices/tl-mr3020-eu-v3.30-firmware.json",
       "category": "site-review",
       "sha256": "85d202dce3d3190fb0d5c61b6cc6b5e1974e6f6ab6d8ce6cef2c536b71315460",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "site/devices/tl-mr3020-eu-v3.30-firmware.json"
     },
     {
       "source": "site/devices/tl-mr3020-eu-v3.30.en.html",
       "proposed_destination": "site/devices/tl-mr3020-eu-v3.30.en.html",
       "category": "site-review",
       "sha256": "5d5b12ce4f8dc4268f86a472f9eee25f0a3b5faea8448ddee189e6efe9af9fb5",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "site/devices/tl-mr3020-eu-v3.30.en.html"
     },
     {
       "source": "site/devices/tl-mr3020-eu-v3.30.html",
       "proposed_destination": "site/devices/tl-mr3020-eu-v3.30.html",
       "category": "site-review",
       "sha256": "b5e8daca22a6008514029af74ce160be33ffbee38ce0c933d54960d70f42b24c",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "site/devices/tl-mr3020-eu-v3.30.html"
     },
     {
       "source": "site/diagrams/audio.en.svg",
       "proposed_destination": "site/diagrams/audio.en.svg",
       "category": "site-review",
       "sha256": "76a5bbf33379153a421d6abe29ae316393d871ae0212727f3bf05bc2963b7b1e",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "site/diagrams/audio.en.svg"
     },
     {
       "source": "site/diagrams/audio.ru.svg",
       "proposed_destination": "site/diagrams/audio.ru.svg",
       "category": "site-review",
       "sha256": "c12c68f5c38827401ee204bf87f3fd6ab0cfd4f187c56ab1087fb982c9be7908",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "site/diagrams/audio.ru.svg"
     },
     {
       "source": "site/diagrams/bench.en.svg",
       "proposed_destination": "site/diagrams/bench.en.svg",
       "category": "site-review",
       "sha256": "4d267d23f75dfc77568a2174f6e3826dc3f55f9dcb2dfcc396d5ba793fc5b41f",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "site/diagrams/bench.en.svg"
     },
     {
       "source": "site/diagrams/bench.ru.svg",
       "proposed_destination": "site/diagrams/bench.ru.svg",
       "category": "site-review",
       "sha256": "f299447fbced26f003630876de9fa75dbf36ed22bd30bd13b0372158cb5961b0",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "site/diagrams/bench.ru.svg"
     },
     {
       "source": "site/guide.css",
       "proposed_destination": "site/guide.css",
       "category": "site-review",
       "sha256": "6279b59b843d17c84b6e83b3c20034b8fce89f2776d45201830d58a6dc00467c",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "site/guide.css"
     },
     {
       "source": "site/index.en.html",
@@ -2533,7 +2548,8 @@
       "proposed_destination": "site/portable-panel.html",
       "category": "site-review",
       "sha256": "4567dcfbbc7ca8165f6c2a50db91d27ae007d6be75892f2c91f18e8b33b29c27",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "site/portable-panel.html"
     },
     {
       "source": "site/portable-ui.js",
@@ -2548,7 +2564,8 @@
       "proposed_destination": "site/portable-zones.NOTICE",
       "category": "site-review",
       "sha256": "1b88e715186e3f6d5c95c5f06ac1d90e83373689f645af6d3d83c1cd9cbd01c9",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "site/portable-zones.NOTICE"
     },
     {
       "source": "site/portable-zones.json",
@@ -2563,42 +2580,48 @@
       "proposed_destination": "site/portable.css",
       "category": "site-review",
       "sha256": "7193e28e1c209f633435c8b7728886a92f99a7c27261a8617f4ed94ae228cd2c",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "site/portable.css"
     },
     {
       "source": "site/schoolbell-guide.en.html",
       "proposed_destination": "site/schoolbell-guide.en.html",
       "category": "site-review",
       "sha256": "18683743a71f8fa8592cde379dd2e17917bb29ed1198ea23fd1cf34abdcc1800",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "site/schoolbell-guide.en.html"
     },
     {
       "source": "site/schoolbell-guide.html",
       "proposed_destination": "site/schoolbell-guide.html",
       "category": "site-review",
       "sha256": "225d8a980bcc59a786451fdc67acf26afe0065a7ea2b2a9a50990304817da702",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "site/schoolbell-guide.html"
     },
     {
       "source": "site/schoolbell-training.en.html",
       "proposed_destination": "site/schoolbell-training.en.html",
       "category": "site-review",
       "sha256": "6c4db8d94dc8678fde27be05210660648cbde61b2b7fd0ad3d1ac6ac9e65d50e",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "site/schoolbell-training.en.html"
     },
     {
       "source": "site/schoolbell-training.html",
       "proposed_destination": "site/schoolbell-training.html",
       "category": "site-review",
       "sha256": "380923c0532e2428a9f5007fc05e3946a73eba853417b9a1eb223c8df572f2e6",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "site/schoolbell-training.html"
     },
     {
       "source": "site/style.css",
       "proposed_destination": "site/style.css",
       "category": "site-review",
       "sha256": "85d3aefe30d3598aca1fcf515e799e4b45e2f49cd08baa3d3cd0b123dc4fdeef",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "site/style.css"
     },
     {
       "source": "skills/router-clock-drift/SKILL.md",

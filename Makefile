@@ -1,6 +1,6 @@
 OUT_DIR ?= out
-.PHONY: all build verify test check-docs
-all: check-docs build verify test
+.PHONY: all build verify test check-docs check-site
+all: check-docs build verify test check-site
 build:
 	python3 scripts/build-schoolbell.py --out $(OUT_DIR)
 verify:
@@ -10,3 +10,10 @@ test:
 	sh scripts/test-ui.sh
 check-docs:
 	python3 scripts/check-foundation.py
+
+check-site:
+	python3 scripts/build-site.py
+	python3 scripts/test-site.py
+	node scripts/test-site-demo.js
+	node scripts/test-demo-storage.js
+	node scripts/test-site-portable.js

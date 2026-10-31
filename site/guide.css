@@ -1,0 +1,5 @@
+.draft-notice{border:1px solid var(--line);border-left:4px solid #bf8700;border-radius:8px;background:var(--panel);padding:18px 24px}.draft-notice p{margin-bottom:0}.guide-toc{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:24px 0}.guide-toc a{padding:12px;border:1px solid var(--line);border-radius:6px;background:var(--panel)}.section{scroll-margin-top:20px}.section li{margin:10px 0}.section svg{display:block;width:100%;height:auto;margin:20px 0}.caption{font-size:14px}header nav a{white-space:nowrap}@media(max-width:600px){.guide-toc{grid-template-columns:1fr}header>div{align-items:flex-start}header nav{gap:12px}}
+
+.artifact-record{overflow-wrap:anywhere;border:1px solid var(--line);padding:16px;border-radius:8px}.artifact-record dd{margin:0 0 12px}.artifact-record code{white-space:normal} .section{margin-top:24px}
+
+.training-step{padding:24px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}.training-result{border-left:4px solid var(--accent);padding-left:16px}.training-step summary{cursor:pointer}.training-step details p{margin-bottom:0}
