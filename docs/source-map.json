@@ -279,15 +279,15 @@
       "source": "packages/schoolbell/media/README.en.md",
       "destination": "assets/melodies/README.en.md",
       "source_sha256": "4b50e14168c9255a1253d96e562eeabf588655d2f1cf39377bf66dcc05962f46",
-      "changes": "none",
-      "destination_sha256": "4b50e14168c9255a1253d96e562eeabf588655d2f1cf39377bf66dcc05962f46"
+      "changes": "2026-10-31 audit: owner recording testimony, current full-package scope, audit/audio links; source hash retained",
+      "destination_sha256": "29dca8018ec09ea4f96b0a8b55ebaf5216842f103ee2b3471b065d13bdcf461a"
     },
     {
       "source": "packages/schoolbell/media/README.md",
       "destination": "assets/melodies/README.md",
       "source_sha256": "83c679c0bcbc43a61ed9c67869f20b283b381f4dfb963b4fb9fcb105fc41fc7c",
-      "changes": "none",
-      "destination_sha256": "83c679c0bcbc43a61ed9c67869f20b283b381f4dfb963b4fb9fcb105fc41fc7c"
+      "changes": "2026-10-31 audit: owner recording testimony, current full-package scope, audit/audio links; source hash retained",
+      "destination_sha256": "b4ae222478d7b91509ec066cc9a99be6e89aed852c9e0e3f3919a2439e6926df"
     },
     {
       "source": "packages/schoolbell/media/manifest.json",

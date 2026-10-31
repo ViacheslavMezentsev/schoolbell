@@ -38,3 +38,5 @@ published Pages verification and new hardware acceptance remain pending. [Migrat
 
 Author: Viacheslav Mezentsev. Modern implementation co-author: Codex (OpenAI).
 [Project rules](AGENTS.md) · [Schoolbell-4 historical archive](docs/archive/schoolbell-4/README.en.md).
+
+[License and provenance audit](docs/LICENSE_AUDIT.en.md)

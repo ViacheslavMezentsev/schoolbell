@@ -17,11 +17,15 @@ no audio authorship claim. `melodies.json` is preserved unchanged.
 | 4.mp3 | Усатый нянь | 20.592 | 82368 |
 | test.mp3 | Separate test sound, not in melodies.json | 3.276 | 13104 |
 
-All six MP3s decoded locally with FFmpeg without errors or audio output.
-Durations are ffprobe estimates; router playback has not been tested.
-The shortest file, `test.mp3`, is bundled in `pkg-schoolbell`; the other files
-stay here and do not occupy storage in the installed minimal package.
-The six source MP3s total 337993 bytes.
+The durations above are historical measurements. The current complete 5.1.28
+IPK and Pages include all six MP3s; the old minimal pkg-schoolbell description
+with test.mp3 alone no longer describes this build. Total original MP3 size: 337993 bytes.
 
-Source and IPK verification: `scripts/verify-schoolbell.py`, invoked by
-`make all`; Python 3.8+ is required on the build host, not on the router.
+Per owner testimony on 2026-10-31, 0–3.mp3 were recorded from the discrete output
+of the Schoolbell-2 microcontroller and have not changed since. This establishes
+reported recording provenance, not composition authorship. 4.mp3 and test.mp3
+were explicitly excluded; their recording sources remain unknown.
+See the [audit](../../docs/LICENSE_AUDIT.en.md) for evidence and gaps.
+[Audio trials](../../docs/AUDIO_EXPERIMENT.en.md) do not replace stock files.
+
+Source and IPK checks: `make all` (host-only).

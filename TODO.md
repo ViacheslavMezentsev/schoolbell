@@ -12,7 +12,8 @@
 - [ ] Актуализировать команды и отдельный протокол под будущие артефакты приёмки / Update commands and create a separate protocol for future acceptance artifacts.
 - [x] Исходники Pages: корневой UI, guide/training/devices, явный перенос localStorage / Pages sources and explicit localStorage transfer.
 - [ ] Приёмка опубликованных Pages владельцем / Owner acceptance of published Pages.
-- [ ] Проверить лицензии и NOTICE / Review licenses and notices.
+- [x] Аудит происхождения кода, 33 IPK и аудио / Audit code, 33 IPKs and audio provenance.
+- [ ] Закрыть L1–L5 аудита: права, лицензии, исходники и доставка NOTICE / Close audit L1–L5: rights, licenses, sources and NOTICE delivery. См. / See [audit](docs/LICENSE_AUDIT.md).
 - [x] Обновление 5.1.27 → 5.1.28 на разрешённом стенде: бэкап, сохранность данных, native и auto-off / Authorized bench upgrade: backup, data preservation, native and auto-off.
 - [x] Подтверждение интерфейса владельцем после миграции / Owner UI confirmation after migration.
 - [ ] Проверить реальный откат с данными и новую установку отдельно / Separately verify actual data-preserving downgrade and fresh installation.

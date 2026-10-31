@@ -1,0 +1,29 @@
+Школьник / Schoolbell — уведомление о происхождении / provenance notice
+2026-10-31
+
+Это уведомление не назначает общую лицензию. / This notice grants no overall license.
+
+Код и документы перенесены из openwrt-modbus-core:
+Code and documentation were migrated from openwrt-modbus-core:
+https://github.com/ViacheslavMezentsev/openwrt-modbus-core
+243a7ccad6aeb2499d3efd5d0c4cef9e822d393e
+Пути, хеши и изменения / Paths, hashes and changes: docs/source-map.json.
+Явная общая лицензия пока не установлена. / No explicit overall license established.
+
+MP3: schoolbell c4bbecd1bd5136051cc12858801fb9bed7222cc2;
+assets/melodies/manifest.json records original bytes and hashes.
+По сообщению владельца 2026-10-31, 0–3.mp3 записаны с дискретного выхода
+микроконтроллера «Школьника-2». Это не утверждение авторства композиций.
+4.mp3 и test.mp3 имеют неустановленное происхождение записи.
+Per owner testimony on 2026-10-31, 0–3.mp3 are Schoolbell-2 discrete-output
+recordings. This does not assert composition authorship. Recording provenance
+of 4.mp3 and test.mp3 remains unresolved. No new audio license is assigned.
+
+Pages time-zone data: see site/portable-zones.NOTICE and site/LUCI-LICENSE
+(Apache-2.0). Those notices apply to that component, not all project files.
+
+Dependencies retain their own terms. License metadata is not a complete
+license/source distribution kit. See docs/LICENSE_DEPENDENCIES.md.
+Полный аудит и открытые пункты / Full audit and open items:
+docs/LICENSE_AUDIT.md, docs/LICENSE_AUDIT.en.md.
+This repository notice is not automatically included in IPK or Pages artifacts.
