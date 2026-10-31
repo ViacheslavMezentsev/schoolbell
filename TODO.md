@@ -5,7 +5,8 @@
 - [x] Прежняя AB13X напрямую/OHCI: 100 успехов подряд, −60 дБ, auto-off; без новых ошибок URB, одна запись cannot get freq / Original AB13X direct/OHCI: 100 consecutive successes, -60 dB, auto off; no new URB errors, one cannot get freq message.
 
 - [x] 100 успешных запусков подряд при прямом подключении GeneralPlus/OHCI, −60 дБ, auto-off; без новых ошибок ядра / 100 consecutive successful direct GeneralPlus/OHCI launches at -60 dB, auto off, no new kernel errors.
-- [ ] Отдельно проверить совместимый хаб: замена карты при прежней топологии EHCI не устранила отказ / Separately validate a compatible hub: replacing the card with the same EHCI topology did not eliminate failure.
+- [x] Новый хаб (12 Мбит/с, OHCI) + C-Media: 100 успешных запусков подряд, без новых сообщений ядра; −60 дБ, auto-off / New hub (12 Mbit/s, OHCI) + C-Media: 100 consecutive successes, no new kernel messages; -60 dB, auto off.
+- [ ] Локализовать причину отказов прежнего сочетания хаба/EHCI; успешная OHCI-серия не закрывает её / Isolate the earlier hub/EHCI failures; the successful OHCI series does not resolve them.
 
 - [ ] Устранить воспроизведённый периодический отказ USB-аудио; сохранить причины ошибок, проверить повторные запуски и длительное расписание / Fix reproduced intermittent USB-audio failure, retain diagnostic reasons, verify repeated starts and endurance. [RU](docs/PLAYBACK_RELIABILITY.md) · [EN](docs/PLAYBACK_RELIABILITY.en.md).
 - Лицензирование отложено владельцем; зелёные host-тесты не закрывают этот дефект / Owner deferred licensing; passing host tests do not close this defect.

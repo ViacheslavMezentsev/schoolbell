@@ -113,3 +113,24 @@ Both tested cards passed separate 100-launch direct-OHCI series. Both previously
 failed through the original hub/EHCI route. This strengthens localization to the
 USB route but does not distinguish hub, power/cable and controller implementation.
 The first hub-based trial alone does not justify declaring the original AB13X faulty.
+
+## Different hub and third card — 2026-10-31
+
+The owner changed both hub and card. C-Media USB PnP Sound Device was detected;
+both the new hub and card operate at 12 Mbit/s through OHCI (Full Speed), confirmed
+by sysfs and `/proc/asound`. The earlier hub used EHCI. This trial must not be
+described as a retest of the same EHCI route.
+
+Same adapter, test.mp3, 48000 Hz, 0.5 s gap. Card/route, -60 dB and automatic-off
+are checked before each attempt; the series stops on its first failure.
+
+**100 consecutive successful launches, 0 failures**, in 416.01 s. Every attempt:
+`completed`, `waitpid: exited`, exit=0, without retries. No new kernel messages.
+No madplay process or playback lock remained; -60 dB and automatic-off were retained.
+`make all`, links and `git diff --check` — PASS. No code, package or setting changes;
+acoustic output and schedule endurance were not tested.
+
+The new hub plus C-Media pair passed this series. A hub does not necessarily cause
+failure: this configuration used OHCI. Since both card and hub were replaced and
+the controller route changed, this experiment does not isolate a single cause of
+the earlier EHCI combination failures.

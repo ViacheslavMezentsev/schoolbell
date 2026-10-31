@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+- New hub and third C-Media card passed 100 consecutive launches (416.01 s), with no failures or new kernel messages. Hub and card use 12 Mbit/s OHCI: this is not an EHCI retest. -60 dB and automatic-off retained, process/lock released. No code/package changes; full make all — PASS.
+
 - Original AB13X direct/OHCI passed 100 consecutive launches (415.94 s), with no failures or new URB errors; one cannot get freq message is retained in the report. Gain -60 dB, automatic off, player and lock released. Both cards passed direct connection after failing through the original hub. No code/package changes; full make all — PASS.
 
 - Replacement card through the hub failed again on attempt 7. Direct OHCI connection of the same card achieved 100 consecutive successes (417.93 s), no new kernel messages or retained process/lock. Gain stayed -60 dB, automatic playback off. No code/package changes; original hub configuration remains failing and schedule endurance is still pending. Full make all — PASS.
