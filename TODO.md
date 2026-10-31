@@ -61,3 +61,5 @@ hardware acceptance protocol.
 
 - [x] Расширить линии шапки и обновить ключ кеша CSS (5.1.30) / Widen header bars and update the CSS cache key (5.1.30).
 - [x] Постоянная высота аудиостроки без сдвига интерфейса при переносе / Fixed-height audio status prevents layout shifts when text wraps.
+
+- [x] Установка 5.1.30 на стенд: данные и −12 дБ сохранены, auto-off, новый CSS проверен по HTTP / Bench upgrade to 5.1.30: data and -12 dB preserved, auto off, new CSS verified over HTTP.

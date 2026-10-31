@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+- Installed 5.1.30 over 5.1.29 on the authorized bench. Verified backup and exact rollback IPK, 78 files, unchanged .sbb contents and system settings. Current -12 dB controls preserved byte for byte, automatic bells off, native 1.0.0. New CSS fetched over HTTP matches the source; the controller reports OHCI / AB13X USB Audio. No playback; visual confirmation of the refreshed page remains with the owner. Full make all passed.
+
 - 5.1.30 validation: full make all passed; local Chrome confirmed stable header coordinates for long card names, no overlaps or horizontal overflow, including a 390 px container. This version was not installed on a device.
 
 - 5.1.30: widened the CPU/Flash block to 320 px, bounded by the available width, to keep the audio card name and gain together. Updated the CSS URL to invalidate cache; narrow-screen wrapping remains available. Audio status uses a separate layer with a fixed two-line reservation: wrapping the name does not shift the interface and gain stays on the right; the full name remains in the tooltip.
