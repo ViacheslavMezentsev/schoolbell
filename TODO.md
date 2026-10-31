@@ -2,6 +2,9 @@
 
 ## Приоритет: надёжная подача звонков / Priority: reliable playback
 
+- [x] 100 успешных запусков подряд при прямом подключении GeneralPlus/OHCI, −60 дБ, auto-off; без новых ошибок ядра / 100 consecutive successful direct GeneralPlus/OHCI launches at -60 dB, auto off, no new kernel errors.
+- [ ] Отдельно проверить совместимый хаб: замена карты при прежней топологии EHCI не устранила отказ / Separately validate a compatible hub: replacing the card with the same EHCI topology did not eliminate failure.
+
 - [ ] Устранить воспроизведённый периодический отказ USB-аудио; сохранить причины ошибок, проверить повторные запуски и длительное расписание / Fix reproduced intermittent USB-audio failure, retain diagnostic reasons, verify repeated starts and endurance. [RU](docs/PLAYBACK_RELIABILITY.md) · [EN](docs/PLAYBACK_RELIABILITY.en.md).
 - Лицензирование отложено владельцем; зелёные host-тесты не закрывают этот дефект / Owner deferred licensing; passing host tests do not close this defect.
 

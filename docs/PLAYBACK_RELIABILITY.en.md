@@ -63,3 +63,31 @@ the failure fixed. Existing requirements and TC identifiers remain unchanged.
 
 Documentation iteration checks: full `make all`, local links and
 `git diff --check` — PASS. This does not override the four device-trial failures.
+
+## Replacement card and direct connection — 2026-10-31
+
+Replacing AB13X with GeneralPlus while retaining the hub did not remove the defect:
+six normal completions, then attempt 7 failed (exit=4) with new URB -27 errors.
+The series stopped on its first failure. A separate stderr-preserving series had
+13 completions followed by `unavailable` when the owner physically unplugged the
+card; this is not a spontaneous failure or completed acceptance.
+
+The owner connected GeneralPlus directly. `/proc/asound` changed from EHCI through
+the hub to direct OHCI. The installed Lua adapter matches repository bytes; madplay,
+the test MP3 and 48000 Hz output are unchanged. The new series checks -60 dB and
+disabled automatic playback before each attempt, without hidden retries.
+
+**Direct connection: 100 consecutive successful launches, 0 failures**, in 417.93 s.
+Every attempt returned `completed`, `waitpid: exited`, exit=0, without hidden retries.
+No new kernel messages appeared. At completion no madplay process or playback lock
+remained; -60 dB was retained and automatic playback was disabled. The same test MP3
+was used; acoustic output was not measured. Installed code, packages, drivers and
+firmware were unchanged. Direct connection is a verified workaround for this setup;
+the requested 100-success criterion is met. `make all` and document checks — PASS.
+
+This comparison localizes the issue to the USB topology and controller/driver
+combination; it does not distinguish the particular hub, power/cable or EHCI split
+transactions. Replacing the card alone was insufficient. Direct connection does
+not validate the original hub or replace schedule endurance acceptance. If a hub
+is required, its compatibility needs a separate trial; this experiment does not
+claim a software USB-driver fix.
