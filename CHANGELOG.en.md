@@ -4,6 +4,10 @@
 
 ## Unreleased
 
+- All 75 installed files match the IPKs. The owner confirmed version 5.1.28 and existing data in the UI.
+
+- Verified 5.1.27 → 5.1.28 upgrade from the standalone repository and target native 1.0.0 loading on the separately authorized development bench. Backup and rollback files were checked first; backup contents were preserved, automatic bells stayed off, and system/NTP settings remained unchanged. Downgrade and full hardware acceptance remain untested.
+
 - Full make all passed: host regressions, package lifecycle and Pages; pinned cache checks, ELF and MIPS Lua/QEMU checks also passed. This is not installation or hardware acceptance.
 
 - Added standalone MIPS builds with pinned SDK/Lua sources and 33 dependencies. Verified offline rebuild, stable native IPK, ELF ABI and QEMU loading. Devices unchanged; hardware acceptance remains separate.
