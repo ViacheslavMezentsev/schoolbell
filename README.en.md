@@ -40,3 +40,8 @@ Author: Viacheslav Mezentsev. Modern implementation co-author: Codex (OpenAI).
 [Project rules](AGENTS.md) · [Schoolbell-4 historical archive](docs/archive/schoolbell-4/README.en.md).
 
 [License and provenance audit](docs/LICENSE_AUDIT.en.md)
+
+## License
+
+Own code and documentation: [MIT](LICENSE). Audio, historical archive and
+third-party components are excluded; see [scope](docs/LICENSING.en.md) and [NOTICE](NOTICE).

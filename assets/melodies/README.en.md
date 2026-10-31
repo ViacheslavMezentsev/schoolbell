@@ -24,7 +24,13 @@ with test.mp3 alone no longer describes this build. Total original MP3 size: 337
 Per owner testimony on 2026-10-31, 0–3.mp3 were recorded from the discrete output
 of the Schoolbell-2 microcontroller and have not changed since. This establishes
 reported recording provenance, not composition authorship. 4.mp3 and test.mp3
-were explicitly excluded; their recording sources remain unknown.
+were explicitly excluded from that microcontroller-recording provenance.
 See the [audit](../../docs/LICENSE_AUDIT.en.md) for evidence and gaps.
 
 Source and IPK checks: `make all` (host-only).
+
+On 2026-10-31 the owner described 0–4 as own recordings of known tunes,
+and identified 4.mp3 as an excerpt from the film «Усатый нянь». Its capture method
+is not established; composition/recording rights remain separate. test.mp3 source
+is still unknown. All MP3s are excluded from the code MIT grant;
+see [license scope](../../docs/LICENSING.en.md).

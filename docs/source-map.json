@@ -279,15 +279,15 @@
       "source": "packages/schoolbell/media/README.en.md",
       "destination": "assets/melodies/README.en.md",
       "source_sha256": "4b50e14168c9255a1253d96e562eeabf588655d2f1cf39377bf66dcc05962f46",
-      "changes": "2026-10-31 audit: owner recording testimony, current full-package scope and audit link; obsolete audio-trial link removed; source hash retained",
-      "destination_sha256": "4047e25b40684ae8ce8bbf857427f5db910bded1bdece2a723cd7fa98f75beba"
+      "changes": "2026-10-31 licensing: own-code MIT scope and exclusions; owner clarified audio provenance where applicable; original source hash retained",
+      "destination_sha256": "5ed07dfe5182c6559e5658115472927a90b91b756a2fbe248001a7cced3d1b5a"
     },
     {
       "source": "packages/schoolbell/media/README.md",
       "destination": "assets/melodies/README.md",
       "source_sha256": "83c679c0bcbc43a61ed9c67869f20b283b381f4dfb963b4fb9fcb105fc41fc7c",
-      "changes": "2026-10-31 audit: owner recording testimony, current full-package scope and audit link; obsolete audio-trial link removed; source hash retained",
-      "destination_sha256": "96bbf141587e8d3ee781b4b0963e50b3d98068c9bda72ee07c75196aca422f28"
+      "changes": "2026-10-31 licensing: own-code MIT scope and exclusions; owner clarified audio provenance where applicable; original source hash retained",
+      "destination_sha256": "80d2d55adb32ad9b1eb313cf3e92a47f302eaaafb71d7b014e96843488aaff37"
     },
     {
       "source": "packages/schoolbell/media/manifest.json",

@@ -122,3 +122,5 @@ separately; this branch neither publishes the site nor changes devices.
 [Pages build and publication](../site/README.en.md)
 
 [License and provenance audit](LICENSE_AUDIT.en.md)
+
+[MIT license and scope](LICENSING.en.md)

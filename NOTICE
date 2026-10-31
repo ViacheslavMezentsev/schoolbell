@@ -1,23 +1,34 @@
 Школьник / Schoolbell — уведомление о происхождении / provenance notice
 2026-10-31
 
-Это уведомление не назначает общую лицензию. / This notice grants no overall license.
+Собственный код и документация: MIT, Copyright (c) 2026 Viacheslav Mezentsev.
+Own code and associated documentation: MIT; see LICENSE.
+Область действия и исключения / Scope and exclusions:
+docs/LICENSING.md, docs/LICENSING.en.md.
+Аудио, архив, данные LuCI и внешние компоненты не получают MIT автоматически.
+Audio, archive, LuCI data and external components are excluded from this MIT grant.
 
 Код и документы перенесены из openwrt-modbus-core:
 Code and documentation were migrated from openwrt-modbus-core:
 https://github.com/ViacheslavMezentsev/openwrt-modbus-core
 243a7ccad6aeb2499d3efd5d0c4cef9e822d393e
 Пути, хеши и изменения / Paths, hashes and changes: docs/source-map.json.
-Явная общая лицензия пока не установлена. / No explicit overall license established.
+MIT применяется к собственным материалам в schoolbell по решению владельца.
+The owner grants MIT for own materials in schoolbell; this does not relicense core
+history or third-party components. vendor/modbus/json_strict.lua is included.
 
 MP3: schoolbell c4bbecd1bd5136051cc12858801fb9bed7222cc2;
 assets/melodies/manifest.json records original bytes and hashes.
 По сообщению владельца 2026-10-31, 0–3.mp3 записаны с дискретного выхода
 микроконтроллера «Школьника-2». Это не утверждение авторства композиций.
-4.mp3 и test.mp3 имеют неустановленное происхождение записи.
+Владелец уточнил: 0–3.mp3 — его записи известных мелодий; 4.mp3 — отрывок из
+фильма «Усатый нянь». Права на исходные композиции и использованную запись 4.mp3
+не установлены. Источник test.mp3 неизвестен.
 Per owner testimony on 2026-10-31, 0–3.mp3 are Schoolbell-2 discrete-output
-recordings. This does not assert composition authorship. Recording provenance
-of 4.mp3 and test.mp3 remains unresolved. No new audio license is assigned.
+recordings of known melodies made by the owner. This does not assert composition
+authorship. Per the owner's clarification, 4.mp3 is an excerpt from «Усатый нянь»;
+composition/recording rights remain unresolved. test.mp3 provenance is unknown.
+No new audio license is assigned. docs/archive/ is excluded from the MIT grant.
 
 Pages time-zone data: see site/portable-zones.NOTICE and site/LUCI-LICENSE
 (Apache-2.0). Those notices apply to that component, not all project files.

@@ -13,7 +13,8 @@
 - [x] Исходники Pages: корневой UI, guide/training/devices, явный перенос localStorage / Pages sources and explicit localStorage transfer.
 - [ ] Приёмка опубликованных Pages владельцем / Owner acceptance of published Pages.
 - [x] Аудит происхождения кода, 33 IPK и аудио / Audit code, 33 IPKs and audio provenance.
-- [ ] Закрыть L1–L5 аудита: права, лицензии, исходники и доставка NOTICE / Close audit L1–L5: rights, licenses, sources and NOTICE delivery. См. / See [audit](docs/LICENSE_AUDIT.md).
+- [x] L1: MIT собственного кода и документации с явными исключениями / MIT for own code/documentation with explicit exclusions.
+- [ ] Закрыть L2–L5 аудита: зависимости, права на аудио и доставка лицензий/NOTICE / Close audit L2–L5: dependencies, audio rights and license/NOTICE delivery. См. / See [audit](docs/LICENSE_AUDIT.md).
 - [x] Обновление 5.1.27 → 5.1.28 на разрешённом стенде: бэкап, сохранность данных, native и auto-off / Authorized bench upgrade: backup, data preservation, native and auto-off.
 - [x] Подтверждение интерфейса владельцем после миграции / Owner UI confirmation after migration.
 - [ ] Проверить реальный откат с данными и новую установку отдельно / Separately verify actual data-preserving downgrade and fresh installation.
@@ -27,7 +28,7 @@ UI on the development bench, not new upload/replacement or full acceptance.
 
 Pages: корень /schoolbell/ сразу открывает интерфейс звонка; руководство и обучение отдельно. / Pages root opens the bell UI directly; guide and training stay separate.
 
-- MIT — намерение владельца для собственного кода; область действия и права уточняются в L1 / MIT is the owner's own-code preference; scope and rights remain under L1.
+MIT собственного кода оформлена: [область действия](docs/LICENSING.md). / Own-code MIT is formalized: [scope](docs/LICENSING.en.md).
 
 Штатные мелодии оставлены без изменений по решению владельца; подбор новых тембров закрыт. / Owner retained stock melodies unchanged; timbre exploration is closed.
 

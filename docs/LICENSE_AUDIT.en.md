@@ -11,8 +11,8 @@ compliance. Specification, runtime, IPK payload and stock audio remain unchanged
 
 | Group | Evidence | Status |
 | --- | --- | --- |
-| Lua/C/JS, UI, packaging, tests and migrated documentation | core `243a7ccad6aeb2499d3efd5d0c4cef9e822d393e`; paths/hashes in [source map](source-map.json); adaptations in schoolbell history | No overall license in that core tree or current schoolbell root. Platform choice does not assign MIT/GPL |
-| strict JSON | Same core revision, `pkg/usr/lib/modbus/json_strict.lua` → `vendor/modbus/json_strict.lua` | Provenance recorded; no explicit distribution grant in the file |
+| Lua/C/JS, UI, packaging, tests and migrated documentation | core `243a7ccad6aeb2499d3efd5d0c4cef9e822d393e`; paths/hashes in [source map](source-map.json); adaptations in schoolbell history | No overall license at audit baseline; the owner subsequently licensed own schoolbell materials under MIT, see [scope](LICENSING.en.md) |
+| strict JSON | Same core revision, `pkg/usr/lib/modbus/json_strict.lua` → `vendor/modbus/json_strict.lua` | The owner subsequently included this own-code copy under MIT; historical core unchanged |
 | Pages time zones | LuCI openwrt-19.07; URL/date/hash in `site/portable-zones.NOTICE` | NOTICE states Apache-2.0, text in `site/LUCI-LICENSE`; builder copies both. Mutable branch URL still needs a pinned revision and attribution review |
 | Schoolbell-4 archive | schoolbell `c4bbecd1bd5136051cc12858801fb9bed7222cc2`, 20 hashed files | Immutable history, not a license grant for all contents |
 | SDK, Lua headers, patches | URLs/hashes in `packaging/offline/toolchain-19.07.9.json` | Build-time inputs, not an SDK distributed in Git/the 35 IPKs; these archives are not complete corresponding sources for all dependencies |
@@ -55,11 +55,14 @@ All six MP3s have original-commit and SHA-256 records in the
 Schoolbell-2 microcontroller and have not changed since. This is owner testimony;
 original firmware, score data and independent comparison were not obtained.
 The owner explicitly excluded 4.mp3 and test.mp3 from that provenance.
+The owner later described 0–4 as own recordings of known tunes and specified that
+4.mp3 is an excerpt from the film «Усатый нянь». It is not attributed to the MCU;
+composition and recording rights remain a separate question.
 
 | Files | Known | Missing |
 | --- | --- | --- |
 | 0–3.mp3 | Schoolbell-2 output recordings, per owner | Composition/composer, score/firmware origin, arrangement/recording rights and distribution terms |
-| 4.mp3 | Historical title «Усатый нянь», unchanged Git bytes | Recording source, authors, rights holders and terms |
+| 4.mp3 | Owner identifies an excerpt from the film «Усатый нянь», unchanged Git bytes | Exact excerpt identification, authors, composition/recording rights and terms |
 | test.mp3 | Historical test file, unchanged Git bytes | Source, content/authorship, rights holder and terms |
 
 melodies.json titles are historical labels, not verified composition identifications.
@@ -76,10 +79,9 @@ correcting it and distributing notices requires a subsequent packaging iteration
 
 ## Open items before distribution
 
-On 2026-10-31 the owner stated an intention to use MIT for own code. This preference is recorded; scope and contribution rights still need confirmation before adding LICENSE. It does not automatically cover dependencies, compositions or recordings.
+On 2026-10-31 the owner authorized MIT for own code. Added standard [LICENSE](../LICENSE) and explicit [scope/exclusions](LICENSING.en.md).
 
-- L1: owner establishes authorship/rights and formalizes the selected MIT license
-  and its own-code scope, separately from third-party components.
+- L1: completed for own schoolbell code/documentation by owner decision: MIT with explicit scope; excluded materials are not relicensed.
 - L2: collect exact dependency sources/notices, resolve GPL/LGPL/GCC exception terms,
   and include compliance materials in release artifacts.
 - L3: pin the time-zone source revision and review attribution in generated Pages.
@@ -87,7 +89,7 @@ On 2026-10-31 the owner stated an intention to use MIT for own code. This prefer
   agree replacement or exclusion where evidence is missing.
 - L5: correct packaged NOTICE and notice delivery in IPK/Pages/bundle; inspect actual artifacts.
 
-The audit is complete; these closure items remain open. No new license is assigned.
+The audit is complete; L1 is formalized, L2–L5 remain open. MIT applies only within the documented scope.
 The owner decided to retain the stock melodies unchanged.
 
 Audit validation: full `make all` — PASS in WSL; `git diff --check` — PASS. Rebuilt IPK metadata, control and payload match the accepted 5.1.28 candidate. All stock MP3 hashes are unchanged. These are host checks, not hardware acceptance.

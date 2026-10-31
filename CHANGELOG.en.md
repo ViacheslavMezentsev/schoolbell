@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+- Licensed own code/documentation under MIT: LICENSE, RU/EN scope, README, NOTICE and vendor. Audio, archive and third-party components excluded; L1 closed, L2–L5 remain open. Owner identifies 4.mp3 as an excerpt from «Усатый нянь». Package payload/versions and devices unchanged. Validation: full `make all`, links and `git diff --check` — PASS; MIT text matches the standard, stock audio and IPK payload unchanged.
+
 - Owner retained stock melodies; removed audio-experiment documents/links and closed timbre exploration. License audit, audio provenance and MIT preference retained. Recorded the owner’s browser time-setting observation with its limitations; no devices accessed. Full `make all`, link checks and `git diff --check` — PASS; stock MP3s and IPK payload unchanged.
 
 - License audit records code provenance, 33 IPK metadata entries, Schoolbell-2 audio testimony and open items L1–L5. Added a repository NOTICE; stock MP3s, payload and package versions are unchanged. No devices accessed.
