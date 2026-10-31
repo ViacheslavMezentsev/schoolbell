@@ -7,8 +7,9 @@
 - [x] Перенести runtime, UI и явные зависимости / Transfer runtime, UI and explicit dependencies.
 - [x] Скриптовый IPK и host-тесты, offline-builder без обязательного core / Script IPK, host tests, optional-core bundle builder.
 - [ ] Целевой MIPS IPK и реальный полный комплект / Target MIPS IPK and real complete bundle.
-- [ ] M1: CI точного HEAD и принятие владельцем / Exact-HEAD CI and owner acceptance.
-- [ ] Требования, история, приёмка RU/EN / Requirements, history and acceptance documentation.
+- [x] M1: CI точного HEAD и принятие владельцем / Exact-HEAD CI and owner acceptance.
+- [x] Перенесены требования, история, руководства и программа приёмки / Requirements, history, guides and acceptance programme transferred.
+- [ ] Актуализировать команды и отдельный протокол под будущие артефакты приёмки / Update commands and create a separate protocol for future acceptance artifacts.
 - [ ] Pages: guide/training/demo и перенос localStorage / Pages and deliberate localStorage migration.
 - [ ] Проверить лицензии и NOTICE / Review licenses and notices.
 - [ ] Проверить обновление/откат с данными; отдельно разрешённый стенд / Data-preserving upgrade/rollback and separately authorized bench.

@@ -38,4 +38,12 @@ for item in mapping['files']:
     assert path not in destinations
     destinations.add(path)
     assert hashlib.sha256((root / path).read_bytes()).hexdigest() == item['destination_sha256'], path
-print('PASS: legacy archive, source map, inventory and local Markdown links')
+    if 'prose_sha256' in item:
+        prose = re.sub(r'(\[[^\]]*\]\()([^\)]+)(\))', lambda m: m[1] + 'LINK' + m[3], (root / path).read_text())
+        assert hashlib.sha256(prose.encode()).hexdigest() == item['prose_sha256'], path
+for language in ('README.md', 'README.en.md'):
+    index = (root / 'docs' / language).read_text()
+    for item in mapping['files']:
+        if item['source'].startswith('docs/packages/schoolbell/'):
+            assert '(' + item['destination'][5:] + ')' in index, (language, item['destination'])
+print('PASS: legacy archive, source map, preserved prose, complete document maps and local Markdown links')

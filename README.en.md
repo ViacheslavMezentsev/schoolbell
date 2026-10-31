@@ -1,15 +1,40 @@
 # Shkolnik
 
-[Русский](README.md) · [Workflow](docs/WORKFLOW.en.md) · [Migration](docs/MIGRATION.md)
+[![CI](https://img.shields.io/github/actions/workflow/status/ViacheslavMezentsev/schoolbell/ci.yml?branch=main&label=CI&style=flat-square)](https://github.com/ViacheslavMezentsev/schoolbell/actions/workflows/ci.yml)
 
-Configurable musical school bell. Author: Viacheslav Mezentsev.
-Modern implementation development co-author: Codex (OpenAI).
+[Русский](README.md)
 
-**Standalone build stage; migration is not complete.**
-Sources were imported from pinned 5.1.27 into the new structure. The candidate
-IPK is 5.1.28; see [build/tests](docs/BUILD.en.md) and [offline packaging](docs/PACKAGING.en.md).
-No installation or publication in this stage. The [archive](docs/archive/schoolbell-4/README.en.md)
-is not packaged. `make all` requires no sibling core checkout.
-[TODO](TODO.md) separates completed source transfer from Pages, documentation
-and hardware acceptance. Production releases remain in core until migration
-completes; avoid parallel feature development in both repositories.
+**Shkolnik is a configurable musical school bell for OpenWrt, managed in a browser.**
+Schedules and calendar plans run on the device without an open browser page.
+
+## Features
+
+- Named date-range plans, calendar painting and preview.
+- Built-in and user MP3 melodies, pre-bells, manual ringing and muting.
+- Time trust checks, event journal, `.sbb` backups and `.sbp` plan transfer.
+
+## Build and test
+
+After preparing the [host dependencies](docs/BUILD.en.md):
+
+```sh
+make all
+```
+
+Builds the IPK and runs host tests without accessing a device.
+The [offline dependency bundle](docs/PACKAGING.en.md) is prepared separately.
+
+## Status
+
+Extraction from openwrt-modbus-core is in progress: candidate **5.1.28**, baseline
+OpenWrt 19.07.9 / TL-MR3020 v3. Host checks passed; the target MIPS bundle,
+Pages migration and new hardware acceptance are pending. [Migration plan](docs/MIGRATION.md).
+
+## Documentation
+
+[Document map](docs/README.en.md) · [User guide](docs/user/USER_GUIDE.en.md) ·
+[Specification (Russian)](docs/requirements/TECHNICAL_SPECIFICATION.md) · [Acceptance](docs/acceptance/ACCEPTANCE.en.md) ·
+[TODO](TODO.md) · [Changelog](CHANGELOG.en.md) · [Workflow](docs/WORKFLOW.en.md)
+
+Author: Viacheslav Mezentsev. Modern implementation co-author: Codex (OpenAI).
+[Project rules](AGENTS.md) · [Schoolbell-4 historical archive](docs/archive/schoolbell-4/README.en.md).

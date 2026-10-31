@@ -128,567 +128,648 @@
       "proposed_destination": "docs/review-required/ACCEPTANCE.en.md",
       "category": "docs-split-review",
       "sha256": "8927406b77435e318ed2d9fa6585f9f614ba37b5c0b7ade348509fe93c35f110",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/acceptance/ACCEPTANCE.en.md"
     },
     {
       "source": "docs/packages/schoolbell/ACCEPTANCE.md",
       "proposed_destination": "docs/review-required/ACCEPTANCE.md",
       "category": "docs-split-review",
       "sha256": "fc8451b397c5dd0043f9f9fbe08ee667f760723993caf16e74efa9646c569ee3",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/acceptance/ACCEPTANCE.md"
     },
     {
       "source": "docs/packages/schoolbell/ACCEPTANCE_RUN.en.md",
       "proposed_destination": "docs/review-required/ACCEPTANCE_RUN.en.md",
       "category": "docs-split-review",
       "sha256": "b897b27c3bb283ca9709a4cc73681939e1831b0bd77c3da2282fcbf24490ddcd",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/acceptance/ACCEPTANCE_RUN.en.md"
     },
     {
       "source": "docs/packages/schoolbell/ACCEPTANCE_RUN.md",
       "proposed_destination": "docs/review-required/ACCEPTANCE_RUN.md",
       "category": "docs-split-review",
       "sha256": "47af9da767957c40bf358d3fa7b4f57f50f08581ef45fd5abe08a677e8d17f93",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/acceptance/ACCEPTANCE_RUN.md"
     },
     {
       "source": "docs/packages/schoolbell/ANNUAL_CALENDAR.en.md",
       "proposed_destination": "docs/review-required/ANNUAL_CALENDAR.en.md",
       "category": "docs-split-review",
       "sha256": "04cd6ec7ebfc47d83fcde8d81709a7531ace21b5f4d250425ccdd1e6d975cc4a",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/ANNUAL_CALENDAR.en.md"
     },
     {
       "source": "docs/packages/schoolbell/ANNUAL_CALENDAR.md",
       "proposed_destination": "docs/review-required/ANNUAL_CALENDAR.md",
       "category": "docs-split-review",
       "sha256": "932107156a0018dcc154786e13d7f1dc3f014fbd31319ea7553d6f083ed75f7e",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/ANNUAL_CALENDAR.md"
     },
     {
       "source": "docs/packages/schoolbell/BACKUP.en.md",
       "proposed_destination": "docs/review-required/BACKUP.en.md",
       "category": "docs-split-review",
       "sha256": "025330b9611bfa6ca82a83a536697e9ab661ce6a15a26e77360dc6feade21bea",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/formats/BACKUP.en.md"
     },
     {
       "source": "docs/packages/schoolbell/BACKUP.md",
       "proposed_destination": "docs/review-required/BACKUP.md",
       "category": "docs-split-review",
       "sha256": "9de69251810caf1e1cbbc02250aeb612a849bbc9a7d79126b2e342040f65aac7",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/formats/BACKUP.md"
     },
     {
       "source": "docs/packages/schoolbell/CALENDAR.en.md",
       "proposed_destination": "docs/review-required/CALENDAR.en.md",
       "category": "docs-split-review",
       "sha256": "28eb0d82faadc6977379240fd78a38da87d4bcec2d5c417233d28f44d3405dae",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/CALENDAR.en.md"
     },
     {
       "source": "docs/packages/schoolbell/CALENDAR.md",
       "proposed_destination": "docs/review-required/CALENDAR.md",
       "category": "docs-split-review",
       "sha256": "4273c57b7f75caf46dceccb9af3d87d91f68bc1b8cca006010ca07a47129359f",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/CALENDAR.md"
     },
     {
       "source": "docs/packages/schoolbell/CHANGELOG.en.md",
       "proposed_destination": "docs/review-required/CHANGELOG.en.md",
       "category": "docs-split-review",
       "sha256": "671201469bf9850789203ee70f0b2502d076c2303ad4b5af6b6fb0c4f0571619",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/history/CHANGELOG.en.md"
     },
     {
       "source": "docs/packages/schoolbell/CHANGELOG.md",
       "proposed_destination": "docs/review-required/CHANGELOG.md",
       "category": "docs-split-review",
       "sha256": "0efb42b007347476944ab2aa6f00417236d7429274039b1fd779f922b1bdedb1",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/history/CHANGELOG.md"
     },
     {
       "source": "docs/packages/schoolbell/CLOCK_EXECUTOR.en.md",
       "proposed_destination": "docs/review-required/CLOCK_EXECUTOR.en.md",
       "category": "docs-split-review",
       "sha256": "ba2e4ee4b1d46a00ba05c5b3b46f1b9df841aba7f064fbca0e25977564229a9e",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/CLOCK_EXECUTOR.en.md"
     },
     {
       "source": "docs/packages/schoolbell/CLOCK_EXECUTOR.md",
       "proposed_destination": "docs/review-required/CLOCK_EXECUTOR.md",
       "category": "docs-split-review",
       "sha256": "f3461ce39c9a127c1b5cce5aebfb98b15bbd0da3401d94caebb4764fabac622a",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/CLOCK_EXECUTOR.md"
     },
     {
       "source": "docs/packages/schoolbell/CLOCK_SYSTEM.en.md",
       "proposed_destination": "docs/review-required/CLOCK_SYSTEM.en.md",
       "category": "docs-split-review",
       "sha256": "705184372585f993069a0408d5625d1d16962449f47d34378a279ed4f6cdf85c",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/CLOCK_SYSTEM.en.md"
     },
     {
       "source": "docs/packages/schoolbell/CLOCK_SYSTEM.md",
       "proposed_destination": "docs/review-required/CLOCK_SYSTEM.md",
       "category": "docs-split-review",
       "sha256": "6793a47d9e24897d42c4b5570c932e83864b082f314f7b459b929fcf41f77d8e",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/CLOCK_SYSTEM.md"
     },
     {
       "source": "docs/packages/schoolbell/CLOCK_TRUST.en.md",
       "proposed_destination": "docs/review-required/CLOCK_TRUST.en.md",
       "category": "docs-split-review",
       "sha256": "2e58adb131800ca2de88e1926b198d0f51ef5db31cec019c2d52ab1f289ef3b9",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/CLOCK_TRUST.en.md"
     },
     {
       "source": "docs/packages/schoolbell/CLOCK_TRUST.md",
       "proposed_destination": "docs/review-required/CLOCK_TRUST.md",
       "category": "docs-split-review",
       "sha256": "badc7d51af11a56dc973b8bf7217fc82eb2b7b2fc7d42b7bab8f90c22fa52f14",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/CLOCK_TRUST.md"
     },
     {
       "source": "docs/packages/schoolbell/CLOCK_TRUST_MODEL.en.md",
       "proposed_destination": "docs/review-required/CLOCK_TRUST_MODEL.en.md",
       "category": "docs-split-review",
       "sha256": "a48d85c86b1191aed9be6aac614d351d9a2673334c3c779e613de9dd72e41707",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/CLOCK_TRUST_MODEL.en.md"
     },
     {
       "source": "docs/packages/schoolbell/CLOCK_TRUST_MODEL.md",
       "proposed_destination": "docs/review-required/CLOCK_TRUST_MODEL.md",
       "category": "docs-split-review",
       "sha256": "469fe2d88c239a4d4d3f289910b610bed0ff4d60f6488e6f59774ba850b18c7a",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/CLOCK_TRUST_MODEL.md"
     },
     {
       "source": "docs/packages/schoolbell/CLOCK_UI.en.md",
       "proposed_destination": "docs/review-required/CLOCK_UI.en.md",
       "category": "docs-split-review",
       "sha256": "21132b4c31994165568fce6f2b09a006929635babd4a077b5a07acf0aad6ce1c",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/CLOCK_UI.en.md"
     },
     {
       "source": "docs/packages/schoolbell/CLOCK_UI.md",
       "proposed_destination": "docs/review-required/CLOCK_UI.md",
       "category": "docs-split-review",
       "sha256": "94b7e2b2f9b79d665a7e85c7acb8e8aaa8e71106bc632c16b4a696afbab81aba",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/CLOCK_UI.md"
     },
     {
       "source": "docs/packages/schoolbell/LINUX_PLAYER.en.md",
       "proposed_destination": "docs/review-required/LINUX_PLAYER.en.md",
       "category": "docs-split-review",
       "sha256": "9053a60165037b42dcc98b6613f2897c3ca30171215395a99555f09f5bf8026d",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/LINUX_PLAYER.en.md"
     },
     {
       "source": "docs/packages/schoolbell/LINUX_PLAYER.md",
       "proposed_destination": "docs/review-required/LINUX_PLAYER.md",
       "category": "docs-split-review",
       "sha256": "55673d711feb71e78a2b189df8761da5d7a06f442a400950b4eb76164ac0c1d0",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/LINUX_PLAYER.md"
     },
     {
       "source": "docs/packages/schoolbell/LUA_PLAYER.en.md",
       "proposed_destination": "docs/review-required/LUA_PLAYER.en.md",
       "category": "docs-split-review",
       "sha256": "312c3d8caa3ac647218fdf029d68005218386a651bb6c02967dfcdd3abbd6890",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/LUA_PLAYER.en.md"
     },
     {
       "source": "docs/packages/schoolbell/LUA_PLAYER.md",
       "proposed_destination": "docs/review-required/LUA_PLAYER.md",
       "category": "docs-split-review",
       "sha256": "ba30dfd052ac9314ea670060b061cfc5b521435cac9b1b8e9198b0d4f5b9ea76",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/LUA_PLAYER.md"
     },
     {
       "source": "docs/packages/schoolbell/MEDIA_ADMISSION.en.md",
       "proposed_destination": "docs/review-required/MEDIA_ADMISSION.en.md",
       "category": "docs-split-review",
       "sha256": "5d2e49b254a8120ed48f51adc3006ce57c36b77efc92b8f4e59dbbee12f56e90",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/MEDIA_ADMISSION.en.md"
     },
     {
       "source": "docs/packages/schoolbell/MEDIA_ADMISSION.md",
       "proposed_destination": "docs/review-required/MEDIA_ADMISSION.md",
       "category": "docs-split-review",
       "sha256": "a13bb067725ef4e3f92f159c35667b5e411e6adacecfc110cd01002b69c1abcb",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/MEDIA_ADMISSION.md"
     },
     {
       "source": "docs/packages/schoolbell/MEDIA_FORMAT.en.md",
       "proposed_destination": "docs/review-required/MEDIA_FORMAT.en.md",
       "category": "docs-split-review",
       "sha256": "f453c0a9a15b63f87b935e357b093a3370c95db9b89c9b876bda95a91bd8011d",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/formats/MEDIA_FORMAT.en.md"
     },
     {
       "source": "docs/packages/schoolbell/MEDIA_FORMAT.md",
       "proposed_destination": "docs/review-required/MEDIA_FORMAT.md",
       "category": "docs-split-review",
       "sha256": "0da65c267a3e2178f3ae22245d5f13ca07cafe2c25c66742599ca1fea64cfb4a",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/formats/MEDIA_FORMAT.md"
     },
     {
       "source": "docs/packages/schoolbell/MEDIA_MANAGER.en.md",
       "proposed_destination": "docs/review-required/MEDIA_MANAGER.en.md",
       "category": "docs-split-review",
       "sha256": "6cd580e7562d4755be31d0c50b7b51e3eda73c6b769f5ade206adb56597b3fae",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/MEDIA_MANAGER.en.md"
     },
     {
       "source": "docs/packages/schoolbell/MEDIA_MANAGER.md",
       "proposed_destination": "docs/review-required/MEDIA_MANAGER.md",
       "category": "docs-split-review",
       "sha256": "cb200101a8ce25af8b53577dcbe72f715929804f4a1ecfee1e78d6aa8eeec2ea",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/MEDIA_MANAGER.md"
     },
     {
       "source": "docs/packages/schoolbell/MEDIA_PERSISTENCE.en.md",
       "proposed_destination": "docs/review-required/MEDIA_PERSISTENCE.en.md",
       "category": "docs-split-review",
       "sha256": "2d5a536731560fd0fd5671cb78518b464a0f07cd86cd6e75e6d4a9e34c89fa69",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/MEDIA_PERSISTENCE.en.md"
     },
     {
       "source": "docs/packages/schoolbell/MEDIA_PERSISTENCE.md",
       "proposed_destination": "docs/review-required/MEDIA_PERSISTENCE.md",
       "category": "docs-split-review",
       "sha256": "1c115e0ef1cb338c188a230332c4b97ddaffe1f7db3f566c1864370ccc55dde6",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/MEDIA_PERSISTENCE.md"
     },
     {
       "source": "docs/packages/schoolbell/MEDIA_UPLOAD.en.md",
       "proposed_destination": "docs/review-required/MEDIA_UPLOAD.en.md",
       "category": "docs-split-review",
       "sha256": "bbbdb2e9df7ffb6b9d749a1da4da6b2c615191bacaafb90b5705ad9528764a08",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/MEDIA_UPLOAD.en.md"
     },
     {
       "source": "docs/packages/schoolbell/MEDIA_UPLOAD.md",
       "proposed_destination": "docs/review-required/MEDIA_UPLOAD.md",
       "category": "docs-split-review",
       "sha256": "18c4b18557bc35eaa64e3c4af73bf55df64198c3d4148bebd59bc73b45a19f77",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/MEDIA_UPLOAD.md"
     },
     {
       "source": "docs/packages/schoolbell/PACKAGING.en.md",
       "proposed_destination": "docs/review-required/PACKAGING.en.md",
       "category": "docs-split-review",
       "sha256": "05d42d95742b3969140aad805b49c2420810b517bd775cb198044c5c5af12310",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/PACKAGING.en.md"
     },
     {
       "source": "docs/packages/schoolbell/PACKAGING.md",
       "proposed_destination": "docs/review-required/PACKAGING.md",
       "category": "docs-split-review",
       "sha256": "074219e59d4336ee9addc01e1ebe9da0287d4da77370d300408e2d09eb96968a",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/PACKAGING.md"
     },
     {
       "source": "docs/packages/schoolbell/PLAYBACK_QUEUE.en.md",
       "proposed_destination": "docs/review-required/PLAYBACK_QUEUE.en.md",
       "category": "docs-split-review",
       "sha256": "3a70ff3bc4a78fb65ec38c5eddc7744aab857be580effc75b31119201301db91",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/PLAYBACK_QUEUE.en.md"
     },
     {
       "source": "docs/packages/schoolbell/PLAYBACK_QUEUE.md",
       "proposed_destination": "docs/review-required/PLAYBACK_QUEUE.md",
       "category": "docs-split-review",
       "sha256": "9fdebd2ce64395b9a706e86d39afd81dbba9cfefa216dc9444105d9f4c896e33",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/PLAYBACK_QUEUE.md"
     },
     {
       "source": "docs/packages/schoolbell/PLAYER_ADAPTER.en.md",
       "proposed_destination": "docs/review-required/PLAYER_ADAPTER.en.md",
       "category": "docs-split-review",
       "sha256": "924206fcc4f94ecad58502e5607228541cec58174d1f2fedbafa6fbb0cca7cfd",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/PLAYER_ADAPTER.en.md"
     },
     {
       "source": "docs/packages/schoolbell/PLAYER_ADAPTER.md",
       "proposed_destination": "docs/review-required/PLAYER_ADAPTER.md",
       "category": "docs-split-review",
       "sha256": "42fca544c876115c1469ddcf97a65b8c6c686798d9e24858914caf32dc2984be",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/PLAYER_ADAPTER.md"
     },
     {
       "source": "docs/packages/schoolbell/PLAYER_MODEL.en.md",
       "proposed_destination": "docs/review-required/PLAYER_MODEL.en.md",
       "category": "docs-split-review",
       "sha256": "ff525a990c29f1bca9cbd590f410aef723da3d779c7d735d6d51de1414494f90",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/PLAYER_MODEL.en.md"
     },
     {
       "source": "docs/packages/schoolbell/PLAYER_MODEL.md",
       "proposed_destination": "docs/review-required/PLAYER_MODEL.md",
       "category": "docs-split-review",
       "sha256": "39c4fb9843c45aa86af995d4366cda58f42a0e44365ff4ab71bf95616e10cd69",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/PLAYER_MODEL.md"
     },
     {
       "source": "docs/packages/schoolbell/PLAYER_RESULTS.en.md",
       "proposed_destination": "docs/review-required/PLAYER_RESULTS.en.md",
       "category": "docs-split-review",
       "sha256": "6a5601ab3cf7bcc5864cdd164140b0c8933f86c95d3ff5587f0669a790bc81dd",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/PLAYER_RESULTS.en.md"
     },
     {
       "source": "docs/packages/schoolbell/PLAYER_RESULTS.md",
       "proposed_destination": "docs/review-required/PLAYER_RESULTS.md",
       "category": "docs-split-review",
       "sha256": "c340b7fff98d944ccc963a3adf2b27ac1966d2af71cee0a7b5b5fbe395dc13c5",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/PLAYER_RESULTS.md"
     },
     {
       "source": "docs/packages/schoolbell/PLAYER_SYSTEM_API.en.md",
       "proposed_destination": "docs/review-required/PLAYER_SYSTEM_API.en.md",
       "category": "docs-split-review",
       "sha256": "46c99d91f7fd06fc3bc0928fca4e00d7ea4188a06563278e00c7ef9addcd9d70",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/PLAYER_SYSTEM_API.en.md"
     },
     {
       "source": "docs/packages/schoolbell/PLAYER_SYSTEM_API.md",
       "proposed_destination": "docs/review-required/PLAYER_SYSTEM_API.md",
       "category": "docs-split-review",
       "sha256": "5ee1124182d3b0170d0dbfe4b3217623df39db1058b0f5c9e8b811e9273b7743",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/PLAYER_SYSTEM_API.md"
     },
     {
       "source": "docs/packages/schoolbell/PLAYER_WIRE.en.md",
       "proposed_destination": "docs/review-required/PLAYER_WIRE.en.md",
       "category": "docs-split-review",
       "sha256": "9e12c88abb1b3c7e4033d62a83008124a08345c4604484fddd59772a9d70c529",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/PLAYER_WIRE.en.md"
     },
     {
       "source": "docs/packages/schoolbell/PLAYER_WIRE.md",
       "proposed_destination": "docs/review-required/PLAYER_WIRE.md",
       "category": "docs-split-review",
       "sha256": "ed80923dbb7d1fdc3dbbe0ea74ba9be8c6c0a12bd4c7f64df41780014c01582b",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/PLAYER_WIRE.md"
     },
     {
       "source": "docs/packages/schoolbell/PORTABLE_PLAN.en.md",
       "proposed_destination": "docs/review-required/PORTABLE_PLAN.en.md",
       "category": "docs-split-review",
       "sha256": "68a88f7ed0f60358b78190b54d35ad6a2f3abdc9d6d8be3c776ad80c0cd30443",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/formats/PORTABLE_PLAN.en.md"
     },
     {
       "source": "docs/packages/schoolbell/PORTABLE_PLAN.md",
       "proposed_destination": "docs/review-required/PORTABLE_PLAN.md",
       "category": "docs-split-review",
       "sha256": "00505f71938dba6bbc7be7c30f402f0c3e2aa96ca8aafe3b7d8699291643f833",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/formats/PORTABLE_PLAN.md"
     },
     {
       "source": "docs/packages/schoolbell/PORTABLE_PLAN_CODEC.en.md",
       "proposed_destination": "docs/review-required/PORTABLE_PLAN_CODEC.en.md",
       "category": "docs-split-review",
       "sha256": "8db7f199a18f15a643697ad42c69317dbf9cdefa3eb0b659cc42f5be4c9b3717",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/formats/PORTABLE_PLAN_CODEC.en.md"
     },
     {
       "source": "docs/packages/schoolbell/PORTABLE_PLAN_CODEC.md",
       "proposed_destination": "docs/review-required/PORTABLE_PLAN_CODEC.md",
       "category": "docs-split-review",
       "sha256": "5f4ec4150e064ffc37bce02a3d565a1be4186eda1989479fc9ab10857235d6a7",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/formats/PORTABLE_PLAN_CODEC.md"
     },
     {
       "source": "docs/packages/schoolbell/PORTABLE_PLAN_EXPORT.en.md",
       "proposed_destination": "docs/review-required/PORTABLE_PLAN_EXPORT.en.md",
       "category": "docs-split-review",
       "sha256": "064c2b93e337c7382d71b94bae67eac81cc1a91eef73bafb9849ff9d6b8db78b",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/formats/PORTABLE_PLAN_EXPORT.en.md"
     },
     {
       "source": "docs/packages/schoolbell/PORTABLE_PLAN_EXPORT.md",
       "proposed_destination": "docs/review-required/PORTABLE_PLAN_EXPORT.md",
       "category": "docs-split-review",
       "sha256": "6960cbdf3bb668802501d8fbbe0068aa066c60ca4b894a2055e04b51a836c51a",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/formats/PORTABLE_PLAN_EXPORT.md"
     },
     {
       "source": "docs/packages/schoolbell/PORTABLE_PLAN_EXPORT_DEVICE.en.md",
       "proposed_destination": "docs/review-required/PORTABLE_PLAN_EXPORT_DEVICE.en.md",
       "category": "docs-split-review",
       "sha256": "7de8915457356baf8879e7f7d01704e7bde5dcb8a8d26901aab0576d7392d812",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/formats/PORTABLE_PLAN_EXPORT_DEVICE.en.md"
     },
     {
       "source": "docs/packages/schoolbell/PORTABLE_PLAN_EXPORT_DEVICE.md",
       "proposed_destination": "docs/review-required/PORTABLE_PLAN_EXPORT_DEVICE.md",
       "category": "docs-split-review",
       "sha256": "fc87cb4502b78e80692918945ff5e4dae4e69daad0583209b491bbedd2b6e98b",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/formats/PORTABLE_PLAN_EXPORT_DEVICE.md"
     },
     {
       "source": "docs/packages/schoolbell/PORTABLE_PLAN_IMPORT.en.md",
       "proposed_destination": "docs/review-required/PORTABLE_PLAN_IMPORT.en.md",
       "category": "docs-split-review",
       "sha256": "34880aa9b3c129ca635f6a0488b484997dfa23b7549a61622feb1acbf6d4b401",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/formats/PORTABLE_PLAN_IMPORT.en.md"
     },
     {
       "source": "docs/packages/schoolbell/PORTABLE_PLAN_IMPORT.md",
       "proposed_destination": "docs/review-required/PORTABLE_PLAN_IMPORT.md",
       "category": "docs-split-review",
       "sha256": "8b8496a1cd83e12803e8d9ebb047d8782168da5ed630f3177f9617d19e5e0639",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/formats/PORTABLE_PLAN_IMPORT.md"
     },
     {
       "source": "docs/packages/schoolbell/PORTABLE_PLAN_PAGES.en.md",
       "proposed_destination": "docs/review-required/PORTABLE_PLAN_PAGES.en.md",
       "category": "docs-split-review",
       "sha256": "effeb3fdef9d5a936e4d61ffbcab50c3ff68680fcf998f0b1af661c6cfdd94c7",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/formats/PORTABLE_PLAN_PAGES.en.md"
     },
     {
       "source": "docs/packages/schoolbell/PORTABLE_PLAN_PAGES.md",
       "proposed_destination": "docs/review-required/PORTABLE_PLAN_PAGES.md",
       "category": "docs-split-review",
       "sha256": "12e3a6cc6956dabd91af1a7b5aade363607519dc89397f8eb31b620952bbef2e",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/formats/PORTABLE_PLAN_PAGES.md"
     },
     {
       "source": "docs/packages/schoolbell/PORTABLE_PLAN_PREVIEW.en.md",
       "proposed_destination": "docs/review-required/PORTABLE_PLAN_PREVIEW.en.md",
       "category": "docs-split-review",
       "sha256": "034e55aef9a94255666c5c04994aca536edebc544c563780e394704e0805ecde",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/formats/PORTABLE_PLAN_PREVIEW.en.md"
     },
     {
       "source": "docs/packages/schoolbell/PORTABLE_PLAN_PREVIEW.md",
       "proposed_destination": "docs/review-required/PORTABLE_PLAN_PREVIEW.md",
       "category": "docs-split-review",
       "sha256": "e971a9f6fc8bd3f05ca73df2f9b19258420f62a85ae881d98cf36f5d6f07f537",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/formats/PORTABLE_PLAN_PREVIEW.md"
     },
     {
       "source": "docs/packages/schoolbell/PORTABLE_PLAN_WIRE.en.md",
       "proposed_destination": "docs/review-required/PORTABLE_PLAN_WIRE.en.md",
       "category": "docs-split-review",
       "sha256": "7aa9765c46924e983215f2bb47537eddefdb671ce7e4354ef8507340852ec3d9",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/formats/PORTABLE_PLAN_WIRE.en.md"
     },
     {
       "source": "docs/packages/schoolbell/PORTABLE_PLAN_WIRE.md",
       "proposed_destination": "docs/review-required/PORTABLE_PLAN_WIRE.md",
       "category": "docs-split-review",
       "sha256": "7b13e71811d5f9734659f3b12696edb5da02f688b70d1b4d2783ba17d2087bb6",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/formats/PORTABLE_PLAN_WIRE.md"
     },
     {
       "source": "docs/packages/schoolbell/QUEUE_LINUX.en.md",
       "proposed_destination": "docs/review-required/QUEUE_LINUX.en.md",
       "category": "docs-split-review",
       "sha256": "6abc64f416654ba4e482a4baa606aa89aa26837e31653b05d4fd74dfd46a7fcb",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/QUEUE_LINUX.en.md"
     },
     {
       "source": "docs/packages/schoolbell/QUEUE_LINUX.md",
       "proposed_destination": "docs/review-required/QUEUE_LINUX.md",
       "category": "docs-split-review",
       "sha256": "97e864112511c0f80e8f8ade2a9f6148cef1b9077d10234328a0587482f9fd5e",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/QUEUE_LINUX.md"
     },
     {
       "source": "docs/packages/schoolbell/RANGE_PLANS.en.md",
       "proposed_destination": "docs/review-required/RANGE_PLANS.en.md",
       "category": "docs-split-review",
       "sha256": "ab6d2ac3f21f7a81d918fc7ad2b777d7dd1c3709f266d4756743a375efd830df",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/RANGE_PLANS.en.md"
     },
     {
       "source": "docs/packages/schoolbell/RANGE_PLANS.md",
       "proposed_destination": "docs/review-required/RANGE_PLANS.md",
       "category": "docs-split-review",
       "sha256": "3270d231ef2ce752413bc82bd810b02a975586442995e184487fb482d8b9999a",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/RANGE_PLANS.md"
     },
     {
       "source": "docs/packages/schoolbell/README.en.md",
       "proposed_destination": "docs/review-required/README.en.md",
       "category": "docs-split-review",
       "sha256": "115b08b38d7c1b6daef01de693dee57791963d1bfc590576e8a8812a564d1b95",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/history/README.en.md"
     },
     {
       "source": "docs/packages/schoolbell/README.md",
       "proposed_destination": "docs/review-required/README.md",
       "category": "docs-split-review",
       "sha256": "a44de6e93bcc843313a8e8abb69d930a161fdc9e0d38c29f7c6d122ea29033f0",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/history/README.md"
     },
     {
       "source": "docs/packages/schoolbell/SCHEDULE_EDITOR.en.md",
       "proposed_destination": "docs/review-required/SCHEDULE_EDITOR.en.md",
       "category": "docs-split-review",
       "sha256": "8af319089d5f7622fd7b73009b565f51c22e8abc88096cbddbb9a8de0f102f74",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/SCHEDULE_EDITOR.en.md"
     },
     {
       "source": "docs/packages/schoolbell/SCHEDULE_EDITOR.md",
       "proposed_destination": "docs/review-required/SCHEDULE_EDITOR.md",
       "category": "docs-split-review",
       "sha256": "db12a15058ab3cf7e8acb4610df5d172dc0f386c07b7a031ca15c8c6b7dc6f12",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/SCHEDULE_EDITOR.md"
     },
     {
       "source": "docs/packages/schoolbell/STARTUP_AUDIT.en.md",
       "proposed_destination": "docs/review-required/STARTUP_AUDIT.en.md",
       "category": "docs-split-review",
       "sha256": "c902728547e5c6334bf2c33988a25ce00074b7ce1804d1a40d0134806a4fca1d",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/STARTUP_AUDIT.en.md"
     },
     {
       "source": "docs/packages/schoolbell/STARTUP_AUDIT.md",
       "proposed_destination": "docs/review-required/STARTUP_AUDIT.md",
       "category": "docs-split-review",
       "sha256": "547d393350e0fc03dd70cc0b1d6c54a91d231dcb583d3887599a8b6338cd1663",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/STARTUP_AUDIT.md"
     },
     {
       "source": "docs/packages/schoolbell/TECHNICAL_SPECIFICATION.md",
       "proposed_destination": "docs/review-required/TECHNICAL_SPECIFICATION.md",
       "category": "docs-split-review",
       "sha256": "61b760731a5c4f6c53ed67726cd8667136ee194692aa517aa2b3ded7e9f07aad",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/requirements/TECHNICAL_SPECIFICATION.md"
     },
     {
       "source": "docs/packages/schoolbell/UI_COMPLETENESS.en.md",
       "proposed_destination": "docs/review-required/UI_COMPLETENESS.en.md",
       "category": "docs-split-review",
       "sha256": "e47cd6786f72a67aa487382ae4eb484ec92b0f29b04585241e7d74505be07c29",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/UI_COMPLETENESS.en.md"
     },
     {
       "source": "docs/packages/schoolbell/UI_COMPLETENESS.md",
       "proposed_destination": "docs/review-required/UI_COMPLETENESS.md",
       "category": "docs-split-review",
       "sha256": "656477fd87303857fd7ce5ba6747b130c3482a0f704ddf65764bb88ea391f5f7",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/architecture/UI_COMPLETENESS.md"
     },
     {
       "source": "docs/packages/schoolbell/USER_GUIDE.en.md",
       "proposed_destination": "docs/review-required/USER_GUIDE.en.md",
       "category": "docs-split-review",
       "sha256": "45cada2eb0064aa88df66a57a4e80f593cc259497ea41817e66eb42fcf678921",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/user/USER_GUIDE.en.md"
     },
     {
       "source": "docs/packages/schoolbell/USER_GUIDE.md",
       "proposed_destination": "docs/review-required/USER_GUIDE.md",
       "category": "docs-split-review",
       "sha256": "9753511757ffb71652f00145a30dc1421e5e3bc3e775b0b357f9d46a93704807",
-      "status": "not-transferred"
+      "status": "transferred",
+      "destination": "docs/user/USER_GUIDE.md"
     },
     {
       "source": "packages/schoolbell/lua/schoolbell/automatic.lua",
