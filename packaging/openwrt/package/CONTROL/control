@@ -1,5 +1,5 @@
 Package: modbus-schoolbell
-Version: 5.1.28
+Version: 5.1.29
 Architecture: all
 Section: sound
 Priority: optional

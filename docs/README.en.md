@@ -128,3 +128,5 @@ separately; this branch neither publishes the site nor changes devices.
 [License delivery and dependency gaps](LICENSE_DELIVERY.en.md)
 
 [Playback reliability: open defect](PLAYBACK_RELIABILITY.en.md)
+
+[Requirements supplement: audio status and Flash colour (RU)](requirements/TECHNICAL_SPECIFICATION_AUDIO_STATUS.md)

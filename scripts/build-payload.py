@@ -15,7 +15,7 @@ for root in (repo / 'packaging/openwrt/root', repo / 'ui/root'):
             files[name] = path
 for name in ('test', '0', '1', '2', '3', '4'):
     files['usr/share/schoolbell-sound-test/' + name + '.mp3'] = repo / ('assets/melodies/' + name + '.mp3')
-for name in ("plan_export_bundle", "plan_import", "plan_admission", "automatic_status", "system_metrics", "queue_metrics", "clock_set", "media_ids", "clock_commands", "clock_mailbox", "clock_policy", "clock_gate", "clock_trust", "clock_reference", "clock_reference_store", "clock_system", "backup", "backup_codec", "mp3", "media_manager", "media_library", "calendar", "media_codec", "media_fs", "schedule_store", "journal", "timezone", "controls", "automatic", "automatic_store"):
+for name in ("audio_output", "plan_export_bundle", "plan_import", "plan_admission", "automatic_status", "system_metrics", "queue_metrics", "clock_set", "media_ids", "clock_commands", "clock_mailbox", "clock_policy", "clock_gate", "clock_trust", "clock_reference", "clock_reference_store", "clock_system", "backup", "backup_codec", "mp3", "media_manager", "media_library", "calendar", "media_codec", "media_fs", "schedule_store", "journal", "timezone", "controls", "automatic", "automatic_store"):
     files["usr/share/schoolbell-editor/lua/schoolbell/" + name + ".lua"] = (
         repo / "src/lua/schoolbell" / (name + ".lua"))
 for name in ('codec','preview','export'):

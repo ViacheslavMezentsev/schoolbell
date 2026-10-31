@@ -131,3 +131,5 @@ TC и AC, история ревизий и отметки незавершённ
 [Доставка лицензий и пробелы зависимостей](LICENSE_DELIVERY.md)
 
 [Надёжность воспроизведения: открытый дефект](PLAYBACK_RELIABILITY.md)
+
+[Дополнение ТЗ: строка аудиовыхода и цвет Flash](requirements/TECHNICAL_SPECIFICATION_AUDIO_STATUS.md)

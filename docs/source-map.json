@@ -503,15 +503,15 @@
       "source": "packages/schoolbell/router-page/root/usr/lib/lua/luci/controller/schoolbell_test.lua",
       "destination": "packaging/openwrt/root/usr/lib/lua/luci/controller/schoolbell_test.lua",
       "source_sha256": "1963bc18fc4f40ef70dfd7cf809384af0a4da99c565e9acc3ea45c10f6d27f8c",
-      "changes": "none",
-      "destination_sha256": "1963bc18fc4f40ef70dfd7cf809384af0a4da99c565e9acc3ea45c10f6d27f8c"
+      "changes": "none; default audio status and blue Flash (5.1.29)",
+      "destination_sha256": "41d5beb2680097fcb738c5e53b8279d440eba58a31ea109cfe7d1045062971c7"
     },
     {
       "source": "packages/schoolbell/router-page/root/usr/lib/lua/luci/view/schoolbell_test.htm",
       "destination": "ui/root/usr/lib/lua/luci/view/schoolbell_test.htm",
       "source_sha256": "526214f183ea8526785239074189d00cc03e7251323ee4146f75f0a53a015a54",
-      "changes": "none",
-      "destination_sha256": "526214f183ea8526785239074189d00cc03e7251323ee4146f75f0a53a015a54"
+      "changes": "none; default audio status and blue Flash (5.1.29)",
+      "destination_sha256": "648ad4dd693dcf96c5aab9d7dd8cd312ab612d5f610d912b8de0c1143088813e"
     },
     {
       "source": "packages/schoolbell/router-page/root/usr/lib/lua/schoolbell/backup_web.lua",
@@ -594,8 +594,8 @@
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/controls.js",
       "destination": "ui/root/www/schoolbell-test/controls.js",
       "source_sha256": "d54bd395645778dc54f3047973372f1da8237cccda8e20a282cfcf307d1e8ff1",
-      "changes": "none",
-      "destination_sha256": "d54bd395645778dc54f3047973372f1da8237cccda8e20a282cfcf307d1e8ff1"
+      "changes": "none; default audio status and blue Flash (5.1.29)",
+      "destination_sha256": "512a4b4dce3c6a356e43f95e9f4dee7ab89adf1b4535bf9b85e18538991b3a6b"
     },
     {
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/cpu.js",
@@ -671,8 +671,8 @@
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/style.css",
       "destination": "ui/root/www/schoolbell-test/style.css",
       "source_sha256": "046d8f5ba5461e83f8c4412b368b227ae34a98eef741d500af2117eefa4ff0ba",
-      "changes": "none",
-      "destination_sha256": "046d8f5ba5461e83f8c4412b368b227ae34a98eef741d500af2117eefa4ff0ba"
+      "changes": "none; default audio status and blue Flash (5.1.29)",
+      "destination_sha256": "1ea98a178116a6f155fec00939555a2d368a87ebdd96c0443423503224f4a09a"
     },
     {
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/theme.js",
@@ -1161,8 +1161,8 @@
       "source": "pkg-schoolbell/CONTROL/control",
       "destination": "packaging/openwrt/package/CONTROL/control",
       "source_sha256": "8183c1fee37c5c6579f32cc2570317640935b5a2598495d8bbb4081e6bb78141",
-      "changes": "adapted; review destination against pinned source",
-      "destination_sha256": "ddb5ba4c6ddb930f7339b8cab99b75250c94840da17d975fd0c1118fd89a0323"
+      "changes": "adapted; review destination against pinned source; default audio status and blue Flash (5.1.29)",
+      "destination_sha256": "79b888d501330237ad745a2764f8b54bf4262e0f8dde43a1517f01b0f654ce74"
     },
     {
       "source": "pkg-schoolbell/CONTROL/postinst",
@@ -1329,8 +1329,8 @@
       "source": "scripts/test-schoolbell.sh",
       "destination": "scripts/test-schoolbell.sh",
       "source_sha256": "5abd8849062bc51e53907344210cb487f9e115458e196f3667753f29553ed282",
-      "changes": "adapted; review destination against pinned source; standalone target migration: deterministic native gzip / pinned-input tests",
-      "destination_sha256": "cb2816b52d3388551ca266aeb24b0c8505f747e290c12d6dcb44d800a900b094"
+      "changes": "adapted; review destination against pinned source; standalone target migration: deterministic native gzip / pinned-input tests; default audio status and blue Flash (5.1.29)",
+      "destination_sha256": "5e2f492e0723a551a66c7bd525315e38dfc1b16dada03adaeb6c2fd5940c5d33"
     },
     {
       "source": "scripts/test-site-demo.js",
@@ -1371,8 +1371,8 @@
       "source": "site/demo.js",
       "destination": "site/demo.js",
       "source_sha256": "e188761949f7a69432ec440c619a95bf1f36d721c910f3a6c866a7c194677f5f",
-      "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer",
-      "destination_sha256": "159811778b64e4e2493abf783cfb726f4a3cd0abb1258eb984c319386f0478f0"
+      "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer; default audio status and blue Flash (5.1.29)",
+      "destination_sha256": "8b21e6bac3263fa500a3fc0e80a7a7c8692f901260be9151c92c2dd8625a99c0"
     },
     {
       "source": "site/portable-pages.js",
@@ -1385,8 +1385,8 @@
       "source": "packages/schoolbell/router-page/build-payload.py",
       "destination": "scripts/build-payload.py",
       "source_sha256": "15ee676879b82aeb4a7ee343623ac98cbf9f849c569598eb40ee4eb93c373c45",
-      "changes": "adapted; review destination against pinned source",
-      "destination_sha256": "f47d28205deec1bbea6648eba15da76cb850f1d64fed27f8d7ad44a1d2fb51ce"
+      "changes": "adapted; review destination against pinned source; default audio status and blue Flash (5.1.29)",
+      "destination_sha256": "d93a07c5ee26568ad05bfa55778ac7e29585d07cd16386ac5047efe909c5059f"
     },
     {
       "source": "site/portable-zones.json",

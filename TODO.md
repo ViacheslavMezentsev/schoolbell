@@ -54,3 +54,6 @@ MIT собственного кода оформлена: [область дей
 shows successful setting/verification, about 1 s difference, automatic bells off and
 time trust still unconfirmed. Version/target are not recorded; this is not a new
 hardware acceptance protocol.
+
+- [x] Строка аудио /dev/dsp под Flash, имя карты и сохранённое усиление; синий Flash до 75% — исходники 5.1.29 / Default audio status, card name and saved gain; blue Flash up to 75% — 5.1.29 sources.
+- [ ] Отдельная установка и проверка новой шапки на устройстве / Separate installation and device acceptance of the new header.

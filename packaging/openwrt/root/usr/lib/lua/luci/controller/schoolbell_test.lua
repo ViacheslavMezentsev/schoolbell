@@ -144,6 +144,7 @@ function controls()
   end
  end
  editor();local m=require('schoolbell.controls');local result=value==nil and volume==nil and m.snapshot() or m.request(value,nil,volume)
+ result.audio=require('schoolbell.audio_output').read()
  result.playing=require('nixio.fs').lstat(require('schoolbell.sound_test').lock)~=nil
  if volume~=nil then audit(result.ok and 'volume_ok' or 'volume_failed',result)end
  if value~=nil then audit(result.ok and (value and 'mute_on' or 'mute_off') or 'mute_failed',result)end

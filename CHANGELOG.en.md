@@ -4,6 +4,10 @@
 
 ## Unreleased
 
+- 5.1.29 checks: make all, focused Lua/JS and strict requirements-supplement validation — PASS. Metadata module exercised read-only on target Lua; header inspected in local headless Chrome at 1280 and 390 px. No installation or device acceptance of the new UI.
+
+- 5.1.29: below Flash, show controller/card model for /dev/dsp and saved gain in % (dB). Distinguish missing and unavailable metadata, hide device paths, never fall back to other cards. Flash is blue up to 75%, retaining 75/90% thresholds. Shared UI/Pages and AUDIO_STATUS requirements supplement. No installation or sound tests.
+
 - New hub and third C-Media card passed 100 consecutive launches (416.01 s), with no failures or new kernel messages. Hub and card use 12 Mbit/s OHCI: this is not an EHCI retest. -60 dB and automatic-off retained, process/lock released. No code/package changes; full make all — PASS.
 
 - Original AB13X direct/OHCI passed 100 consecutive launches (415.94 s), with no failures or new URB errors; one cannot get freq message is retained in the report. Gain -60 dB, automatic off, player and lock released. Both cards passed direct connection after failing through the original hub. No code/package changes; full make all — PASS.
