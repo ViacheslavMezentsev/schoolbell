@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+- Owner-authorized 100 consecutive playback attempts on the 5.1.28 bench: 96 completions, 4 madplay failures (exit=4) and four new USB URB -27 error groups. Gain reduced to -60 dB on request. Documented actual route and open reliability work; no fix or endurance acceptance claimed. Runtime/IPK unchanged.
+
 - License delivery validation: full `make all`, missing/stale-notice refusals, nested SHA256SUMS and links — PASS. Real MIPS bundle and Lua module loading under QEMU verified; not hardware acceptance.
 
 - Deliver licenses/NOTICE in main/native IPKs, Pages and offline bundle; SHA256SUMS covers nested documents. Added actual dependency evidence with open gaps. Pinned/verified LuCI timezone source. Documentation additions retain versions 5.1.28/1.0.0; IPK hashes changed, runtime/audio retained. No devices accessed.

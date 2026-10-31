@@ -1,5 +1,12 @@
 # План миграции / Migration checklist
 
+## Приоритет: надёжная подача звонков / Priority: reliable playback
+
+- [ ] Устранить воспроизведённый периодический отказ USB-аудио; сохранить причины ошибок, проверить повторные запуски и длительное расписание / Fix reproduced intermittent USB-audio failure, retain diagnostic reasons, verify repeated starts and endurance. [RU](docs/PLAYBACK_RELIABILITY.md) · [EN](docs/PLAYBACK_RELIABILITY.en.md).
+- Лицензирование отложено владельцем; зелёные host-тесты не закрывают этот дефект / Owner deferred licensing; passing host tests do not close this defect.
+
+## Миграция / Migration
+
 - [x] Архив старых 20 файлов с SHA-256 / Archive the 20 legacy files with SHA-256.
 - [x] Правила, workflow и инвентарь / Rules, workflow and inventory.
 - [x] Проверка каркаса на хосте / Host foundation verification.

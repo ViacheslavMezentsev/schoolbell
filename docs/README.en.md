@@ -126,3 +126,5 @@ separately; this branch neither publishes the site nor changes devices.
 [MIT license and scope](LICENSING.en.md)
 
 [License delivery and dependency gaps](LICENSE_DELIVERY.en.md)
+
+[Playback reliability: open defect](PLAYBACK_RELIABILITY.en.md)
