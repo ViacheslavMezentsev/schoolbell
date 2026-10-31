@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+- Installed 5.1.29 over 5.1.28 on the authorized bench: verified backup and exact rollback package, all 78 new IPK files, preserved .sbb contents and system settings. Gain remains -60 dB, automatic bells off, native 1.0.0. The GET controller returns OHCI/C-Media/USB PnP Sound Device; shared JS correctly renders the name and 0.1% (-60 dB). Full make all passed. No playback; browser inspection blocked by tool startup failure, requiring Ctrl+F5 and owner confirmation.
+
 - 5.1.29 checks: make all, focused Lua/JS and strict requirements-supplement validation — PASS. Metadata module exercised read-only on target Lua; header inspected in local headless Chrome at 1280 and 390 px. No installation or device acceptance of the new UI.
 
 - 5.1.29: below Flash, show controller/card model for /dev/dsp and saved gain in % (dB). Distinguish missing and unavailable metadata, hide device paths, never fall back to other cards. Flash is blue up to 75%, retaining 75/90% thresholds. Shared UI/Pages and AUDIO_STATUS requirements supplement. No installation or sound tests.
