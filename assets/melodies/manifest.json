@@ -1,0 +1,55 @@
+{
+  "repository": "https://github.com/ViacheslavMezentsev/schoolbell",
+  "commit": "c4bbecd1bd5136051cc12858801fb9bed7222cc2",
+  "files": [
+    {
+      "path": "0.mp3",
+      "bytes": 41273,
+      "sha256": "3821035954269a1ba9bacd0a5ab528c61817acb6d623de835f1936ebaebc7d5c",
+      "git_blob": "f4b7f2aa05449d8eb9bb3193f46551c82de21c47",
+      "duration_seconds_ffprobe": 10.31825
+    },
+    {
+      "path": "1.mp3",
+      "bytes": 63321,
+      "sha256": "e836c3f00c25ec0d2b91c258d6c8057daa7622e029e8ec5b62b911a27f3cf51a",
+      "git_blob": "13d21638df1fa107cc6828fa42e244641e297502",
+      "duration_seconds_ffprobe": 15.83025
+    },
+    {
+      "path": "2.mp3",
+      "bytes": 69904,
+      "sha256": "9ced774a35d0dec99b963c9b0a6fe2cd67dd23d1df13338c21e44ea7e519b149",
+      "git_blob": "bbf9f7ff3214248b16ed8e0ac6e5b2b8da7d444a",
+      "duration_seconds_ffprobe": 17.476
+    },
+    {
+      "path": "3.mp3",
+      "bytes": 68023,
+      "sha256": "e561d0205694f8776a9e6389e6a99ffa642a4c680fc076a02dadd3d94b97dc5d",
+      "git_blob": "0d452ad0ff6572f1446bd4b2396b59cbc6fdc6f0",
+      "duration_seconds_ffprobe": 17.00575
+    },
+    {
+      "path": "4.mp3",
+      "bytes": 82368,
+      "sha256": "ef1adc39a49ca75aa085ef8fb88491b1f44e20de03fa06c52285ac9654136264",
+      "git_blob": "fe1c4a09df033a0109540257939c631a30b146e3",
+      "duration_seconds_ffprobe": 20.592
+    },
+    {
+      "path": "test.mp3",
+      "bytes": 13104,
+      "sha256": "1ae57af4d27698b0cd3795de7287c0dd1b5e2b336e8d9e8dcc9b853cbd8b4e0d",
+      "git_blob": "0d22a69b6f80171ab435f2aca878aa6247150f05",
+      "duration_seconds_ffprobe": 3.276
+    },
+    {
+      "path": "melodies.json",
+      "bytes": 127,
+      "sha256": "8fc2aba4dfa278ac451197c48c4f931acbf3381daed0a20a4f34d85d3c66070f",
+      "git_blob": "46ddffec563ce2da6be58f1518708b172491d905"
+    }
+  ],
+  "license_note": "No explicit upstream license; imported at repository owner request. No new audio license is assigned."
+}

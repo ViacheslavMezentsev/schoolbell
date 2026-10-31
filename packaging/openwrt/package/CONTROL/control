@@ -1,0 +1,10 @@
+Package: modbus-schoolbell
+Version: 5.1.28
+Architecture: all
+Section: sound
+Priority: optional
+Maintainer: Viacheslav Mezentsev
+Depends: lua, luci-base, luci-theme-bootstrap, luci-lib-nixio, luci-lib-jsonc, uhttpd, uci, madplay, kmod-usb-audio, modbus-schoolbell-clock (= 1.0.0)
+Description: Schoolbell schedules, named calendar plans, media library and LuCI UI.
+ Engineering executor with explicit activation and clock trust control.
+ Installation, upgrade and rollback leave automatic bells disabled.

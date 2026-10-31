@@ -23,11 +23,19 @@ for item in inventory['files']:
     assert item['source'] not in seen
     seen.add(item['source'])
     assert re.fullmatch('[a-f0-9]{64}', item['sha256'])
-    assert item['status'] == 'not-transferred'
+    assert item['status'] in ('not-transferred', 'transferred')
+    if item['status'] == 'transferred': assert (root / item['destination']).is_file()
 assert 'pkg/usr/lib/modbus/json_strict.lua' in seen
 for path in root.rglob('*.md'):
-    if '.git' in path.parts: continue
+    if any(part in ('.git', 'out', 'build') for part in path.relative_to(root).parts): continue
     for target in re.findall(r'\[[^\]]*\]\(([^)]+)\)', path.read_text(encoding='utf-8')):
         if '://' in target or target.startswith('#'): continue
         assert (path.parent / target.split('#')[0]).exists(), (path, target)
-print('PASS: 20 archived files, inventory and local Markdown links')
+mapping = json.loads((root / 'docs/source-map.json').read_text())
+destinations = set()
+for item in mapping['files']:
+    path = item['destination']
+    assert path not in destinations
+    destinations.add(path)
+    assert hashlib.sha256((root / path).read_bytes()).hexdigest() == item['destination_sha256'], path
+print('PASS: legacy archive, source map, inventory and local Markdown links')

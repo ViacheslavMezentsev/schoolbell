@@ -1,0 +1,43 @@
+#!/usr/bin/lua
+package.path='/usr/share/schoolbell-editor/lua/?.lua;'..package.path
+local fs=require('nixio.fs')
+local root='/etc/schoolbell-editor'
+local function private(path)
+ local st=fs.lstat(path)
+ if not st then assert(fs.mkdir(path,700));st=assert(fs.lstat(path))end
+ local mode=tonumber(tostring(st.modedec),8)%512
+ assert(st.type=='dir' and (mode==448 or (path=='/etc/modbus-schoolbell' and mode==493)),'private directory required')
+end
+for _,path in ipairs({root,'/etc/modbus-schoolbell','/etc/modbus-schoolbell/data'})do private(path)end
+local pending=root..'/package.pending'
+if arg[1]=='initialize'then assert(not fs.lstat(pending),'unfinished package operation');os.exit(0)end
+assert(arg[1]=='finish','unknown operation')
+local function marker(path)
+ local st=assert(fs.lstat(path),'missing package marker');assert(st.type=='reg' and st.size==17,'foreign marker')
+ local f=assert(io.open(path,'rb'));local s=f:read(18);f:close();assert(s=='schoolbell-ipk-1\n','foreign marker')
+end
+marker(pending)
+local lock='/tmp/schoolbell-sound-test.lock'
+local st=fs.lstat(lock)
+-- A reboot may have removed tmpfs; only recreate our gate when absent.
+if not st then assert(fs.mkdir(lock,700))
+ local f=assert(io.open(lock..'/package-owner','wb'));assert(f:write('schoolbell-ipk-1\n'));assert(f:close())
+else assert(st.type=='dir');marker(lock..'/package-owner')end
+local Store=require('schoolbell.automatic_store')
+local result=Store.transaction(Store.change,false,nil,{})
+assert(result.ok,'cannot persist auto-off: '..tostring(result.detail))
+assert(not Store.decode(Store.raw()).enabled,'auto-off readback')
+-- A queued enable/policy command from the previous code must not run after upgrade.
+-- CGI refuses new mailbox operations while the persistent marker is present.
+local mailbox='/tmp/schoolbell-clock-control'
+if fs.lstat(mailbox)then
+ local h=require('schoolbell.media_fs').new(mailbox)
+ local ok,why=pcall(function()
+  for _,name in ipairs({'request.json','result.json','next','metrics.json','metrics.next'})do if h.stat(name)then h.unlink(name)end end
+  h.sync('')
+ end)
+ h.close();assert(ok,why)
+end
+assert(fs.unlink(lock..'/package-owner'));assert(fs.rmdir(lock))
+assert(fs.unlink(pending))
+local n=require('nixio');local dir=assert(n.open(root,'r'));assert(dir:sync());assert(dir:close())

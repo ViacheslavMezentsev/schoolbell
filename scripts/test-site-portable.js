@@ -1,0 +1,54 @@
+'use strict';
+const fs=require('fs'),path=require('path'),vm=require('vm'),assert=require('assert'),crypto=require('crypto').webcrypto;
+const ctx={TextEncoder,TextDecoder,Uint8Array,Blob,crypto,console};vm.createContext(ctx);
+for(const source of ['ui/root/www/schoolbell-test/ranges.js','src/portable-plan/codec.js','src/portable-plan/export.js','src/portable-plan/preview.js'])vm.runInContext(fs.readFileSync(path.resolve(__dirname,'..',source),'utf8'),ctx);
+const mediaRoot=path.resolve(__dirname,'../assets/melodies');
+const manifest=JSON.parse(fs.readFileSync(path.join(mediaRoot,'manifest.json'),'utf8'));
+const version=fs.readFileSync(path.resolve(__dirname,'../packaging/openwrt/package/CONTROL/control'),'utf8').match(/^Version: (.+)$/m)[1];
+const titles=['Тестовый звонок','Время','Шутка Баха','Мелодия 2','Мелодия 3','Мелодия 4'];
+const config={version,zones:JSON.parse(fs.readFileSync(path.resolve(__dirname,'../site/portable-zones.json'),'utf8')),media:['test','0','1','2','3','4'].map((id,i)=>{const f=manifest.files.find(f=>f.path===id+'.mp3');return {id,title:titles[i],size_bytes:f.bytes,sha256:f.sha256};})};
+const api=require('../site/portable-pages.js').create(ctx.SchoolbellPlanCodec,ctx.SchoolbellPlanExport,ctx.SchoolbellPlanPreview,crypto,config);
+const clone=x=>JSON.parse(JSON.stringify(x));
+const draft={mode:'annual',fixed_schedule:'quiet',manual_media:'test',pre_minutes:2,pre_media:'test',schedules:[{id:'normal',name:'Учебный день',color:5,rows:[{id:'bell',time:'08:00',media:'0',enabled:false,pre:true}]}],plans:[{id:'school',name:'Учебный план',start:'2027-12-31',end:'2028-01-02',schedule_ids:['normal'],days:'A.A'}]};
+const source={draft,dirty:false,formPending:false,busy:false,reconcile:false,revision:'1'};
+const empty={...clone(source),draft:{...clone(draft),schedules:[],plans:[],mode:'fixed'}};
+const names={plans:{},schedules:{}};
+async function rejected(p,code){await assert.rejects(p,e=>e.message===code);}
+(async()=>{
+ const before=JSON.stringify(source),blob=await api.exportFile(source,['school'],'Asia/Yekaterinburg'),decoded=await api.readFile(blob);
+ if(process.argv[2])fs.writeFileSync(process.argv[2],Buffer.from(await blob.arrayBuffer()));
+ assert.equal(JSON.stringify(source),before);assert.equal(decoded.summary.plans[0].days,'A.A');assert.equal(decoded.summary.schedules[0].color,5);
+ assert.equal(decoded.summary.schedules[0].rows[0].enabled,false);assert.equal(decoded.timezone.posix,config.zones['Asia/Yekaterinburg']);
+ const ok=api.preview(decoded,empty,'Asia/Yekaterinburg',names,false);assert(ok.ok);assert.equal(ok.admitted,false);assert.equal(empty.draft.plans.length,0);
+ assert.equal(ok.candidate.mode,'fixed');assert.equal(ok.candidate.fixed_schedule,'quiet');
+ const block=(s,z,n,on,code)=>assert(api.preview(decoded,s,z,n,on).blockers.some(x=>x.code===code),code);
+ block(source,'Asia/Yekaterinburg',names,false,'overlap');block(source,'Asia/Yekaterinburg',names,false,'name_conflict');
+ block({...empty,dirty:true},'Asia/Yekaterinburg',names,false,'dirty');block(empty,'UTC',names,false,'timezone');block(empty,'Asia/Yekaterinburg',names,true,'automatic_enabled');
+ const existing=clone(empty);existing.draft.schedules=clone(draft.schedules);existing.draft.schedules[0].id='other';
+ block(existing,'Asia/Yekaterinburg',names,false,'name_conflict');assert(api.preview(decoded,existing,'Asia/Yekaterinburg',{plans:{},schedules:{normal:'Другое имя'}},false).ok);
+ await rejected(api.exportFile({...source,formPending:true},['school'],'UTC'),'pending');await rejected(api.exportFile(source,[],'UTC'),'selection');await rejected(api.exportFile(source,['school'],''),'timezone');
+ const raw=new Uint8Array(await blob.arrayBuffer()),corrupt=raw.slice();corrupt[corrupt.length-1]^=1;await rejected(api.readFile(new Blob([corrupt])),'checksum');await rejected(api.readFile(new Blob([raw.slice(0,-1)])),'size');await rejected(api.readFile(new Blob([raw,new Uint8Array([1])])),'size');
+ await rejected(api.readFile({size:ctx.SchoolbellPlanCodec.maximum+1,slice(){throw Error('must not read');}}),'size');
+ const manifest=JSON.parse(new TextDecoder().decode(decoded.manifest)),calendar=decoded.calendar;manifest.exporter.name='schoolbell-device';manifest.files.push({name:'media/'+('a'.repeat(64))+'.mp3',size_bytes:10,sha256:'a'.repeat(64)});manifest.media.push({id:'user1',title:'User',source:'user',size_bytes:10,sha256:'a'.repeat(64),file:manifest.files[1].name});
+ const m=new TextEncoder().encode(JSON.stringify(manifest)),sha=Buffer.from(await crypto.subtle.digest('SHA-256',m)).toString('hex'),head=new TextEncoder().encode('SBPLAN1\n'+String(m.length).padStart(8,'0')+'\n'+sha+'\n'),user=new Blob([head,m,calendar,new Uint8Array(10)]);
+ let reads=[];await rejected(api.readFile({size:user.size,slice(a,b){reads.push([a,b]);return user.slice(a,b);}}),'unsupported_media');assert.deepEqual(reads,[[0,82],[82,82+m.length]]);
+ const mismatch=clone(config);mismatch.media[0].sha256='f'.repeat(64);const bad=require('../site/portable-pages.js').create(ctx.SchoolbellPlanCodec,ctx.SchoolbellPlanExport,ctx.SchoolbellPlanPreview,crypto,mismatch);assert(bad.preview(decoded,empty,'Asia/Yekaterinburg',names,false).blockers.some(x=>x.code==='dependency'));
+ const academic=clone(source);academic.draft.plans[0]={...academic.draft.plans[0],start:'2027-09-01',end:'2028-05-31',days:'A'.repeat((Date.UTC(2028,4,31)-Date.UTC(2027,8,1))/86400000+1)};
+ const academicDecoded=await api.readFile(await api.exportFile(academic,['school'],'UTC'));assert.equal(academicDecoded.summary.plans[0].days.length,274);
+ await rejected(api.readFile(new Blob([new Uint8Array(82)])),'format');
+ console.log('PASS Pages .sbp: real media hashes, exact cross-year snapshot, non-mutating preview, conflicts/names, bounded reads, corrupt/truncated/trailing files and early user-media refusal');
+ // Exercise the actual panel without fetch/storage/device APIs.
+ class El{constructor(){this.children=[];this.events={};this.style={};this.value='';this.files=[];this.disabled=false;}append(...e){this.children.push(...e);}replaceChildren(...e){this.children=e;}addEventListener(k,f){this.events[k]=f;}querySelectorAll(){return this.children.flatMap(l=>l.children).filter(e=>e.checked);}remove(){}click(){if(!this.disabled)return this.events.click?.();}}
+ const ids=Object.fromEntries(['panel','zone','status','result','plans','export','preview','zone-hint','file','names'].map(x=>['portable-'+x,new El()]));const listeners={},timers=[];let current=clone(source),downloads=0;
+ const win={SchoolbellPortableConfig:config,SchoolbellPortablePages:{create:()=>api},crypto,schoolbellEditor:{portableSnapshot:()=>clone(current)},schoolbellDemo:{portableState:()=>({automatic_enabled:false})},addEventListener(k,f){listeners[k]=f;}};
+ const doc={getElementById:id=>ids[id],createElement:()=>new El(),createTextNode:text=>text,body:new El()};
+ const u={window:win,document:doc,Intl,Set,Array,JSON,Object,Error,URL:{createObjectURL(){downloads++;return 'blob:test';},revokeObjectURL(){}},setTimeout:f=>timers.push(f),setInterval:f=>timers.push(f)};vm.createContext(u);vm.runInContext(fs.readFileSync(path.resolve(__dirname,'../site/portable-ui.js'),'utf8'),u);
+ const el=n=>ids['portable-'+n];el('zone').value='Asia/Yekaterinburg';el('zone').events.change();el('plans').children[0].children[0].checked=true;
+ await el('export').click();assert.equal(downloads,1);assert(el('status').textContent.includes('подготовлен'));
+ el('file').files=[blob];await el('file').events.change();assert(el('status').textContent.includes('Файл проверен'));await el('preview').click();assert(el('result').children.length);assert(el('status').textContent.includes('невозможно'));
+ current=clone(empty);listeners['schoolbell-editor-state']();assert.equal(el('result').children.length,0);await el('preview').click();assert(el('status').textContent.includes('Проверка пройдена'));
+ current.dirty=true;listeners['schoolbell-editor-state']();await el('preview').click();assert(el('result').children.some(x=>x.textContent.includes('Сначала сохраните')));
+ current=clone(source);listeners['schoolbell-editor-state']();el('plans').children[0].children[0].checked=true;
+ const pending=el('export').click();current.draft.plans[0].name='Changed while hashing';listeners['schoolbell-editor-state']();await pending;assert.equal(downloads,1);assert(el('status').textContent.includes('Изменилось'));
+ assert.equal(JSON.stringify(source),before);assert(!win.fetch);console.log('PASS actual Pages panel: export download, preview blockers, stale result invalidation, dirty draft, async edit cancellation, no write/fetch API');
+})().catch(e=>{console.error(e);process.exitCode=1;});

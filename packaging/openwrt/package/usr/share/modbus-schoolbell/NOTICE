@@ -1,0 +1,8 @@
+Sample: melodies/test.mp3 (unchanged, 13104 bytes)
+Source: https://github.com/ViacheslavMezentsev/schoolbell
+Commit: c4bbecd1bd5136051cc12858801fb9bed7222cc2
+Imported at the repository owner's request. Upstream has no explicit license.
+No new license or authorship claim is assigned to this audio.
+The complete package also contains original melodies 0.mp3 through 4.mp3,
+with provenance and hashes recorded in assets/melodies/manifest.json.
+Runtime source licensing does not assign a new license to this audio.

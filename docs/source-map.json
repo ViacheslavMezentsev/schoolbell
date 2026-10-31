@@ -1,0 +1,1413 @@
+{
+  "repository": "https://github.com/ViacheslavMezentsev/openwrt-modbus-core",
+  "commit": "243a7ccad6aeb2499d3efd5d0c4cef9e822d393e",
+  "files": [
+    {
+      "source": "packages/schoolbell/lua/schoolbell/automatic.lua",
+      "destination": "src/lua/schoolbell/automatic.lua",
+      "source_sha256": "a1e38ba6c53c3e9c2d6eabfbe280ef9114e75d09e35774b6d8cadce6ad3fc0fb",
+      "changes": "none",
+      "destination_sha256": "a1e38ba6c53c3e9c2d6eabfbe280ef9114e75d09e35774b6d8cadce6ad3fc0fb"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/automatic_status.lua",
+      "destination": "src/lua/schoolbell/automatic_status.lua",
+      "source_sha256": "5b63db73a3b349f2765d084dc1c406ad1b89f4fb0ac1f5b4e22625d5af379f14",
+      "changes": "none",
+      "destination_sha256": "5b63db73a3b349f2765d084dc1c406ad1b89f4fb0ac1f5b4e22625d5af379f14"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/automatic_store.lua",
+      "destination": "src/lua/schoolbell/automatic_store.lua",
+      "source_sha256": "0286ab87491245d6aed03e8b0080be11287b087d16ed16569ef4d464bc8e6dae",
+      "changes": "none",
+      "destination_sha256": "0286ab87491245d6aed03e8b0080be11287b087d16ed16569ef4d464bc8e6dae"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/backup.lua",
+      "destination": "src/lua/schoolbell/backup.lua",
+      "source_sha256": "7b8af9d88dd5874cdee9a8d06d04527b666366cb4b674b41cc3faf8363132640",
+      "changes": "none",
+      "destination_sha256": "7b8af9d88dd5874cdee9a8d06d04527b666366cb4b674b41cc3faf8363132640"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/backup_codec.lua",
+      "destination": "src/lua/schoolbell/backup_codec.lua",
+      "source_sha256": "5e41b400c58368bc1d4e3e9532d4f9662ed77d702dc49fa42cf95dbc1b61e589",
+      "changes": "none",
+      "destination_sha256": "5e41b400c58368bc1d4e3e9532d4f9662ed77d702dc49fa42cf95dbc1b61e589"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/calendar.lua",
+      "destination": "src/lua/schoolbell/calendar.lua",
+      "source_sha256": "ad12deabc4a3630d4fe3cf7ac5c613e08c7367b485546ce0f77cb47129319a37",
+      "changes": "none",
+      "destination_sha256": "ad12deabc4a3630d4fe3cf7ac5c613e08c7367b485546ce0f77cb47129319a37"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/clock_commands.lua",
+      "destination": "src/lua/schoolbell/clock_commands.lua",
+      "source_sha256": "ea57ccd05997b994b195cc7572c93bbde2ef2461768c109aaec9809a825bff29",
+      "changes": "none",
+      "destination_sha256": "ea57ccd05997b994b195cc7572c93bbde2ef2461768c109aaec9809a825bff29"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/clock_gate.lua",
+      "destination": "src/lua/schoolbell/clock_gate.lua",
+      "source_sha256": "2df1c7df1a37d457e5b02bb758b851093d0dbc751053c077b523dc6b986ae3d2",
+      "changes": "none",
+      "destination_sha256": "2df1c7df1a37d457e5b02bb758b851093d0dbc751053c077b523dc6b986ae3d2"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/clock_mailbox.lua",
+      "destination": "src/lua/schoolbell/clock_mailbox.lua",
+      "source_sha256": "e014931d483c9beb993d4f62780d2a3968bf733e46ef0154f2bf169efd46703a",
+      "changes": "none",
+      "destination_sha256": "e014931d483c9beb993d4f62780d2a3968bf733e46ef0154f2bf169efd46703a"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/clock_policy.lua",
+      "destination": "src/lua/schoolbell/clock_policy.lua",
+      "source_sha256": "df6b3665247a569d2904a829c4a861379bd166622b7c0909a3f7f185e8a7fb02",
+      "changes": "none",
+      "destination_sha256": "df6b3665247a569d2904a829c4a861379bd166622b7c0909a3f7f185e8a7fb02"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/clock_reference.lua",
+      "destination": "src/lua/schoolbell/clock_reference.lua",
+      "source_sha256": "65f42fc46a29040d6528edb2b7710b5d7279ac49ce0f6b74e0865e172d927834",
+      "changes": "none",
+      "destination_sha256": "65f42fc46a29040d6528edb2b7710b5d7279ac49ce0f6b74e0865e172d927834"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/clock_reference_store.lua",
+      "destination": "src/lua/schoolbell/clock_reference_store.lua",
+      "source_sha256": "bef36f79feb2946724397e9744f9966ce27c4ed1328e024c470ff27d8a988c26",
+      "changes": "none",
+      "destination_sha256": "bef36f79feb2946724397e9744f9966ce27c4ed1328e024c470ff27d8a988c26"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/clock_set.lua",
+      "destination": "src/lua/schoolbell/clock_set.lua",
+      "source_sha256": "72eb8d2982c54038e76310b44aafd0a92e10682ff88d070a6d351c7ee22ed473",
+      "changes": "none",
+      "destination_sha256": "72eb8d2982c54038e76310b44aafd0a92e10682ff88d070a6d351c7ee22ed473"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/clock_system.lua",
+      "destination": "src/lua/schoolbell/clock_system.lua",
+      "source_sha256": "a76e93f0e7dea20c8dfa6c34fd57318e6301463637bdf62407efd98e52a687ca",
+      "changes": "none",
+      "destination_sha256": "a76e93f0e7dea20c8dfa6c34fd57318e6301463637bdf62407efd98e52a687ca"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/clock_trust.lua",
+      "destination": "src/lua/schoolbell/clock_trust.lua",
+      "source_sha256": "20ec06e0bf3ea66915791cb0f878ec0a3ecbfc1c3c85746d9aee0f11a028ee14",
+      "changes": "none",
+      "destination_sha256": "20ec06e0bf3ea66915791cb0f878ec0a3ecbfc1c3c85746d9aee0f11a028ee14"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/controls.lua",
+      "destination": "src/lua/schoolbell/controls.lua",
+      "source_sha256": "659527537a37671bbcf906debecac26e1c90394e5bac45b7abd52b314d3e985f",
+      "changes": "none",
+      "destination_sha256": "659527537a37671bbcf906debecac26e1c90394e5bac45b7abd52b314d3e985f"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/journal.lua",
+      "destination": "src/lua/schoolbell/journal.lua",
+      "source_sha256": "ee2c01422fe2c3128359ff158bbef964196a52f8b18c0243d64f2e67ff41260c",
+      "changes": "none",
+      "destination_sha256": "ee2c01422fe2c3128359ff158bbef964196a52f8b18c0243d64f2e67ff41260c"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/media_codec.lua",
+      "destination": "src/lua/schoolbell/media_codec.lua",
+      "source_sha256": "b0683fc978c5b8d3deca3a3e32e597ed0705100b5d32f1b8021a5bee43535e24",
+      "changes": "none",
+      "destination_sha256": "b0683fc978c5b8d3deca3a3e32e597ed0705100b5d32f1b8021a5bee43535e24"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/media_fs.lua",
+      "destination": "src/lua/schoolbell/media_fs.lua",
+      "source_sha256": "e20700a774aa051c66cd900d8dc0acdf7d741c944cc5fa45c9b61046d17b713d",
+      "changes": "none",
+      "destination_sha256": "e20700a774aa051c66cd900d8dc0acdf7d741c944cc5fa45c9b61046d17b713d"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/media_ids.lua",
+      "destination": "src/lua/schoolbell/media_ids.lua",
+      "source_sha256": "acfd327a72671505e1d025ed23cf877a6b914acab90d5d62275524f8782d4990",
+      "changes": "none",
+      "destination_sha256": "acfd327a72671505e1d025ed23cf877a6b914acab90d5d62275524f8782d4990"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/media_library.lua",
+      "destination": "src/lua/schoolbell/media_library.lua",
+      "source_sha256": "d9fda8f3c2610f178532a3d588a16230986a8fe1b4f8bf8262147e17ae78ad60",
+      "changes": "none",
+      "destination_sha256": "d9fda8f3c2610f178532a3d588a16230986a8fe1b4f8bf8262147e17ae78ad60"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/media_manager.lua",
+      "destination": "src/lua/schoolbell/media_manager.lua",
+      "source_sha256": "4ccb4f0fee57212917d40b12e7850dd29abe05045dbd3366079f998dc13b9b82",
+      "changes": "none",
+      "destination_sha256": "4ccb4f0fee57212917d40b12e7850dd29abe05045dbd3366079f998dc13b9b82"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/mp3.lua",
+      "destination": "src/lua/schoolbell/mp3.lua",
+      "source_sha256": "58f28a46be0dd3ac5dfd25a630bbd78044bfdd296384bece009822d43e7d452f",
+      "changes": "none",
+      "destination_sha256": "58f28a46be0dd3ac5dfd25a630bbd78044bfdd296384bece009822d43e7d452f"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/plan_admission.lua",
+      "destination": "src/lua/schoolbell/plan_admission.lua",
+      "source_sha256": "b2a766a9da14292bb0bfebc27f04677bef8a7e5be6daae1453274ed78c406113",
+      "changes": "none",
+      "destination_sha256": "b2a766a9da14292bb0bfebc27f04677bef8a7e5be6daae1453274ed78c406113"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/plan_export_bundle.lua",
+      "destination": "src/lua/schoolbell/plan_export_bundle.lua",
+      "source_sha256": "b6e636f583b9b90eb48874298db860cdbe18c7b0db5b4d3f7b131db5d1b3bfb6",
+      "changes": "none",
+      "destination_sha256": "b6e636f583b9b90eb48874298db860cdbe18c7b0db5b4d3f7b131db5d1b3bfb6"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/plan_import.lua",
+      "destination": "src/lua/schoolbell/plan_import.lua",
+      "source_sha256": "2a6ebac5cf5a4774447650f89c92696c582f5b0732eaec09e85da3963e0c4f5b",
+      "changes": "none",
+      "destination_sha256": "2a6ebac5cf5a4774447650f89c92696c582f5b0732eaec09e85da3963e0c4f5b"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/playback_queue.lua",
+      "destination": "src/lua/schoolbell/playback_queue.lua",
+      "source_sha256": "c227f22629674d17e7df7f890b72044df95cb955f781278c533f4fa78bd6c66b",
+      "changes": "none",
+      "destination_sha256": "c227f22629674d17e7df7f890b72044df95cb955f781278c533f4fa78bd6c66b"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/player_codec.lua",
+      "destination": "src/lua/schoolbell/player_codec.lua",
+      "source_sha256": "26505ba5475decb83eb38ea1bca72d96c46d542fb03fb7a9efa36511935d410a",
+      "changes": "none",
+      "destination_sha256": "26505ba5475decb83eb38ea1bca72d96c46d542fb03fb7a9efa36511935d410a"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/player_model.lua",
+      "destination": "src/lua/schoolbell/player_model.lua",
+      "source_sha256": "00215e4eef34c17bc27f03bf3d2ccdecee7b1087b865edab27e34ea3ce57f5b5",
+      "changes": "none",
+      "destination_sha256": "00215e4eef34c17bc27f03bf3d2ccdecee7b1087b865edab27e34ea3ce57f5b5"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/queue_metrics.lua",
+      "destination": "src/lua/schoolbell/queue_metrics.lua",
+      "source_sha256": "ff11e0893c74a3bf837bcf80e038e4661080b144408f59b45d6a2f51484f73da",
+      "changes": "none",
+      "destination_sha256": "ff11e0893c74a3bf837bcf80e038e4661080b144408f59b45d6a2f51484f73da"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/queue_player.lua",
+      "destination": "src/lua/schoolbell/queue_player.lua",
+      "source_sha256": "8a16c649fc98208e788faff295741552e033e5415352e8c3874787e5bbf7a9fb",
+      "changes": "none",
+      "destination_sha256": "8a16c649fc98208e788faff295741552e033e5415352e8c3874787e5bbf7a9fb"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/schedule_store.lua",
+      "destination": "src/lua/schoolbell/schedule_store.lua",
+      "source_sha256": "edf87899094d5523913b36fc25fd73043290c89919ec73b0d7f1abb9229129a6",
+      "changes": "none",
+      "destination_sha256": "edf87899094d5523913b36fc25fd73043290c89919ec73b0d7f1abb9229129a6"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/system_metrics.lua",
+      "destination": "src/lua/schoolbell/system_metrics.lua",
+      "source_sha256": "1439b349cd64d2b6e9d8c257b2251a1005ee347fa251c47b81e195620093546a",
+      "changes": "none",
+      "destination_sha256": "1439b349cd64d2b6e9d8c257b2251a1005ee347fa251c47b81e195620093546a"
+    },
+    {
+      "source": "packages/schoolbell/lua/schoolbell/timezone.lua",
+      "destination": "src/lua/schoolbell/timezone.lua",
+      "source_sha256": "deea87443730a451587b91371583cd33cbee972c90be9ce5b4ada5794f8029ab",
+      "changes": "none",
+      "destination_sha256": "deea87443730a451587b91371583cd33cbee972c90be9ce5b4ada5794f8029ab"
+    },
+    {
+      "source": "packages/schoolbell/media/0.mp3",
+      "destination": "assets/melodies/0.mp3",
+      "source_sha256": "3821035954269a1ba9bacd0a5ab528c61817acb6d623de835f1936ebaebc7d5c",
+      "changes": "none",
+      "destination_sha256": "3821035954269a1ba9bacd0a5ab528c61817acb6d623de835f1936ebaebc7d5c"
+    },
+    {
+      "source": "packages/schoolbell/media/1.mp3",
+      "destination": "assets/melodies/1.mp3",
+      "source_sha256": "e836c3f00c25ec0d2b91c258d6c8057daa7622e029e8ec5b62b911a27f3cf51a",
+      "changes": "none",
+      "destination_sha256": "e836c3f00c25ec0d2b91c258d6c8057daa7622e029e8ec5b62b911a27f3cf51a"
+    },
+    {
+      "source": "packages/schoolbell/media/2.mp3",
+      "destination": "assets/melodies/2.mp3",
+      "source_sha256": "9ced774a35d0dec99b963c9b0a6fe2cd67dd23d1df13338c21e44ea7e519b149",
+      "changes": "none",
+      "destination_sha256": "9ced774a35d0dec99b963c9b0a6fe2cd67dd23d1df13338c21e44ea7e519b149"
+    },
+    {
+      "source": "packages/schoolbell/media/3.mp3",
+      "destination": "assets/melodies/3.mp3",
+      "source_sha256": "e561d0205694f8776a9e6389e6a99ffa642a4c680fc076a02dadd3d94b97dc5d",
+      "changes": "none",
+      "destination_sha256": "e561d0205694f8776a9e6389e6a99ffa642a4c680fc076a02dadd3d94b97dc5d"
+    },
+    {
+      "source": "packages/schoolbell/media/4.mp3",
+      "destination": "assets/melodies/4.mp3",
+      "source_sha256": "ef1adc39a49ca75aa085ef8fb88491b1f44e20de03fa06c52285ac9654136264",
+      "changes": "none",
+      "destination_sha256": "ef1adc39a49ca75aa085ef8fb88491b1f44e20de03fa06c52285ac9654136264"
+    },
+    {
+      "source": "packages/schoolbell/media/README.en.md",
+      "destination": "assets/melodies/README.en.md",
+      "source_sha256": "4b50e14168c9255a1253d96e562eeabf588655d2f1cf39377bf66dcc05962f46",
+      "changes": "none",
+      "destination_sha256": "4b50e14168c9255a1253d96e562eeabf588655d2f1cf39377bf66dcc05962f46"
+    },
+    {
+      "source": "packages/schoolbell/media/README.md",
+      "destination": "assets/melodies/README.md",
+      "source_sha256": "83c679c0bcbc43a61ed9c67869f20b283b381f4dfb963b4fb9fcb105fc41fc7c",
+      "changes": "none",
+      "destination_sha256": "83c679c0bcbc43a61ed9c67869f20b283b381f4dfb963b4fb9fcb105fc41fc7c"
+    },
+    {
+      "source": "packages/schoolbell/media/manifest.json",
+      "destination": "assets/melodies/manifest.json",
+      "source_sha256": "7a92b23aa967231ba4fc3dd6d679cee41c06313a3682cc8d685a912e9a91c910",
+      "changes": "none",
+      "destination_sha256": "7a92b23aa967231ba4fc3dd6d679cee41c06313a3682cc8d685a912e9a91c910"
+    },
+    {
+      "source": "packages/schoolbell/media/melodies.json",
+      "destination": "assets/melodies/melodies.json",
+      "source_sha256": "8fc2aba4dfa278ac451197c48c4f931acbf3381daed0a20a4f34d85d3c66070f",
+      "changes": "none",
+      "destination_sha256": "8fc2aba4dfa278ac451197c48c4f931acbf3381daed0a20a4f34d85d3c66070f"
+    },
+    {
+      "source": "packages/schoolbell/media/test.mp3",
+      "destination": "assets/melodies/test.mp3",
+      "source_sha256": "1ae57af4d27698b0cd3795de7287c0dd1b5e2b336e8d9e8dcc9b853cbd8b4e0d",
+      "changes": "none",
+      "destination_sha256": "1ae57af4d27698b0cd3795de7287c0dd1b5e2b336e8d9e8dcc9b853cbd8b4e0d"
+    },
+    {
+      "source": "packages/schoolbell/native/Makefile",
+      "destination": "src/native/Makefile",
+      "source_sha256": "2b62f26a8cd76fb916863aab8cc8d84a9b263fcf9d55c5d8a707d7375c99948c",
+      "changes": "none",
+      "destination_sha256": "2b62f26a8cd76fb916863aab8cc8d84a9b263fcf9d55c5d8a707d7375c99948c"
+    },
+    {
+      "source": "packages/schoolbell/native/README.en.md",
+      "destination": "src/native/README.en.md",
+      "source_sha256": "828439ecc5177a9d6d6f3873d3015c64e1c37f7658afc488b8d192d72a96dcce",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "1cb02d9748845ee3de92c2f1851261cca34785313d74f3d5f22354003013c17e"
+    },
+    {
+      "source": "packages/schoolbell/native/README.md",
+      "destination": "src/native/README.md",
+      "source_sha256": "87f8ecfc26393a11771e03628a913e4e2ebac5baf1ac0392b13ffb475a686c88",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "96306513d062bb35f1ea25df5d2507cf8469c2af00ae4b0dad06f28021ce61ab"
+    },
+    {
+      "source": "packages/schoolbell/native/clock_lua.c",
+      "destination": "src/native/clock_lua.c",
+      "source_sha256": "9c8d45809fa333df5689a58ea537d81ab27189cbd5f98444377f8a043bdda40a",
+      "changes": "none",
+      "destination_sha256": "9c8d45809fa333df5689a58ea537d81ab27189cbd5f98444377f8a043bdda40a"
+    },
+    {
+      "source": "packages/schoolbell/native/media_lua.c",
+      "destination": "src/native/media_lua.c",
+      "source_sha256": "8facb03c58164d7ca623bab129921a3c6999f1d014b189303ab5ad8c9c6daaca",
+      "changes": "none",
+      "destination_sha256": "8facb03c58164d7ca623bab129921a3c6999f1d014b189303ab5ad8c9c6daaca"
+    },
+    {
+      "source": "packages/schoolbell/native/player.c",
+      "destination": "src/native/player.c",
+      "source_sha256": "fc351ccb47e549084a58ac89a021b96377fa7a5fa469e543964af40523a33812",
+      "changes": "none",
+      "destination_sha256": "fc351ccb47e549084a58ac89a021b96377fa7a5fa469e543964af40523a33812"
+    },
+    {
+      "source": "packages/schoolbell/native/player.h",
+      "destination": "src/native/player.h",
+      "source_sha256": "010f785ae73a1518050049a92f7ce94793103a4d713dfb280cbf3bc4eabc2c24",
+      "changes": "none",
+      "destination_sha256": "010f785ae73a1518050049a92f7ce94793103a4d713dfb280cbf3bc4eabc2c24"
+    },
+    {
+      "source": "packages/schoolbell/native/player_lua.c",
+      "destination": "src/native/player_lua.c",
+      "source_sha256": "e60a38851eff40c58153ee66363128ad3b9754cc28826f570311fa387007419e",
+      "changes": "none",
+      "destination_sha256": "e60a38851eff40c58153ee66363128ad3b9754cc28826f570311fa387007419e"
+    },
+    {
+      "source": "packages/schoolbell/offline/check.sh",
+      "destination": "packaging/offline/check.sh",
+      "source_sha256": "6f7ccc332e0d0f0cf55e6ac8e2347f7d80d94acfac222520ad82ef559bccf208",
+      "changes": "none",
+      "destination_sha256": "6f7ccc332e0d0f0cf55e6ac8e2347f7d80d94acfac222520ad82ef559bccf208"
+    },
+    {
+      "source": "packages/schoolbell/offline/openwrt-19.07.9-mipsel_24kc.json",
+      "destination": "packaging/offline/openwrt-19.07.9-mipsel_24kc.json",
+      "source_sha256": "ea36cc1b4aca18ab6c8ca3061451872aa82707ef74d785f0467e9ba611fed848",
+      "changes": "none",
+      "destination_sha256": "ea36cc1b4aca18ab6c8ca3061451872aa82707ef74d785f0467e9ba611fed848"
+    },
+    {
+      "source": "packages/schoolbell/portable-plan/codec.js",
+      "destination": "src/portable-plan/codec.js",
+      "source_sha256": "104e90cc9386f2829c91f8b4b9c299e73e5a693333b48e801f848691d793c7c7",
+      "changes": "none",
+      "destination_sha256": "104e90cc9386f2829c91f8b4b9c299e73e5a693333b48e801f848691d793c7c7"
+    },
+    {
+      "source": "packages/schoolbell/portable-plan/codec.lua",
+      "destination": "src/portable-plan/codec.lua",
+      "source_sha256": "677e6280743e3a90f0598a4fbea17294980a6df6c229191a88366166156ca457",
+      "changes": "none",
+      "destination_sha256": "677e6280743e3a90f0598a4fbea17294980a6df6c229191a88366166156ca457"
+    },
+    {
+      "source": "packages/schoolbell/portable-plan/export.js",
+      "destination": "src/portable-plan/export.js",
+      "source_sha256": "21ebf10f96bc6d16f3a4b6a69d5fbcf66b2cde39517f8d634d0a3b5484f59db4",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "ac1641a3a7b6e0fcccc56995bc4bcf74bd90a7ee13d6ca7e83b60dd7a4f80aac"
+    },
+    {
+      "source": "packages/schoolbell/portable-plan/export.lua",
+      "destination": "src/portable-plan/export.lua",
+      "source_sha256": "6c0a4f7621016cdb3c88a6c0b800ded2fe25f10904f83b24c47370ff782158e6",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "1a9a377bbf01e031282f1094c825f36f11d99546a0a3aa2df7fde40db6a18d75"
+    },
+    {
+      "source": "packages/schoolbell/portable-plan/fixture.json",
+      "destination": "src/portable-plan/fixture.json",
+      "source_sha256": "fb23bbec538451faf42c5c28764cfc4bedce01320990f54787e87f31633e9023",
+      "changes": "none",
+      "destination_sha256": "fb23bbec538451faf42c5c28764cfc4bedce01320990f54787e87f31633e9023"
+    },
+    {
+      "source": "packages/schoolbell/portable-plan/preview.js",
+      "destination": "src/portable-plan/preview.js",
+      "source_sha256": "b3fed908a17be40ad40f79c3e0932945e4cdc0007ef2e82d304e93dd8ea86326",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "7723241bf169294742d06c121b1fc65276f5978c43407b408452d56d54f434be"
+    },
+    {
+      "source": "packages/schoolbell/portable-plan/preview.lua",
+      "destination": "src/portable-plan/preview.lua",
+      "source_sha256": "408236694613b5c30db54691979ab3e288ff4a285bddf36cbcec726316489419",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "1fa2eb9513f0002c88d35ba0a73e01a25734c46422915525a3a86774c65d763f"
+    },
+    {
+      "source": "packages/schoolbell/portable-plan/test-export.js",
+      "destination": "src/portable-plan/test-export.js",
+      "source_sha256": "bac721a3db3ac62daf353d05c48baed1c9edef71831b4cf7d6477cef74554c3e",
+      "changes": "none",
+      "destination_sha256": "bac721a3db3ac62daf353d05c48baed1c9edef71831b4cf7d6477cef74554c3e"
+    },
+    {
+      "source": "packages/schoolbell/portable-plan/test-export.lua",
+      "destination": "src/portable-plan/test-export.lua",
+      "source_sha256": "2649b8bb323ae5c29420c1897dc69b7cc9b408f663eb42b999170392ad041401",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "92ff1c37f5c318b43181ff8d9db75c6d179f8ff2ff1a069b1f1042e3f6ea7b79"
+    },
+    {
+      "source": "packages/schoolbell/portable-plan/test-export.py",
+      "destination": "src/portable-plan/test-export.py",
+      "source_sha256": "0c8c7e6f401f48764481c2fc3345eab45863afff22bfc25f548a34c8542f7b6a",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "eda5e373912ab40685f533fa1c2f84e8a0f83bcb37ede1b352fab1d235426367"
+    },
+    {
+      "source": "packages/schoolbell/portable-plan/test-preview.js",
+      "destination": "src/portable-plan/test-preview.js",
+      "source_sha256": "ecd3bd9852b11988da47fca958ffe465d60740963c84ec9c1e381b9f0bbe0bab",
+      "changes": "none",
+      "destination_sha256": "ecd3bd9852b11988da47fca958ffe465d60740963c84ec9c1e381b9f0bbe0bab"
+    },
+    {
+      "source": "packages/schoolbell/portable-plan/test-preview.lua",
+      "destination": "src/portable-plan/test-preview.lua",
+      "source_sha256": "d65eb9d7e3efe1b7e26e807dce377a8bbd5143d5c2b8af29fb91e3961da3b91a",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "ace3484e1b76e3ad4a1c4437371e3a99f4af0c84ccc947611b7413262fe3194c"
+    },
+    {
+      "source": "packages/schoolbell/portable-plan/test-preview.py",
+      "destination": "src/portable-plan/test-preview.py",
+      "source_sha256": "50392faa9f16b7c4066caa9935fccfc64eb7e0f5f54e17d2ee03d6c158889391",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "cf9794f213ee13e72c9b6368a05428326c3f9baf40a85629f6984674f037a504"
+    },
+    {
+      "source": "packages/schoolbell/portable-plan/test.js",
+      "destination": "src/portable-plan/test.js",
+      "source_sha256": "75bfc6827fcefa6d1635a8a81af70abdcc32430d26dc59e1797ba81d2eea98a1",
+      "changes": "none",
+      "destination_sha256": "75bfc6827fcefa6d1635a8a81af70abdcc32430d26dc59e1797ba81d2eea98a1"
+    },
+    {
+      "source": "packages/schoolbell/portable-plan/test.lua",
+      "destination": "src/portable-plan/test.lua",
+      "source_sha256": "9ef1d67018a0e836681a5880c56ed3481fc15b16644b5f22e74ede55dbbd0714",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "b48edd7f6c750f3d4f14fcdf397ae5407a120c96d3a57de4a0e0b9d2f896568c"
+    },
+    {
+      "source": "packages/schoolbell/portable-plan/test.py",
+      "destination": "src/portable-plan/test.py",
+      "source_sha256": "96b0a006f4beaa566a95979035130fcc36aadaeac7cd7ebdf42c95d214fc13fb",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "0403392643f14064c85d1e45d07ddebd0cd14486880274f851d44a389d49b08a"
+    },
+    {
+      "source": "packages/schoolbell/router-page/root/etc/init.d/schoolbell-auto",
+      "destination": "packaging/openwrt/root/etc/init.d/schoolbell-auto",
+      "source_sha256": "33ce0c7a251ed0e5cae6b46e164bb6cb068172b6a47d1d44b549232d0a101f87",
+      "changes": "none",
+      "destination_sha256": "33ce0c7a251ed0e5cae6b46e164bb6cb068172b6a47d1d44b549232d0a101f87"
+    },
+    {
+      "source": "packages/schoolbell/router-page/root/usr/lib/lua/luci/controller/schoolbell_test.lua",
+      "destination": "packaging/openwrt/root/usr/lib/lua/luci/controller/schoolbell_test.lua",
+      "source_sha256": "1963bc18fc4f40ef70dfd7cf809384af0a4da99c565e9acc3ea45c10f6d27f8c",
+      "changes": "none",
+      "destination_sha256": "1963bc18fc4f40ef70dfd7cf809384af0a4da99c565e9acc3ea45c10f6d27f8c"
+    },
+    {
+      "source": "packages/schoolbell/router-page/root/usr/lib/lua/luci/view/schoolbell_test.htm",
+      "destination": "ui/root/usr/lib/lua/luci/view/schoolbell_test.htm",
+      "source_sha256": "526214f183ea8526785239074189d00cc03e7251323ee4146f75f0a53a015a54",
+      "changes": "none",
+      "destination_sha256": "526214f183ea8526785239074189d00cc03e7251323ee4146f75f0a53a015a54"
+    },
+    {
+      "source": "packages/schoolbell/router-page/root/usr/lib/lua/schoolbell/backup_web.lua",
+      "destination": "packaging/openwrt/root/usr/lib/lua/schoolbell/backup_web.lua",
+      "source_sha256": "61eec0b07be24dc7bf0cc5b69254377465b6257817a60a95bc4259c6f41853ba",
+      "changes": "none",
+      "destination_sha256": "61eec0b07be24dc7bf0cc5b69254377465b6257817a60a95bc4259c6f41853ba"
+    },
+    {
+      "source": "packages/schoolbell/router-page/root/usr/lib/lua/schoolbell/media_web.lua",
+      "destination": "packaging/openwrt/root/usr/lib/lua/schoolbell/media_web.lua",
+      "source_sha256": "3a7631ec0cc1265720ba70bb0e8cf462e8d31f76e7401de4b158bc66690016f4",
+      "changes": "none",
+      "destination_sha256": "3a7631ec0cc1265720ba70bb0e8cf462e8d31f76e7401de4b158bc66690016f4"
+    },
+    {
+      "source": "packages/schoolbell/router-page/root/usr/lib/lua/schoolbell/plan_export_web.lua",
+      "destination": "packaging/openwrt/root/usr/lib/lua/schoolbell/plan_export_web.lua",
+      "source_sha256": "ca786ec4e53faf5f13ab106fce4518be5bc3b647ac31d0cf3b0e2233f462bc06",
+      "changes": "none",
+      "destination_sha256": "ca786ec4e53faf5f13ab106fce4518be5bc3b647ac31d0cf3b0e2233f462bc06"
+    },
+    {
+      "source": "packages/schoolbell/router-page/root/usr/lib/lua/schoolbell/plan_import_web.lua",
+      "destination": "packaging/openwrt/root/usr/lib/lua/schoolbell/plan_import_web.lua",
+      "source_sha256": "f880f104d8b3ca71fab9db10b2b01f9196e63bdf94fe572ac3dd47c8f79ea6ba",
+      "changes": "none",
+      "destination_sha256": "f880f104d8b3ca71fab9db10b2b01f9196e63bdf94fe572ac3dd47c8f79ea6ba"
+    },
+    {
+      "source": "packages/schoolbell/router-page/root/usr/lib/lua/schoolbell/sound_test.lua",
+      "destination": "packaging/openwrt/root/usr/lib/lua/schoolbell/sound_test.lua",
+      "source_sha256": "6cb8d92f954599f39ff8424c2e16b3991e8d05f110a4ca31fca5fa892c7d2316",
+      "changes": "none",
+      "destination_sha256": "6cb8d92f954599f39ff8424c2e16b3991e8d05f110a4ca31fca5fa892c7d2316"
+    },
+    {
+      "source": "packages/schoolbell/router-page/root/usr/sbin/schoolbell-auto",
+      "destination": "packaging/openwrt/root/usr/sbin/schoolbell-auto",
+      "source_sha256": "9ef66a98ac6fb710f9b1b13d5997b3cdf6b1271d0f2c99d172ed3bc09b55d907",
+      "changes": "none",
+      "destination_sha256": "9ef66a98ac6fb710f9b1b13d5997b3cdf6b1271d0f2c99d172ed3bc09b55d907"
+    },
+    {
+      "source": "packages/schoolbell/router-page/root/usr/sbin/schoolbell-package",
+      "destination": "packaging/openwrt/root/usr/sbin/schoolbell-package",
+      "source_sha256": "41a17dcb25044358e91680c82a8eb30f978092560a9c62ff913b6414abaea027",
+      "changes": "none",
+      "destination_sha256": "41a17dcb25044358e91680c82a8eb30f978092560a9c62ff913b6414abaea027"
+    },
+    {
+      "source": "packages/schoolbell/router-page/root/www/schoolbell-test/app.js",
+      "destination": "ui/root/www/schoolbell-test/app.js",
+      "source_sha256": "265696eb80858b64764268b7870a33f6ff7ab55c0ef286de8faa7519c4883118",
+      "changes": "none",
+      "destination_sha256": "265696eb80858b64764268b7870a33f6ff7ab55c0ef286de8faa7519c4883118"
+    },
+    {
+      "source": "packages/schoolbell/router-page/root/www/schoolbell-test/automatic.js",
+      "destination": "ui/root/www/schoolbell-test/automatic.js",
+      "source_sha256": "1a68ffe9c98311464217a369cccc6da76426a96d6083288ab47e2f441d1e828c",
+      "changes": "none",
+      "destination_sha256": "1a68ffe9c98311464217a369cccc6da76426a96d6083288ab47e2f441d1e828c"
+    },
+    {
+      "source": "packages/schoolbell/router-page/root/www/schoolbell-test/backup.js",
+      "destination": "ui/root/www/schoolbell-test/backup.js",
+      "source_sha256": "1e12119b24f79ea622d81a05f2eae5298555de8656da96a0061b4fd7bfb8355c",
+      "changes": "none",
+      "destination_sha256": "1e12119b24f79ea622d81a05f2eae5298555de8656da96a0061b4fd7bfb8355c"
+    },
+    {
+      "source": "packages/schoolbell/router-page/root/www/schoolbell-test/clock-trust.js",
+      "destination": "ui/root/www/schoolbell-test/clock-trust.js",
+      "source_sha256": "e5f28fd308cfc13517f8e445c163b1ed7c0cdf1c7f3a11acb3fb3ecdaa11e1f9",
+      "changes": "none",
+      "destination_sha256": "e5f28fd308cfc13517f8e445c163b1ed7c0cdf1c7f3a11acb3fb3ecdaa11e1f9"
+    },
+    {
+      "source": "packages/schoolbell/router-page/root/www/schoolbell-test/controls.js",
+      "destination": "ui/root/www/schoolbell-test/controls.js",
+      "source_sha256": "d54bd395645778dc54f3047973372f1da8237cccda8e20a282cfcf307d1e8ff1",
+      "changes": "none",
+      "destination_sha256": "d54bd395645778dc54f3047973372f1da8237cccda8e20a282cfcf307d1e8ff1"
+    },
+    {
+      "source": "packages/schoolbell/router-page/root/www/schoolbell-test/cpu.js",
+      "destination": "ui/root/www/schoolbell-test/cpu.js",
+      "source_sha256": "7d80ab0954d30b814afbd6ade3787c86b9c786f78e0a3bafa2034adcd7c7563a",
+      "changes": "none",
+      "destination_sha256": "7d80ab0954d30b814afbd6ade3787c86b9c786f78e0a3bafa2034adcd7c7563a"
+    },
+    {
+      "source": "packages/schoolbell/router-page/root/www/schoolbell-test/dashboard.js",
+      "destination": "ui/root/www/schoolbell-test/dashboard.js",
+      "source_sha256": "d2f4fba470da0160da0d2a47f8986c485346e103a4debf15a37ec55eeb7a9476",
+      "changes": "none",
+      "destination_sha256": "d2f4fba470da0160da0d2a47f8986c485346e103a4debf15a37ec55eeb7a9476"
+    },
+    {
+      "source": "packages/schoolbell/router-page/root/www/schoolbell-test/diagnostics.js",
+      "destination": "ui/root/www/schoolbell-test/diagnostics.js",
+      "source_sha256": "5251a559554176c3fdc8be5bb2e34cecb73389f39d07086736404427886756ac",
+      "changes": "none",
+      "destination_sha256": "5251a559554176c3fdc8be5bb2e34cecb73389f39d07086736404427886756ac"
+    },
+    {
+      "source": "packages/schoolbell/router-page/root/www/schoolbell-test/media.js",
+      "destination": "ui/root/www/schoolbell-test/media.js",
+      "source_sha256": "79b52ae442a583d3df5ab20db499c2c62f572908ddc8c5e6de0c30079a49c225",
+      "changes": "none",
+      "destination_sha256": "79b52ae442a583d3df5ab20db499c2c62f572908ddc8c5e6de0c30079a49c225"
+    },
+    {
+      "source": "packages/schoolbell/router-page/root/www/schoolbell-test/plan-export.js",
+      "destination": "ui/root/www/schoolbell-test/plan-export.js",
+      "source_sha256": "8d4fe50349716bd5c89f258841d5d7642c31eb6cdf64dd50959f53e1e539aef7",
+      "changes": "none",
+      "destination_sha256": "8d4fe50349716bd5c89f258841d5d7642c31eb6cdf64dd50959f53e1e539aef7"
+    },
+    {
+      "source": "packages/schoolbell/router-page/root/www/schoolbell-test/plan-import.js",
+      "destination": "ui/root/www/schoolbell-test/plan-import.js",
+      "source_sha256": "4f83deb89f6f16f9d7092ac1c224323ce20db43a6859ad61589cb7e8c4144653",
+      "changes": "none",
+      "destination_sha256": "4f83deb89f6f16f9d7092ac1c224323ce20db43a6859ad61589cb7e8c4144653"
+    },
+    {
+      "source": "packages/schoolbell/router-page/root/www/schoolbell-test/ranges.js",
+      "destination": "ui/root/www/schoolbell-test/ranges.js",
+      "source_sha256": "775cebc5e5b42533561d4c871de4ea4e91215129d198fb9ce0f30e09f48064b3",
+      "changes": "none",
+      "destination_sha256": "775cebc5e5b42533561d4c871de4ea4e91215129d198fb9ce0f30e09f48064b3"
+    },
+    {
+      "source": "packages/schoolbell/router-page/root/www/schoolbell-test/row-preview.js",
+      "destination": "ui/root/www/schoolbell-test/row-preview.js",
+      "source_sha256": "eff6c9d130dcff28cf76e1a1b7a6b3228d3d2a378ddb9afd62b7ee868e1dd0c4",
+      "changes": "none",
+      "destination_sha256": "eff6c9d130dcff28cf76e1a1b7a6b3228d3d2a378ddb9afd62b7ee868e1dd0c4"
+    },
+    {
+      "source": "packages/schoolbell/router-page/root/www/schoolbell-test/schedules.js",
+      "destination": "ui/root/www/schoolbell-test/schedules.js",
+      "source_sha256": "0bc0f6d87c79856181ed81326f0f4728872783e19f55d99249b3eea5f8042a6f",
+      "changes": "none",
+      "destination_sha256": "0bc0f6d87c79856181ed81326f0f4728872783e19f55d99249b3eea5f8042a6f"
+    },
+    {
+      "source": "packages/schoolbell/router-page/root/www/schoolbell-test/session.js",
+      "destination": "ui/root/www/schoolbell-test/session.js",
+      "source_sha256": "ffb876b0dfaf523e9949df731af974e61f720b9c400fefa2fd5c1330f0b5ce7b",
+      "changes": "none",
+      "destination_sha256": "ffb876b0dfaf523e9949df731af974e61f720b9c400fefa2fd5c1330f0b5ce7b"
+    },
+    {
+      "source": "packages/schoolbell/router-page/root/www/schoolbell-test/style.css",
+      "destination": "ui/root/www/schoolbell-test/style.css",
+      "source_sha256": "046d8f5ba5461e83f8c4412b368b227ae34a98eef741d500af2117eefa4ff0ba",
+      "changes": "none",
+      "destination_sha256": "046d8f5ba5461e83f8c4412b368b227ae34a98eef741d500af2117eefa4ff0ba"
+    },
+    {
+      "source": "packages/schoolbell/router-page/root/www/schoolbell-test/theme.js",
+      "destination": "ui/root/www/schoolbell-test/theme.js",
+      "source_sha256": "18fcbf525f1a2b0baf2e07bf2672a61713660fdcadbd4b05b9a2db76389e2c99",
+      "changes": "none",
+      "destination_sha256": "18fcbf525f1a2b0baf2e07bf2672a61713660fdcadbd4b05b9a2db76389e2c99"
+    },
+    {
+      "source": "packages/schoolbell/router-page/root/www/schoolbell-test/time-settings.js",
+      "destination": "ui/root/www/schoolbell-test/time-settings.js",
+      "source_sha256": "dfb1234a4d60cd22921ad44753ed43ffc0465467970d471a0e1757d7d5b165f7",
+      "changes": "none",
+      "destination_sha256": "dfb1234a4d60cd22921ad44753ed43ffc0465467970d471a0e1757d7d5b165f7"
+    },
+    {
+      "source": "packages/schoolbell/router-page/root/www/schoolbell-test/traffic.js",
+      "destination": "ui/root/www/schoolbell-test/traffic.js",
+      "source_sha256": "48d7be2df53e017b954fa16975b0528a9e1dc3374fe72544c60cd8d34e2a556d",
+      "changes": "none",
+      "destination_sha256": "48d7be2df53e017b954fa16975b0528a9e1dc3374fe72544c60cd8d34e2a556d"
+    },
+    {
+      "source": "packages/schoolbell/tests/check_dates.lua",
+      "destination": "tests/check_dates.lua",
+      "source_sha256": "5dd5a3abd71c6b3e7623ac5473a7de35420b14d30f2adfd80d3626327e34fb11",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "602b28d4b36404b4c5db08aa56e09227903da73c35d4c1f165bcd0fe0ab766ab"
+    },
+    {
+      "source": "packages/schoolbell/tests/clock_faults.c",
+      "destination": "tests/clock_faults.c",
+      "source_sha256": "a71ba52cc4ccc769f77377ac31046f560365835396eaf1f978ea612f24958a87",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "45e46a77645c28a818c6f49aba371ac6aeffa534d6797543152e84ba07f2ae67"
+    },
+    {
+      "source": "packages/schoolbell/tests/lua_player_host.c",
+      "destination": "tests/lua_player_host.c",
+      "source_sha256": "01f18fbb434a05cb4f43d95b392d16cbe8e1f1060cfd08b27227a72a7e6bf939",
+      "changes": "none",
+      "destination_sha256": "01f18fbb434a05cb4f43d95b392d16cbe8e1f1060cfd08b27227a72a7e6bf939"
+    },
+    {
+      "source": "packages/schoolbell/tests/media_fs_host.c",
+      "destination": "tests/media_fs_host.c",
+      "source_sha256": "2dde804c432b4e5bcc4bfb8c3602a56b0b8d24195305405592cca3d17f8b3fb2",
+      "changes": "none",
+      "destination_sha256": "2dde804c432b4e5bcc4bfb8c3602a56b0b8d24195305405592cca3d17f8b3fb2"
+    },
+    {
+      "source": "packages/schoolbell/tests/original_fixture.lua",
+      "destination": "tests/original_fixture.lua",
+      "source_sha256": "e593e344bdd0671d4821d085163fc5f859dca5eafb6cdba51cbf92e182ab4882",
+      "changes": "none",
+      "destination_sha256": "e593e344bdd0671d4821d085163fc5f859dca5eafb6cdba51cbf92e182ab4882"
+    },
+    {
+      "source": "packages/schoolbell/tests/player_child.c",
+      "destination": "tests/player_child.c",
+      "source_sha256": "ba8e76f59401f83ba209bdbf0d33c6db4eaccacf2484ef953a865f1df1062e38",
+      "changes": "none",
+      "destination_sha256": "ba8e76f59401f83ba209bdbf0d33c6db4eaccacf2484ef953a865f1df1062e38"
+    },
+    {
+      "source": "packages/schoolbell/tests/range-plan.json",
+      "destination": "tests/range-plan.json",
+      "source_sha256": "aefe095b01a8b81df507bf71ea9efec2ff502323403d52553e04b6b4724c9508",
+      "changes": "none",
+      "destination_sha256": "aefe095b01a8b81df507bf71ea9efec2ff502323403d52553e04b6b4724c9508"
+    },
+    {
+      "source": "packages/schoolbell/tests/range-preview.lua",
+      "destination": "tests/range-preview.lua",
+      "source_sha256": "d5ebed41428b9b11bf039390f53190f150cce5a1d048cfb8d121f08e6ad31c55",
+      "changes": "none",
+      "destination_sha256": "d5ebed41428b9b11bf039390f53190f150cce5a1d048cfb8d121f08e6ad31c55"
+    },
+    {
+      "source": "packages/schoolbell/tests/schedule_store_driver.lua",
+      "destination": "tests/schedule_store_driver.lua",
+      "source_sha256": "0ca75357fbeee14b180467681d4fb80c7ec73b7a86561ecc642f2c8d2d544378",
+      "changes": "none",
+      "destination_sha256": "0ca75357fbeee14b180467681d4fb80c7ec73b7a86561ecc642f2c8d2d544378"
+    },
+    {
+      "source": "packages/schoolbell/tests/test-clock-ui.js",
+      "destination": "tests/test-clock-ui.js",
+      "source_sha256": "c12f145e42d02a293e1a8345108a30b7084b8912af8fdba61d55524a1564947d",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "4a996bafdc48ca89f061f0a3c553fa6d75da13b41d095d6210c29a78ba9e9517"
+    },
+    {
+      "source": "packages/schoolbell/tests/test-linux-player.sh",
+      "destination": "tests/test-linux-player.sh",
+      "source_sha256": "7fc2f0783a6848d216b4842f6bf3890f8dc594f20af25768f2705d736a627c5d",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "5bb06322d378b00bcf02f122bd26925ef3242e7c1783a1f49cd6ac3a934ab6ec"
+    },
+    {
+      "source": "packages/schoolbell/tests/test-lua-player.sh",
+      "destination": "tests/test-lua-player.sh",
+      "source_sha256": "5c0803bfe26a4cb63fa789eee393d73c54c04306f943c55b7ff9f3f1800e07f5",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "08a34bcaa30f21ebe74f7ec499761f2e99bd2f22eff74662d300eea4ec0b3b3f"
+    },
+    {
+      "source": "packages/schoolbell/tests/test-media-manager.sh",
+      "destination": "tests/test-media-manager.sh",
+      "source_sha256": "2ea0b782795337e44a8af8efc4579cdf0667486d05be58303fd3e5b78342301a",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "5b6d6052b2ef91650e5ef64fdfa53ce3b18f3567df56cbaaca6d8c1f1d51a606"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_annual_editor.lua",
+      "destination": "tests/test_annual_editor.lua",
+      "source_sha256": "a4943b26c62eb7146f2b5fd3c1008ededf9a111f2faa1c8d0c3818bbb757d968",
+      "changes": "none",
+      "destination_sha256": "a4943b26c62eb7146f2b5fd3c1008ededf9a111f2faa1c8d0c3818bbb757d968"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_annual_http.lua",
+      "destination": "tests/test_annual_http.lua",
+      "source_sha256": "209c49a66266b447b86ccb44ce260753453c09b61ecfb10b25356dbb2893a643",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "b6155524d30195fb47c48d79df0584db38dfc6f010a3c388ef2c5d88b9f97c00"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_automatic.lua",
+      "destination": "tests/test_automatic.lua",
+      "source_sha256": "aee516ecfed63a09dcd3cd4c8c0b4a0f64daf6cc24c3c436ef80c58cb219ac6a",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "4025743df275a3135d33f1364438569bcacd68af4013f48ac679afe0fd50e2d8"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_automatic_oracle.lua",
+      "destination": "tests/test_automatic_oracle.lua",
+      "source_sha256": "cdc9450effe65cb340a3d9d475045b73585e60c9b14f2cecce9ab5914660f2f3",
+      "changes": "none",
+      "destination_sha256": "cdc9450effe65cb340a3d9d475045b73585e60c9b14f2cecce9ab5914660f2f3"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_automatic_service.lua",
+      "destination": "tests/test_automatic_service.lua",
+      "source_sha256": "481d6ba6c8d56f76a00a415045eae00edaf4f755f6b8d7039c8bfa045aa07d23",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "2138873e971236316c135e518dbbcfc0128eaaa091845f44e4c830791b5cf218"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_automatic_status.lua",
+      "destination": "tests/test_automatic_status.lua",
+      "source_sha256": "a0eac2c2e0a4904bf0ee09031d243b909109c97242a05e7be04d664597dbb57a",
+      "changes": "none",
+      "destination_sha256": "a0eac2c2e0a4904bf0ee09031d243b909109c97242a05e7be04d664597dbb57a"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_automatic_storage.lua",
+      "destination": "tests/test_automatic_storage.lua",
+      "source_sha256": "a6095c109d8021c89254cf758dd6fd9c521a4afb39524e2f07c779b8de2eea96",
+      "changes": "none",
+      "destination_sha256": "a6095c109d8021c89254cf758dd6fd9c521a4afb39524e2f07c779b8de2eea96"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_backup.lua",
+      "destination": "tests/test_backup.lua",
+      "source_sha256": "cabe78f808ebbdf22558ee3268df76d437ee102dd83cfaee361a52a9a1d09b81",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "594c76de2bc7d9980773d18815ad1da7a4e24506104d4cc3f2cd56b3bc48aabc"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_backup_http.lua",
+      "destination": "tests/test_backup_http.lua",
+      "source_sha256": "a8eaab33080ac68fc78ddee995b35880dbb80803fa2b7a8998380e01d1ccd6c6",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "d1763f8dbdda3f94248d8775f137af34b9c2080679736f4907f8e13a9424e008"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_calendar.lua",
+      "destination": "tests/test_calendar.lua",
+      "source_sha256": "cc61a6b32cbdce9ce3a85765b2045157ea1d09d6a8d6118ccac51afb574963e9",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "aa45e2b8564b6d16cfcdc2cf1606333638658a59310e3feb15763354388ddaf1"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_calendar_dates.py",
+      "destination": "tests/test_calendar_dates.py",
+      "source_sha256": "a990f4311441523966dc42bea81efacf3dfe991f6a0f6c0086a51854cc2479e1",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "33641180b17b5afb0edc76407179d0384c350622d7f9e0631b94d828a5b29ce4"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_clock_commands.lua",
+      "destination": "tests/test_clock_commands.lua",
+      "source_sha256": "24349d2db50d1f4d907a6c6e88dc0707fc8b40ea4cf3d81cb995e2da244da8b0",
+      "changes": "none",
+      "destination_sha256": "24349d2db50d1f4d907a6c6e88dc0707fc8b40ea4cf3d81cb995e2da244da8b0"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_clock_gate.lua",
+      "destination": "tests/test_clock_gate.lua",
+      "source_sha256": "3c75da967ebd68727a1e0290b781b2d1e505159b4a7a4c4c126d635a2bf6d1d3",
+      "changes": "none",
+      "destination_sha256": "3c75da967ebd68727a1e0290b781b2d1e505159b4a7a4c4c126d635a2bf6d1d3"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_clock_http.lua",
+      "destination": "tests/test_clock_http.lua",
+      "source_sha256": "0b0ab40054463ba0af5a4a85815916d4e65554542a7585b13fac09e353a5f685",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "b63497496304ba35a0498d7f6b165907bc8c9ccb179b78fd05b00a94eddff834"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_clock_policy.lua",
+      "destination": "tests/test_clock_policy.lua",
+      "source_sha256": "1b9d0b0d30829653421ab619211175e42380937155b28bc77e7068b2a5ce37e6",
+      "changes": "none",
+      "destination_sha256": "1b9d0b0d30829653421ab619211175e42380937155b28bc77e7068b2a5ce37e6"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_clock_set.lua",
+      "destination": "tests/test_clock_set.lua",
+      "source_sha256": "8edd750aecd12e58405ad57a3bd3405e1273237f3d7ad8974f59aa779efb3811",
+      "changes": "none",
+      "destination_sha256": "8edd750aecd12e58405ad57a3bd3405e1273237f3d7ad8974f59aa779efb3811"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_clock_system.lua",
+      "destination": "tests/test_clock_system.lua",
+      "source_sha256": "59196293e0d28edd5f976519cdc57101a9770f0c08906d11ec573729928c6ffc",
+      "changes": "none",
+      "destination_sha256": "59196293e0d28edd5f976519cdc57101a9770f0c08906d11ec573729928c6ffc"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_clock_system.py",
+      "destination": "tests/test_clock_system.py",
+      "source_sha256": "1921266ee39b14e58843019de79f04434be0fae1e15d82b3a65cadd476111516",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "319015ddc427576eb72545640c7b9d86a082b91683a247fee33fdb68e5e99652"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_clock_trust.lua",
+      "destination": "tests/test_clock_trust.lua",
+      "source_sha256": "33a1bef5f0743df51c22011b1e6539bc3bf23b4cb8ace7c10e84d096f0a19082",
+      "changes": "none",
+      "destination_sha256": "33a1bef5f0743df51c22011b1e6539bc3bf23b4cb8ace7c10e84d096f0a19082"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_controls.lua",
+      "destination": "tests/test_controls.lua",
+      "source_sha256": "4efa32f9b718aefa8409c8a51c6ed5945d16f56eb43543a1ccc37e786549ee3c",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "4bccca83d253bb21b75ebd07a211a21ce470d68380313bf126d69d933ae29123"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_dashboard_http.lua",
+      "destination": "tests/test_dashboard_http.lua",
+      "source_sha256": "e502ed694c5b845d2bb2518b514386b115ff0c7437953b3157edae78f0a42d55",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "81470f19e889ed834268a760ee00286c56816666892e57613944fd09b0e95ab9"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_journal.lua",
+      "destination": "tests/test_journal.lua",
+      "source_sha256": "a2ac6c92da1d92557ec744aef48feca67fd5707cb0ac2d3105455a79c2ccaa7a",
+      "changes": "none",
+      "destination_sha256": "a2ac6c92da1d92557ec744aef48feca67fd5707cb0ac2d3105455a79c2ccaa7a"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_linux_player.c",
+      "destination": "tests/test_linux_player.c",
+      "source_sha256": "5a7e4725f797e76746e41ba4905dde95010c6008a4544ec2b0b98aa7228da74f",
+      "changes": "none",
+      "destination_sha256": "5a7e4725f797e76746e41ba4905dde95010c6008a4544ec2b0b98aa7228da74f"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_linux_player_faults.c",
+      "destination": "tests/test_linux_player_faults.c",
+      "source_sha256": "57335022e598777d6b5e9d534c6c723ca2036c06f6a312222acfb5e075a008ef",
+      "changes": "none",
+      "destination_sha256": "57335022e598777d6b5e9d534c6c723ca2036c06f6a312222acfb5e075a008ef"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_media_admission.lua",
+      "destination": "tests/test_media_admission.lua",
+      "source_sha256": "982bb9b3a4002a32490a584947159d61cf5b2bde8b300a65019f9d477adc3da4",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "fdfaf7ef717905546aabdff269fa6d490e0e929db6adda474448f6908795046a"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_media_http.lua",
+      "destination": "tests/test_media_http.lua",
+      "source_sha256": "9df200dab57ae50b2ee9bdf15109482e7f9d10cb081e57b9e2e9c5198f3c7947",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "5906045ce62d9cefd77bd8404975826bf234320eb22d2c31319f1d9bb9ffa3ec"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_media_library.lua",
+      "destination": "tests/test_media_library.lua",
+      "source_sha256": "7664e0f07d81403fe02c12a0e4fb3d502de5639e1adaa2c6a6ff3057ace20a62",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "249dee787e6e4893c5e6e15a1f26461b4f7cf750fd51a4af7c834eca41b848df"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_media_manager.lua",
+      "destination": "tests/test_media_manager.lua",
+      "source_sha256": "c626dd62a9d6b690177b815865db567b8afaf4eb8edc323e8c96efb8c06fa4c4",
+      "changes": "none",
+      "destination_sha256": "c626dd62a9d6b690177b815865db567b8afaf4eb8edc323e8c96efb8c06fa4c4"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_media_manager.py",
+      "destination": "tests/test_media_manager.py",
+      "source_sha256": "8665a9fb4aa2e5d6d748e02eaa9ac0698860186ba865c3be2a35265ed81c4eb3",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "09d5b020e1a064a539ddba1c6388fcacb3bc2a63102239a07aa084bbdc8bd9d9"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_media_web.lua",
+      "destination": "tests/test_media_web.lua",
+      "source_sha256": "bb76b305eec591e51011e13071815df2217093ab9a4f900a708c625c15f5fd89",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "2709d1bc8a5697c9fbab561017840cf4464b7e22eef19fc6550450d117e04146"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_metadata_progress.lua",
+      "destination": "tests/test_metadata_progress.lua",
+      "source_sha256": "54309bf7662042a96cb2de749ca4a00987db0686e5f8c15c29666b358fa86fab",
+      "changes": "none",
+      "destination_sha256": "54309bf7662042a96cb2de749ca4a00987db0686e5f8c15c29666b358fa86fab"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_mp3.lua",
+      "destination": "tests/test_mp3.lua",
+      "source_sha256": "329c898407c393a5f75b13eabd39559eece2d0d6e716aa5f2d70f9a9aa8ab861",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "d7749472c766dcb1a81629c30215c0b4b43afcbf092e7d9a8dc0efe32f486cdc"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_offline_bundle.py",
+      "destination": "tests/test_offline_bundle.py",
+      "source_sha256": "6b6f895bde333cfa479a5710fc2a8ba6061372374fe480a9216e62f37692382c",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "2feae52dffd9c43937acf874c6db8b5a96f9b040facf8436c04caefe86f1f6e9"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_package_lifecycle.py",
+      "destination": "tests/test_package_lifecycle.py",
+      "source_sha256": "2cd4faf428a3c7727cd9959c64567692e17fac04f74d3cd8472d6c05451be229",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "27f8515ad18ef18b1f1621d8728a19149fda3b7bbc3d44b7cdbd17dbe6239c54"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_package_mailbox.lua",
+      "destination": "tests/test_package_mailbox.lua",
+      "source_sha256": "b4e2dce432807226a22f73290f88e50c5ee8644d4e2c7a63ea09ad8253eef4e8",
+      "changes": "none",
+      "destination_sha256": "b4e2dce432807226a22f73290f88e50c5ee8644d4e2c7a63ea09ad8253eef4e8"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_plan_export.lua",
+      "destination": "tests/test_plan_export.lua",
+      "source_sha256": "333dca4e5b61b855b406e4910607ded7cdcc4302f39f493e7748666d7b50f8ed",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "8483a73e5ec55298023fac8aa2d684eb5f9cae967976658e5f3786cebc8d6ede"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_plan_export_http.lua",
+      "destination": "tests/test_plan_export_http.lua",
+      "source_sha256": "52c0a2fd21416d32668929eaee04541850122157df12f78aa02a86afea3469db",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "e7bf84f56223056cbb75de9ca634615e73fdb690c85516b453a7d78799e82076"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_plan_import.lua",
+      "destination": "tests/test_plan_import.lua",
+      "source_sha256": "0ac455b3677e89530c63bbaf5e9541c04cce104d6ad5eb491aef43fea8b66280",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "bbf78bfbd57adfb0faf0727d73a762bfe296ca03451743175495f5f2902b8215"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_plan_import_http.lua",
+      "destination": "tests/test_plan_import_http.lua",
+      "source_sha256": "09fb2e1f87c40841d1d25fc80829e924a33b71316a6b52434bca80be099a4e65",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "ae586c1580e72d3f39e8e511e6b8c1f6df9a7584f95b77afaeefb90d6d9bb5f8"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_plan_import_web.lua",
+      "destination": "tests/test_plan_import_web.lua",
+      "source_sha256": "91dfc813d20987da8400ca09054e3ccfa8abea8628448849ffb99adc43ae1f6c",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "a6191807587a07737d02e67914901a5d376aef1cff089448db9033dd1399bded"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_playback_queue.lua",
+      "destination": "tests/test_playback_queue.lua",
+      "source_sha256": "fe01e2004eb1234c2e998e3ca6258353175d9834dded38de0a7d68874b8ce0da",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "0f480e7ca10f8a3aadeaaa971fd6d7ca86af1b9ace47321251c7377ab111f6c7"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_player_linux.lua",
+      "destination": "tests/test_player_linux.lua",
+      "source_sha256": "476332fe510944db3938fda8d23ee40df3fc410dd990a84459bb42821c3e3052",
+      "changes": "none",
+      "destination_sha256": "476332fe510944db3938fda8d23ee40df3fc410dd990a84459bb42821c3e3052"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_player_model.lua",
+      "destination": "tests/test_player_model.lua",
+      "source_sha256": "937e9084cf0b1e25eeb9f69a17ddf11145f38229c53413ec88588711b3ad9795",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "1d605bd62be6b110574bf405d85ae5abcc5b56ae789078cd154b02fdde759c7f"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_queue_linux.lua",
+      "destination": "tests/test_queue_linux.lua",
+      "source_sha256": "e217df8150b0cab02103517db7f96d6a18b3b4e69a244c71655055888e30326b",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "4ed975f7e1575b2557f1ea5bc60760da940e8727e163c7c979b581dfd7a50880"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_queue_metrics.lua",
+      "destination": "tests/test_queue_metrics.lua",
+      "source_sha256": "8c3e1165a158bb61c02aa32cee4fedb1e31de641ec8cc4d48cce85f2cde12f9b",
+      "changes": "none",
+      "destination_sha256": "8c3e1165a158bb61c02aa32cee4fedb1e31de641ec8cc4d48cce85f2cde12f9b"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_row_play_http.lua",
+      "destination": "tests/test_row_play_http.lua",
+      "source_sha256": "79abd5a86528aaae258a45b3a502235ab14b3989940b330ca959ecd0c81b896d",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "24133acb33460b331365a5bd5fd182e0c6becb467feddfaa2f97ca0b8e79714a"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_schedule_colors.lua",
+      "destination": "tests/test_schedule_colors.lua",
+      "source_sha256": "1048e8645c6ae63047ffd55ec2b4b084a5700b65cfbd05dfe8b9205c9e807bf3",
+      "changes": "none",
+      "destination_sha256": "1048e8645c6ae63047ffd55ec2b4b084a5700b65cfbd05dfe8b9205c9e807bf3"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_schedule_store.lua",
+      "destination": "tests/test_schedule_store.lua",
+      "source_sha256": "43056129e0583c1978a8b4838605d7fb1bc16db517bc63f82ed00ff4fc942b97",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "ce9d90aced90206a8afb2d8e7ee32d35ea912218aeb00f5ceb1ff49ccd37ca13"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_schedule_store.py",
+      "destination": "tests/test_schedule_store.py",
+      "source_sha256": "f3a13be370c7f058205ef632d21ff56ffb1498f6c3de3ee7c78088e5a8cc04d2",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "3dfcb4846a6d71e73b828784a0c03dd387a8b0299edc421afadd29c043f4de96"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_session_http.lua",
+      "destination": "tests/test_session_http.lua",
+      "source_sha256": "94a8f70fa3ce3f7e200f136b638c74e42559ec9c2a711e0f16f5f8207f4363df",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "1c0d9758858e80e656893b7a9fdf6b72e56e26234deb33744f4b08c1ad7b2c64"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_sound_test.lua",
+      "destination": "tests/test_sound_test.lua",
+      "source_sha256": "8d5fdff4fbec9566eec8d2531987652984044b4a1ef0dbb801b4b53cb81775b6",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "7f411042c8ea2fa89ef643416fc1d14b2ebd122dfb0766b59297756499ff1cf4"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_timezone.lua",
+      "destination": "tests/test_timezone.lua",
+      "source_sha256": "e75eccf6e119d2e93bfe2655819ed3315f1efa0e05651e014e81df911af41016",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "81e4150fc2e322cf07676a07511e4f99eda877e402c3959b679c698fa983e0cc"
+    },
+    {
+      "source": "packages/schoolbell/tests/test_timezone_target.lua",
+      "destination": "tests/test_timezone_target.lua",
+      "source_sha256": "573f6bbcb06aa87d00ff123c068f385fa0932ec2f90e9e9bed7c2395c3384041",
+      "changes": "none",
+      "destination_sha256": "573f6bbcb06aa87d00ff123c068f385fa0932ec2f90e9e9bed7c2395c3384041"
+    },
+    {
+      "source": "pkg-schoolbell/CONTROL/control",
+      "destination": "packaging/openwrt/package/CONTROL/control",
+      "source_sha256": "8183c1fee37c5c6579f32cc2570317640935b5a2598495d8bbb4081e6bb78141",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "ddb5ba4c6ddb930f7339b8cab99b75250c94840da17d975fd0c1118fd89a0323"
+    },
+    {
+      "source": "pkg-schoolbell/CONTROL/postinst",
+      "destination": "packaging/openwrt/package/CONTROL/postinst",
+      "source_sha256": "3ab1a86f6c3507aac6a4635a123924dd1e50255874845f112adbe49f77d4f3c7",
+      "changes": "none",
+      "destination_sha256": "3ab1a86f6c3507aac6a4635a123924dd1e50255874845f112adbe49f77d4f3c7"
+    },
+    {
+      "source": "pkg-schoolbell/CONTROL/preinst",
+      "destination": "packaging/openwrt/package/CONTROL/preinst",
+      "source_sha256": "b685cf35c52263766e4a0e31b51b055bd5b371f3b15eb22a0a8af7f3fd79c499",
+      "changes": "none",
+      "destination_sha256": "b685cf35c52263766e4a0e31b51b055bd5b371f3b15eb22a0a8af7f3fd79c499"
+    },
+    {
+      "source": "pkg-schoolbell/CONTROL/prerm",
+      "destination": "packaging/openwrt/package/CONTROL/prerm",
+      "source_sha256": "f4575e848458a6d31909fb4ec8a9442367def54fa034714a45185344b442ce8f",
+      "changes": "none",
+      "destination_sha256": "f4575e848458a6d31909fb4ec8a9442367def54fa034714a45185344b442ce8f"
+    },
+    {
+      "source": "pkg-schoolbell/usr/share/modbus-schoolbell/NOTICE",
+      "destination": "packaging/openwrt/package/usr/share/modbus-schoolbell/NOTICE",
+      "source_sha256": "c0ce9a427b469ff099eba82b5a8dda8b0a285db3aca86b464d71fd4765d0a5f3",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "db80795fd7009d7cf8d12649e26d7c62c3449be2256ebc50ac8544d6f17c0311"
+    },
+    {
+      "source": "pkg-schoolbell/usr/share/modbus-schoolbell/melodies/test.mp3",
+      "destination": "packaging/openwrt/package/usr/share/modbus-schoolbell/melodies/test.mp3",
+      "source_sha256": "1ae57af4d27698b0cd3795de7287c0dd1b5e2b336e8d9e8dcc9b853cbd8b4e0d",
+      "changes": "none",
+      "destination_sha256": "1ae57af4d27698b0cd3795de7287c0dd1b5e2b336e8d9e8dcc9b853cbd8b4e0d"
+    },
+    {
+      "source": "pkg/usr/lib/modbus/json_strict.lua",
+      "destination": "vendor/modbus/json_strict.lua",
+      "source_sha256": "77762c746ec23205ebcce0e5d38743f780b3f56abb4fcb0f3027895308f560a2",
+      "changes": "none",
+      "destination_sha256": "77762c746ec23205ebcce0e5d38743f780b3f56abb4fcb0f3027895308f560a2"
+    },
+    {
+      "source": "scripts/build-schoolbell-bundle.py",
+      "destination": "scripts/build-schoolbell-bundle.py",
+      "source_sha256": "de9e84baa10c73dcfd7153380682346c143898fdf686f89bb9cc47b40d72f9bb",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "66f1a7747f46fb9437825188a2b282701f5648b340c12a7607976135fa7bdd80"
+    },
+    {
+      "source": "scripts/build-schoolbell-clock.py",
+      "destination": "scripts/build-schoolbell-clock.py",
+      "source_sha256": "e913de627818a961a9b1d034ecbf03d8264291bc2a4741d643217a58c927cc84",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "ba65a011b58030661842d814ab69ecedec95b05bebc2ce4724af2fefbf9d3110"
+    },
+    {
+      "source": "scripts/build-schoolbell.py",
+      "destination": "scripts/build-schoolbell.py",
+      "source_sha256": "13711a3803374554963e567ea5d4c8fda37b03d65689363e4fe047594e5ea5b5",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "34a4e10ead24b1184b8d5e0f8818057b96beb413e9dcadda6d994d66d2d61ac9"
+    },
+    {
+      "source": "scripts/schoolbell_ipk.py",
+      "destination": "scripts/schoolbell_ipk.py",
+      "source_sha256": "636e7d7bed5e3442708721869a629d1a481c9a70735b033396c21c6ed64e1193",
+      "changes": "none",
+      "destination_sha256": "636e7d7bed5e3442708721869a629d1a481c9a70735b033396c21c6ed64e1193"
+    },
+    {
+      "source": "scripts/test-schoolbell-backup-ui.js",
+      "destination": "scripts/test-schoolbell-backup-ui.js",
+      "source_sha256": "bc61851bd6c5fa1f49d9b2e5031abf5a04e363c9652323df8a93113c6cc1f048",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "2bbd86b87fd8fa10156c86b9862e3cdb99f9105d63e2befed193e2d1ddeab95b"
+    },
+    {
+      "source": "scripts/test-schoolbell-cpu.js",
+      "destination": "scripts/test-schoolbell-cpu.js",
+      "source_sha256": "321e7deb283ac8d26938f166b3ffd120b47004c154cf40509ba319463c1d2f5f",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "05dfc126ad041cead251c12ff716360405604258f969a5bd50be6e36354ddc4a"
+    },
+    {
+      "source": "scripts/test-schoolbell-diagnostics.js",
+      "destination": "scripts/test-schoolbell-diagnostics.js",
+      "source_sha256": "72bf25b0d2e81e64871cdd952e5fa3b8314cd36162f1a06a35695a4c9fbe5817",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "d21fb7f82184e24aeeee990c759bffefd438c9493fe3a4753c660dd5d8ecfd81"
+    },
+    {
+      "source": "scripts/test-schoolbell-journal-ui.js",
+      "destination": "scripts/test-schoolbell-journal-ui.js",
+      "source_sha256": "dd98290a1c41ba94073a375988e516f1de7e77babcddb521fef9bd4334d56f3d",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "59bafedcbbb67c5ad3401b029b36d688b6146821b469359832b928b4096434c8"
+    },
+    {
+      "source": "scripts/test-schoolbell-media-ui.js",
+      "destination": "scripts/test-schoolbell-media-ui.js",
+      "source_sha256": "e2994b282b544a50b4a6922fc23c6471db79ae0684679fc668d5fd5bf482aed8",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "f9e6b52cc9f4c679ac1474ee88be878adb4420a075744ac64b7811bafda12096"
+    },
+    {
+      "source": "scripts/test-schoolbell-plan-export.js",
+      "destination": "scripts/test-schoolbell-plan-export.js",
+      "source_sha256": "0f31a6e90fa8cca4ab4b5b2b0158052a8aaa57759474ee1ad4eda5aadda725b2",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "7cf266323785e4d29070e4c274d1529015a77041a3d62be4e18318d1136205e8"
+    },
+    {
+      "source": "scripts/test-schoolbell-plan-import.js",
+      "destination": "scripts/test-schoolbell-plan-import.js",
+      "source_sha256": "a72141b8335e0474fecee55f7a369d436ba2f15a55712dbda3e071441f0b3d87",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "8a1b2ebc34a1e70b82b2f47ee6078f87bb6112ddf873065faed0642d790f8f94"
+    },
+    {
+      "source": "scripts/test-schoolbell-ranges.js",
+      "destination": "scripts/test-schoolbell-ranges.js",
+      "source_sha256": "88e38eb2a95f147c74bf7f1a5d7688b88425585a9a99dc626375bcf7b4f7cdb9",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "57105437c58a3207e3211cd9bbcfb885cf3000563ad2ada4d24394c16cb7e9fd"
+    },
+    {
+      "source": "scripts/test-schoolbell-routes.js",
+      "destination": "scripts/test-schoolbell-routes.js",
+      "source_sha256": "44039356f5822154bf05e200d93c5e6bc0f5959e73dc452f49c401b96126e8ec",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "671cd50eafd3a0ae074e5b5f51607f313c147d1d592fe362b743bf9198121ca7"
+    },
+    {
+      "source": "scripts/test-schoolbell-row-preview.js",
+      "destination": "scripts/test-schoolbell-row-preview.js",
+      "source_sha256": "6242c83914c303cc5f2cc14c75fe5b0da68833024cc7a2c5e1c87ca484173201",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "6cfbf0134d39d9284c20ce274b545614dde7df74d6b053bc9fc501e2844c32fc"
+    },
+    {
+      "source": "scripts/test-schoolbell-session-ui.js",
+      "destination": "scripts/test-schoolbell-session-ui.js",
+      "source_sha256": "c3424de10df74f2734f49a2c8a66d7f6820043eb98e48f53949ae90fa6966c02",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "ff85ebaf4c8902a5936e080fb817675de54d14ec759063171b9440722f007d53"
+    },
+    {
+      "source": "scripts/test-schoolbell-time-settings.js",
+      "destination": "scripts/test-schoolbell-time-settings.js",
+      "source_sha256": "d20cdd0b75520bae05b3b51061244657bcd0402cadd8b1ddcef649d5c4dd625a",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "740202f603f57aee74e025b173e65cd78c0ed01cdfed775d0782f0544966a042"
+    },
+    {
+      "source": "scripts/test-schoolbell-traffic.js",
+      "destination": "scripts/test-schoolbell-traffic.js",
+      "source_sha256": "aae9fafa4a56770b6d9d960f071606f843a6ac2b44b0a4e5015085a7dfff1fb4",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "005d6d26bdee6053031108f232aa570c77b2a4c21502230f83433fcb5eef0c40"
+    },
+    {
+      "source": "scripts/test-schoolbell.sh",
+      "destination": "scripts/test-schoolbell.sh",
+      "source_sha256": "5abd8849062bc51e53907344210cb487f9e115458e196f3667753f29553ed282",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "55262b9359b9c654eedf0b842358aa2c3d4dca500474b56cd7156b0a67934d2c"
+    },
+    {
+      "source": "scripts/test-site-demo.js",
+      "destination": "scripts/test-site-demo.js",
+      "source_sha256": "81de795087ec5a84b8e8567f3ff1cf614edbb1b7454e493350fc5ec4e9d64f2a",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "4346cf48687a17e1dd0e261ceebe4a4a7add0dd4329e3550954a0447e43419b1"
+    },
+    {
+      "source": "scripts/test-site-portable.js",
+      "destination": "scripts/test-site-portable.js",
+      "source_sha256": "ee104300c78382e0f62db5471b519a2f45e3f47e901b42cc667aab9a363667bb",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "f2ebe9912b871ac571c64b67d2628ab66b90ac6c26ce826a6b71f0778293b628"
+    },
+    {
+      "source": "scripts/verify-schoolbell.py",
+      "destination": "scripts/verify-schoolbell.py",
+      "source_sha256": "05c2fd9969fd13ad8bdce895751dfc1379e0e606a232ac6e6de8d5de108d6889",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "19b18f0de94c59b5aa3cd385c8580b278189e487f8798784f44bd9ae7e28634a"
+    },
+    {
+      "source": "site/LUCI-LICENSE",
+      "destination": "site/LUCI-LICENSE",
+      "source_sha256": "43070e2d4e532684de521b885f385d0841030efa2b1a20bafb76133a5e1379c1",
+      "changes": "none",
+      "destination_sha256": "43070e2d4e532684de521b885f385d0841030efa2b1a20bafb76133a5e1379c1"
+    },
+    {
+      "source": "site/README.md",
+      "destination": "site/README.md",
+      "source_sha256": "411ead0a2d3e281f493c20f1172f8a63d8299f35968d1e4f92a6ed32d660ddf4",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "73f23f05e66481b2dd26a86bd999d0d73fe090880bec8b79651d222347c18380"
+    },
+    {
+      "source": "site/demo.js",
+      "destination": "site/demo.js",
+      "source_sha256": "e188761949f7a69432ec440c619a95bf1f36d721c910f3a6c866a7c194677f5f",
+      "changes": "none",
+      "destination_sha256": "e188761949f7a69432ec440c619a95bf1f36d721c910f3a6c866a7c194677f5f"
+    },
+    {
+      "source": "site/portable-pages.js",
+      "destination": "site/portable-pages.js",
+      "source_sha256": "e044a840fcae4c16d1b4af59c008ba866ac8a8e7244898209fd8b498c11e3f3b",
+      "changes": "none",
+      "destination_sha256": "e044a840fcae4c16d1b4af59c008ba866ac8a8e7244898209fd8b498c11e3f3b"
+    },
+    {
+      "source": "packages/schoolbell/router-page/build-payload.py",
+      "destination": "scripts/build-payload.py",
+      "source_sha256": "15ee676879b82aeb4a7ee343623ac98cbf9f849c569598eb40ee4eb93c373c45",
+      "changes": "adapted; review destination against pinned source",
+      "destination_sha256": "f47d28205deec1bbea6648eba15da76cb850f1d64fed27f8d7ad44a1d2fb51ce"
+    },
+    {
+      "source": "site/portable-zones.json",
+      "destination": "site/portable-zones.json",
+      "source_sha256": "cd7f2ed11f2eead11749072cc662567fa4a1c36dfbb421ae71ddeb63cf7df79f",
+      "changes": "none",
+      "destination_sha256": "cd7f2ed11f2eead11749072cc662567fa4a1c36dfbb421ae71ddeb63cf7df79f"
+    },
+    {
+      "source": "site/portable-ui.js",
+      "destination": "site/portable-ui.js",
+      "source_sha256": "10b958ac9fd702fe6ad303c92a74a0263fcd3307347a28d6a43c929923e796f9",
+      "changes": "none",
+      "destination_sha256": "10b958ac9fd702fe6ad303c92a74a0263fcd3307347a28d6a43c929923e796f9"
+    },
+    {
+      "source": "scripts/test_json_strict.lua",
+      "destination": "tests/test_json_strict.lua",
+      "source_sha256": "a10cc9b970cf5dd01e5efa00ff387aa5335af1c1c39f6182858e25271e3e4f9a",
+      "destination_sha256": "85927658cace127e8aeb8daa3719135f3d17b3b3b81393a7d5e1de5b2bd5b42e",
+      "changes": "adapted; review destination against pinned source"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+#!/bin/sh
+set -eu
+[ -z "${IPKG_INSTROOT:-}" ] || exit 0
+# LuCI 19.07 bytecode cache ignores source mtimes: invalidate only our modules.
+for file in /tmp/luci-modulecache/7363686F6F6C62656C6C2E* /tmp/luci-modulecache/6C7563692E636F6E74726F6C6C65722E7363686F6F6C62656C6C5F74657374; do
+    [ ! -f "$file" ] || rm -f "$file"
+done
+rm -f /tmp/luci-indexcache /tmp/luci-indexcache.*.json
+/usr/sbin/schoolbell-package finish
+/etc/init.d/schoolbell-auto enable
+/etc/init.d/schoolbell-auto start

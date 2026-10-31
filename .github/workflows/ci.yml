@@ -1,4 +1,4 @@
-name: Foundation CI
+name: Schoolbell CI
 on:
   push:
     branches: ['main', 'codex/**']
@@ -7,13 +7,22 @@ permissions:
   contents: read
 jobs:
   ci-gate:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2 # HEAD and its parent for the whitespace check
-      - uses: actions/setup-python@v5
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
         with:
-          python-version: '3.12'
-      - run: python3 scripts/check-foundation.py
+          node-version: '22'
+      - name: Install host test dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lua5.1 liblua5.1-0-dev gcc libc6-dev make python3
+      - run: make all
       - run: git diff --check HEAD^ HEAD
+      - uses: actions/upload-artifact@v4
+        with:
+          name: schoolbell-candidate
+          if-no-files-found: error
+          path: out/modbus-schoolbell_*.ipk

@@ -5,12 +5,11 @@
 Configurable musical school bell. Author: Viacheslav Mezentsev.
 Modern implementation development co-author: Codex (OpenAI).
 
-**Standalone repository preparation; production code has not been transferred.**
-Version 5.1.27 remains in
-[openwrt-modbus-core](https://github.com/ViacheslavMezentsev/openwrt-modbus-core).
-The previous implementation is preserved in the [archive](docs/archive/schoolbell-4/README.en.md).
-This stage builds no IPK, publishes no Pages and changes no devices.
-
-Run `python3 scripts/check-foundation.py` for this stage. See [TODO](TODO.md).
-The eventual standalone build must require no sibling core checkout. Until the
-migration is complete, core remains the only production source.
+**Standalone build stage; migration is not complete.**
+Sources were imported from pinned 5.1.27 into the new structure. The candidate
+IPK is 5.1.28; see [build/tests](docs/BUILD.en.md) and [offline packaging](docs/PACKAGING.en.md).
+No installation or publication in this stage. The [archive](docs/archive/schoolbell-4/README.en.md)
+is not packaged. `make all` requires no sibling core checkout.
+[TODO](TODO.md) separates completed source transfer from Pages, documentation
+and hardware acceptance. Production releases remain in core until migration
+completes; avoid parallel feature development in both repositories.
