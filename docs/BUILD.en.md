@@ -20,11 +20,11 @@ and configure LD_LIBRARY_PATH for a local shared library. Never commit the SDK.
 `make build verify` requires neither Lua nor a compiler.
 
 This does not cross-build the MIPS clock IPK, download real offline dependencies,
-build/deploy Pages or perform hardware acceptance. See PACKAGING for cross-build
+deploy Pages or perform hardware acceptance. Pages build/tests are included in make all. See PACKAGING for cross-build
 and ABI conditions. Offline tests use synthetic packages, not installable artifacts.
 
 Sources live under src/lua, src/native and src/portable-plan; UI under ui/root;
 system payload and metadata under packaging/openwrt; strict JSON under vendor/modbus.
-site currently retains only parity-test sources, not a Pages generator/deployer.
+site contains the demo, guide and training; the owner publishes Pages separately.
 Schoolbell CI runs make all; require successful ci-gate for the exact pushed SHA
 before land. A built IPK does not authorize installation.

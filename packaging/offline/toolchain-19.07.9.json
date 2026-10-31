@@ -1,0 +1,24 @@
+{
+  "format": 1,
+  "sdk_directory": "openwrt-sdk-19.07.9-ramips-mt76x8_gcc-7.5.0_musl.Linux-x86_64",
+  "inputs": {
+    "sdk": {
+      "file": "openwrt-sdk-19.07.9-ramips-mt76x8_gcc-7.5.0_musl.Linux-x86_64.tar.xz",
+      "url": "https://downloads.openwrt.org/releases/19.07.9/targets/ramips/mt76x8/openwrt-sdk-19.07.9-ramips-mt76x8_gcc-7.5.0_musl.Linux-x86_64.tar.xz",
+      "bytes": 80882944,
+      "sha256": "bcaf22a1f3bbb4b328360c8715cf8ab59d8b01879cd0586d31f73504519a0435"
+    },
+    "lua": {
+      "file": "lua-5.1.5.tar.gz",
+      "url": "https://www.lua.org/ftp/lua-5.1.5.tar.gz",
+      "bytes": 221213,
+      "sha256": "2640fc56a795f29d28ef15e13c34a47e223960b0240e8cb0a82d9b0738695333"
+    },
+    "openwrt": {
+      "file": "openwrt-v19.07.9.tar.gz",
+      "url": "https://codeload.github.com/openwrt/openwrt/tar.gz/refs/tags/v19.07.9",
+      "bytes": 9342337,
+      "sha256": "e4a16dee274bde28afa98113283d93acee570cb3aca1872062a9bad5a1566128"
+    }
+  }
+}

@@ -1217,8 +1217,8 @@
       "source": "scripts/build-schoolbell-clock.py",
       "destination": "scripts/build-schoolbell-clock.py",
       "source_sha256": "e913de627818a961a9b1d034ecbf03d8264291bc2a4741d643217a58c927cc84",
-      "changes": "adapted; review destination against pinned source",
-      "destination_sha256": "ba65a011b58030661842d814ab69ecedec95b05bebc2ce4724af2fefbf9d3110"
+      "changes": "adapted; review destination against pinned source; standalone target migration: deterministic native gzip / pinned-input tests",
+      "destination_sha256": "76711dccf6280c245974865674df7763bd01c10b0f067a1bab341afe59217d1e"
     },
     {
       "source": "scripts/build-schoolbell.py",
@@ -1329,8 +1329,8 @@
       "source": "scripts/test-schoolbell.sh",
       "destination": "scripts/test-schoolbell.sh",
       "source_sha256": "5abd8849062bc51e53907344210cb487f9e115458e196f3667753f29553ed282",
-      "changes": "adapted; review destination against pinned source",
-      "destination_sha256": "55262b9359b9c654eedf0b842358aa2c3d4dca500474b56cd7156b0a67934d2c"
+      "changes": "adapted; review destination against pinned source; standalone target migration: deterministic native gzip / pinned-input tests",
+      "destination_sha256": "cb2816b52d3388551ca266aeb24b0c8505f747e290c12d6dcb44d800a900b094"
     },
     {
       "source": "scripts/test-site-demo.js",

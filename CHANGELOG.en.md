@@ -4,6 +4,10 @@
 
 ## Unreleased
 
+- Full make all passed: host regressions, package lifecycle and Pages; pinned cache checks, ELF and MIPS Lua/QEMU checks also passed. This is not installation or hardware acceptance.
+
+- Added standalone MIPS builds with pinned SDK/Lua sources and 33 dependencies. Verified offline rebuild, stable native IPK, ELF ABI and QEMU loading. Devices unchanged; hardware acceptance remains separate.
+
 - Validation: full make all and Pages-specific tests passed; a local browser verified the root UI, calendar, guide/training navigation and return. No sound or device commands were executed. Publication remains unverified.
 
 - Migrated Pages build: root bell UI, separate RU/EN guide/training and device pages. Added explicit legacy draft copy to a new localStorage key without overwriting existing data; old data remains intact. Issue forms target schoolbell. Deployment is owner-triggered only; devices and IPK version unchanged.

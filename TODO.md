@@ -6,7 +6,7 @@
 - [x] M0: CI отправленного HEAD и принятие владельцем / Exact pushed HEAD CI and owner acceptance.
 - [x] Перенести runtime, UI и явные зависимости / Transfer runtime, UI and explicit dependencies.
 - [x] Скриптовый IPK и host-тесты, offline-builder без обязательного core / Script IPK, host tests, optional-core bundle builder.
-- [ ] Целевой MIPS IPK и реальный полный комплект / Target MIPS IPK and real complete bundle.
+- [x] Целевой MIPS IPK и реальный полный комплект / Target MIPS IPK and real complete bundle.
 - [x] M1: CI точного HEAD и принятие владельцем / Exact-HEAD CI and owner acceptance.
 - [x] Перенесены требования, история, руководства и программа приёмки / Requirements, history, guides and acceptance programme transferred.
 - [ ] Актуализировать команды и отдельный протокол под будущие артефакты приёмки / Update commands and create a separate protocol for future acceptance artifacts.
