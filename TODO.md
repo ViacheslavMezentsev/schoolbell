@@ -15,6 +15,8 @@
 
 ## На согласовании / Pending review
 
+- [x] Владелец принял компактную шапку 5.1.60 и разрешил фиксацию текущего цикла в ветке / Owner accepted the compact 5.1.60 header and authorized committing the current cycle on a branch.
+
 - [ ] Принять интерфейс «Система» в 5.1.38; реальную перезагрузку/сброс проверять отдельно по разрешению владельца / Review System UI in 5.1.38; actual reboot/reset requires separate owner authorization.
 
 - [ ] Принять лимит 64 КиБ, инструкцию и удаление неиспользуемых мелодий в 5.1.36 / Review the 64 KiB limit, instructions and unused melody deletion in 5.1.36.
@@ -102,3 +104,21 @@ hardware acceptance protocol.
 - [x] Владелец подтвердил внешний вид базовой CSS-палитры на стенде 5.1.44 / Owner confirmed the baseline CSS palette appearance on the 5.1.44 bench.
 
 - [x] 5.1.45: общий маршрут обратной связи в Issues schoolbell, собственные формы и ссылки на руководства RU/EN / Shared schoolbell Issues feedback links, tailored forms and RU/EN guide links.
+
+- [x] 5.1.46: местная дата и день недели в часах шапки / Device-local date and weekday in the header clock.
+
+- [x] Единые крестики удаления и центрирование заголовков переключателей/действий / Consistent delete icons and centered switch/action headings.
+- [x] 5.1.48: вставка после строки, фокус времени, перестановка вверх/вниз и явная очистка / Insert after a row, focus time, reorder up/down and explicit clear.
+
+- [x] Общий стандарт UI в ТЗ 1.83 и крупные плюс/стрелки/копирование / Shared UI conventions and larger add/move/copy icons.
+- [ ] TC-197: полный визуальный аудит общего стиля в обеих темах и на узком экране / Full shared-style visual audit in both themes and narrow layouts.
+
+- [x] 5.1.52: добавление/замена мелодий из таблицы без перестановки и массового удаления / Add/replace melodies from the table without reordering or bulk deletion.
+
+- [x] 5.1.53: отдельное сохранение названия пользовательской мелодии, 🖉/✓ и упрощённая таблица / Title-only melody editing, 🖉/✓ and a simplified table.
+
+- [x] 5.1.54: пробелы и настоящие плюсы при переименовании, проверка query-декодера LuCI / Preserve spaces and literal plus signs on rename; LuCI query-decoder regression.
+
+- [x] 💾 для загрузки MP3, динамическая подсказка добавления/замены / MP3 upload icon with add/replace tooltip.
+
+- [x] 5.1.56: переключатель и текущий IP в существующем опросе шапки / Physical switch and current IP through existing header polling.

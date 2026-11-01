@@ -4,6 +4,36 @@
 
 ## Unreleased
 
+- 5.1.60: header CPU is rounded to an integer; CPU, Flash and volume share the “50 %” format. Measurement precision and color thresholds are unchanged.
+
+- 5.1.59: the audio row shows the volume label and percentage on the left, controller and card name on the right, retaining compact spacing.
+
+- 5.1.58: compact header spacing is consistent: 6 px from label to bar, 8 px to the next row. Long audio names truncate with a full tooltip and stable row height.
+
+- 5.1.57: a blue saved-volume bar separates audio and switch rows; it uses the existing poll without changing gain and clears stale values.
+
+- 5.1.56 / specification 1.87: the header shows the physical switch position and current device IP below audio. It reuses controls polling with bounded file reads and local interface addresses, without commands or network changes. Unavailable values are cleared and demo is explicit.
+
+- 5.1.55: MP3 upload uses 💾, with a tooltip and accessible name matching add or replace mode. Confirmation is retained.
+
+- 5.1.54: melody renaming no longer turns spaces into plus signs. Query values encode spaces as %20 and literal plus signs as %2B; the regression test models LuCI decoding with Cyrillic and special characters.
+
+- 5.1.53 / specification 1.86: 🖉 opens melody editing; ✓ saves the title without an MP3 upload. Atomic metadata-only rename preserves audio/references, checks generation/automatic state/locks and reconciles uncertain responses without POST retry. Revision hashes are hidden and the player has spacing below the form.
+
+- 5.1.52 / specification 1.85: + below the melody table opens add; ↻ in a user row opens replace. The shared form is collapsible, focuses the title and confirms discarding pending input when switching targets. Existing replacement/deletion restrictions are retained.
+
+- 5.1.51 / specification 1.84: move controls use ▲/▼; bottom add/delete-all controls use +/××. Tooltips, accessible names and delete-all confirmation are retained.
+
+- 5.1.50 / specification 1.83: shared UI conventions for equivalent controls, switches, icons and spacing. Icon-only add, move and copy symbols use bold 32 CSS px; button dimensions are unchanged.
+
+- 5.1.49: row actions are ordered add/up/down, playback, then delete, with 30 CSS px between groups.
+
+- 5.1.48 / specification 1.82: per-row plus inserts a bell and focuses its time; up/down arrows reorder whole rows. Clear rows is renamed Delete all bells with an explicit confirmation. Changes remain in the draft until saved. Both switches share one column with a 30 CSS px gap.
+
+- 5.1.47: consistent 28 px delete icons; Enabled, Pre-bell and Actions column headings are centered.
+
+- 5.1.46: the CPU header shows the weekday and device-local date/time (`Вс 01.11.2026 · 16:24`), independently of the browser timezone.
+
 - 5.1.45 validation: `make all` — PASS; forms parsed as YAML, RU/EN guides available (HTTP 200). Development bench checks covered 81 package files, 12 HTTP assets, unchanged data and 232 preserved journal entries. Volume remains 50%, automatic bells remain off; no audio was played.
 
 - 5.1.45: device and Pages Feedback now link to schoolbell Issues. Bug/feature forms cover the device, demo and installation; RU/EN guides are linked from forms, the issue chooser and Feedback. Remove old core links and the temporary unavailable-forms notice.

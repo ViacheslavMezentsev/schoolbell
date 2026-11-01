@@ -26,7 +26,7 @@ The [offline dependency bundle](docs/PACKAGING.en.md) is prepared separately.
 
 ## Status
 
-Extraction from openwrt-modbus-core is in progress: candidate **5.1.45**, baseline
+Extraction from openwrt-modbus-core is in progress: candidate **5.1.56**, baseline
 OpenWrt 19.07.9 / TL-MR3020 v3. Host checks and the target MIPS bundle are ready;
 published Pages verification and new hardware acceptance remain pending. [Migration plan](docs/MIGRATION.md).
 

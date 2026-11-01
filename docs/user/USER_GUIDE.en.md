@@ -45,6 +45,8 @@ Individual functions have been tested; full endurance, cold-start and power-loss
 acceptance remains pending. See the [acceptance programme](../acceptance/ACCEPTANCE.en.md).
 Russian button labels below match the current UI.
 
+The + button in a bell row inserts a new bell immediately after it and focuses its time. The ▲/▼ arrows move the entire row without changing bell times. Delete all bells clears the selected schedule after confirmation while retaining the schedule itself. These actions edit the draft; saving is explicit and the active plan does not change automatically.
+
 ## 1. Open the module
 
 Join a network that can reach the router. Obtain its address and login from the
@@ -281,3 +283,11 @@ starts the operation. Cancel leaves settings unchanged.
 If a response is lost, check state before repeating. Commands are never replayed
 automatically. An interrupted reset can be completed by explicitly confirming
 reset again. Both hardware operations are disabled in the demo.
+
+In Melodies, + below the table opens the add form. The 🖉 button on a user melody opens replacement for that entry, retaining schedule references. Choose an MP3, review its title and confirm the upload. Bundled melodies cannot be replaced; deletion restrictions are unchanged.
+
+To rename a user melody, select 🖉, edit the title and select ✓ Save title without choosing an MP3. Automatic bells must be off. The file and schedule references remain unchanged. To replace the audio, choose an MP3 and use the separate upload button.
+
+Below Audio, the header shows the physical switch position and current device IP. Position updates on the next poll, usually within 15–16 seconds; it does not mean that the corresponding network profile is applied. The display does not change network settings.
+
+The blue bar below the audio row shows saved volume, not signal level; mute does not change its fill.
