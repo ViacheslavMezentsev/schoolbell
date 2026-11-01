@@ -45,6 +45,22 @@ function fixture(storage={},initialRevision="r1",loadCodes=[]){
  return x;
 }
 (async()=>{
+ // TC-195: compare rendered controls against the normative table, including persisted IDs.
+ const spec=fs.readFileSync(path.join(root,'docs/requirements/TECHNICAL_SPECIFICATION.md'),'utf8');
+ const baseline=Array.from(spec.matchAll(/\| (\d+) \| `([a-z]+)` \| `(#[0-9A-F]{6})` \|/g),m=>({id:Number(m[1]),name:m[2],hex:m[3].toLowerCase()}));
+ assert.equal(baseline.length,16);
+ const palette=fixture();await palette.tick();
+ for(const c of baseline){
+  const buttons=palette.get('schedule-colors').children;assert.equal(buttons.length,16);
+  const button=buttons[c.id-1];assert.equal(button.textContent,c.id);assert.equal(button.style.background,c.hex);assert(button.title.includes('('+c.name+')'));
+  const rgb=c.hex.slice(1).match(/../g).map(v=>parseInt(v,16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);
+  const l=rgb[0]*.2126+rgb[1]*.7152+rgb[2]*.0722;
+  assert((button.style.color==='#ffffff'?1.05/(l+.05):(l+.05)/.05)>=4.5);
+  await button.click();assert.equal(palette.day().style.background,c.hex);assert.equal(palette.get('schedule-select').style.borderLeft,'10px solid '+c.hex);
+  palette.data.schedules[0].color=c.id;await palette.get('schedule-reload').click();assert.equal(palette.get('schedule-colors').children[c.id-1]['aria-pressed'],'true');
+ }
+ assert.equal(palette.saves.length,0);assert.equal(palette.posts.length,0);
+ console.log('PASS TC-195: exact specification palette order/names/HEX, contrast, selection/calendar and reloaded IDs; no writes or activation');
  if(process.env.SCHOOLBELL_PAGES_TEST){const p=fixture();await p.tick();const snap=p.window.schoolbellEditor.portableSnapshot();snap.draft.schedules[0].name='External mutation';assert.notEqual(p.window.schoolbellEditor.portableSnapshot().draft.schedules[0].name,'External mutation');p.get('plan-name').value='Pending';await p.get('plan-name').fire('input');assert(p.window.schoolbellEditor.portableSnapshot().formPending);assert(!p.saves.length&&!p.posts.length);console.log('PASS Pages-only read snapshot is cloned and identifies unapplied plan fields');}
  let b=fixture({},'r1',['busy','busy']);await b.tick();
  assert.equal(b.loads,1);assert(!b.window.schoolbellEditor.snapshot().loaded);

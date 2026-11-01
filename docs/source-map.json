@@ -657,8 +657,8 @@
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/schedules.js",
       "destination": "ui/root/www/schoolbell-test/schedules.js",
       "source_sha256": "0bc0f6d87c79856181ed81326f0f4728872783e19f55d99249b3eea5f8042a6f",
-      "changes": "staged UI integration; baseline palette follows separately",
-      "destination_sha256": "87b4192d0baaddc68cf446bafe2090ca226f77e38770a070e3ce87aab8dc6fd8"
+      "changes": "none; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner clarification of playback action icons (5.1.32, spec 1.78); owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); 5.1.41 startup priority and shared Actions column; compact 4x4 schedule palette; 5.1.44 approved contrast palette; baseline CSS palette implementation, spec 1.81",
+      "destination_sha256": "4f4ea889fded2a8694b2c6f0bdc228cbf4e4f5c71daf5946992250ffceb34d24"
     },
     {
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/session.js",
@@ -1161,8 +1161,8 @@
       "source": "pkg-schoolbell/CONTROL/control",
       "destination": "packaging/openwrt/package/CONTROL/control",
       "source_sha256": "8183c1fee37c5c6579f32cc2570317640935b5a2598495d8bbb4081e6bb78141",
-      "changes": "adapted; review destination against pinned source; default audio status and blue Flash (5.1.29); wider header and CSS cache key (5.1.30); owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner clarification of playback action icons (5.1.32, spec 1.78)",
-      "destination_sha256": "1fd14d7d959c81be51c34600ba044da2617800019e96d33c7111840b58dea453"
+      "changes": "adapted; review destination against pinned source; default audio status and blue Flash (5.1.29); wider header and CSS cache key (5.1.30); owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner clarification of playback action icons (5.1.32, spec 1.78); collapsed manual sound check, version 5.1.33; version 5.1.34; version 5.1.35; owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); fast advisory media listing, authoritative checks retained for deletion; confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); 5.1.39 lazy backup status check and release notes; 5.1.40 initial page-load performance; 5.1.41 startup priority and shared Actions column; 5.1.42 reduced action spacing; 5.1.43 playback icon size; 5.1.44 approved contrast palette",
+      "destination_sha256": "63a0195843620cf99c88af04057e146f7bb2a6670924f02dada0a37379f44e64"
     },
     {
       "source": "pkg-schoolbell/CONTROL/postinst",
@@ -1294,8 +1294,8 @@
       "source": "scripts/test-schoolbell-routes.js",
       "destination": "scripts/test-schoolbell-routes.js",
       "source_sha256": "44039356f5822154bf05e200d93c5e6bc0f5959e73dc452f49c401b96126e8ec",
-      "changes": "staged UI integration; baseline palette follows separately",
-      "destination_sha256": "4f41d4e8c9870c1ba9a784476adcf3de1b43976211130ee25e876aa4fc360e4b"
+      "changes": "adapted; review destination against pinned source; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); 5.1.41 startup priority and shared Actions column; TC-195 normative palette regression",
+      "destination_sha256": "bfcf872e292bf08559b4147573fe4b3b53f926a1009d4ca303b968454682f5f1"
     },
     {
       "source": "scripts/test-schoolbell-row-preview.js",
@@ -2021,9 +2021,9 @@
       "source": "docs/packages/schoolbell/TECHNICAL_SPECIFICATION.md",
       "destination": "docs/requirements/TECHNICAL_SPECIFICATION.md",
       "source_sha256": "61b760731a5c4f6c53ed67726cd8667136ee194692aa517aa2b3ded7e9f07aad",
-      "destination_sha256": "8ad65b7e4d9f4645ed85eb01494967b91550ccf2e6cde775c602bd90c45c7fe0",
-      "changes": "Markdown link destinations only; original text and requirement/TC IDs preserved; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner clarification of playback action icons (5.1.32, spec 1.78)",
-      "prose_sha256": "1362839f3ef4cc0a95f426234a80ccb517902d24979b27b9ba75a5f4fa432dc8",
+      "destination_sha256": "ebd92e41fa2c70eafd972485a209c9a126f3f73082426de172d07896526be3f8",
+      "changes": "Markdown link destinations only; original text and requirement/TC IDs preserved; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner clarification of playback action icons (5.1.32, spec 1.78); owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); owner-approved baseline CSS palette and fixed order, spec 1.81 (documentation only); baseline CSS palette implementation, spec 1.81",
+      "prose_sha256": "03b2160cf7ca6ebf21c6eb855a7b6b1779960e3ffcb3f5b1a940112bb65e7252",
       "migrated_prose_sha256": "7a7b8c5652b4353f90f58c476218ca443a2dbb2be0af2516e6e735ea8fa30be5"
     },
     {
@@ -2046,18 +2046,18 @@
       "source": "docs/packages/schoolbell/USER_GUIDE.en.md",
       "destination": "docs/user/USER_GUIDE.en.md",
       "source_sha256": "45cada2eb0064aa88df66a57a4e80f593cc259497ea41817e66eb42fcf678921",
-      "destination_sha256": "a4327b7f79772e3acb8c1850016175f835bf9dce6eef080bbe5bec44c7352509",
-      "changes": "Markdown link destinations only; original text and requirement/TC IDs preserved; owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
-      "prose_sha256": "88a1ff3fec829b3676aca08c953e8134d8a0e66989cac16817f9c6d2e24bcc37",
+      "destination_sha256": "10a60a3d60dd99640f6acdd5db282bcc1ea7861e35b033ccc4e6df7eb5b19b93",
+      "changes": "Markdown link destinations only; original text and requirement/TC IDs preserved; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80)",
+      "prose_sha256": "5d45d591772fb3e4f004e2980d0c92d1df0ca52828af39c42c3bb26ab18705b9",
       "migrated_prose_sha256": "ca3efd23e3a9a2c17b796ed94a73f372ad98853e29c32591d2525368a2e9fee8"
     },
     {
       "source": "docs/packages/schoolbell/USER_GUIDE.md",
       "destination": "docs/user/USER_GUIDE.md",
       "source_sha256": "9753511757ffb71652f00145a30dc1421e5e3bc3e775b0b357f9d46a93704807",
-      "destination_sha256": "dda86a18c4f8337532666e9ce76cacbe44bffad9c5393a6abb0f93bd07813f81",
-      "changes": "Markdown link destinations only; original text and requirement/TC IDs preserved; owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
-      "prose_sha256": "6f0b92d1d5e75a2815015d3fb902638bb3723191e6b7950835ebb4f1a248e097",
+      "destination_sha256": "352918f60b5d00c92cf2c4edfa3c43ac8688d7d7f6cafd45852495715a41ab70",
+      "changes": "Markdown link destinations only; original text and requirement/TC IDs preserved; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80)",
+      "prose_sha256": "4db4e98eb3eee7d6fe0e4ed3f4ae896fef4a509b3789b74a0a43d33d521d648c",
       "migrated_prose_sha256": "3d8d69c4d89c627f85c1db40f3e4b2e8e1222460ef7ab761eb50e2bdb05ed600"
     },
     {
@@ -2211,8 +2211,8 @@
       "source": "site/style.css",
       "destination": "site/style.css",
       "source_sha256": "85d3aefe30d3598aca1fcf515e799e4b45e2f49cd08baa3d3cd0b123dc4fdeef",
-      "destination_sha256": "85d3aefe30d3598aca1fcf515e799e4b45e2f49cd08baa3d3cd0b123dc4fdeef",
-      "changes": "none"
+      "destination_sha256": "30f52d6627827b5e8f0bc308550c8bb003bbf60f55b1d5d132898d2fbc10acf1",
+      "changes": "none; 5.1.44 approved contrast palette; baseline CSS palette implementation, spec 1.81"
     },
     {
       "source": ".github/workflows/pages.yml",

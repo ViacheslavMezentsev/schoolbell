@@ -24,11 +24,13 @@
   window.addEventListener('schoolbell-router-date',function(e){routerDate={date:e.detail,at:performance.now()};});
   window.addEventListener('schoolbell-clock-state',function(e){trust=e.detail;});
   var monthNames=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
-  // Stable IDs; 5.0.2 replaces low-contrast shades with xterm-256 cube colors.
-  var colors=['#005faf','#00875f','#af0000','#af8700','#875faf','#008787','#af005f','#5f8700',
-    '#d75f5f','#00afff','#00af5f','#af5f00','#af5fff','#5f5f87','#875f00','#d75faf'];
-  var colorNames=['Синий','Зелёный','Красный','Охра','Фиолетовый','Бирюзовый','Малиновый','Оливковый',
-    'Коралловый','Голубой','Изумрудный','Оранжевый','Сиреневый','Сланцевый','Коричневый','Розовый'];
+  // Schoolbell specification 4.6.64: built-in IDs and order are stable.
+  var colorCssNames=['royalblue','green','firebrick','rebeccapurple','slategray','yellowgreen','maroon','mediumorchid',
+    'darkturquoise','lightgreen','saddlebrown','darksalmon','skyblue','gold','chocolate','plum'];
+  var colors=['#4169e1','#008000','#b22222','#663399','#708090','#9acd32','#800000','#ba55d3',
+    '#00ced1','#90ee90','#8b4513','#e9967a','#87ceeb','#ffd700','#d2691e','#dda0dd'];
+  var colorNames=['Синий','Зелёный','Красный','Фиолетовый','Серо-синий','Салатовый','Бордовый','Орхидейный',
+    'Бирюзовый','Светло-зелёный','Коричневый','Лососевый','Голубой','Золотистый','Шоколадный','Светло-сиреневый'];
   function ink(color){var rgb=color.slice(1).match(/../g).map(function(v){var n=parseInt(v,16)/255;return n<=0.04045?n/12.92:Math.pow((n+0.055)/1.055,2.4);});
     var l=rgb[0]*0.2126+rgb[1]*0.7152+rgb[2]*0.0722;return l>0.179?'#000000':'#ffffff';}
   function colorOf(id){var item=draft.schedules.find(function(s){return s.id===id;});return item?colors[item.color-1]:'';}
@@ -37,7 +39,7 @@
     var currentSchedule=current(),palette=document.getElementById('schedule-colors');palette.replaceChildren();
     if(!currentSchedule)return;
     colors.forEach(function(color,i){var button=document.createElement('button');button.type='button';button.textContent=i+1;
-      button.style.background=color;button.style.color=ink(color);button.title=colorNames[i];button.setAttribute('aria-label','Цвет '+(i+1)+': '+colorNames[i]);
+      button.style.background=color;button.style.color=ink(color);button.title=colorNames[i]+' ('+colorCssNames[i]+')';button.setAttribute('aria-label','Цвет '+(i+1)+': '+button.title);
       button.setAttribute('aria-pressed',String(currentSchedule.color===i+1));
       button.addEventListener('click',function(){currentSchedule.color=i+1;changed();render();});palette.appendChild(button);
     });

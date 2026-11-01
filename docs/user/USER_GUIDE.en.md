@@ -1,6 +1,6 @@
 # Schoolbell user guide
 
-In 5.1.27, Media → Add melody creates an entry; selecting an existing entry replaces its file while preserving references. MP3 up to 64 KB is recommended. Free space appears in the header and Media. From 5.1.31, the journal is bounded only by 32 KiB; age and clock changes do not remove entries.
+In 5.1.27, Media → Add melody creates an entry; selecting an existing entry replaces its file while preserving references. New MP3 files are limited to 64 KiB. Free space appears in the header and Media. From 5.1.31, the journal is bounded only by 32 KiB; age and clock changes do not remove entries.
 
 
 5.1.22 (host): device local time HH:MM is right-aligned above the CPU bar; uptime is below (page age in Pages). Reuses existing clock polling and hides stale time. Default idle logout is 30 minutes; existing choices are preserved. Major section gaps are aligned and the bell-delete cross enlarged. Pages synchronized; this version is not installed on the device.
@@ -142,23 +142,25 @@ player completion does not prove that speakers/amplifier have power.
 
 ## 7. Upload melodies and check space
 
-Six bundled melodies are protected; user1–user8 are replaceable. MP3 only, not MIDI
-or WAV: maximum 512 KiB and 60 seconds per file, subject to total space.
+Bundled melodies cannot be replaced or deleted. New user MP3 files are limited to
+**64 KiB (65,536 bytes) and 60 seconds**. Existing files and backups remain readable.
 
-1. Disable automatic bells, wait for sound to end and stop browser listening.
-2. Open Melodies and wait for the table/storage status.
-3. Choose a user slot, descriptive title and MP3 file.
-4. Click «Загрузить и заменить» and confirm.
-5. Wait for «Мелодия сохранена, список обновлён», verify the title and listen in-browser.
+1. Disable automatic bells.
+2. Open Melodies and choose Add melody or an existing melody to replace.
+3. Select an MP3 and enter its title.
+4. Click Upload or Upload and replace, confirm, and wait for the result.
 
-Schedules keep slot references: replacing user1 changes what its rows will play.
-Review them before resuming. Empty slots cannot play; a missing required melody blocks
-activation. There is currently no separate user-file delete operation; replace instead.
+Replacement preserves schedule references. The × button in the Delete column is
+available only for unused user melodies. Remove references from schedules, manual
+bell and pre-bell settings and save; the applied plan must also stop referencing it.
+Unsaved changes block deletion. Bundled melodies have no delete button.
+A previous copy may remain temporarily for recovery after deletion.
 
-The bar shows persistent partition usage, not RAM: above 75% yellow, above 90% red.
-Temporary/previous copies and system reserve may prevent upload despite apparent
-free space. User objects and retained copies share a 2 MiB quota; internal storage
-may impose a tighter limit. Eight slots do not promise eight maximum-size files.
+The list and free space refresh when opening the tab and after upload/deletion.
+Refresh list retries after a connection error or changes from another browser.
+The persistent storage bar is blue up to 75%, yellow above 75%, red above 90%.
+Actual usage is separate from the required system reserve and temporary copy space.
+Uploads are rejected when space is insufficient.
 
 ## 8. Timezone and verification
 
@@ -262,3 +264,20 @@ A separately powered Modbus RTC board is proposed for future post-reboot time re
 In Schedules, Preview offers 🔊 browser playback and 🔔 Shkolnik speaker playback of the melody currently selected in that row, even before saving the draft. Speaker playback requires confirmation and respects mute; it does not enable automatic bells. Pages provides browser playback of bundled melodies only. The red × in Delete removes the draft row.
 
 In 5.1.31, click each settings heading to expand its section. Enabled/pre-bell switches are off on the left and on on the right. The automatic bell icon shows the applied mode, not the unsaved draft.
+
+## System
+
+Expand System in Settings. The first click prepares confirmation; only Confirm
+starts the operation. Cancel leaves settings unchanged.
+
+- **Reboot device:** the interface becomes temporarily unavailable. Data is retained,
+  automatic bells are disabled. Wait about a minute and reload the page.
+- **Reset Schoolbell settings:** schedules and plans are removed; manual/pre-bell
+  sounds return to the test melody, pre-bell to 2 minutes, volume to 100%, time
+  checks on and automatic bells off. User melodies and the journal are retained.
+  Network, OpenWrt password, clocks/NTP and timezone remain unchanged. Reload after
+  success; unsaved edits in this browser are discarded and idle logout returns to 30 minutes.
+
+If a response is lost, check state before repeating. Commands are never replayed
+automatically. An interrupted reset can be completed by explicitly confirming
+reset again. Both hardware operations are disabled in the demo.

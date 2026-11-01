@@ -2,6 +2,8 @@
 
 ## Приоритет: надёжная подача звонков / Priority: reliable playback
 
+- [ ] Установить причину оставшегося пустого замка медиатеки после завершения запросов; безопасное восстановление выполнено, автоматическое снятие не добавлялось / Identify the cause of the orphan empty media gate; safe recovery performed, no automatic gate removal added.
+
 - [x] Прежняя AB13X напрямую/OHCI: 100 успехов подряд, −60 дБ, auto-off; без новых ошибок URB, одна запись cannot get freq / Original AB13X direct/OHCI: 100 consecutive successes, -60 dB, auto off; no new URB errors, one cannot get freq message.
 
 - [x] 100 успешных запусков подряд при прямом подключении GeneralPlus/OHCI, −60 дБ, auto-off; без новых ошибок ядра / 100 consecutive successful direct GeneralPlus/OHCI launches at -60 dB, auto off, no new kernel errors.
@@ -10,6 +12,14 @@
 
 - [ ] Устранить воспроизведённый периодический отказ USB-аудио; сохранить причины ошибок, проверить повторные запуски и длительное расписание / Fix reproduced intermittent USB-audio failure, retain diagnostic reasons, verify repeated starts and endurance. [RU](docs/PLAYBACK_RELIABILITY.md) · [EN](docs/PLAYBACK_RELIABILITY.en.md).
 - Лицензирование отложено владельцем; зелёные host-тесты не закрывают этот дефект / Owner deferred licensing; passing host tests do not close this defect.
+
+## На согласовании / Pending review
+
+- [ ] Принять интерфейс «Система» в 5.1.38; реальную перезагрузку/сброс проверять отдельно по разрешению владельца / Review System UI in 5.1.38; actual reboot/reset requires separate owner authorization.
+
+- [ ] Принять лимит 64 КиБ, инструкцию и удаление неиспользуемых мелодий в 5.1.36 / Review the 64 KiB limit, instructions and unused melody deletion in 5.1.36.
+
+- [x] Владелец разрешил сгруппированные коммиты правок UI, медиатеки, системы и CI после осмотра 5.1.44 / Owner authorized grouped UI, media, system and CI commits after reviewing 5.1.44.
 
 ## Миграция / Migration
 
@@ -72,3 +82,21 @@ hardware acceptance protocol.
 
 - [x] Установка 5.1.32: файлы, данные и 194 записи журнала проверены, громкость сохранена, auto-off / 5.1.32 installed: files, data and 194 journal entries verified, gain preserved, auto off.
 - [ ] Визуальное подтверждение исправленных иконок 5.1.32 владельцем / Owner visual confirmation of corrected 5.1.32 icons.
+
+- [x] 5.1.39: проверка резервной копии только при открытии раздела; исключена конкуренция закрытого блока со списком мелодий после F5. Проверить субъективную задержку в браузере владельца после установки.
+
+- [x] 5.1.41: повторные F5 в реальном Chrome — расписания готовы за 1,36–1,48 с; первая загрузка после обновления 2,66 с. Полный список мелодий остаётся 2,32–2,91 с / Real Chrome repeat reloads: draft ready in 1.36–1.48 s; first after upgrade 2.66 s. Full melody list still takes 2.32–2.91 s.
+
+- [x] 5.1.42: вдвое уменьшен отступ перед удалением в обеих таблицах / Halved the gap before deletion in both tables.
+
+- [x] 5.1.43: увеличены значки прослушивания в обеих таблицах / Enlarged playback icons in both tables.
+
+- [x] 5.1.44: встроенная CSS-палитра по ТЗ 1.81, стабильные номера 1–16 / Built-in CSS palette per specification 1.81, stable IDs 1–16.
+
+- [x] ТЗ 1.81: закрепить согласованные CSS-имена/HEX и встроенный порядок 1–16 / Record approved CSS names/HEX and built-in order 1–16.
+- [x] Внедрить базовую CSS-палитру по ТЗ 4.6.64–4.6.66 в общий UI и иллюстрации / Implement the baseline CSS palette in shared UI and illustrations.
+- [ ] TC-195: подтвердить новую палитру на стенде; полный цикл импорта/восстановления отдельно / Confirm the new palette on the bench; full import/restore cycle separately.
+
+- [x] 5.1.44 установлена на разрешённый стенд; бэкап, файлы/HTTP, журнал и сохранность громкости/auto-off проверены / 5.1.44 installed on the authorized bench; backup, files/HTTP, journal and preserved volume/auto-off verified.
+
+- [x] Владелец подтвердил внешний вид базовой CSS-палитры на стенде 5.1.44 / Owner confirmed the baseline CSS palette appearance on the 5.1.44 bench.

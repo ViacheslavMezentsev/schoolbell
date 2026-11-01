@@ -4,6 +4,42 @@
 
 ## Unreleased
 
+- 5.1.44 verification: make all and specification checks PASS. Authorized bench verification covered 81 package files, 12 HTTP assets, unchanged backup contents and 226 preserved journal entries. Volume remains 50%, automatic bells off; no playback. The owner confirmed the palette appearance on the bench.
+
+- Specification 1.81: record the owner-approved 16 CSS names/HEX values and fixed built-in 4×4 palette order. Shared UI implementation and TC-195 remain pending; package version unchanged.
+
+- 5.1.44: implement the specification 1.81 baseline CSS palette of 16 colors in the exact 4×4 order; tooltips include CSS names. Preserve numeric color assignments; quiet days remain neutral.
+
+- 5.1.43: enlarge playback icons in both Actions columns to 24 CSS px; preserve button dimensions and the gap before deletion.
+
+- 5.1.42: halve the gap before Delete in the Actions column of both tables (60 → 30 CSS px). Clarified the custom melody requirements: format, size and duration.
+
+- 5.1.41 verification: make all PASS; installed on the development bench, preserving data, 220 journal entries, volume and auto-off. Real Chrome: repeat reloads reach draft readiness in 1.36–1.48 s vs 3.65–3.98 s; first reload after upgrade 2.66 s. Complete melody list takes 2.32–2.91 s on repeat reloads; no instant-load claim. Palette and actions inspected on the installed page. Uncommitted.
+
+- 5.1.41: one Actions column in Schedules and Melodies, with a button-width empty slot before deletion. Initial schedule/media reads precede background polling; a 1.5-second wait limit prevents failed loading from starving status controls. A 4×4 color palette sits left of schedule selection and name; create/copy/delete use icons with accessible labels.
+
+- 5.1.40: faster schedule reads with unchanged integrity checks: precompute SHA-256 rotation powers and expand dates only for assigned days. Start schedule loading before background reads; closed time settings no longer issue a duplicate startup clock request.
+
+- 5.1.39: Check backup status when its section opens instead of on every page reload, avoiding storage-lock contention with the initial melody list.
+
+- 5.1.38 validated: make all and strict specification checks passed; local Chrome confirmed the compact column and System section. Installed on the bench with verified backup/rollback: 81 files and 10 HTTP assets matched; .sbb data, 220 journal entries, 50% volume and auto-off preserved. Boot ID unchanged. Actual reboot/reset was not invoked; new actions were tested on host fixtures. No commit.
+
+- 5.1.38: compact deletion column and removed bell count. Settings now includes System with confirmed reboot and resumable settings reset preserving melodies and journal. Specification revision 1.80, TC-192–194; installation never triggers these actions.
+
+- 5.1.37: make all passed; installed on the bench with verified backup/rollback. Successful list reads: 531/531/703 ms versus 2770/3064 ms. .sbb contents, settings, 220 journal entries and 50% volume preserved, auto off. An orphan empty gate was separately recovered with the web service stopped, no owners and storage locks held; its origin is not established. No sound or commit.
+
+- 5.1.37 fixes the 5.1.36 regression: melody listing no longer validates/hashes entire draft/applied plans or acquires the editor lock. Bounded reference snapshots provide UI hints; authoritative validation remains mandatory before deletion. Original bench listing took 2.8–3.1 s.
+
+- 5.1.36 validation: make all and strict specification checks passed. Installed on the authorized bench over 5.1.35; backup, rollback, 78 files and 9 HTTP assets verified. Read-only catalog checks confirmed the title and usage flags. .sbb contents, settings and 220 journal entries preserved, volume 50%, auto off. Deletion was tested on host fixtures only; no bench playback, upload or deletion. No commit.
+
+- 5.1.36: mandatory 64 KiB limit for new MP3 files, concise replacement instructions and deletion of unused user melodies with server-side reference checks and locks. Existing files/backups remain compatible. 2.mp3 is titled «Гостья из будущего». Specification revision 1.79, TC-190–191.
+
+- Storage information separates actual usage from upload conditions. The system reserve is explained as a required amount of free space, not already occupied space. Installed on the bench as 5.1.35: backup and 5.1.34 rollback verified, 78 files and 9 HTTP assets matched, data and 218 journal entries preserved. Volume unchanged at 50%, automatic bells off, no audio played.
+
+- Removed the audibility question after successful test playback. Persistent storage information in Melodies is collapsed by default, like journal statistics. Installed on the bench as 5.1.34: backup, exact 5.1.33 rollback, 78 files and 9 HTTP assets verified. Data and 218 journal entries preserved; volume unchanged at 50%, automatic bells off, no audio played.
+
+- 5.1.33: the Melodies manual sound check is grouped in one collapsed section. CI selects runtime, web/Pages and package jobs by changed paths; the mandatory ci-gate rejects skipped selected checks. With owner authorization, 5.1.33 was installed on the bench: backup, rollback, 78 files and 8 HTTP assets verified; data and 211 journal entries preserved. Volume remains 50%, automatic bells off, no audio played. make all and targeted checks passed. Changes remain uncommitted.
+
 - Installed 5.1.32 over 5.1.31 on the authorized bench. Backup and exact rollback IPK verified; all 78 files, .sbb contents, settings and 194 journal entries preserved. Gain remains 25% (-12 dB), automatic bells off, native 1.0.0. Eight CSS/JS assets verified over HTTP. The normal service restart leaves time trust unconfirmed/startup; clocks/NTP unchanged. No playback; icon appearance awaits owner confirmation. Full make all passed.
 
 - 5.1.32 validation: full make all and strict specification checks passed; chains and buttons inspected in local Chrome without playback. No device installation.
