@@ -10,8 +10,7 @@ function ready(e){return e && e.loaded && !e.dirty && !e.busy && !e.reconcile &&
 function confirmed(){var v=sample && performance.now()-sample.at<15000 && sample.value;return v && v.ok!==false && typeof v.enabled==='boolean' && Number.isInteger(v.generation) && v.generation>=0 && v.state!=='waiting' && v.state!=='unavailable' && v.state!=='executor_error'?v:null;}
 function header(){
  var v=confirmed(),text,tone='warning',demo=v && v.simulated;
- var mode=v && v.mode==='annual'?'📅 ':v && v.mode==='fixed'?'☷ ':'';
- quick.textContent=(v && v.enabled?'⏸ ':'▶ ')+mode+'Автозвонки';
+ quick.textContent=(v && v.enabled?'⏸ ':'▶ ')+'Автозвонки';
  quick.setAttribute('aria-label','Автозвонки'+(v && v.mode==='annual'?' · календарный план':v && v.mode==='fixed'?' · расписание':''));
  quick.title=v && v.enabled?'Выключить автоматические звонки':'Включить ранее применённый план, не черновик';
  if(window.schoolbellSessionBlocked){text='Войдите';tone='warning';}

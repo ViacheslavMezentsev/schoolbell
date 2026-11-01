@@ -93,7 +93,7 @@ function fixture(storage={},initialRevision="r1",loadCodes=[]){
 
  let h=fixture();await h.tick();
  assert(h.get('quick-automatic').disabled);assert.equal(h.get('quick-automatic-status').dataset.tone,'danger');
- h.active={ok:true,state:'disabled',enabled:false,generation:1,revision:'applied',mode:'fixed'};await h.poll();assert(h.get('quick-automatic').textContent.includes('☷'));h.active.mode='annual';await h.poll();assert(h.get('quick-automatic').textContent.includes('📅'));
+ h.active={ok:true,state:'disabled',enabled:false,generation:1,revision:'applied',mode:'fixed'};await h.poll();assert.equal(h.get('quick-automatic').textContent,'▶ Автозвонки');h.active.mode='annual';await h.poll();assert.equal(h.get('quick-automatic').textContent,'▶ Автозвонки');
  assert(!h.get('quick-automatic').disabled);assert.equal(h.get('quick-automatic-status').textContent,'Выключены');
  h.window.schoolbellEditor.snapshot().dirty=true;
  // Deliberately edit the real draft; header resume must not load or apply it.
@@ -138,6 +138,7 @@ function fixture(storage={},initialRevision="r1",loadCodes=[]){
  await y.get('months-bottom-prev').click();assert(y.get('months-prev').disabled && y.get('months-bottom-prev').disabled);assert(!y.get('months-next').disabled && !y.get('months-bottom-next').disabled);
  await y.get('months-bottom-next').click();assert.equal(visible()[1].title,'2028-09-02 · Normal');assert(y.get('months-next').disabled && y.get('months-bottom-next').disabled);
  assert.equal(y.saves.length,0);assert.equal(y.posts.length,0);
+ await y.get('months-first').click();assert(y.get('months-first').disabled);assert(y.get('months-bottom-first').disabled);await y.get('months-bottom-last').click();assert(y.get('months-last').disabled);assert(y.get('months-bottom-last').disabled);assert.equal(y.saves.length,0);assert.equal(y.posts.length,0);
  console.log('PASS consecutive cross-year months; bounded pages; navigation preserves draft and global assignment indices');
  let x=fixture();await x.tick();
  assert(x.brush('Просмотр дня')['aria-pressed']==='true');

@@ -109,8 +109,8 @@
     var pages=selectedPlan?Math.ceil((lastMonth-firstMonth+1)/12):0;
     monthPage=Math.max(0,Math.min(monthPage,Math.max(0,pages-1)));
     ['months-','months-bottom-'].forEach(function(prefix){
-      document.getElementById(prefix+'prev').disabled=!selectedPlan || monthPage===0;
-      document.getElementById(prefix+'next').disabled=!selectedPlan || monthPage+1>=pages;
+      document.getElementById(prefix+'first').disabled=document.getElementById(prefix+'prev').disabled=!selectedPlan || monthPage===0;
+      document.getElementById(prefix+'last').disabled=document.getElementById(prefix+'next').disabled=!selectedPlan || monthPage+1>=pages;
       document.getElementById(prefix+'navigation').hidden=pages<=1;
       document.getElementById(prefix+'status').textContent=pages?'Страница '+(monthPage+1)+' из '+pages+' · до 12 месяцев подряд':'';
     });
@@ -186,11 +186,11 @@
     document.getElementById('duty-state').textContent=busy?'Обмен с устройством…':reconcile?'Требуется сверка данных':!draft?'Данные недоступны':dirty?'Черновик изменён · не сохранён':revision==='empty'?'План ещё не сохранён':'Черновик сохранён';
 
     root.setAttribute('aria-busy',String(locked));
-    save.textContent=busy?'Обмен с устройством…':formPending?'Сначала примените название и даты':reconcile?'Сначала сверьте сохранённое':dirty?'Сохранить черновик на устройстве':'Нет изменений для сохранения';
+    save.textContent=busy?'Обмен с устройством…':formPending?'Сначала примените название и даты':reconcile?'Сначала сверьте сохранённое':dirty?'💾 Сохранить черновик':'Нет изменений для сохранения';
     fields.disabled=locked || !draft;
     save.disabled=locked || !draft || !dirty || reconcile || formPending;
-    reload.disabled=locked;
-    reload.textContent=draft?"Отменить правки / загрузить сохранённое":"Повторить чтение";
+    reload.disabled=locked;reload.title=draft?"Отменить несохранённые правки и загрузить сохранённый черновик":"Повторить чтение сохранённых данных";
+    reload.textContent=draft?"Отменить правки":"Повторить чтение";
     document.getElementById('draft-compare').disabled=locked || !draft || formPending;
     document.getElementById('draft-keep-local').disabled=locked || !compared || formPending;
     document.getElementById('draft-use-router').disabled=locked || !compared || formPending;
@@ -462,8 +462,8 @@
       draft=candidate;planId=resized.plan.id;fillPlan();brush='view';changed();render();formStatus('План изменён в черновике. Сохранение и активация — отдельные действия.');
     }catch(e){formStatus(e.message);}
   });
-  ['months-','months-bottom-'].forEach(function(prefix){['prev','next'].forEach(function(direction){document.getElementById(prefix+direction).addEventListener('click',function(){
-    if(!plan())return;painting=false;monthPage+=direction==='next'?1:-1;renderAnnual();
+  ['months-','months-bottom-'].forEach(function(prefix){['first','prev','next','last'].forEach(function(direction){document.getElementById(prefix+direction).addEventListener('click',function(){
+    var p=plan();if(!p)return;painting=false;if(direction==='first')monthPage=0;else if(direction==='last'){var first=Number(p.start.slice(0,4))*12+Number(p.start.slice(5,7)),last=Number(p.end.slice(0,4))*12+Number(p.end.slice(5,7));monthPage=Math.ceil((last-first+1)/12)-1;}else monthPage+=direction==='next'?1:-1;renderAnnual();
     if(prefix==='months-bottom-')document.getElementById('months-navigation').scrollIntoView({block:'start'});
   });});});
   document.getElementById('plan-brush').addEventListener('change',function(e){chooseBrush(e.target.value);});

@@ -132,7 +132,7 @@ input.schedule-switch:checked{background:var(--accent);border-color:var(--accent
 .bell-switches{display:inline-flex;align-items:center;gap:30px}.bell-switches input.schedule-switch{margin:0}.switches-column{white-space:nowrap}
 
 /* Shared monochrome icon buttons: add, copy and move. */
-.schedule-table .row-actions button.row-edit,.schedule-tools .schedule-icon:not(.icon-delete){font-size:32px;font-weight:700;line-height:1}
+.media-actions button.row-edit,.schedule-table .row-actions button.row-edit,.schedule-tools .schedule-icon:not(.icon-delete){font-size:32px;font-weight:700;line-height:1}
 
 .row-tools{gap:30px}.editor-toolbar .icon-action{width:44px;min-width:44px;height:48px;padding:0;font-size:32px;font-weight:700;line-height:1}.editor-toolbar .icon-action.icon-delete{font-size:28px;color:var(--danger)}
 
@@ -151,3 +151,39 @@ input.schedule-switch:checked{background:var(--accent);border-color:var(--accent
 .cpu-labels,.flash-labels{line-height:1.6}
 
 .audio-volume-label{white-space:nowrap}
+
+/* Compact list tools and discrete volume slider. */
+#selected-schedule>.table-scroll>.schedule-table{margin-bottom:0}#selected-schedule>.row-tools{margin-top:48px;margin-bottom:0}#row-preview-status:empty{min-height:0;margin:0}
+.journal-actions .icon-action,.volume-controls .icon-action{width:44px;min-width:44px;height:48px;padding:0;font-size:32px;font-weight:700;line-height:1}
+#panel-sound .volume-editor>label{display:block;margin:0 0 8px}.volume-editor{max-width:720px}.volume-controls{display:flex;align-items:center;gap:12px}.volume-controls output{min-width:54px;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+#router-volume{appearance:none;-webkit-appearance:none;flex:1;min-width:80px;width:100%;height:44px;padding:0;border:0;border-radius:0;cursor:pointer;background:linear-gradient(to right,var(--accent) 0 var(--slider-fill,0%),var(--border) var(--slider-fill,0%) 100%) center/100% 6px no-repeat}
+#router-volume::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:var(--accent);border:2px solid var(--panel)}
+#router-volume::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--accent);border:2px solid var(--panel)}
+#router-volume::-moz-range-track{background:transparent;border:0}#router-volume:disabled{opacity:.5;cursor:default}#router-volume:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+#volume-help{margin:6px 0 0}#volume-status{min-height:0;margin:6px 0 0}#volume-status:empty{margin:0}
+
+.calendar-navigation{justify-content:flex-end;align-items:center;margin:18px 0 18px auto}.calendar-navigation>span{margin-right:8px}
+
+.range-actions{display:flex;align-items:center;gap:30px;flex-shrink:0}
+
+/* Shared compact plan and timezone form tools. */
+.plan-tools{gap:8px}.plan-tools #year-clear{margin-left:22px}
+.timezone-editor{display:flex;align-items:flex-end;gap:12px;max-width:720px}#panel-sound .timezone-editor>label{display:flex;flex:1;min-width:0;max-width:none;margin:0;flex-direction:column;gap:8px}.timezone-editor .timezone-actions{margin:0;flex-wrap:nowrap}
+#plan-form-status,#plan-status,#calendar-tool,#timezone-current,#timezone-result,#time-result,#trust-result{min-height:0;margin:8px 0}
+#plan-form-status:empty,#plan-status:empty,#calendar-tool:empty,#timezone-result:empty,#time-result:empty,#trust-result:empty{margin:0}
+@media(max-width:420px){.timezone-editor{flex-wrap:wrap}.timezone-editor>label{flex-basis:100%}}
+
+/* Preview and manual sound controls share compact icon tools. */
+.preview-tools{max-width:480px;align-items:flex-end}.preview-tools label{min-width:160px}.preview-tools input{width:100%}.preview-tools button{flex-shrink:0}
+#manual-sound-check .sound-check-action{align-items:center;gap:12px;margin:8px 0 0}.sound-check-action .icon-action{flex-shrink:0}
+#preview-status,#browser-result,#router-result{min-height:0;margin:8px 0}#preview-status:empty,#browser-result:empty,#router-result:empty{margin:0}
+#manual-sound-check .routes{margin:12px 0}#manual-sound-check .routes article>p{margin:8px 0}#manual-sound-check .diagram{margin:12px 0}
+
+.savebar,.settings-savebar{align-items:center;gap:12px}.settings-savebar{margin:12px 0 8px}.settings-savebar .primary{width:auto}#settings-save-hint{margin:0 0 8px}#settings-result,#schedule-result{min-height:0;margin:8px 0}#settings-result:empty,#schedule-result:empty{margin:0}
+
+/* Avoid covering the editor with a three-row sticky toolbar on phones. */
+@media(max-width:580px){.savebar{position:static;bottom:auto}}
+
+header>div:first-child{min-width:0;max-width:100%}audio{max-width:100%}.routes>article{min-width:0}.diagram>div{min-width:0}
+
+@media(max-width:420px){#manual-sound-check .diagram{flex-direction:column;gap:8px;padding:12px 8px}#manual-sound-check .diagram>div{width:100%}#manual-sound-check .diagram>b{transform:rotate(90deg)}#manual-sound-check .diagram strong{line-height:1.4}}
