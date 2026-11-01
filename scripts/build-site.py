@@ -73,7 +73,6 @@ text=text.replace(marker,marker+(root/'site/portable-panel.html').read_text(),1)
 text=text.replace('</head>','<link rel="stylesheet" href="./assets/portable.css"></head>')
 scripts=''.join('<script src="./assets/'+name+'.js"></script>' for name in ['portable-codec','portable-export','portable-preview','portable-config','portable-pages','portable-ui'])
 text=text.replace('</body>',scripts+'</body>')
-text=text.replace('https://github.com/ViacheslavMezentsev/openwrt-modbus-core', 'https://github.com/ViacheslavMezentsev/schoolbell')
 assert '<%=' not in text,'unresolved template'
 # Embed provenance at build time; never infer it from the current remote branch.
 author_marker='Соавтор: Codex (OpenAI), ИИ-помощник в разработке.</p>'

@@ -1,1 +1,8 @@
 blank_issues_enabled: true
+contact_links:
+  - name: Руководство Школьника
+    url: https://viacheslavmezentsev.github.io/schoolbell/guide.html
+    about: Настройка расписаний, календаря, мелодий и работа с устройством.
+  - name: Schoolbell user guide
+    url: https://viacheslavmezentsev.github.io/schoolbell/guide.en.html
+    about: Schedules, calendar plans, melodies and device operation.

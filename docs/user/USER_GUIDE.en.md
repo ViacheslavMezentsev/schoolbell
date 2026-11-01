@@ -237,7 +237,7 @@ Use «Обновить журнал». Table times are UTC; rotation discards ol
 is not permanent history. Full core system-event subscription is still pending.
 Player success does not confirm audible sound.
 
-In Feedback, search existing Issues or report a bug with module/core versions,
+In Feedback, search [schoolbell Issues](https://github.com/ViacheslavMezentsev/schoolbell/issues) or use the bug/feature forms, which also link to the RU/EN guides. Include the Schoolbell version,
 equipment, steps, expected/actual result and exact error/operation ID. Attach a
 screenshot or short log only after removing credentials/tokens/personal data.
 GitHub submission requires Internet/account and is performed by you, not automatically.

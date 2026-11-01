@@ -1,34 +1,34 @@
-name: Ошибка / Bug report
+name: Ошибка Школьника / Schoolbell bug
 description: Сообщить о воспроизводимой ошибке / Report a reproducible problem
 title: "[Bug]: "
 body:
   - type: markdown
     attributes:
-      value: "Проверьте существующие Issues. Публикация открытая: удалите пароли, токены и личные данные. / Check existing issues. Remove secrets and personal data before posting."
+      value: "[Руководство](https://viacheslavmezentsev.github.io/schoolbell/guide.html) · [User guide](https://viacheslavmezentsev.github.io/schoolbell/guide.en.html). Проверьте [существующие Issues](https://github.com/ViacheslavMezentsev/schoolbell/issues). Публикация открытая: удалите пароли, токены и личные данные. / Check existing issues. Remove secrets and personal data before posting."
   - type: dropdown
     id: component
     attributes:
-      label: Компонент / Component
+      label: Где возникла проблема / Affected area
       options:
-        - schoolbell
-        - core
-        - demo
-        - rover
-        - documentation / other
+        - Школьник на устройстве / Schoolbell on a device
+        - Демо в браузере / Browser demo
+        - Установка или обновление / Installation or upgrade
+        - Документация / Documentation
+        - Другое / Other
     validations:
       required: true
   - type: input
     id: versions
     attributes:
-      label: Версии модуля и ядра / Module and core versions
-      placeholder: "schoolbell 5.0.1; core 0.4.0; commit/build ID if known"
+      label: Версия Школьника / Schoolbell version
+      placeholder: "5.1.45; для демо — commit из вкладки Обратная связь / for demo: commit from Feedback"
     validations:
       required: true
   - type: textarea
     id: environment
     attributes:
       label: Оборудование и окружение / Hardware and environment
-      description: "Модель/ревизия роутера, OpenWrt, платы и периферия, браузер/ОС. Если не применимо, укажите это. / Router model, OpenWrt, boards, peripherals, browser/OS; use N/A where appropriate."
+      description: "Модель устройства, версия OpenWrt, браузер/ОС. Для сбоя звука — аудиокарта, USB-хаб и строка Аудио из шапки. / Device model, OpenWrt version, browser/OS. For audio problems: sound card, USB hub and the Audio header line."
     validations:
       required: true
   - type: textarea

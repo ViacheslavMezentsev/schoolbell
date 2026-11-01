@@ -510,8 +510,8 @@
       "source": "packages/schoolbell/router-page/root/usr/lib/lua/luci/view/schoolbell_test.htm",
       "destination": "ui/root/usr/lib/lua/luci/view/schoolbell_test.htm",
       "source_sha256": "526214f183ea8526785239074189d00cc03e7251323ee4146f75f0a53a015a54",
-      "changes": "none; default audio status and blue Flash (5.1.29); wider header and CSS cache key (5.1.30); owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner clarification of playback action icons (5.1.32, spec 1.78); manual sound check grouped in a collapsed disclosure; collapsed manual sound check, version 5.1.33; concise playback completion and collapsed storage information; separate actual storage use from upload conditions; owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); 5.1.39 lazy backup status check and release notes; 5.1.40 initial page-load performance; 5.1.41 startup priority and shared Actions column; compact 4x4 schedule palette; 5.1.42 reduced action spacing; 5.1.43 playback icon size; 5.1.44 approved contrast palette",
-      "destination_sha256": "1a78decbe63937782bccd1ae473d3b2b3a002e5b32ab1d57f89a847c10af114f"
+      "changes": "none; default audio status and blue Flash (5.1.29); wider header and CSS cache key (5.1.30); owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner clarification of playback action icons (5.1.32, spec 1.78); manual sound check grouped in a collapsed disclosure; collapsed manual sound check, version 5.1.33; concise playback completion and collapsed storage information; separate actual storage use from upload conditions; owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); 5.1.39 lazy backup status check and release notes; 5.1.40 initial page-load performance; 5.1.41 startup priority and shared Actions column; compact 4x4 schedule palette; 5.1.42 reduced action spacing; 5.1.43 playback icon size; 5.1.44 approved contrast palette; schoolbell feedback issue forms and RU/EN guide links (5.1.45)",
+      "destination_sha256": "445fe3140f14d6e9a962ef404405e24f12e9fd92df089501ad3cc81a2e18f6b2"
     },
     {
       "source": "packages/schoolbell/router-page/root/usr/lib/lua/schoolbell/backup_web.lua",
@@ -1161,8 +1161,8 @@
       "source": "pkg-schoolbell/CONTROL/control",
       "destination": "packaging/openwrt/package/CONTROL/control",
       "source_sha256": "8183c1fee37c5c6579f32cc2570317640935b5a2598495d8bbb4081e6bb78141",
-      "changes": "adapted; review destination against pinned source; default audio status and blue Flash (5.1.29); wider header and CSS cache key (5.1.30); owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner clarification of playback action icons (5.1.32, spec 1.78); collapsed manual sound check, version 5.1.33; version 5.1.34; version 5.1.35; owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); fast advisory media listing, authoritative checks retained for deletion; confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); 5.1.39 lazy backup status check and release notes; 5.1.40 initial page-load performance; 5.1.41 startup priority and shared Actions column; 5.1.42 reduced action spacing; 5.1.43 playback icon size; 5.1.44 approved contrast palette",
-      "destination_sha256": "63a0195843620cf99c88af04057e146f7bb2a6670924f02dada0a37379f44e64"
+      "changes": "adapted; review destination against pinned source; default audio status and blue Flash (5.1.29); wider header and CSS cache key (5.1.30); owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner clarification of playback action icons (5.1.32, spec 1.78); collapsed manual sound check, version 5.1.33; version 5.1.34; version 5.1.35; owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); fast advisory media listing, authoritative checks retained for deletion; confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); 5.1.39 lazy backup status check and release notes; 5.1.40 initial page-load performance; 5.1.41 startup priority and shared Actions column; 5.1.42 reduced action spacing; 5.1.43 playback icon size; 5.1.44 approved contrast palette; schoolbell feedback issue forms and RU/EN guide links (5.1.45)",
+      "destination_sha256": "cd76b5e9c4109c6d098226df8c40e177e0fa8f55d9089ee4c0907227c105c343"
     },
     {
       "source": "pkg-schoolbell/CONTROL/postinst",
@@ -2046,47 +2046,47 @@
       "source": "docs/packages/schoolbell/USER_GUIDE.en.md",
       "destination": "docs/user/USER_GUIDE.en.md",
       "source_sha256": "45cada2eb0064aa88df66a57a4e80f593cc259497ea41817e66eb42fcf678921",
-      "destination_sha256": "10a60a3d60dd99640f6acdd5db282bcc1ea7861e35b033ccc4e6df7eb5b19b93",
-      "changes": "Markdown link destinations only; original text and requirement/TC IDs preserved; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80)",
-      "prose_sha256": "5d45d591772fb3e4f004e2980d0c92d1df0ca52828af39c42c3bb26ab18705b9",
+      "destination_sha256": "e13ec823a91ed03c326403297420d68d919db1428d51fa4e1395f6527a4ffbea",
+      "changes": "Markdown link destinations only; original text and requirement/TC IDs preserved; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); schoolbell feedback issue forms and RU/EN guide links (5.1.45)",
+      "prose_sha256": "a536de7b469726926c882b1693fb4e0b3510a12209b07c2f7e6749fbb665f20a",
       "migrated_prose_sha256": "ca3efd23e3a9a2c17b796ed94a73f372ad98853e29c32591d2525368a2e9fee8"
     },
     {
       "source": "docs/packages/schoolbell/USER_GUIDE.md",
       "destination": "docs/user/USER_GUIDE.md",
       "source_sha256": "9753511757ffb71652f00145a30dc1421e5e3bc3e775b0b357f9d46a93704807",
-      "destination_sha256": "352918f60b5d00c92cf2c4edfa3c43ac8688d7d7f6cafd45852495715a41ab70",
-      "changes": "Markdown link destinations only; original text and requirement/TC IDs preserved; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80)",
-      "prose_sha256": "4db4e98eb3eee7d6fe0e4ed3f4ae896fef4a509b3789b74a0a43d33d521d648c",
+      "destination_sha256": "0239dc3b5fa8caa0609444379fb10631618cffe6a7ef45e0969e044c306f9d97",
+      "changes": "Markdown link destinations only; original text and requirement/TC IDs preserved; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); schoolbell feedback issue forms and RU/EN guide links (5.1.45)",
+      "prose_sha256": "d9956527725f21bdf27e0bb70166538833a238eb33f6bfa12e745626935b6d13",
       "migrated_prose_sha256": "3d8d69c4d89c627f85c1db40f3e4b2e8e1222460ef7ab761eb50e2bdb05ed600"
     },
     {
       "source": ".github/ISSUE_TEMPLATE/bug_report.yml",
       "destination": ".github/ISSUE_TEMPLATE/bug_report.yml",
       "source_sha256": "42530fa9d5c8396ab37e6b06d7f995ca4a5228e687d147d3c3c6d3888d689298",
-      "destination_sha256": "42530fa9d5c8396ab37e6b06d7f995ca4a5228e687d147d3c3c6d3888d689298",
-      "changes": "none"
+      "destination_sha256": "89893721f793cf724cf71170d652012b936eef1a86aa48a8bb1c60656f31da9c",
+      "changes": "none; schoolbell feedback issue forms and RU/EN guide links (5.1.45)"
     },
     {
       "source": ".github/ISSUE_TEMPLATE/config.yml",
       "destination": ".github/ISSUE_TEMPLATE/config.yml",
       "source_sha256": "13064e7bea658e01e718b414fbb7b3b244f36411fe25ee2055c151f7b534547a",
-      "destination_sha256": "13064e7bea658e01e718b414fbb7b3b244f36411fe25ee2055c151f7b534547a",
-      "changes": "none"
+      "destination_sha256": "b54de3c2c6eb75f80cbc14cd3af025e2ba9af8157a04c6f861f224f930571d5c",
+      "changes": "none; schoolbell feedback issue forms and RU/EN guide links (5.1.45)"
     },
     {
       "source": ".github/ISSUE_TEMPLATE/feature_request.yml",
       "destination": ".github/ISSUE_TEMPLATE/feature_request.yml",
       "source_sha256": "00f110ffb7e269e62da140c48702d4955fb1defc86699a8382f75775451a636d",
-      "destination_sha256": "00f110ffb7e269e62da140c48702d4955fb1defc86699a8382f75775451a636d",
-      "changes": "none"
+      "destination_sha256": "fa90b66ddcb724ca73ac24f6f094fabed06ed563deb5bdad3ef79eadbc19fde3",
+      "changes": "none; schoolbell feedback issue forms and RU/EN guide links (5.1.45)"
     },
     {
       "source": "scripts/build-site.py",
       "destination": "scripts/build-site.py",
       "source_sha256": "7b581e66a713901cc092b9afcd5ff99155aaaa2bbf8d292dd251a3680f9247b9",
-      "destination_sha256": "ab8a776074c9fb3b1649bfeb8313292bf79fb4f40949b3ff548b1c0e8e1f67c9",
-      "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer; 2026-10-31 license delivery: shared artifact notices and verification; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80)"
+      "destination_sha256": "77d71a387d27f93ed8edffcdaa27ded8c481fd73d41c487d3f120eaaf1bf4c03",
+      "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer; 2026-10-31 license delivery: shared artifact notices and verification; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); schoolbell feedback issue forms and RU/EN guide links (5.1.45)"
     },
     {
       "source": "site/devices/index.en.html",

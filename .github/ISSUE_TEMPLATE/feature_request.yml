@@ -1,20 +1,20 @@
-name: Предложение / Feature request
+name: Улучшение Школьника / Schoolbell feature
 description: Предложить улучшение / Suggest an improvement
 title: "[Feature]: "
 body:
   - type: markdown
     attributes:
-      value: "Проверьте существующие Issues. Опишите потребность, а не только вариант реализации. / Check existing issues and explain the need, not only an implementation."
+      value: "[Руководство](https://viacheslavmezentsev.github.io/schoolbell/guide.html) · [User guide](https://viacheslavmezentsev.github.io/schoolbell/guide.en.html). Проверьте [существующие Issues](https://github.com/ViacheslavMezentsev/schoolbell/issues). Опишите потребность, а не только вариант реализации. / Check existing issues and explain the need, not only an implementation."
   - type: dropdown
     id: component
     attributes:
-      label: Компонент / Component
+      label: Область улучшения / Area
       options:
-        - schoolbell
-        - core
-        - demo
-        - rover
-        - documentation / other
+        - Школьник на устройстве / Schoolbell on a device
+        - Демо в браузере / Browser demo
+        - Установка или обновление / Installation or upgrade
+        - Документация / Documentation
+        - Другое / Other
     validations:
       required: true
   - type: textarea

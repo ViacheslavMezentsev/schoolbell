@@ -53,3 +53,23 @@ for name in ['LUCI-LICENSE','portable-zones.NOTICE']:
  assert (out/'assets'/name).read_bytes()==(root/'site'/name).read_bytes()
 assert (out/'assets/media-manifest.json').read_bytes()==(root/'assets/melodies/manifest.json').read_bytes()
 print('PASS Pages license navigation, MIT, scope, audio manifest and LuCI notice delivery')
+
+# Device HTML must carry correct feedback links itself; Pages must not repair it.
+feedback_base='https://github.com/ViacheslavMezentsev/schoolbell/issues'
+guides=['https://viacheslavmezentsev.github.io/schoolbell/guide.html',
+        'https://viacheslavmezentsev.github.io/schoolbell/guide.en.html']
+expected={feedback_base,feedback_base+'/new?template=bug_report.yml',
+          feedback_base+'/new?template=feature_request.yml',*guides}
+for text in [home,(root/'ui/root/usr/lib/lua/luci/view/schoolbell_test.htm').read_text()]:
+ panel=text.split('<section id="panel-feedback"',1)[1].split('</section>',1)[0]
+ assert set(Page(panel).links)==expected
+ assert 'openwrt-modbus-core' not in panel
+ assert 'Если формы ещё недоступны' not in panel
+for name in ['bug_report.yml','feature_request.yml']:
+ form=(root/'.github/ISSUE_TEMPLATE'/name).read_text()
+ assert all(url in form for url in guides)
+ assert '        - core' not in form and '        - rover' not in form
+ assert 'id: component' in form and 'validations:' in form
+config=(root/'.github/ISSUE_TEMPLATE/config.yml').read_text()
+assert all(url in config for url in guides)
+print('PASS Feedback: device/Pages share exact schoolbell issue-form and guide links; templates exist and target Schoolbell')

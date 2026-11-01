@@ -100,3 +100,5 @@ hardware acceptance protocol.
 - [x] 5.1.44 установлена на разрешённый стенд; бэкап, файлы/HTTP, журнал и сохранность громкости/auto-off проверены / 5.1.44 installed on the authorized bench; backup, files/HTTP, journal and preserved volume/auto-off verified.
 
 - [x] Владелец подтвердил внешний вид базовой CSS-палитры на стенде 5.1.44 / Owner confirmed the baseline CSS palette appearance on the 5.1.44 bench.
+
+- [x] 5.1.45: общий маршрут обратной связи в Issues schoolbell, собственные формы и ссылки на руководства RU/EN / Shared schoolbell Issues feedback links, tailored forms and RU/EN guide links.

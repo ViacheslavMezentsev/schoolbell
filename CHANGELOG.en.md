@@ -4,6 +4,10 @@
 
 ## Unreleased
 
+- 5.1.45 validation: `make all` — PASS; forms parsed as YAML, RU/EN guides available (HTTP 200). Development bench checks covered 81 package files, 12 HTTP assets, unchanged data and 232 preserved journal entries. Volume remains 50%, automatic bells remain off; no audio was played.
+
+- 5.1.45: device and Pages Feedback now link to schoolbell Issues. Bug/feature forms cover the device, demo and installation; RU/EN guides are linked from forms, the issue chooser and Feedback. Remove old core links and the temporary unavailable-forms notice.
+
 - 5.1.44 verification: make all and specification checks PASS. Authorized bench verification covered 81 package files, 12 HTTP assets, unchanged backup contents and 226 preserved journal entries. Volume remains 50%, automatic bells off; no playback. The owner confirmed the palette appearance on the bench.
 
 - Specification 1.81: record the owner-approved 16 CSS names/HEX values and fixed built-in 4×4 palette order. Shared UI implementation and TC-195 remain pending; package version unchanged.
