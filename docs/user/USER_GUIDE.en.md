@@ -71,7 +71,7 @@ the draft; «Мелодии» manages audio; «Настройки» controls tim
    «Время верно — подтвердить».
 3. Create a schedule with an enabled test-melody row a few minutes after current
    router time. Disable preliminary ringing for this test.
-4. In Settings select «По расписанию» and that schedule, then «Сохранить настройки и черновик».
+4. In Settings select «По расписанию» and that schedule, then «💾 Сохранить настройки».
 5. Preview today and check there are no unsaved changes.
 6. Click «Применить сохранённый план и включить», review/confirm, ensure Mute is off
    and the executor permits ringing. Use a short melody and low speaker volume.
@@ -284,10 +284,14 @@ If a response is lost, check state before repeating. Commands are never replayed
 automatically. An interrupted reset can be completed by explicitly confirming
 reset again. Both hardware operations are disabled in the demo.
 
-In Melodies, + below the table opens the add form. The 🖉 button on a user melody opens replacement for that entry, retaining schedule references. Choose an MP3, review its title and confirm the upload. Bundled melodies cannot be replaced; deletion restrictions are unchanged.
+In Melodies, + below the table opens the add form. The `*` button on a user melody opens replacement for that entry, retaining schedule references. Choose an MP3, review its title and confirm the upload. Bundled melodies cannot be replaced; deletion restrictions are unchanged.
 
-To rename a user melody, select 🖉, edit the title and select ✓ Save title without choosing an MP3. Automatic bells must be off. The file and schedule references remain unchanged. To replace the audio, choose an MP3 and use the separate upload button.
+To rename a user melody, select `*`, edit the title and select ✓ Save title without choosing an MP3. Automatic bells must be off. The file and schedule references remain unchanged. To replace the audio, choose an MP3 and use the separate upload button.
 
 Below Audio, the header shows the physical switch position and current device IP. Position updates on the next poll, usually within 15–16 seconds; it does not mean that the corresponding network profile is applied. The display does not change network settings.
 
 The blue bar below the audio row shows saved volume, not signal level; mute does not change its fill.
+
+Move the volume slider to a step and select ✓ Apply volume. The saved gain stays unchanged until applied. Steps are evenly spaced: 0, 10, 20…100 %, mapped to the nearest supported device gain. Existing settings stay unchanged until applied; 0 % is a rounded minimum, while Mute fully disables sound. Journal controls: ↻ refresh, ⧉ copy, ⏮/⏭ first/last page.
+
+💾 Save draft saves current edits. 💾 Save settings saves bell settings together with the entire schedule/plan draft. Neither action enables automatic bells. Discard edits reloads the saved draft with confirmation before losing unsaved changes; Compare with device lets you compare copies.
