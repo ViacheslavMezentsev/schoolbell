@@ -225,7 +225,7 @@
         });
         var listening=document.createElement('div');listening.className='row-listen';
         [false,true].forEach(function(hardware){
-          var b=document.createElement('button');b.type='button';b.innerHTML='<span class="output-icon '+(hardware?'icon-device':'icon-browser')+'" aria-hidden="true"></span>';
+          var b=document.createElement('button');b.type='button';b.textContent=hardware?'🔔':'🔊';
           b.title=hardware?'Проиграть через Школьника':'Проиграть в браузере';b.setAttribute('aria-label',b.title+' — звонок '+(index+1));
           if(hardware && root.dataset.load.indexOf('demo-api')>=0){b.disabled=true;b.title='Через Школьника недоступно: демо без оборудования';}
           b.addEventListener('click',function(){if(window.schoolbellRowPreview)window.schoolbellRowPreview(row.media,hardware);});listening.appendChild(b);

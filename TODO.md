@@ -67,3 +67,5 @@ hardware acceptance protocol.
 - [x] Правки общего UI и журнал только по размеру, кандидат 5.1.31 / Shared UI refinements and size-only journal retention, candidate 5.1.31.
 - [x] Установка 5.1.31 на стенд: файлы, данные, 187 записей журнала и HTTP-ресурсы проверены; громкость сохранена, auto-off / Bench upgrade to 5.1.31: files, data, 187 journal entries and HTTP assets verified; gain preserved, auto off.
 - [ ] Визуальное подтверждение интерфейса 5.1.31 владельцем / Owner visual confirmation of the 5.1.31 interface.
+
+- [x] Уточнение иконок: действия 🔊/🔔, узлы цепочек — окно/устройство (5.1.32) / Correct action icons to 🔊/🔔, keep window/device chain nodes (5.1.32).

@@ -4,6 +4,10 @@
 
 ## Unreleased
 
+- 5.1.32 validation: full make all and strict specification checks passed; chains and buttons inspected in local Chrome without playback. No device installation.
+
+- 5.1.32: corrected shared playback icons: 🔊 for browser playback and 🔔 for Schoolbell in schedules, media, manual buttons and chain endpoints instead of notes. Browser-window and device icons remain as chain nodes. The automatic-bell mode still reflects the applied plan, not a settings draft. Devices untouched.
+
 - Installed 5.1.31 over 5.1.30 on the authorized bench: verified backup and exact rollback, all 78 IPK files, unchanged .sbb contents and settings. Gain remains -12 dB (25% in UI), automatic bells off, native 1.0.0. All 187 existing journal entries were preserved; API reports a 32768-byte limit without age retention. Eight CSS/JS assets verified over HTTP, applied calendar mode confirmed. No playback; visual review of the open interface remains with the owner. Full make all passed.
 
 - 5.1.31 validation: full make all passed; strict checks of both specifications reported no errors or warnings. Regressions cover clock jumps, retained history and exact gain, and applied mode. Local Chrome checked four collapsed sections, preview alignment, switches/icons, light/dark themes and a 390 px container, with no JS errors or page overflow. This is not hardware acceptance.

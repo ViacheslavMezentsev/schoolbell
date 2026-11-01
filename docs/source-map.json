@@ -510,8 +510,8 @@
       "source": "packages/schoolbell/router-page/root/usr/lib/lua/luci/view/schoolbell_test.htm",
       "destination": "ui/root/usr/lib/lua/luci/view/schoolbell_test.htm",
       "source_sha256": "526214f183ea8526785239074189d00cc03e7251323ee4146f75f0a53a015a54",
-      "changes": "none; default audio status and blue Flash (5.1.29); wider header and CSS cache key (5.1.30); owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
-      "destination_sha256": "4e68ab63347dff94c9a787387dccf23333eba15d435d3ebb12e98990bf2174e9"
+      "changes": "none; default audio status and blue Flash (5.1.29); wider header and CSS cache key (5.1.30); owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner clarification of playback action icons (5.1.32, spec 1.78)",
+      "destination_sha256": "deab90d7a5fe08b578aebc2d9040eaee5843d7de2a9b0479d8fd99ae8fa877dc"
     },
     {
       "source": "packages/schoolbell/router-page/root/usr/lib/lua/schoolbell/backup_web.lua",
@@ -622,8 +622,8 @@
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/media.js",
       "destination": "ui/root/www/schoolbell-test/media.js",
       "source_sha256": "79b52ae442a583d3df5ab20db499c2c62f572908ddc8c5e6de0c30079a49c225",
-      "changes": "none; owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
-      "destination_sha256": "634abae2f14bba150280b5e1e7cb6887ba2fa648517195da6631da8e641d63b1"
+      "changes": "none; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner clarification of playback action icons (5.1.32, spec 1.78)",
+      "destination_sha256": "e113436fb812a41d1af6b213cb27b9c36502a25782ddb6476b4af0979bb1c39d"
     },
     {
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/plan-export.js",
@@ -657,8 +657,8 @@
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/schedules.js",
       "destination": "ui/root/www/schoolbell-test/schedules.js",
       "source_sha256": "0bc0f6d87c79856181ed81326f0f4728872783e19f55d99249b3eea5f8042a6f",
-      "changes": "none; owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
-      "destination_sha256": "91cf92c5d834a16b30e5980d031dc4ea8d6bfbee5806cd1abb7c89c9357f7fa3"
+      "changes": "none; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner clarification of playback action icons (5.1.32, spec 1.78)",
+      "destination_sha256": "dcef6277cadb3eca23898458d73d5d023a64a4f60eba7d4403867f19305cd7e9"
     },
     {
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/session.js",
@@ -1161,8 +1161,8 @@
       "source": "pkg-schoolbell/CONTROL/control",
       "destination": "packaging/openwrt/package/CONTROL/control",
       "source_sha256": "8183c1fee37c5c6579f32cc2570317640935b5a2598495d8bbb4081e6bb78141",
-      "changes": "adapted; review destination against pinned source; default audio status and blue Flash (5.1.29); wider header and CSS cache key (5.1.30); owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
-      "destination_sha256": "77dbf81e46c7a5249e9f67c791b15734e4b984be0e4d0df9499d67245d530bc7"
+      "changes": "adapted; review destination against pinned source; default audio status and blue Flash (5.1.29); wider header and CSS cache key (5.1.30); owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner clarification of playback action icons (5.1.32, spec 1.78)",
+      "destination_sha256": "1fd14d7d959c81be51c34600ba044da2617800019e96d33c7111840b58dea453"
     },
     {
       "source": "pkg-schoolbell/CONTROL/postinst",
@@ -2021,9 +2021,9 @@
       "source": "docs/packages/schoolbell/TECHNICAL_SPECIFICATION.md",
       "destination": "docs/requirements/TECHNICAL_SPECIFICATION.md",
       "source_sha256": "61b760731a5c4f6c53ed67726cd8667136ee194692aa517aa2b3ded7e9f07aad",
-      "destination_sha256": "fddaf6ab3613c06f65352156832dd251030985e375de55cf8eee8e348b781095",
-      "changes": "Markdown link destinations only; original text and requirement/TC IDs preserved; owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
-      "prose_sha256": "3e07fbe53b76338f2845b0b13b6f398b4e37d6ce08d861cefa456358b338c322",
+      "destination_sha256": "8ad65b7e4d9f4645ed85eb01494967b91550ccf2e6cde775c602bd90c45c7fe0",
+      "changes": "Markdown link destinations only; original text and requirement/TC IDs preserved; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner clarification of playback action icons (5.1.32, spec 1.78)",
+      "prose_sha256": "1362839f3ef4cc0a95f426234a80ccb517902d24979b27b9ba75a5f4fa432dc8",
       "migrated_prose_sha256": "7a7b8c5652b4353f90f58c476218ca443a2dbb2be0af2516e6e735ea8fa30be5"
     },
     {
