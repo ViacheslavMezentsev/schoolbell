@@ -4,6 +4,24 @@
 
 ## Unreleased
 
+- 5.1.69 / spec 1.97: UI/Pages consistency review; the save toolbar no longer overlays the editor on phones. Stale guide/README labels are updated; every volume step is tested through save/readback.
+
+- 5.1.68: consistent 💾 draft/settings save labels and a concise discard button with a detailed tooltip. Settings explain that the whole draft is saved; toolbars and status spacing are aligned. Comparison and activation are unchanged.
+
+- 5.1.67: preview uses ✓ beside the date; manual sound checks use compact 🔊/🔔 buttons with adjacent output labels. Status spacing is reduced; playback and saving behavior are unchanged.
+
+- 5.1.66 / spec 1.94: whole-plan deletion sits beside +/⧉ with a 30 px gap; plan/zone apply uses ✓ and zone/clock refresh uses ↻. Empty calendar/time form status spacing is removed; no SVG or behavior changes.
+
+- 5.1.65: range assignment and plan deletion use ✓ and a red × with a 30 CSS px gap; tooltips and deletion confirmation are retained.
+
+- 5.1.64: calendar plan creation and copying use compact + and ⧉ buttons with tooltips and accessible names, matching schedule tools.
+
+- 5.1.63 / spec 1.91: both calendar pagers are right-aligned and share compact journal buttons, including first/last page actions. Navigation does not change the plan.
+
+- 5.1.62 / spec 1.90: discrete volume slider with a separate ✓ apply button preserves existing and custom saved levels. Compact schedule tools, journal refresh/copy and boundary-page icons; corrected melody editing instructions.
+
+- 5.1.61 / spec 1.89: melody editing uses a large * instead of the pencil; the automatic-bells button no longer displays a mode icon. Tooltips, play/pause symbols and behavior are unchanged.
+
 - 5.1.60: header CPU is rounded to an integer; CPU, Flash and volume share the “50 %” format. Measurement precision and color thresholds are unchanged.
 
 - 5.1.59: the audio row shows the volume label and percentage on the left, controller and card name on the right, retaining compact spacing.

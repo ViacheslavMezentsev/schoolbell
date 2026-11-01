@@ -15,6 +15,25 @@
 
 ## На согласовании / Pending review
 
+- [x] Владелец поручил проверку целостности и фиксацию цикла 5.1.61–5.1.69 в ветке; 64 сочетания ширины/темы/вкладки проверены локально / Owner authorized consistency review and grouped commits for 5.1.61–5.1.69; 64 local viewport/theme/tab combinations checked.
+- [ ] Подтвердить на телефоне исправления 5.1.69: панель сохранения в потоке и отсутствие выхода страницы за экран / Confirm 5.1.69 phone layout: in-flow save toolbar and no page overflow.
+
+- [x] Принято: панели сохранения черновика/настроек 5.1.68 / Reviewed draft/settings save panels in 5.1.68.
+
+- [x] Принято: компактный предпросмотр и ручную проверку звука 5.1.67 / Reviewed compact preview and manual sound controls in 5.1.67.
+
+- [x] Принято: группировку действий плана и компактные формы 5.1.66 / Reviewed grouped plan actions and compact forms in 5.1.66.
+
+- [x] Принято: ✓/× инструментов диапазона 5.1.65 / Reviewed range tool ✓/× buttons in 5.1.65.
+
+- [x] Принято: кнопки +/⧉ календарного плана 5.1.64 / Reviewed calendar plan +/⧉ buttons in 5.1.64.
+
+- [x] Принято: компактную навигацию календаря 5.1.63 / Reviewed compact calendar pagination in 5.1.63.
+
+- [x] Принято: слайдер громкости и компактные инструменты расписания/журнала 5.1.62 / Reviewed the volume slider and compact schedule/journal tools in 5.1.62.
+
+- [x] Принято: совместимые значки 5.1.61: * для правки, автозвонки без значка режима / Reviewed 5.1.61 compatible symbols: * for editing, no automatic-mode icon.
+
 - [x] Владелец принял компактную шапку 5.1.60 и разрешил фиксацию текущего цикла в ветке / Owner accepted the compact 5.1.60 header and authorized committing the current cycle on a branch.
 
 - [ ] Принять интерфейс «Система» в 5.1.38; реальную перезагрузку/сброс проверять отдельно по разрешению владельца / Review System UI in 5.1.38; actual reboot/reset requires separate owner authorization.
