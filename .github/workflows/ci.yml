@@ -6,12 +6,29 @@ on:
 permissions:
   contents: read
 jobs:
-  ci-gate:
+  changes:
     runs-on: ubuntu-22.04
+    outputs:
+      runtime: ${{ steps.paths.outputs.runtime }}
+      web: ${{ steps.paths.outputs.web }}
+      package: ${{ steps.paths.outputs.package }}
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 0
+      - id: paths
+        run: python3 scripts/ci_paths.py
+  docs:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: make check-docs check-ci
+  runtime:
+    needs: changes
+    if: needs.changes.outputs.runtime == 'true'
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -19,10 +36,35 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y lua5.1 liblua5.1-0-dev gcc libc6-dev make python3
-      - run: make all
-      - run: git diff --check HEAD^ HEAD
+      - run: make test-runtime
+  web:
+    needs: changes
+    if: needs.changes.outputs.web == 'true'
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: make test-web check-site
+  package:
+    needs: changes
+    if: needs.changes.outputs.package == 'true'
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: make build verify
       - uses: actions/upload-artifact@v4
         with:
           name: schoolbell-candidate
           if-no-files-found: error
           path: out/modbus-schoolbell_*.ipk
+  ci-gate:
+    if: always()
+    needs: [changes, docs, runtime, web, package]
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/ci_gate.py
+        env:
+          CI_NEEDS: ${{ toJSON(needs) }}
