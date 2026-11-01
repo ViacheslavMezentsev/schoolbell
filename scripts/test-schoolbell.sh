@@ -5,6 +5,7 @@ command -v lua5.1 >/dev/null
 cd "$ROOT"
 lua5.1 tests/test_json_strict.lua
 lua5.1 tests/test_calendar.lua
+lua5.1 tests/test_sparse_plan.lua
 python3 tests/test_calendar_dates.py "$(command -v lua5.1)"
 lua5.1 tests/test_playback_queue.lua
 lua5.1 tests/test_player_model.lua

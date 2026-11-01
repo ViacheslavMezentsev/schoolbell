@@ -44,15 +44,14 @@ local function expand_plans(d)
             seen[id]=true
         end
         if type(p.days)~="string" or #p.days~=b-a+1 then fail("days",path) end
-        local days,date={},first
+        local days={}
         for day=1,#p.days do
             local char=p.days:sub(day,day)
             if char~="." then
                 local slot=char:byte()-64
                 if slot<1 or slot>#p.schedule_ids then fail("day_code",path) end
-                days[date]=p.schedule_ids[slot]
+                days[assert(Calendar.add_days(first,day-1))]=p.schedule_ids[slot]
             end
-            if day<#p.days then date=assert(Calendar.add_days(date,1)) end
         end
         out[i]={start=first,["end"]=last,days=days}
     end

@@ -125,8 +125,8 @@
       "source": "packages/schoolbell/lua/schoolbell/media_codec.lua",
       "destination": "src/lua/schoolbell/media_codec.lua",
       "source_sha256": "b0683fc978c5b8d3deca3a3e32e597ed0705100b5d32f1b8021a5bee43535e24",
-      "changes": "none",
-      "destination_sha256": "b0683fc978c5b8d3deca3a3e32e597ed0705100b5d32f1b8021a5bee43535e24"
+      "changes": "none; 5.1.40 initial page-load performance",
+      "destination_sha256": "c972ceea0a90084c618da7fe27797fae60ed82aa7cb1bb52a6fd6ad08b43a764"
     },
     {
       "source": "packages/schoolbell/lua/schoolbell/media_fs.lua",
@@ -223,8 +223,8 @@
       "source": "packages/schoolbell/lua/schoolbell/schedule_store.lua",
       "destination": "src/lua/schoolbell/schedule_store.lua",
       "source_sha256": "edf87899094d5523913b36fc25fd73043290c89919ec73b0d7f1abb9229129a6",
-      "changes": "none",
-      "destination_sha256": "edf87899094d5523913b36fc25fd73043290c89919ec73b0d7f1abb9229129a6"
+      "changes": "none; 5.1.40 initial page-load performance",
+      "destination_sha256": "b24dc7f07bc7cf09afb564b9b43873145aad854ebb0b4ee735d58eed9bfb88db"
     },
     {
       "source": "packages/schoolbell/lua/schoolbell/system_metrics.lua",
@@ -1329,8 +1329,8 @@
       "source": "scripts/test-schoolbell.sh",
       "destination": "scripts/test-schoolbell.sh",
       "source_sha256": "5abd8849062bc51e53907344210cb487f9e115458e196f3667753f29553ed282",
-      "changes": "adapted; review destination against pinned source; standalone target migration: deterministic native gzip / pinned-input tests; default audio status and blue Flash (5.1.29)",
-      "destination_sha256": "5e2f492e0723a551a66c7bd525315e38dfc1b16dada03adaeb6c2fd5940c5d33"
+      "changes": "staged UI integration; baseline palette follows separately",
+      "destination_sha256": "6172afdc757565278bc4f50618c295f0c81712faa1895c5175f404191d15e50c"
     },
     {
       "source": "scripts/test-site-demo.js",
