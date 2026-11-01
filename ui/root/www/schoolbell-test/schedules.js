@@ -161,6 +161,21 @@
   }
   function id(prefix) { return prefix+'_'+Date.now().toString(36)+'_'+(++counter); }
   function current() { return draft && draft.schedules.find(function (s) { return s.id===selected; }); }
+  function rowEditAllowed(){return !busy && !activationLock && !window.schoolbellSessionBlocked && !!current();}
+  function focusRow(index){var tr=rows.children[index];if(tr)tr.children[0].children[0].focus();}
+  function insertRow(after){
+    if(!rowEditAllowed())return;
+    var s=current(),index=after+1;
+    s.rows.splice(index,0,{id:id('row'),time:'08:00',media:'test',enabled:true,pre:false});
+    changed();render();focusRow(index);
+  }
+  function moveRow(index,step){
+    if(!rowEditAllowed())return;
+    var list=current().rows,target=index+step;
+    if(target<0 || target>=list.length)return;
+    var row=list.splice(index,1)[0];list.splice(target,0,row);
+    changed();render();focusRow(target);
+  }
   function state() {
     var locked=busy || activationLock || !!window.schoolbellSessionBlocked;
     document.getElementById('plan-apply').disabled=locked || !formPending;document.getElementById('plan-cancel').disabled=locked || !formPending;
@@ -222,12 +237,21 @@
         time.addEventListener('input',function () { row.time=time.value; changed(); }); cell(time);
         var media=document.createElement('select'); media.setAttribute('aria-label','Мелодия звонка '+(index+1));
         mediaOptions(media,row.media);media.addEventListener('change',function(){row.media=media.value;changed();}); cell(media);
+        var switches=document.createElement('div');switches.className='bell-switches';
         ['enabled','pre'].forEach(function (key) {
           var box=document.createElement('input'); box.type='checkbox'; box.className='schedule-switch';box.setAttribute('role','switch'); box.checked=row[key];
           box.setAttribute('aria-label',(key==='enabled'?'Включить звонок ':'Предзвонок ')+(index+1));
-          box.addEventListener('change',function () { row[key]=box.checked; changed(); }); cell(box);
+          box.addEventListener('change',function () { row[key]=box.checked; changed(); }); switches.appendChild(box);
         });
-        var listening=document.createElement('div');listening.className='row-actions';
+        cell(switches);
+        var listening=document.createElement('div');listening.className='row-actions bell-actions';
+        [['+','Добавить звонок после строки ',function(){insertRow(index);},false],
+         ['▲','Переместить звонок вверх: ',function(){moveRow(index,-1);},index===0],
+         ['▼','Переместить звонок вниз: ',function(){moveRow(index,1);},index===s.rows.length-1]].forEach(function(action){
+          var button=document.createElement('button');button.type='button';button.textContent=action[0];button.className='row-edit';
+          button.title=action[1]+(index+1);button.setAttribute('aria-label',button.title);button.disabled=action[3];
+          button.addEventListener('click',action[2]);listening.appendChild(button);
+        });
         [false,true].forEach(function(hardware){
           var b=document.createElement('button');b.type='button';b.textContent=hardware?'🔔':'🔊';
           b.title=hardware?'Проиграть через Школьника':'Проиграть в браузере';b.setAttribute('aria-label',b.title+' — звонок '+(index+1));
@@ -235,7 +259,7 @@
           b.addEventListener('click',function(){if(window.schoolbellRowPreview)window.schoolbellRowPreview(row.media,hardware);});listening.appendChild(b);
         });
         var del=document.createElement('button'); del.type='button'; del.textContent='×'; del.className='icon-delete'; del.title='Удалить звонок '+(index+1); del.setAttribute('aria-label','Удалить звонок '+(index+1));
-        del.addEventListener('click',function () { s.rows.splice(index,1); changed(); render(); }); listening.appendChild(del);cell(listening);rows.appendChild(tr);
+        del.addEventListener('click',function () { if(!rowEditAllowed())return; s.rows.splice(index,1); changed(); render(); focusRow(Math.min(index,s.rows.length-1)); }); listening.appendChild(del);cell(listening);rows.appendChild(tr);
       });
       document.getElementById('empty-rows').hidden=s.rows.length!==0;
       document.getElementById('row-add').disabled=false;
@@ -390,11 +414,10 @@
     draft.schedules=draft.schedules.filter(function (s) { return s.id!==selected; }); selected=null; changed(); render();
   });
   document.getElementById('row-add').addEventListener('click',function () {
-    var s=current(); if(!s) return;
-    s.rows.push({id:id('row'),time:'08:00',media:'test',enabled:true,pre:false}); changed(); render();
+    if(current())insertRow(current().rows.length-1);
   });
   document.getElementById('rows-clear').addEventListener('click',function () {
-    if(!current() || !window.confirm('Очистить все строки выбранного расписания?')) return;
+    if(!rowEditAllowed() || !window.confirm('Удалить все звонки выбранного расписания из черновика? Само расписание останется. Активный план не изменится.')) return;
     current().rows=[]; changed(); render();
   });
   save.addEventListener('click',async function () {

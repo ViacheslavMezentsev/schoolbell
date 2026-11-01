@@ -13,14 +13,16 @@ assert.equal(uptime(10*86400+6*3600+10*60),'10 дн 06 ч 10 мин');assert.equ
 win.schoolbellSessionBlocked=false;now=0;listener({detail:{...b,uptime_seconds:86460}});assert.equal(up.textContent,'1 дн 00 ч 01 мин');listener({detail:{available:false,uptime_seconds:60,simulated:true}});assert.equal(up.textContent,'Демо · 0 дн 00 ч 01 мин');now=15001;tick();assert.equal(up.textContent,'В работе · нет данных');now=0;listener({detail:{...a,uptime_seconds:0,boot:'new'}});assert.equal(up.textContent,'0 дн 00 ч 00 мин');win.schoolbellSessionBlocked=true;tick();assert.equal(up.textContent,'В работе · нет данных');console.log('PASS uptime: minute/day boundaries, invalid/stale/logout, reboot and explicit demo age');
 
 win.schoolbellSessionBlocked=false;
-win.schoolbellDisplayClock(Date.UTC(2026,9,30,20,54,59));assert.equal(clock.textContent,'20:54');
-win.schoolbellDisplayClock(Date.UTC(2026,9,31,0,0,0));assert.equal(clock.textContent,'00:00');
+win.schoolbellDisplayClock(Date.UTC(2026,9,30,20,54,59));assert.equal(clock.textContent,'Пт 30.10.2026 · 20:54');
+win.schoolbellDisplayClock(Date.UTC(2026,9,31,0,0,0));assert.equal(clock.textContent,'Сб 31.10.2026 · 00:00');
+win.schoolbellDisplayClock(Date.UTC(2027,0,1,0,0));assert.equal(clock.textContent,'Пт 01.01.2027 · 00:00');
+win.schoolbellDisplayClock(Date.UTC(2026,10,1,16,24));assert.equal(clock.textContent,'Вс 01.11.2026 · 16:24');
 for(const v of [null,undefined,NaN,Infinity,'20:54']){win.schoolbellDisplayClock(v);assert.equal(clock.textContent,'—:—');}
 win.schoolbellDisplayClock(Date.UTC(2026,9,30,20,54));win.schoolbellSessionBlocked=true;tick();assert.equal(clock.textContent,'—:—');
 console.log('PASS header clock: device wall time, 24h/midnight, unavailable and blocked session');
 
 win.schoolbellSessionBlocked=false;now=0;
-listener({detail:{...b,storage:{total_kib:4096,free_kib:1024}}});assert.equal(flash.dataset.tone,'success');assert.match(free.textContent,/1.00 МиБ \(25%\)/);
+listener({detail:{...b,storage:{total_kib:4096,free_kib:1024}}});assert.equal(flash.dataset.tone,'success');assert.match(free.textContent,/1.00 МиБ \(25 %\)/);
 listener({detail:{...b,storage:{total_kib:4096,free_kib:400}}});assert.equal(flash.dataset.tone,'danger');
 listener({detail:{...b,storage:{total_kib:4096,free_kib:800}}});assert.equal(flash.dataset.tone,'warning');
 listener({detail:{...b,storage:{total_kib:0,free_kib:0}}});assert.equal(flash.dataset.tone,'unknown');

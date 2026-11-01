@@ -9,9 +9,14 @@ function audioDraw(){
  if(a && a.state==='missing')text='Аудио: не обнаружено';
  else if(a && a.state==='ready')text='Аудио: '+(a.controller || 'контроллер неизвестен')+' · '+(a.name || 'карта неизвестна')+(a.model && a.model!==a.name?' ('+a.model+')':'');
  else if(state && fresh && state.hardware===false)text='Аудио: демо — устройство не подключено';
- audioRoute.textContent=text;audioRoute.title=text;
+ audioRoute.textContent=text.replace(/^Аудио: /,'');audioRoute.title=text;
  var db=fresh && state.volume_db;
- audioVolume.textContent=typeof db==='number' && Number.isInteger(db) && db>=-60 && db<=0?percent(db):'—%';
+ audioVolume.textContent=typeof db==='number' && Number.isInteger(db) && db>=-60 && db<=0?percent(db).replace('%',' %'):'— %';
+ var line=document.getElementById('volume-line');
+ if(line){var known=audioVolume.textContent!=='— %',value=known?parseInt(audioVolume.textContent,10):0;line.setAttribute('style','--volume-fill:'+value+'%');line.setAttribute('data-tone',known?'normal':'unknown');line.setAttribute('aria-valuetext',known?audioVolume.textContent:'Нет данных');if(known)line.setAttribute('aria-valuenow',String(value));else line.removeAttribute('aria-valuenow');}
+ var mode=document.getElementById('device-switch'),ip=document.getElementById('device-ip'),device=fresh && state.device;
+ if(mode){mode.textContent=fresh && state.hardware===false?'Переключатель: демо':device && device.switch_state==='ready' && ['3G/4G','WISP','AP'].includes(device.position)?'Переключатель: '+device.position:'Переключатель: не определён';mode.title='Физическое положение переключателя, не активный сетевой профиль';}
+ if(ip){ip.textContent='IP: '+(device && device.ip || '—');ip.title=device && device.ip || 'Адрес устройства недоступен';}
  var expectation=document.getElementById('media-output-summary');if(expectation)expectation.textContent=text+' '+audioVolume.textContent;
 }
 function percent(db){return Math.round(100*Math.pow(10,db/20))+'%';}

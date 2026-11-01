@@ -37,7 +37,7 @@ function setup(demo=false){
 // Sound controls must remain disabled even when an old read completes after logout.
 (async()=>{
  const ids={},events={},timers=[];let pending,reads=0;
- const get=id=>ids[id]??=( {dataset:{controls:'controls'},options:[],value:'0',textContent:'',disabled:false,addEventListener(){},setAttribute(){},appendChild(o){this.options.push(o);}} );
+ const get=id=>ids[id]??=( {dataset:{controls:'controls'},options:[],value:'0',textContent:'',disabled:false,addEventListener(){},setAttribute(){},removeAttribute(){},appendChild(o){this.options.push(o);}} );
  const w={addEventListener:(n,f)=>events[n]=f};
  const context={window:w,document:{hidden:false,getElementById:get,addEventListener(){},createElement:()=>({})},fetch:()=>{reads++;return new Promise(resolve=>pending=resolve);},setTimeout:()=>1,clearTimeout(){},setInterval:f=>timers.push(f),AbortController,URLSearchParams,Date,Array,Number,String};
  vm.runInNewContext(fs.readFileSync('ui/root/www/schoolbell-test/controls.js','utf8'),context);

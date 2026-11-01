@@ -15,7 +15,7 @@ function fixture(storage={},initialRevision="r1",loadCodes=[]){
   addEventListener(k,f){(this.events[k]??=[]).push(f);}
   async fire(k,e={}){for(const f of this.events[k]||[])await f(Object.assign({target:this,preventDefault(){}},e));}
   click(){if(this.disabled)return Promise.resolve();return this.fire('click');}
-  focus(){}select(){}scrollIntoView(){}
+  focus(){x.focused=this;}select(){}scrollIntoView(){}
   querySelector(s){return this.children.find(x=>s==='[value="annual"]' && x.value==='annual') || new Element();}
  }
  const html=fs.readFileSync(process.env.SCHOOLBELL_UI_DIR?path.join(ui,'../index.html'):path.join(root,'ui/root/usr/lib/lua/luci/view/schoolbell_test.htm'),'utf8');
@@ -210,11 +210,36 @@ function fixture(storage={},initialRevision="r1",loadCodes=[]){
  x.get('schedule-name').value='New edit';await x.get('schedule-name').fire('input');assert(x.get('draft-comparison').hidden && x.get('draft-use-router').disabled);assert(!x.saves.length && !x.posts.length);
  console.log('PASS failed comparison preserves edits; content is text; edits invalidate stale comparison');
  x=fixture();await x.tick();const listens=[];x.window.schoolbellRowPreview=(id,hw)=>listens.push([id,hw]);
- const row=x.get('schedule-rows').children[0];assert.equal(row.children.length,5);
+ const row=x.get('schedule-rows').children[0];assert.equal(row.children.length,4);
+ const switches=row.children[2].children[0].children;assert.equal(switches.length,2);assert.equal(switches[0].checked,true);assert.equal(switches[1].checked,false);
+ switches[1].checked=true;await switches[1].fire('change');assert.equal(x.window.schoolbellEditor.exportSnapshot().draft.schedules[0].rows[0].pre,true);
  const media=row.children[1].children[0];media.value='user3';await media.fire('change');
- const actions=row.children[4].children[0].children;assert.equal(actions.length,3);assert.equal(actions[2].className,'icon-delete');await actions[0].click();await actions[1].click();
+ const actions=row.children[3].children[0].children;assert.equal(actions.length,6);assert.equal(actions[5].className,'icon-delete');await actions[3].click();await actions[4].click();
  assert.deepEqual(listens,[['user3',false],['user3',true]]);assert(!x.saves.length && !x.posts.length);
  console.log('PASS row preview uses current unsaved selection without save or activation');
+ // TC-196: real handlers preserve whole rows and their order; edits never activate or write implicitly.
+ x=fixture();await x.tick();
+ const rowButtons=i=>x.get('schedule-rows').children[i].children[3].children[0].children;
+ const snapshot=()=>clone(x.window.schoolbellEditor.exportSnapshot().draft.schedules[0].rows);
+ assert(rowButtons(0)[1].disabled && rowButtons(0)[2].disabled);
+ await rowButtons(0)[0].click();
+ assert.equal(snapshot().length,2);assert.equal(x.focused,x.get('schedule-rows').children[1].children[0].children[0]);
+ const added=snapshot()[1];assert.notEqual(added.id,'r');assert.equal(added.time,'08:00');
+ await rowButtons(0)[0].click();
+ const initial=snapshot();assert.equal(initial[0].id,'r');assert.equal(initial[2].id,added.id);
+ await rowButtons(1)[2].click();assert.deepEqual(snapshot(),[initial[0],initial[2],initial[1]]);
+ await rowButtons(2)[1].click();assert.deepEqual(snapshot(),initial);
+ await rowButtons(0)[1].click();await rowButtons(2)[2].click();assert.deepEqual(snapshot(),initial);
+ assert.equal(x.saves.length,0);assert.equal(x.posts.length,0);
+ await x.get('schedule-save').click();await x.get('schedule-reload').click();assert.deepEqual(snapshot(),initial);
+ x.window.schoolbellSessionBlocked=true;await rowButtons(0)[0].click();await rowButtons(0)[2].click();assert.deepEqual(snapshot(),initial);x.window.schoolbellSessionBlocked=false;
+ x.confirm=false;await x.get('rows-clear').click();assert.deepEqual(snapshot(),initial);
+ x.confirm=true;await rowButtons(1)[5].click();assert.deepEqual(snapshot(),[initial[0],initial[2]]);
+ await x.get('rows-clear').click();assert.equal(snapshot().length,0);assert.equal(x.window.schoolbellEditor.exportSnapshot().draft.schedules.length,1);
+ await x.get('row-add').click();assert.equal(snapshot().length,1);assert(rowButtons(0)[1].disabled && rowButtons(0)[2].disabled);
+ assert.equal(x.saves.length,1);assert.equal(x.posts.length,0);
+ console.log('PASS TC-196: insert after, focus, move boundaries/order/fields, explicit save/reload, blocked session, delete/clear cancel and empty-list recovery');
+
  x=fixture();await x.tick();
  for(let i=1;i<129;i++)await x.get('row-add').click();
  assert.equal(x.get('schedule-rows').children.length,129);

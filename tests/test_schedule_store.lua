@@ -29,6 +29,16 @@ test("save reload previous and no-op",function()
  assert(S.load(f).data.schedules[1].rows[1].time=="09:00")
  assert(C.decode(f.disk["previous.json"]).checksum==a.revision)
 end)
+test("TC-196 reordered rows retain order and every field after save/reload",function()
+ local f=fs();local d=assert(J.decode(sample))
+ local first=d.schedules[1].rows[1]
+ local second={id="r2",time="07:30",media="test",enabled=false,pre=false}
+ d.schedules[1].rows[2]=second
+ local a=S.save(f,C.encode(d),"empty");assert(a.ok)
+ d.schedules[1].rows[1]=second;d.schedules[1].rows[2]=first
+ local b=S.save(f,C.encode(d),a.revision);assert(b.ok and b.revision~=a.revision)
+ assert(C.encode(S.load(f).data.schedules[1].rows)==C.encode(d.schedules[1].rows))
+end)
 test("stale editor cannot overwrite",function()
  local f=fs();assert(S.save(f,sample,"empty").ok);local n=f.writes
  assert(S.save(f,sample:gsub("08:00","09:00"),"empty").code=="conflict" and f.writes==n)
