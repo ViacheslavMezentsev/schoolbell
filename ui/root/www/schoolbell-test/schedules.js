@@ -219,13 +219,13 @@
         var media=document.createElement('select'); media.setAttribute('aria-label','Мелодия звонка '+(index+1));
         mediaOptions(media,row.media);media.addEventListener('change',function(){row.media=media.value;changed();}); cell(media);
         ['enabled','pre'].forEach(function (key) {
-          var box=document.createElement('input'); box.type='checkbox'; box.checked=row[key];
+          var box=document.createElement('input'); box.type='checkbox'; box.className='schedule-switch';box.setAttribute('role','switch'); box.checked=row[key];
           box.setAttribute('aria-label',(key==='enabled'?'Включить звонок ':'Предзвонок ')+(index+1));
           box.addEventListener('change',function () { row[key]=box.checked; changed(); }); cell(box);
         });
         var listening=document.createElement('div');listening.className='row-listen';
         [false,true].forEach(function(hardware){
-          var b=document.createElement('button');b.type='button';b.textContent=hardware?'🔔':'🔊';
+          var b=document.createElement('button');b.type='button';b.innerHTML='<span class="output-icon '+(hardware?'icon-device':'icon-browser')+'" aria-hidden="true"></span>';
           b.title=hardware?'Проиграть через Школьника':'Проиграть в браузере';b.setAttribute('aria-label',b.title+' — звонок '+(index+1));
           if(hardware && root.dataset.load.indexOf('demo-api')>=0){b.disabled=true;b.title='Через Школьника недоступно: демо без оборудования';}
           b.addEventListener('click',function(){if(window.schoolbellRowPreview)window.schoolbellRowPreview(row.media,hardware);});listening.appendChild(b);

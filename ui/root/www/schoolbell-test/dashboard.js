@@ -12,7 +12,7 @@
     try{sessionStorage.setItem('schoolbell-tab',name);}catch(_){}
   }
   window.addEventListener('schoolbell-open-tab',function(e){if(tabs.some(function(b){return b.dataset.tab===e.detail;}))selectTab(e.detail);});
-  document.getElementById('workflow-apply').addEventListener('click',function(){selectTab('sound');document.getElementById('automatic-enable').scrollIntoView({block:'center'});});
+  document.getElementById('workflow-apply').addEventListener('click',function(){selectTab('sound');document.getElementById('automatic-enable').closest('details').open=true;document.getElementById('automatic-enable').scrollIntoView({block:'center'});});
   var zoneState=null,zoneBusy=false;
   var zoneSelect=document.getElementById('timezone-select'),zoneSave=document.getElementById('timezone-save'),zoneBrowser=document.getElementById('timezone-browser');
   var zoneMessage=document.getElementById('timezone-result');
@@ -29,7 +29,7 @@
     }catch(_){zoneState=null;zoneMessage.textContent='Не удалось загрузить часовые пояса. Нажмите «Обновить».';}
     finally{zoneBusy=false;zoneControls();}
   }
-  document.querySelectorAll('[data-open-settings]').forEach(function(b){b.addEventListener('click',function(){selectTab('sound');document.getElementById('panel-sound').scrollIntoView({block:'start'});});});
+  document.querySelectorAll('[data-open-settings]').forEach(function(b){b.addEventListener('click',function(){selectTab('sound');document.getElementById('time-settings').open=true;document.getElementById('panel-sound').scrollIntoView({block:'start'});});});
   document.getElementById('timezone-reload').addEventListener('click',loadZones);
   zoneBrowser.addEventListener('click',function(){var name=Intl.DateTimeFormat().resolvedOptions().timeZone;
     if(zoneState.zones.includes(name)){zoneSelect.value=name;zoneMessage.textContent='Выбран '+name+'. Проверьте место установки и нажмите «Применить».';}else zoneMessage.textContent='Зона браузера '+name+' отсутствует в базе устройства. Выберите город вручную.';});

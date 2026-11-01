@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Школьник · расписания</title>
-<link rel="stylesheet" href="/schoolbell-test/style.css?v=5130">
-<script src="/schoolbell-test/theme.js?v=5106"></script></head>
+<link rel="stylesheet" href="/schoolbell-test/style.css?v=5131">
+<script src="/schoolbell-test/theme.js?v=5131"></script></head>
 <body><main><header><div><p class="eyebrow">Настраиваемый музыкальный звонок</p>
-<h1>Школьник</h1><div class="cpu-monitor"><div class="cpu-labels"><span id="cpu-value">CPU · нет измерения</span><span id="device-clock" title="Местное время устройства">—:—</span></div><div id="cpu-line" role="progressbar" aria-label="Загрузка CPU всего устройства между опросами" aria-valuemin="0" aria-valuemax="100"><i></i></div><div class="flash-labels"><span id="flash-value">Flash · нет данных</span><div id="device-uptime" title="Время работы устройства с последней загрузки">В работе · нет данных</div></div><div id="flash-line" role="progressbar" aria-label="Занято постоянного хранилища" aria-valuemin="0" aria-valuemax="100"><i></i></div><div class="audio-labels"><span id="audio-route">Аудио: нет данных</span><span id="audio-volume" title="Усиление относительно 0 дБ, не измеренная громкость">—% (— дБ)</span></div></div></div><div class="header-controls"><div class="quick-controls"><button id="quick-automatic" type="button" aria-describedby="quick-automatic-status" disabled>▶ Автозвонки</button><button id="quick-mute" type="button" aria-pressed="false" disabled>Без звука · проверка…</button><button id="quick-bell" type="button" disabled>🔔 Подать звонок</button><button id="theme-toggle" type="button">Тема</button><div id="session-panel" class="session-controls" data-session="<%=pcdata(session_url)%>" data-user="<%=pcdata(auth_user)%>"><span id="session-warning" hidden></span><span id="session-countdown" hidden></span><a class="session-button" id="session-login" href="<%=pcdata(login_url)%>" hidden>Войти</a><button id="session-check" type="button" hidden>Проверить сеанс</button><button id="session-logout" type="button">Выйти</button></div></div><span id="quick-automatic-status" class="automatic-badge" data-tone="warning" role="status" aria-live="polite">Проверка…</span></div></header><p id="session-status" class="session-message" role="status" hidden></p><div class="header-status-row"><p id="quick-status" role="status" aria-live="polite">Получаем состояние звука…</p><button id="problem-open" type="button" aria-controls="problem-panel" aria-expanded="false">Решить проблему</button></div>
+<h1>Школьник <sup class="header-version"><%=pcdata(module_version)%></sup></h1><div class="cpu-monitor"><div class="cpu-labels"><span id="cpu-value">CPU · нет измерения</span><span id="device-clock" title="Местное время устройства">—:—</span></div><div id="cpu-line" role="progressbar" aria-label="Загрузка CPU всего устройства между опросами" aria-valuemin="0" aria-valuemax="100"><i></i></div><div class="flash-labels"><span id="flash-value">Flash · нет данных</span><div id="device-uptime" title="Время работы устройства с последней загрузки">В работе · нет данных</div></div><div id="flash-line" role="progressbar" aria-label="Занято постоянного хранилища" aria-valuemin="0" aria-valuemax="100"><i></i></div><div class="audio-labels"><span id="audio-route">Аудио: нет данных</span><span id="audio-volume" title="Сохранённая громкость">—%</span></div></div></div><div class="header-controls"><div class="quick-controls"><button id="quick-automatic" type="button" aria-describedby="quick-automatic-status" disabled>▶ Автозвонки</button><button id="quick-mute" type="button" aria-pressed="false" disabled>Без звука · проверка…</button><button id="quick-bell" type="button" disabled>🔔 Подать звонок</button><button id="theme-toggle" type="button">Тема</button><div id="session-panel" class="session-controls" data-session="<%=pcdata(session_url)%>" data-user="<%=pcdata(auth_user)%>"><span id="session-warning" hidden></span><span id="session-countdown" hidden></span><a class="session-button" id="session-login" href="<%=pcdata(login_url)%>" hidden>Войти</a><button id="session-check" type="button" hidden>Проверить сеанс</button><button id="session-logout" type="button">Выйти</button></div></div><span id="quick-automatic-status" class="automatic-badge" data-tone="warning" role="status" aria-live="polite">Проверка…</span></div></header><p id="session-status" class="session-message" role="status" hidden></p><div class="header-status-row"><p id="quick-status" role="status" aria-live="polite">Получаем состояние звука…</p><button id="problem-open" type="button" aria-controls="problem-panel" aria-expanded="false">Решить проблему</button></div>
 <section id="problem-panel" class="details problem-panel" hidden aria-labelledby="problem-heading">
 <h2 id="problem-heading">Диагностика</h2><p id="problem-summary" role="status" aria-live="polite">Ожидаем данные состояния.</p>
 <p id="problem-explanation"></p><p>Проверка не включает звонки, не меняет часы, настройки или ваши правки. Действия, меняющие состояние, выполняются отдельно в соответствующем разделе.</p>
@@ -156,25 +156,25 @@
 <audio id="media-audio" controls preload="none"></audio><p id="media-status" role="status">Загрузите список мелодий.</p>
 </section>
 <h2 class="sound-heading">Ручная проверка звука</h2><p>Эти две кнопки воспроизводят штатную тестовую мелодию сразу, независимо от черновика.</p>
-<section class="routes"><article><span class="badge">1 · РЯДОМ С ВАМИ</span><h2>В браузере — на компьютере или телефоне</h2>
+<section class="routes"><article><span class="badge">1 · РЯДОМ С ВАМИ</span><h2>В браузере</h2>
 <p>Звук из динамика телефона, планшета или компьютера, на котором открыта страница.</p>
-<div class="diagram"><div>▣<br><strong>Ваш браузер</strong></div><b>→</b><div>♫<br><strong>Динамики компьютера / телефона</strong></div></div>
+<div class="diagram"><div><span class="output-icon icon-browser" aria-hidden="true"></span><br><strong>Ваш браузер</strong></div><b>→</b><div>♫<br><strong>Динамики компьютера / телефона</strong></div></div>
 <audio id="browser-audio" preload="none" src="<%=pcdata(sample_url)%>"></audio>
-<button id="browser-play" type="button" class="primary">▶ Послушать в браузере</button>
+<button id="browser-play" type="button" class="primary"><span class="output-icon icon-browser" aria-hidden="true"></span> Послушать в браузере</button>
 <p id="browser-result" role="status">Школьник передаст файл в браузер. Колонки Школьника будут молчать.</p></article>
 <article><span class="badge">2 · КОЛОНКИ ШКОЛЬНИКА</span><h2>Через колонки Школьника</h2>
 <p>Браузер отправит команду. Звук пойдёт через USB-аудиокарту к подключённым колонкам.</p>
-<div class="diagram"><div>▣<br><strong>Браузер</strong></div><b>→</b><div>⌘<br><strong>Школьник</strong></div><b>→</b><div>♫<br><strong>USB → колонки</strong></div></div>
+<div class="diagram"><div><span class="output-icon icon-browser" aria-hidden="true"></span><br><strong>Браузер</strong></div><b>→</b><div><span class="output-icon icon-device" aria-hidden="true"></span><br><strong>Школьник</strong></div><b>→</b><div>♫<br><strong>USB → колонки</strong></div></div>
 <form id="router-form" action="<%=pcdata(play_url)%>" method="post">
 <input type="hidden" name="token" value="<%=pcdata(token)%>">
-<button id="router-play" type="submit" class="primary">▶ Через колонки Школьника</button></form>
+<button id="router-play" type="submit" class="primary"><span class="output-icon icon-device" aria-hidden="true"></span> Через колонки Школьника</button></form>
 <p id="router-result" role="status">Колонки должны быть включены и подключены к аудиовыходу.</p></article></section>
-<section class="details"><h2>Что будет воспроизведено</h2><p><strong>Штатная test.mp3</strong> · около 3,3 секунды · один раз.</p>
-<p>Устройство: madplay · выход /dev/dsp · 48 кГц · громкость — по сохранённой настройке. Громкость колонок регулируется на самих колонках.</p>
-<p>Успешное завершение проигрывателя ещё не подтверждает, что звук был слышен.</p></section>
+<section class="details"><h2>Проверка звука</h2><p>Тестовая мелодия прозвучит один раз, около 3 секунд.</p>
+<p id="media-output-summary">Аудио: нет данных —%</p>
+<p>В браузере звук прозвучит на вашем компьютере или телефоне. Через Школьника — в подключённых колонках, с сохранённой громкостью.</p></section>
 </section>
 <section id="panel-sound" role="tabpanel" aria-labelledby="tab-sound" data-panel="sound" hidden>
-<section id="time-settings" class="details time-settings"><h2>Дата и время</h2><h3>Часовой пояс школы</h3>
+<details id="time-settings" class="details time-settings"><summary>Дата и время</summary><h3>Часовой пояс школы</h3>
 <p>Выберите место, где установлен школьный звонок. Настройка сохраняется на устройстве и действует для всех его приложений. Сами часы и расписания не переводятся.</p>
 <p id="timezone-current" role="status">Настройки ещё не загружены.</p>
 <label>Город / часовой пояс<select id="timezone-select" disabled></select></label>
@@ -197,12 +197,13 @@
 <div id="trust-review" hidden><p id="trust-date"></p><label><input id="trust-rollback" type="checkbox"> Подтверждаю намеренное время раньше сохранённой опоры</label><button id="trust-confirm" type="button">Время верно — подтвердить</button></div>
 <p id="trust-result" role="status"></p>
 <p>Эти действия отключают автозвонки. Включение плана выполняется отдельно ниже. Если контроль отключён, защита от неверных часов не действует; «Без звука» и запрет повторного проигрывания сохраняются.</p>
-</section>
-<section class="details"><details><summary>Вход и автовыход</summary><label>Автовыход при бездействии<select id="session-duration"><option value="1">1 минута</option><option value="5">5 минут</option><option value="15">15 минут</option><option value="30" selected>30 минут</option><option value="60">1 час</option><option value="120">2 часа</option></select></label><p>Автовыход считает бездействие пользователя, а не фоновые обновления. Настройка действует в этом браузере при работающей странице; сервер LuCI может завершить сеанс раньше.</p></details></section>
-<section class="details"><h2>Звонки и режим работы</h2>
-<label>Громкость колонок устройства<select id="router-volume" disabled>
-<option value="-36">Едва слышно (−36 дБ)</option><option value="-24">Очень тихо (−24 дБ)</option><option value="-12">Тихо (−12 дБ)</option><option value="-6">Средне (−6 дБ)</option><option value="0">Без ослабления (0 дБ)</option></select></label>
+</details>
+<details class="details"><summary>Вход и автовыход</summary><label>Автовыход при бездействии<select id="session-duration"><option value="1">1 минута</option><option value="5">5 минут</option><option value="15">15 минут</option><option value="30" selected>30 минут</option><option value="60">1 час</option><option value="120">2 часа</option></select></label><p>Автовыход считает бездействие пользователя, а не фоновые обновления. Настройка действует в этом браузере при работающей странице; сервер LuCI может завершить сеанс раньше.</p></details>
+<details class="details"><summary>Звонки и режим работы</summary>
+<label>Громкость колонок устройства, %<select id="router-volume" disabled>
+<option value="-60">0% — минимум</option><option value="-36">2%</option><option value="-24">6%</option><option value="-12">25%</option><option value="-6">50%</option><option value="0">100%</option></select></label>
 <button type="button" id="volume-save" disabled>Применить громкость</button><p id="volume-status" role="status"></p>
+<p>0% — округлённый минимальный уровень. Для полного отключения используйте «Без звука».</p>
 <p>Громкость применяется к следующему звонку на устройстве: ручному, тестовому и автоматическому. Для немедленной остановки используйте Без звука. Звук браузера регулируется на вашем устройстве.</p>
 <p>Мелодия ручного звонка применяется после сохранения. Автозвонки работают без открытого браузера по отдельно применённой копии плана.</p>
 <label>Мелодия ручного звонка<select id="manual-media" disabled></select></label>
@@ -214,8 +215,8 @@
 <button id="settings-save" type="button" disabled>Сохранить настройки и черновик</button><p id="settings-result" role="status"></p>
 <div class="automatic-controls"><button id="automatic-enable" type="button" disabled>Применить сохранённый черновик и включить</button> <button id="automatic-disable" type="button">Отключить автозвонки</button><p id="automatic-status" role="status"></p>
 <p>Проверьте дату и время устройства перед включением. После перезагрузки или изменения часового пояса включите снова. Пропущенные звонки не повторяются; при занятом проигрывателе новый звонок пропускается. Совпадающие времена звонков недопустимы.</p></div>
-<p>Без звука действует сразу на звук schoolbell через устройство, включая ручной звонок. Прослушивание в браузере не отключается. После снятия Без звука пропущенные звонки не повторяются.</p></section>
-<section class="details" id="backup-panel" data-url="<%=pcdata(backup_url)%>" data-token="<%=pcdata(token)%>"><h2>Резервная копия</h2>
+<p>Без звука действует сразу на звук schoolbell через устройство, включая ручной звонок. Прослушивание в браузере не отключается. После снятия Без звука пропущенные звонки не повторяются.</p></details>
+<details class="details" id="backup-panel" data-url="<%=pcdata(backup_url)%>" data-token="<%=pcdata(token)%>"><summary>Резервная копия</summary>
 <p>Сохранённые настройки, расписания, календарные планы и пользовательские мелодии — в одном файле. Несохранённые правки страницы в копию не входят. Сначала отключите автозвонки.</p>
 <p>Восстановление заменяет эти данные и оставляет автозвонки выключенными. Системные часы, NTP, сеть и часовой пояс не меняются. Для переноса выберите на другом устройстве тот же часовой пояс заранее.</p>
 <button id="backup-download" type="button">Скачать резервную копию</button>
@@ -223,7 +224,7 @@
 <button id="backup-restore" type="button" disabled>Восстановить из файла</button>
 <button id="backup-resume" type="button" hidden>Продолжить прерванное восстановление</button>
 <button id="backup-refresh" type="button">Проверить состояние</button>
-<p id="backup-status" role="status">Проверяем состояние восстановления…</p></section>
+<p id="backup-status" role="status">Проверяем состояние восстановления…</p></details>
 
 </section>
 <section id="panel-journal" role="tabpanel" aria-labelledby="tab-journal" data-panel="journal" class="details" hidden>
@@ -246,7 +247,7 @@
 <div class="table-scroll"><table class="schedule-table"><thead><tr><th>Метод API</th><th>Запросы</th><th>Завершены</th><th>Ошибки HTTP/сети</th><th>Ожидают</th><th>Среднее / максимум</th></tr></thead><tbody id="traffic-method-rows"></tbody></table></div></div>
 <p id="traffic-http-note">Измерение HTTP пассивное, начинается при открытии страницы и сбрасывается при её перезагрузке. Задержка — до заголовков HTTP, без загрузки тела. Она включает серверную обработку до ответа; ручной звонок отвечает после завершения мелодии. Это не время до первого звука; HTTP 200 с отказом операции не считается ошибкой HTTP. Это не объём данных в байтах и не оценка загрузки исполнителя.</p>
 </details><p>Пользователь · Модуль · Система. События, наблюдаемые этим модулем; общий syslog не подключён. Время показано в часовом поясе Школьника, с его смещением UTC; порядок — по номеру, даже после коррекции часов.</p>
-<p>Хранятся последние события — до 32 КиБ. При заполнении самые старые записи удаляются автоматически. Записи старше семи суток скрываются при чтении и удаляются при следующей записи; при откате часов будущие записи сохраняются.</p>
+<p>Хранятся последние события — до 32 КиБ. При заполнении самые старые записи удаляются автоматически. Возраст записей и изменение часов не удаляют события. Порядок определяется номером записи.</p>
 <div class="journal-toolbar"><div class="journal-actions"><button type="button" id="journal-reload">Обновить журнал</button><button type="button" id="journal-errors" aria-pressed="false">Ошибки</button><button type="button" id="journal-copy" disabled>Скопировать</button></div>
 <div class="journal-navigation"><span id="journal-page" role="status"></span><button type="button" id="journal-first" title="Первая страница" aria-label="Первая страница">«</button><button type="button" id="journal-prev" title="Предыдущая страница" aria-label="Предыдущая страница">‹</button><button type="button" id="journal-next" title="Следующая страница" aria-label="Следующая страница">›</button><button type="button" id="journal-last" title="Последняя страница" aria-label="Последняя страница">»</button></div></div><p id="journal-status" role="status"></p>
 <div class="table-scroll"><table class="schedule-table"><thead><tr><th>№ / Местное время</th><th>Источник</th><th>Событие</th></tr></thead><tbody id="journal-rows"></tbody></table></div>
@@ -262,6 +263,6 @@
 <p>Если формы ещё недоступны, они появятся после слияния соответствующей ветки в main.</p>
 </section>
 <footer><a href="<%=url('admin')%>">← Управление устройством LuCI</a> · Расписания сохраняются без активации</footer>
-</main><script src="/schoolbell-test/traffic.js?v=5114"></script><script src="/schoolbell-test/session.js?v=5122"></script><script src="/schoolbell-test/backup.js?v=5106"></script><script src="/schoolbell-test/media.js?v=5106"></script><script src="/schoolbell-test/clock-trust.js?v=5106"></script><script src="/schoolbell-test/diagnostics.js?v=5106"></script><script src="/schoolbell-test/cpu.js?v=5122"></script><script src="/schoolbell-test/automatic.js?v=5111"></script><script src="/schoolbell-test/controls.js?v=5106"></script><script src="/schoolbell-test/app.js?v=5106"></script><script src="/schoolbell-test/ranges.js?v=5106"></script><script src="/schoolbell-test/schedules.js?v=5122"></script><script src="/schoolbell-test/dashboard.js?v=5122"></script><script src="/schoolbell-test/plan-import.js?v=5120"></script><script src="/schoolbell-test/plan-export.js?v=5121"></script><script src="/schoolbell-test/row-preview.js"></script>
-<script src="/schoolbell-test/time-settings.js"></script>
+</main><script src="/schoolbell-test/traffic.js?v=5131"></script><script src="/schoolbell-test/session.js?v=5131"></script><script src="/schoolbell-test/backup.js?v=5131"></script><script src="/schoolbell-test/media.js?v=5131"></script><script src="/schoolbell-test/clock-trust.js?v=5131"></script><script src="/schoolbell-test/diagnostics.js?v=5131"></script><script src="/schoolbell-test/cpu.js?v=5131"></script><script src="/schoolbell-test/automatic.js?v=5131"></script><script src="/schoolbell-test/controls.js?v=5131"></script><script src="/schoolbell-test/app.js?v=5131"></script><script src="/schoolbell-test/ranges.js?v=5131"></script><script src="/schoolbell-test/schedules.js?v=5131"></script><script src="/schoolbell-test/dashboard.js?v=5131"></script><script src="/schoolbell-test/plan-import.js?v=5131"></script><script src="/schoolbell-test/plan-export.js?v=5131"></script><script src="/schoolbell-test/row-preview.js?v=5131"></script>
+<script src="/schoolbell-test/time-settings.js?v=5131"></script>
 </body></html>

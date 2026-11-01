@@ -4,6 +4,10 @@
 
 ## Unreleased
 
+- 5.1.31 validation: full make all passed; strict checks of both specifications reported no errors or warnings. Regressions cover clock jumps, retained history and exact gain, and applied mode. Local Chrome checked four collapsed sections, preview alignment, switches/icons, light/dark themes and a 390 px container, with no JS errors or page overflow. This is not hardware acceptance.
+
+- 5.1.31: superscript version, whole-percent volume, applied-mode icon, aligned buttons, collapsible settings, shared browser/device icons, concise playback explanation and row switches. Device and demo journals are bounded only by 32 KiB; age and clock jumps no longer remove entries. Requirements updated to 1.77 and AUDIO_STATUS 1.1 at the owner’s request. Not installed on devices.
+
 - Installed 5.1.30 over 5.1.29 on the authorized bench. Verified backup and exact rollback IPK, 78 files, unchanged .sbb contents and system settings. Current -12 dB controls preserved byte for byte, automatic bells off, native 1.0.0. New CSS fetched over HTTP matches the source; the controller reports OHCI / AB13X USB Audio. No playback; visual confirmation of the refreshed page remains with the owner. Full make all passed.
 
 - 5.1.30 validation: full make all passed; local Chrome confirmed stable header coordinates for long card names, no overlaps or horizontal overflow, including a 390 px container. This version was not installed on a device.

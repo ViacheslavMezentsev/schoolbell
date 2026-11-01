@@ -26,7 +26,7 @@ The [offline dependency bundle](docs/PACKAGING.en.md) is prepared separately.
 
 ## Status
 
-Extraction from openwrt-modbus-core is in progress: candidate **5.1.30**, baseline
+Extraction from openwrt-modbus-core is in progress: candidate **5.1.31**, baseline
 OpenWrt 19.07.9 / TL-MR3020 v3. Host checks and the target MIPS bundle are ready;
 published Pages verification and new hardware acceptance remain pending. [Migration plan](docs/MIGRATION.md).
 
@@ -46,4 +46,4 @@ Author: Viacheslav Mezentsev. Modern implementation co-author: Codex (OpenAI).
 Own code and documentation: [MIT](LICENSE). Audio, historical archive and
 third-party components are excluded; see [scope](docs/LICENSING.en.md) and [NOTICE](NOTICE).
 
-Below Flash, the header shows the controller and card name for the default `/dev/dsp` output, with saved volume in % (dB) on the right. A missing output is reported explicitly; other cards are not selected automatically. Percent means amplitude gain, not measured loudness. Flash uses MiB (1024² bytes); normal usage up to 75% is blue.
+Below Flash, the header shows the controller and card name for the default `/dev/dsp` output, with saved volume in whole percentages on the right. A missing output is reported explicitly; other cards are not selected automatically. Percent means amplitude gain, not measured loudness. Flash uses MiB (1024² bytes); normal usage up to 75% is blue.

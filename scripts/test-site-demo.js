@@ -21,7 +21,7 @@ async function api(name,data){return (await context.window.fetch('./demo-api/'+n
  assert(events.length===2 && events[1].time==='23:58' && events[1].origin_date==='2026-01-03');
  let tz=await api('timezone');assert((await api('timezone',{zone:'UTC',revision:tz.revision})).ok);assert((await api('clock')).ok);
  for(let i=0;i<500;i++){let value=await api('load');assert((await api('save',{revision:value.revision,draft:JSON.stringify(value.data)})).ok);}
- const journal=await api('journal');assert(journal.limit_bytes===32768 && journal.entries.length>80 && journal.entries.length<500);const persisted=JSON.parse([...storage.values()][0]);assert(new TextEncoder().encode(JSON.stringify(persisted.log)).length<=32768);
+ const journal=await api('journal');assert(journal.limit_bytes===32768 && journal.entries.length>80 && journal.entries.length<500);const persisted=JSON.parse([...storage.values()][0]);assert(journal.retention_seconds===undefined);const logKey=[...storage.keys()][0];persisted.log[0].time=0;storage.set(logKey,JSON.stringify(persisted));const oldSeq=persisted.log[0].seq;assert((await api('journal')).entries.some(e=>e.seq===oldSeq && e.time===0));assert(new TextEncoder().encode(JSON.stringify(persisted.log)).length<=32768);
  await assert.rejects(()=>context.window.fetch('http://192.0.2.1/api'));await assert.rejects(()=>context.window.fetch('/cgi-bin/luci'));
  assert((await api('no-router',{})).state==='unavailable');
  assert((await api('automatic')).hardware===false);

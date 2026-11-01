@@ -95,6 +95,7 @@ local function tick()
   active=v;cached=raw
  end
  local v={ok=true,enabled=active.enabled,generation=active.generation,revision=active.revision,now=now}
+ if active.plan then v.mode=active.plan.mode or 'annual' end
  if not active.enabled then v.state='disabled'
  elseif active.boot~=env.boot then v.state='confirm_clock'
  elseif active.zone~=env.zone or started.zone~=env.zone then v.state='timezone_changed'
@@ -104,7 +105,7 @@ local function tick()
   if key~=k then events,calendar_error=A.events(active.plan,env.date);key=k end
   if not events then v.state=calendar_error
   else
-   local controls=Controls.snapshot();v.mode=active.plan.mode or 'annual'
+   local controls=Controls.snapshot()
    local clock_allowed=Clock.status().automatic_permitted
    v.state=not clock_allowed and 'clock_untrusted' or now<engine.watermark() and 'backward_hold' or not controls.ok and 'control_unreadable' or controls.muted and 'muted' or 'running'
    for _,e in ipairs(events)do if e.utc>math.max(now,active.watermark,engine.watermark())then v.next=e;break end end

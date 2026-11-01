@@ -13,7 +13,7 @@ function close(){panel.hidden=true;open.setAttribute('aria-expanded','false');op
 open.addEventListener('click',function(){panel.hidden=!panel.hidden;open.setAttribute('aria-expanded',String(!panel.hidden));if(!panel.hidden){draw();panel.scrollIntoView({block:'nearest'});}});
 document.getElementById('problem-close').addEventListener('click',close);
 document.getElementById('problem-refresh').addEventListener('click',function(){window.dispatchEvent(new CustomEvent('schoolbell-diagnostic-refresh'));});
-function go(id){var target=document.getElementById(id);if(target){target.click();target.focus();}}
+function go(id){var target=document.getElementById(id);if(target){target.click();if(id==='tab-sound')document.getElementById('time-settings').open=true;target.focus();}}
 action.addEventListener('click',function(){go(action.dataset.target);});
 document.getElementById('problem-journal').addEventListener('click',function(){go('tab-journal');});
 window.addEventListener('schoolbell-diagnostic-state',function(e){latest=e.detail || {};if(!panel.hidden)draw();});

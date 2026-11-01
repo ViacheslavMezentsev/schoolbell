@@ -8,6 +8,7 @@ function fixture(demo=false){
 }
 (async()=>{let x=fixture();await x.window.schoolbellRowPreview('user8',false);assert.equal(x.nodes['row-preview-audio'].src,'sample?id=user8');assert.equal(x.posts.length,0);
  await x.window.schoolbellRowPreview('user3',true);assert.deepEqual(x.posts[0],{url:'play',body:{token:'token',id:'user3'}});
+ const mediaStatus={textContent:''};await x.window.schoolbellRowPreview('user3',true,mediaStatus);assert.equal(mediaStatus.textContent,'Мелодия завершена.');x.posts.pop();
  x.window.schoolbellSessionBlocked=true;await x.window.schoolbellRowPreview('test',true);assert.equal(x.posts.length,1);
  x=fixture(true);await x.window.schoolbellRowPreview('4',false);assert.equal(x.nodes['row-preview-audio'].src,'assets/4.mp3');await x.window.schoolbellRowPreview('4',true);assert.equal(x.posts.length,0);
  x=fixture();x.fail=true;await x.window.schoolbellRowPreview('test',true);assert.equal(x.posts.length,1);assert(x.nodes['row-preview-status'].textContent.includes('мог начаться'));await x.window.schoolbellRowPreview('../evil',true);assert.equal(x.posts.length,1);

@@ -1,6 +1,6 @@
 # Schoolbell user guide
 
-In 5.1.27, Media → Add melody creates an entry; selecting an existing entry replaces its file while preserving references. MP3 up to 64 KB is recommended. Free space appears in the header and Media. Journal retention is 32 KiB/seven days.
+In 5.1.27, Media → Add melody creates an entry; selecting an existing entry replaces its file while preserving references. MP3 up to 64 KB is recommended. Free space appears in the header and Media. From 5.1.31, the journal is bounded only by 32 KiB; age and clock changes do not remove entries.
 
 
 5.1.22 (host): device local time HH:MM is right-aligned above the CPU bar; uptime is below (page age in Pages). Reuses existing clock polling and hides stale time. Default idle logout is 30 minutes; existing choices are preserved. Major section gaps are aligned and the bell-delete cross enlarged. Pages synchronized; this version is not installed on the device.
@@ -136,8 +136,7 @@ file immediately, independently of draft rows. The browser route sounds on your
 computer/phone/tablet; the router route sounds through USB audio and school speakers.
 For another melody use «В браузере» in its table row.
 
-Select router volume and «Применить громкость». For example −12 dB is quiet and
-0 dB applies no software attenuation. It affects the next manual/test/automatic bell,
+Select router volume and «Применить громкость». Volume uses whole percentages, for example 25% or 100%. Rounded 0% means minimum; use «Без звука» to mute. It affects the next manual/test/automatic bell,
 not the one already playing. Browser volume belongs to your device. Successful
 player completion does not prove that speakers/amplifier have power.
 
@@ -261,3 +260,5 @@ A separately powered Modbus RTC board is proposed for future post-reboot time re
 5.1.21 adds [device .sbp export with all dependencies](../formats/PORTABLE_PLAN_EXPORT_DEVICE.en.md). On the destination, use [preview and add-only draft import](../formats/PORTABLE_PLAN_IMPORT.en.md). This does not replace a full .sbb backup or enable automatic bells.
 
 In Schedules, Preview offers 🔊 browser playback and 🔔 Shkolnik speaker playback of the melody currently selected in that row, even before saving the draft. Speaker playback requires confirmation and respects mute; it does not enable automatic bells. Pages provides browser playback of bundled melodies only. The red × in Delete removes the draft row.
+
+In 5.1.31, click each settings heading to expand its section. Enabled/pre-bell switches are off on the left and on on the right. The automatic bell icon shows the applied mode, not the unsaved draft.

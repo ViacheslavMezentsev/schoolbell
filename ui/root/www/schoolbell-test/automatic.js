@@ -10,7 +10,9 @@ function ready(e){return e && e.loaded && !e.dirty && !e.busy && !e.reconcile &&
 function confirmed(){var v=sample && performance.now()-sample.at<15000 && sample.value;return v && v.ok!==false && typeof v.enabled==='boolean' && Number.isInteger(v.generation) && v.generation>=0 && v.state!=='waiting' && v.state!=='unavailable' && v.state!=='executor_error'?v:null;}
 function header(){
  var v=confirmed(),text,tone='warning',demo=v && v.simulated;
- quick.textContent=v && v.enabled?'⏸ Автозвонки':'▶ Автозвонки';
+ var mode=v && v.mode==='annual'?'📅 ':v && v.mode==='fixed'?'☷ ':'';
+ quick.textContent=(v && v.enabled?'⏸ ':'▶ ')+mode+'Автозвонки';
+ quick.setAttribute('aria-label','Автозвонки'+(v && v.mode==='annual'?' · календарный план':v && v.mode==='fixed'?' · расписание':''));
  quick.title=v && v.enabled?'Выключить автоматические звонки':'Включить ранее применённый план, не черновик';
  if(window.schoolbellSessionBlocked){text='Войдите';tone='warning';}
  else if(busy || pending){text='Ожидаем подтверждения…';}
@@ -67,7 +69,7 @@ async function change(enabled){
  finally{busy=false;if(locked)window.schoolbellEditor.unlock();draw();setTimeout(refresh,1500);}}
 async function toggleApplied(){
  var v=confirmed();if(window.schoolbellSessionBlocked || busy || pending || !v)return;
- if(!v.enabled && !v.revision){feedback='Сначала примените сохранённый черновик в настройках. ';draw();var tab=document.getElementById('tab-sound');if(tab)tab.click();document.getElementById('automatic-enable').focus();return;}
+ if(!v.enabled && !v.revision){feedback='Сначала примените сохранённый черновик в настройках. ';draw();var tab=document.getElementById('tab-sound');if(tab)tab.click();var apply=document.getElementById('automatic-enable');if(apply.closest){var card=apply.closest('details');if(card)card.open=true;}apply.focus();return;}
  var enable=!v.enabled,captured=++generation;busy=true;feedback='';draw();
  try{
   var result=enable?await window.schoolbellClockCommand({action:'resume',revision:v.revision,generation:String(v.generation)}):await request(root.dataset.automatic,{enabled:'false',revision:''});

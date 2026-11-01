@@ -3,7 +3,8 @@
 var root=document.getElementById('schedule-editor'),audio=document.getElementById('row-preview-audio'),status=document.getElementById('row-preview-status'),pending=false;
 var demo=root.dataset.load.indexOf('demo-api')>=0;
 function stop(){audio.pause();audio.removeAttribute('src');audio.load();audio.hidden=true;}
-window.schoolbellRowPreview=async function(id,hardware){
+window.schoolbellRowPreview=async function(id,hardware,statusTarget){
+ var status=statusTarget || document.getElementById('row-preview-status');
  if(!/^(test|[0-4]|user(?:[1-9][0-9]*|_[0-9a-f]+))$/.test(id))return;
  if(window.schoolbellSessionBlocked){status.textContent='Войдите для прослушивания.';return;}
  if(hardware && demo){status.textContent='Через Школьника недоступно: демо без оборудования.';return;}
@@ -11,7 +12,7 @@ window.schoolbellRowPreview=async function(id,hardware){
  if(demo && /^user/.test(id)){status.textContent='В демо доступны только штатные мелодии.';return;}
  if(!hardware){
   stop();audio.hidden=false;audio.src=demo?root.dataset.sample.replace(/test\.mp3$/,encodeURIComponent(id)+'.mp3'):root.dataset.sample+'?id='+encodeURIComponent(id);
-  status.textContent='В браузере — на компьютере или телефоне.';
+  status.textContent='В браузере.';
   try{await audio.play();}catch(_){status.textContent='Не удалось прослушать мелодию. Проверьте наличие файла и вход.';}return;
  }
  if(!window.confirm('Проиграть выбранную мелодию через колонки Школьника сейчас?'))return;

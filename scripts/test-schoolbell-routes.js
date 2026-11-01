@@ -77,7 +77,7 @@ function fixture(storage={},initialRevision="r1",loadCodes=[]){
 
  let h=fixture();await h.tick();
  assert(h.get('quick-automatic').disabled);assert.equal(h.get('quick-automatic-status').dataset.tone,'danger');
- h.active={ok:true,state:'disabled',enabled:false,generation:1,revision:'applied'};await h.poll();
+ h.active={ok:true,state:'disabled',enabled:false,generation:1,revision:'applied',mode:'fixed'};await h.poll();assert(h.get('quick-automatic').textContent.includes('☷'));h.active.mode='annual';await h.poll();assert(h.get('quick-automatic').textContent.includes('📅'));
  assert(!h.get('quick-automatic').disabled);assert.equal(h.get('quick-automatic-status').textContent,'Выключены');
  h.window.schoolbellEditor.snapshot().dirty=true;
  // Deliberately edit the real draft; header resume must not load or apply it.

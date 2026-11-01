@@ -118,8 +118,8 @@
       "source": "packages/schoolbell/lua/schoolbell/journal.lua",
       "destination": "src/lua/schoolbell/journal.lua",
       "source_sha256": "ee2c01422fe2c3128359ff158bbef964196a52f8b18c0243d64f2e67ff41260c",
-      "changes": "none",
-      "destination_sha256": "ee2c01422fe2c3128359ff158bbef964196a52f8b18c0243d64f2e67ff41260c"
+      "changes": "none; owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
+      "destination_sha256": "b52ffd461cd76c8093ca3ab7ec3a7bf04a70c753d84b82e20c8cd7c184568784"
     },
     {
       "source": "packages/schoolbell/lua/schoolbell/media_codec.lua",
@@ -510,8 +510,8 @@
       "source": "packages/schoolbell/router-page/root/usr/lib/lua/luci/view/schoolbell_test.htm",
       "destination": "ui/root/usr/lib/lua/luci/view/schoolbell_test.htm",
       "source_sha256": "526214f183ea8526785239074189d00cc03e7251323ee4146f75f0a53a015a54",
-      "changes": "none; default audio status and blue Flash (5.1.29); wider header and CSS cache key (5.1.30)",
-      "destination_sha256": "e8172dd2dca5b489ebde8019d0b3d5e7adbb48355ff3c2da17ce62b03beb758a"
+      "changes": "none; default audio status and blue Flash (5.1.29); wider header and CSS cache key (5.1.30); owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
+      "destination_sha256": "4e68ab63347dff94c9a787387dccf23333eba15d435d3ebb12e98990bf2174e9"
     },
     {
       "source": "packages/schoolbell/router-page/root/usr/lib/lua/schoolbell/backup_web.lua",
@@ -552,8 +552,8 @@
       "source": "packages/schoolbell/router-page/root/usr/sbin/schoolbell-auto",
       "destination": "packaging/openwrt/root/usr/sbin/schoolbell-auto",
       "source_sha256": "9ef66a98ac6fb710f9b1b13d5997b3cdf6b1271d0f2c99d172ed3bc09b55d907",
-      "changes": "none",
-      "destination_sha256": "9ef66a98ac6fb710f9b1b13d5997b3cdf6b1271d0f2c99d172ed3bc09b55d907"
+      "changes": "none; owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
+      "destination_sha256": "6254ba7d95cf7673fcc61d099770179c0f17b03f76762caf654bc7c74709db20"
     },
     {
       "source": "packages/schoolbell/router-page/root/usr/sbin/schoolbell-package",
@@ -573,8 +573,8 @@
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/automatic.js",
       "destination": "ui/root/www/schoolbell-test/automatic.js",
       "source_sha256": "1a68ffe9c98311464217a369cccc6da76426a96d6083288ab47e2f441d1e828c",
-      "changes": "none",
-      "destination_sha256": "1a68ffe9c98311464217a369cccc6da76426a96d6083288ab47e2f441d1e828c"
+      "changes": "none; owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
+      "destination_sha256": "f70bab995bae7a5bef894b2f67f8048f04328b5faddaa32c97e200f8ae7071a4"
     },
     {
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/backup.js",
@@ -594,8 +594,8 @@
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/controls.js",
       "destination": "ui/root/www/schoolbell-test/controls.js",
       "source_sha256": "d54bd395645778dc54f3047973372f1da8237cccda8e20a282cfcf307d1e8ff1",
-      "changes": "none; default audio status and blue Flash (5.1.29)",
-      "destination_sha256": "512a4b4dce3c6a356e43f95e9f4dee7ab89adf1b4535bf9b85e18538991b3a6b"
+      "changes": "none; default audio status and blue Flash (5.1.29); owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
+      "destination_sha256": "ced6c01e2db2c10540439fcb46fe2b0f25c428b8b23b58bca713436f09f4f111"
     },
     {
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/cpu.js",
@@ -608,22 +608,22 @@
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/dashboard.js",
       "destination": "ui/root/www/schoolbell-test/dashboard.js",
       "source_sha256": "d2f4fba470da0160da0d2a47f8986c485346e103a4debf15a37ec55eeb7a9476",
-      "changes": "none",
-      "destination_sha256": "d2f4fba470da0160da0d2a47f8986c485346e103a4debf15a37ec55eeb7a9476"
+      "changes": "none; owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
+      "destination_sha256": "771512d956f7efe99a8870f1733327051b4c940bbf8b10635cc39a1a97be382d"
     },
     {
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/diagnostics.js",
       "destination": "ui/root/www/schoolbell-test/diagnostics.js",
       "source_sha256": "5251a559554176c3fdc8be5bb2e34cecb73389f39d07086736404427886756ac",
-      "changes": "none",
-      "destination_sha256": "5251a559554176c3fdc8be5bb2e34cecb73389f39d07086736404427886756ac"
+      "changes": "none; owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
+      "destination_sha256": "36b18377f34777a79e87795635f42e14b72ddfe38377f9f6fcf7c9001d116c9c"
     },
     {
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/media.js",
       "destination": "ui/root/www/schoolbell-test/media.js",
       "source_sha256": "79b52ae442a583d3df5ab20db499c2c62f572908ddc8c5e6de0c30079a49c225",
-      "changes": "none",
-      "destination_sha256": "79b52ae442a583d3df5ab20db499c2c62f572908ddc8c5e6de0c30079a49c225"
+      "changes": "none; owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
+      "destination_sha256": "634abae2f14bba150280b5e1e7cb6887ba2fa648517195da6631da8e641d63b1"
     },
     {
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/plan-export.js",
@@ -650,15 +650,15 @@
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/row-preview.js",
       "destination": "ui/root/www/schoolbell-test/row-preview.js",
       "source_sha256": "eff6c9d130dcff28cf76e1a1b7a6b3228d3d2a378ddb9afd62b7ee868e1dd0c4",
-      "changes": "none",
-      "destination_sha256": "eff6c9d130dcff28cf76e1a1b7a6b3228d3d2a378ddb9afd62b7ee868e1dd0c4"
+      "changes": "none; owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
+      "destination_sha256": "0880e38952820b69fa1e5c3d1ddbcc2c681955f80413733186587877775088ba"
     },
     {
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/schedules.js",
       "destination": "ui/root/www/schoolbell-test/schedules.js",
       "source_sha256": "0bc0f6d87c79856181ed81326f0f4728872783e19f55d99249b3eea5f8042a6f",
-      "changes": "none",
-      "destination_sha256": "0bc0f6d87c79856181ed81326f0f4728872783e19f55d99249b3eea5f8042a6f"
+      "changes": "none; owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
+      "destination_sha256": "91cf92c5d834a16b30e5980d031dc4ea8d6bfbee5806cd1abb7c89c9357f7fa3"
     },
     {
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/session.js",
@@ -671,8 +671,8 @@
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/style.css",
       "destination": "ui/root/www/schoolbell-test/style.css",
       "source_sha256": "046d8f5ba5461e83f8c4412b368b227ae34a98eef741d500af2117eefa4ff0ba",
-      "changes": "none; default audio status and blue Flash (5.1.29); wider header and CSS cache key (5.1.30); stable two-line audio layer",
-      "destination_sha256": "f20134b3927cba6729409a7af5e627a48a21696e0f071953fa947e7a7baba695"
+      "changes": "none; default audio status and blue Flash (5.1.29); wider header and CSS cache key (5.1.30); stable two-line audio layer; owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
+      "destination_sha256": "b34cc514cc424285a45cb7a9732355b0c4a4ae36ae2d7d72526db972665fab42"
     },
     {
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/theme.js",
@@ -937,8 +937,8 @@
       "source": "packages/schoolbell/tests/test_journal.lua",
       "destination": "tests/test_journal.lua",
       "source_sha256": "a2ac6c92da1d92557ec744aef48feca67fd5707cb0ac2d3105455a79c2ccaa7a",
-      "changes": "none",
-      "destination_sha256": "a2ac6c92da1d92557ec744aef48feca67fd5707cb0ac2d3105455a79c2ccaa7a"
+      "changes": "none; owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
+      "destination_sha256": "271a969428f235759bfd169f04457f7a484be6943cbe7bfbb2b292126f3400b1"
     },
     {
       "source": "packages/schoolbell/tests/test_linux_player.c",
@@ -1161,8 +1161,8 @@
       "source": "pkg-schoolbell/CONTROL/control",
       "destination": "packaging/openwrt/package/CONTROL/control",
       "source_sha256": "8183c1fee37c5c6579f32cc2570317640935b5a2598495d8bbb4081e6bb78141",
-      "changes": "adapted; review destination against pinned source; default audio status and blue Flash (5.1.29); wider header and CSS cache key (5.1.30)",
-      "destination_sha256": "1135f44b49a49785b8b887ec5d49a3fdeaf532ed934cf481a26b96544cbdbbe5"
+      "changes": "adapted; review destination against pinned source; default audio status and blue Flash (5.1.29); wider header and CSS cache key (5.1.30); owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
+      "destination_sha256": "77dbf81e46c7a5249e9f67c791b15734e4b984be0e4d0df9499d67245d530bc7"
     },
     {
       "source": "pkg-schoolbell/CONTROL/postinst",
@@ -1294,15 +1294,15 @@
       "source": "scripts/test-schoolbell-routes.js",
       "destination": "scripts/test-schoolbell-routes.js",
       "source_sha256": "44039356f5822154bf05e200d93c5e6bc0f5959e73dc452f49c401b96126e8ec",
-      "changes": "adapted; review destination against pinned source",
-      "destination_sha256": "671cd50eafd3a0ae074e5b5f51607f313c147d1d592fe362b743bf9198121ca7"
+      "changes": "adapted; review destination against pinned source; owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
+      "destination_sha256": "8a150b8543bc2b664c19f96a6a15809c7cfc4d7836caad8599df9249593991b0"
     },
     {
       "source": "scripts/test-schoolbell-row-preview.js",
       "destination": "scripts/test-schoolbell-row-preview.js",
       "source_sha256": "6242c83914c303cc5f2cc14c75fe5b0da68833024cc7a2c5e1c87ca484173201",
-      "changes": "adapted; review destination against pinned source",
-      "destination_sha256": "6cfbf0134d39d9284c20ce274b545614dde7df74d6b053bc9fc501e2844c32fc"
+      "changes": "adapted; review destination against pinned source; report media playback result in the active panel (5.1.31)",
+      "destination_sha256": "0b74c1bdd755d4f7e170b1fc650574d75d86dc68af9bc2779034f81c25e849d8"
     },
     {
       "source": "scripts/test-schoolbell-session-ui.js",
@@ -1336,8 +1336,8 @@
       "source": "scripts/test-site-demo.js",
       "destination": "scripts/test-site-demo.js",
       "source_sha256": "81de795087ec5a84b8e8567f3ff1cf614edbb1b7454e493350fc5ec4e9d64f2a",
-      "changes": "adapted; review destination against pinned source",
-      "destination_sha256": "4346cf48687a17e1dd0e261ceebe4a4a7add0dd4329e3550954a0447e43419b1"
+      "changes": "adapted; review destination against pinned source; owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
+      "destination_sha256": "fe129dc5028f46f64745b7ac4080d0bafda792262e765b103edb9b99099b5771"
     },
     {
       "source": "scripts/test-site-portable.js",
@@ -1371,8 +1371,8 @@
       "source": "site/demo.js",
       "destination": "site/demo.js",
       "source_sha256": "e188761949f7a69432ec440c619a95bf1f36d721c910f3a6c866a7c194677f5f",
-      "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer; default audio status and blue Flash (5.1.29)",
-      "destination_sha256": "8b21e6bac3263fa500a3fc0e80a7a7c8692f901260be9151c92c2dd8625a99c0"
+      "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer; default audio status and blue Flash (5.1.29); owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
+      "destination_sha256": "bbfa1498f892de8bda66ce2a8cbdb30b09904a2fac13babfa2884670eaa4b13d"
     },
     {
       "source": "site/portable-pages.js",
@@ -2021,9 +2021,10 @@
       "source": "docs/packages/schoolbell/TECHNICAL_SPECIFICATION.md",
       "destination": "docs/requirements/TECHNICAL_SPECIFICATION.md",
       "source_sha256": "61b760731a5c4f6c53ed67726cd8667136ee194692aa517aa2b3ded7e9f07aad",
-      "destination_sha256": "e55e97ade57a4cb9c8b2bea14d5b21a6d70cf16123266ad413c354044f668604",
-      "changes": "Markdown link destinations only; original text and requirement/TC IDs preserved",
-      "prose_sha256": "7a7b8c5652b4353f90f58c476218ca443a2dbb2be0af2516e6e735ea8fa30be5"
+      "destination_sha256": "fddaf6ab3613c06f65352156832dd251030985e375de55cf8eee8e348b781095",
+      "changes": "Markdown link destinations only; original text and requirement/TC IDs preserved; owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
+      "prose_sha256": "3e07fbe53b76338f2845b0b13b6f398b4e37d6ce08d861cefa456358b338c322",
+      "migrated_prose_sha256": "7a7b8c5652b4353f90f58c476218ca443a2dbb2be0af2516e6e735ea8fa30be5"
     },
     {
       "source": "docs/packages/schoolbell/UI_COMPLETENESS.en.md",
@@ -2045,17 +2046,19 @@
       "source": "docs/packages/schoolbell/USER_GUIDE.en.md",
       "destination": "docs/user/USER_GUIDE.en.md",
       "source_sha256": "45cada2eb0064aa88df66a57a4e80f593cc259497ea41817e66eb42fcf678921",
-      "destination_sha256": "404a90034b45688c337d78dc6d76a92f4bf0f6664b884bee443d40b22e37bbe4",
-      "changes": "Markdown link destinations only; original text and requirement/TC IDs preserved",
-      "prose_sha256": "ca3efd23e3a9a2c17b796ed94a73f372ad98853e29c32591d2525368a2e9fee8"
+      "destination_sha256": "a4327b7f79772e3acb8c1850016175f835bf9dce6eef080bbe5bec44c7352509",
+      "changes": "Markdown link destinations only; original text and requirement/TC IDs preserved; owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
+      "prose_sha256": "88a1ff3fec829b3676aca08c953e8134d8a0e66989cac16817f9c6d2e24bcc37",
+      "migrated_prose_sha256": "ca3efd23e3a9a2c17b796ed94a73f372ad98853e29c32591d2525368a2e9fee8"
     },
     {
       "source": "docs/packages/schoolbell/USER_GUIDE.md",
       "destination": "docs/user/USER_GUIDE.md",
       "source_sha256": "9753511757ffb71652f00145a30dc1421e5e3bc3e775b0b357f9d46a93704807",
-      "destination_sha256": "3f568993da623ba933b49317c283ae4e3fe5ae8ae99a61a2ecf28f5c690cf763",
-      "changes": "Markdown link destinations only; original text and requirement/TC IDs preserved",
-      "prose_sha256": "3d8d69c4d89c627f85c1db40f3e4b2e8e1222460ef7ab761eb50e2bdb05ed600"
+      "destination_sha256": "dda86a18c4f8337532666e9ce76cacbe44bffad9c5393a6abb0f93bd07813f81",
+      "changes": "Markdown link destinations only; original text and requirement/TC IDs preserved; owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
+      "prose_sha256": "6f0b92d1d5e75a2815015d3fb902638bb3723191e6b7950835ebb4f1a248e097",
+      "migrated_prose_sha256": "3d8d69c4d89c627f85c1db40f3e4b2e8e1222460ef7ab761eb50e2bdb05ed600"
     },
     {
       "source": ".github/ISSUE_TEMPLATE/bug_report.yml",
@@ -2082,8 +2085,8 @@
       "source": "scripts/build-site.py",
       "destination": "scripts/build-site.py",
       "source_sha256": "7b581e66a713901cc092b9afcd5ff99155aaaa2bbf8d292dd251a3680f9247b9",
-      "destination_sha256": "2339fb169232ffcdad27ad53c4b578a23568103646f692c0bc97456ae1dae399",
-      "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer; 2026-10-31 license delivery: shared artifact notices and verification"
+      "destination_sha256": "fa6d544986a526400b6bb76e911c6ae3cd44606ac73b5b0f4712a20f1a3fd4a1",
+      "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer; 2026-10-31 license delivery: shared artifact notices and verification; owner-requested UI and size-only journal policy (5.1.31, spec 1.77)"
     },
     {
       "source": "site/devices/index.en.html",
