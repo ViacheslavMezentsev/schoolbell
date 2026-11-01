@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+- Installed 5.1.31 over 5.1.30 on the authorized bench: verified backup and exact rollback, all 78 IPK files, unchanged .sbb contents and settings. Gain remains -12 dB (25% in UI), automatic bells off, native 1.0.0. All 187 existing journal entries were preserved; API reports a 32768-byte limit without age retention. Eight CSS/JS assets verified over HTTP, applied calendar mode confirmed. No playback; visual review of the open interface remains with the owner. Full make all passed.
+
 - 5.1.31 validation: full make all passed; strict checks of both specifications reported no errors or warnings. Regressions cover clock jumps, retained history and exact gain, and applied mode. Local Chrome checked four collapsed sections, preview alignment, switches/icons, light/dark themes and a 390 px container, with no JS errors or page overflow. This is not hardware acceptance.
 
 - 5.1.31: superscript version, whole-percent volume, applied-mode icon, aligned buttons, collapsible settings, shared browser/device icons, concise playback explanation and row switches. Device and demo journals are bounded only by 32 KiB; age and clock jumps no longer remove entries. Requirements updated to 1.77 and AUDIO_STATUS 1.1 at the owner’s request. Not installed on devices.
