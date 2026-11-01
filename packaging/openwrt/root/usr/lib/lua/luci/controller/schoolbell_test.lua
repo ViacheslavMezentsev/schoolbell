@@ -161,6 +161,7 @@ function controls()
  end
  editor();local m=require('schoolbell.controls');local result=value==nil and volume==nil and m.snapshot() or m.request(value,nil,volume)
  result.audio=require('schoolbell.audio_output').read()
+ result.device=require('schoolbell.device_identity').read(h.getenv('SERVER_ADDR'))
  result.playing=require('nixio.fs').lstat(require('schoolbell.sound_test').lock)~=nil
  if volume~=nil then audit(result.ok and 'volume_ok' or 'volume_failed',result)end
  if value~=nil then audit(result.ok and (value and 'mute_on' or 'mute_off') or 'mute_failed',result)end
@@ -271,6 +272,11 @@ function media()
  -- Cookie session is still required; Bearer carries its CSRF token, not a login.
  local token=(h.getenv('HTTP_AUTHORIZATION') or ''):match('^Bearer ([^%s]+)$');local expected=require('luci.dispatcher').context.authtoken
  if type(token)~='string' or token=='' or token~=expected then h.status(403,'Forbidden');return end
+ if h.formvalue('action',true)=='rename'then
+  if tonumber(h.getenv('CONTENT_LENGTH')or '0')~=0 then h.status(413,'Unsupported request');return end
+  local result=m.rename({id=h.formvalue('id',true),title=h.formvalue('title',true),generation=tonumber(h.formvalue('generation',true)),operation=h.formvalue('operation',true)})
+  audit(result.ok and 'media_renamed' or 'media_failed',result);respond(result);return
+ end
  if h.formvalue('action',true)=='delete'then
   if tonumber(h.getenv('CONTENT_LENGTH')or '0')~=0 then h.status(413,'Unsupported request');return end
   local result=m.remove({id=h.formvalue('id',true),generation=tonumber(h.formvalue('generation',true)),operation=h.formvalue('operation',true)})

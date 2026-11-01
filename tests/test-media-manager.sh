@@ -34,6 +34,7 @@ lua5.1 tests/test_schedule_colors.lua
 lua5.1 tests/test_timezone.lua
 
 lua5.1 tests/test_controls.lua
+lua5.1 tests/test_device_identity.lua
 
 TZ=UTC lua5.1 tests/test_automatic.lua
 TZ=Europe/Berlin lua5.1 tests/test_automatic.lua

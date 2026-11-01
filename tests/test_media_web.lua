@@ -107,3 +107,27 @@ for _,v in ipairs(hints.slots)do if v.source=='user'then assert(v.in_use)end end
 editorlock.unlink('current.json');editorlock.close()
 S.load=savedload;package.loaded['schoolbell.automatic_store'].decode=olddecode
 print('PASS fast listing: no full draft/active validation or editor lock; malformed hints disable deletion')
+
+-- TC-199: metadata-only rename preserves the exact audio object and all row references.
+local function rename(id,title,gen,op)return W.rename({id=id,title=title,generation=gen,operation=string.rep(op,32)})end
+local listing=W.list();local gen=listing.generation;local original
+for _,v in ipairs(listing.slots)do if v.id=='user5' then original=v end end
+assert(original)
+local before_audio='';assert(W.sample('user5',function(s)before_audio=before_audio..s end).ok)
+assert(rename('0','No',gen,'f').code=='invalid')
+assert(rename('user5','',gen,'f').code=='invalid')
+assert(rename('user5',string.rep('x',97),gen,'f').code=='invalid')
+assert(rename('user5','bad\nname',gen,'f').code=='invalid')
+assert(rename('user5','   ',gen,'f').code=='invalid')
+assert(rename('user5','New',gen-1,'f').code=='conflict')
+assert(rename('user99','New',gen,'f').code=='missing')
+enabled=true;assert(rename('user5','New',gen,'f').code=='automatic_enabled');enabled=false
+assert(host.mkdir(L.root..'/gate'));assert(rename('user5','New',gen,'f').code=='busy');assert(host.rmdir(L.root..'/gate'))
+local olddecoded=decoded;assert(rename('user5','Новое название',gen,'f').ok);assert(decoded==olddecoded)
+assert(W.lookup(string.rep('f',32)).state=='retained')
+local found;for _,v in ipairs(W.list().slots)do if v.id=='user5' then found=v end end
+assert(found.title=='Новое название' and found.name==original.name and found.revision==original.revision and found.size_bytes==original.size_bytes)
+local after_audio='';assert(W.sample('user5',function(s)after_audio=after_audio..s end).ok);assert(after_audio==before_audio)
+assert(plan.schedules[1].rows[1].media=='user5' and W.plan_ready(plan))
+assert(rename('user5','Overwrite',gen,'0').code=='conflict')
+print('PASS TC-199 rename: protected/invalid/missing, CAS, auto/gate, exact bytes and references preserved, no decoder and retained operation')

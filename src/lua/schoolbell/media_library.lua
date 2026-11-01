@@ -50,6 +50,22 @@ function M.open(fs,root,owned)
   if result.status=='saved' then result.revision=hash;result.cleanup=manager.cleanup().status end
   return result
  end
+ function api.rename(id,title,expected,op)
+  assert(M.editable(id),'protected')
+  assert(type(title)=='string' and #title>0 and #title<=96 and title:find('%S') and not title:find('[%c]'),'title')
+  local state,cat=read()
+  if expected~=(state.generation or 0)then return {status='conflict'}end
+  local found
+  for _,m in ipairs(cat.melodies)do if m.id==id then found=m;break end end
+  if not found then return {status='missing'}end
+  found.title=title
+  assert(manager.cleanup().status=='cleaned','cleanup')
+  local docs={['catalog.json']=C.encode(cat),['settings.json']='{"scope":"engineering-media-overrides"}',
+   ['schedules.json']='{"references":[]}',['plans.json']='{"references":[]}'}
+  local result=manager.commit(op,expected,docs,{})
+  if result.status=='saved'then result.cleanup=manager.cleanup().status end
+  return result
+ end
  function api.remove(id,expected,op)
   assert(M.editable(id),'protected')
   local state,cat=read()

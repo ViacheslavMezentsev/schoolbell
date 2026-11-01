@@ -70,6 +70,15 @@ function M.remove(args)
   return {ok=result.status=='saved',code=result.status,generation=result.generation,operation_id=result.operation_id}
  end,true)
 end
+function M.rename(args)
+ if not L.editable(args.id) or type(args.title)~='string' or #args.title<1 or #args.title>96 or not args.title:find('%S') or args.title:find('[%c]')
+  or not C.integer(args.generation,0,2147483646) or not C.hex(args.operation,32)then return {ok=false,code='invalid'}end
+ return session(function(lib)
+  local A=require('schoolbell.automatic_store');if A.decode(A.raw()).enabled then return {ok=false,code='automatic_enabled'}end
+  local result=lib.rename(args.id,args.title,args.generation,args.operation)
+  return {ok=result.status=='saved',code=result.status,generation=result.generation,operation_id=result.operation_id}
+ end,true)
+end
 function M.lookup(op)
  if not C.hex(op,32)then return {ok=false,code='invalid'}end
  return session(function(lib)local v=lib.lookup(op);v.ok=true;return v end)
