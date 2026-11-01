@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+- Installed 5.1.32 over 5.1.31 on the authorized bench. Backup and exact rollback IPK verified; all 78 files, .sbb contents, settings and 194 journal entries preserved. Gain remains 25% (-12 dB), automatic bells off, native 1.0.0. Eight CSS/JS assets verified over HTTP. The normal service restart leaves time trust unconfirmed/startup; clocks/NTP unchanged. No playback; icon appearance awaits owner confirmation. Full make all passed.
+
 - 5.1.32 validation: full make all and strict specification checks passed; chains and buttons inspected in local Chrome without playback. No device installation.
 
 - 5.1.32: corrected shared playback icons: 🔊 for browser playback and 🔔 for Schoolbell in schedules, media, manual buttons and chain endpoints instead of notes. Browser-window and device icons remain as chain nodes. The automatic-bell mode still reflects the applied plan, not a settings draft. Devices untouched.

@@ -69,3 +69,6 @@ hardware acceptance protocol.
 - [ ] Визуальное подтверждение интерфейса 5.1.31 владельцем / Owner visual confirmation of the 5.1.31 interface.
 
 - [x] Уточнение иконок: действия 🔊/🔔, узлы цепочек — окно/устройство (5.1.32) / Correct action icons to 🔊/🔔, keep window/device chain nodes (5.1.32).
+
+- [x] Установка 5.1.32: файлы, данные и 194 записи журнала проверены, громкость сохранена, auto-off / 5.1.32 installed: files, data and 194 journal entries verified, gain preserved, auto off.
+- [ ] Визуальное подтверждение исправленных иконок 5.1.32 владельцем / Owner visual confirmation of corrected 5.1.32 icons.
