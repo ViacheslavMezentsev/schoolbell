@@ -9,7 +9,7 @@ const factory=()=>{const h=crypto.createHash('sha256');return {update:c=>{h.upda
   let i=0;const parsed=await D.decode(()=>{if(i===archive.length)return null;const c=archive.subarray(i,i+16384);i+=c.length;return c;},factory);
   const manifestLength=Number(archive.subarray(8,16).toString());
   const ctx={draft:{schedules:[],plans:[],pre_minutes:2,pre_media:'test'},timezone:input.timezone,media:input.media.filter(x=>!x.id.startsWith('user')).map(({id,size_bytes,sha256})=>({id,size_bytes,sha256})),operation_id:'0123456789abcdef0123456789abcdef',automatic_enabled:false,dirty:false,target:'device',names:{plans:{},schedules:{}}};
-  const preview=P.preview(archive.subarray(82,82+manifestLength),parsed.calendar,ctx);assert(preview.ok,JSON.stringify(preview));
+  const preview=P.preview(archive.subarray(82,82+manifestLength),parsed.calendar,ctx);if(input.media.some(v=>v.id.startsWith('user')&&v.size_bytes>65536)){assert(!preview.ok&&preview.blockers.some(b=>b.code==='size'),JSON.stringify(preview));}else assert(preview.ok,JSON.stringify(preview));
  }catch(e){error=String(e);}
  assert.strictEqual(JSON.stringify(input),before,'mutated input');assert.strictEqual(error===null,v.ok,v.name+': '+error);
  if(v.early)assert.strictEqual(emitted,0,v.name+' emitted before validation');

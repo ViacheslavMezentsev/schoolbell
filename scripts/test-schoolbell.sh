@@ -23,3 +23,8 @@ python3 tests/test_offline_bundle.py
 python3 tests/test_target_cache.py
 
 lua5.1 tests/test_row_play_http.lua
+
+lua5.1 tests/test_system_actions.lua
+lua5.1 tests/test_system_reset.lua
+lua5.1 tests/test_system_http.lua
+lua5.1 tests/test_system_ports.lua

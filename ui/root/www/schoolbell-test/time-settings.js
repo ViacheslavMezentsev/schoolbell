@@ -41,5 +41,7 @@ confirm.addEventListener('click',async function(){
 reload.addEventListener('click',read);
 window.addEventListener('schoolbell-session-lost',function(){proposal=null;review.hidden=true;draw();});
 window.addEventListener('schoolbell-session-restored',function(){proposal=null;draw();});
-browserTime();read();draw();
+var section=document.getElementById('time-settings');
+section.addEventListener('toggle',function(){if(section.open)read();});
+browserTime();if(section.open)read();draw();
 }());

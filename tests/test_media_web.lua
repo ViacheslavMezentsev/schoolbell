@@ -1,10 +1,12 @@
 package.path='packaging/openwrt/root/usr/lib/lua/?.lua;'..package.path
 local L=require('schoolbell.media_library');local C=require('schoolbell.media_codec');local F=require('schoolbell.media_fs');local host=require('schoolbell.media_fs_host');L.root=assert(arg[1])
+assert(host.mkdir(L.root..'/editor'))
+local applied=nil
 local enabled=false;local decoded=0;local decoder_ok=true
 package.loaded['schoolbell.media_fs']={new=function(p)return F.new(p,host)end}
 package.loaded.nixio={};package.loaded['nixio.fs']={mkdir=host.mkdir,rmdir=host.rmdir}
 package.loaded['schoolbell.sound_test']={lock=L.root..'/gate',run=function()decoded=decoded+1;return decoder_ok and {ok=true} or {ok=false,state='failed'}end}
-package.loaded['schoolbell.automatic_store']={raw=function()return '{}'end,decode=function()return {enabled=enabled}end}
+package.loaded['schoolbell.automatic_store']={root=L.root..'/editor',name='automatic.json',max_bytes=16384,raw=function()return '{}'end,decode=function()return {enabled=enabled,plan=applied}end}
 local function copcall(fn,...)
  local co=coroutine.create(fn);local args={...}
  while true do
@@ -50,13 +52,58 @@ local S=require('schoolbell.schedule_store');local draft=S.empty();draft.schedul
 assert(host.mkdir(L.root..'/gate'));assert(W.list().code=='busy');assert(host.rmdir(L.root..'/gate'))
 print('PASS media gateway: disabled-auto, stream failure/bounds, invalid MP3, decoder refusal, CAS before read, lookup, preview, gate')
 
-local realrequest=S.request
-S.request=function()return {ok=true,data=draft}end
+local realload=S.load
+S.load=function()return {ok=true,data=draft}end
 local op=string.rep('e',32);local at=1
 local created=W.upload({id='new',name='dynamic.mp3',title='Новая',size=#bytes,generation=8,operation=op},function()if at>#bytes then return nil end;local b=bytes:sub(at,at+4095);at=at+#b;return b end)
 assert(created.ok and created.media_id=='user_'..op and #W.list().slots==15)
 assert(W.upload({id='new',name='dynamic.mp3',size=#bytes,generation=9,operation=op},function()error('no duplicate read')end).code=='conflict')
 draft.manual_media=created.media_id;draft.pre_media=created.media_id;draft.schedules[1].rows[1].media=created.media_id
 assert(S.validate(C.encode(draft)))
-S.request=realrequest
+S.load=realload
 print('PASS dynamic upload: ninth entry, stable generated ID, duplicate blocked, references accepted')
+
+local function deletion(id,gen,op)return W.remove({id=id,generation=gen,operation=string.rep(op,32)})end
+assert(deletion('0',9,'a').code=='invalid')
+S.load=function()return {ok=true,data=draft}end
+assert(deletion(created.media_id,9,'a').code=='in_use')
+-- Listing hints come from published files, not the authoritative mutation stub.
+local ef=F.new(L.root..'/editor',host);ef.write('current.json',C.encode({data=draft}));ef.close()
+assert(W.list().slots[#W.list().slots].in_use)
+ef=F.new(L.root..'/editor',host);ef.unlink('current.json');ef.close()
+draft=S.empty();applied={pre_media='test',manual_media='user1',schedules={}}
+assert(deletion('user1',9,'a').code=='in_use')
+applied={pre_media='test',schedules={{rows={{media='user1',enabled=false}}}}}
+assert(deletion('user1',9,'a').code=='in_use')
+applied=nil;enabled=true;assert(deletion('user1',9,'a').code=='automatic_enabled');enabled=false
+assert(deletion('user1',8,'a').code=='conflict')
+local locked=F.new(L.root..'/editor',host);assert(not deletion('user1',9,'a').ok);locked.close()
+S.load=function()return {ok=false,code='recovery_required'}end
+assert(not deletion('user1',9,'a').ok)
+S.load=function()return {ok=true,data=draft}end
+assert(deletion('user1',9,'a').ok);assert(W.list().generation==10)
+assert(not W.sample('user1',function()error('removed media')end).ok)
+assert(W.lookup(string.rep('a',32)).state=='retained')
+assert(deletion('user1',9,'c').code=='conflict')
+assert(deletion('user1',10,'c').code=='missing')
+local inspected=require('schoolbell.mp3').inspect
+require('schoolbell.mp3').inspect=function()return {format='mp3',duration_ms=1000,sample_rate_hz=44100,channels=1}end
+local function sized(n,op)
+ local at=0;return W.upload({id='user2',name='size.mp3',size=n,generation=10,operation=string.rep(op,32)},function()if at>=n then return nil end;local k=math.min(4096,n-at);at=at+k;return string.rep('x',k)end)
+end
+local olddecoded=decoded;assert(sized(65537,'d').code=='invalid'and decoded==olddecoded)
+assert(sized(65536,'d').ok);require('schoolbell.mp3').inspect=inspected
+S.load=realload
+print('PASS delete: bundled protection, draft/applied/disabled row references, auto/generation/editor lock/corruption guards, persisted removal, lookup, 65536/65537 upload boundary')
+
+local savedload=S.load;local olddecode=package.loaded['schoolbell.automatic_store'].decode
+S.load=function()error('listing must not validate the draft')end
+package.loaded['schoolbell.automatic_store'].decode=function()error('listing must not validate active plan')end
+local editorlock=F.new(L.root..'/editor',host)
+assert(W.list().ok,'listing must not take editor lock')
+editorlock.write('current.json','broken')
+local hints=W.list();assert(hints.ok)
+for _,v in ipairs(hints.slots)do if v.source=='user'then assert(v.in_use)end end
+editorlock.unlink('current.json');editorlock.close()
+S.load=savedload;package.loaded['schoolbell.automatic_store'].decode=olddecode
+print('PASS fast listing: no full draft/active validation or editor lock; malformed hints disable deletion')

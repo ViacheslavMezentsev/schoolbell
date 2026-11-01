@@ -43,8 +43,15 @@ local command=require('schoolbell.clock_commands').new(Clock,{
 local set_clock=require("schoolbell.clock_set").system(Clock,
  function()return Store.transaction(Store.change,false,nil,Store.environment()).ok end,
  function()return Store.environment().zone end,mono)
+local system_command,system_busy=require('schoolbell.system_actions').system(Clock,mono)
 local function commands()
  mailbox.process(function(q,meta)
+  if system_busy()then return {ok=false,code='reboot_pending'}end
+  if q.action:match('^system_')then
+   local value=system_command(q)
+   if q.action~='system_prepare'then pcall(audit,value.ok and (q.action=='system_reset'and 'system_reset' or 'system_reboot')or 'system_failed')end
+   return value
+  end
   local setting=q.action=="set_time" or q.action=="set_prepare"
   local value=setting and set_clock(q,meta) or command(q)
   if q.action~='prepare' and q.action~='set_prepare'then

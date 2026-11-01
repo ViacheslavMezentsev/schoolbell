@@ -3,24 +3,73 @@ local M={}
 -- LuCI request sources and response sinks may yield on Lua 5.1.
 local protect=require('luci.util').copcall
 local L=require('schoolbell.media_library');local C=require('schoolbell.media_codec')
-local function session(fn)
+local function session(fn,lock_editor)
  local n,fs=require('nixio'),require('nixio.fs');local lock=require('schoolbell.sound_test').lock
  if not fs.mkdir(lock,700)then return {ok=false,code='busy'}end
- local backend,library;local keep=false
+ local backend,library,editorfs;local keep=false
  local ok,value=protect(function()
   local editor=require('schoolbell.automatic_store').root or '/etc/schoolbell-editor'
   assert(not fs.lstat or not fs.lstat(editor..'/import.pending'),'import_pending')
   assert(not fs.lstat or not fs.lstat(editor..'/restore.pending'),'restore_pending')
+  if lock_editor then editorfs=require('schoolbell.media_fs').new(editor)end
   backend=require('schoolbell.media_fs').new(L.root)
   library=L.open(backend,L.root,function()return true end)
-  return fn(library,backend,function()keep=true end)
+  return fn(library,backend,function()keep=true end,editorfs)
  end)
  local closed=true;if library then closed=pcall(library.close)elseif backend then closed=pcall(backend.close)end
+ if editorfs and not pcall(editorfs.close)then closed=false end
  if not keep then if not fs.rmdir(lock)then closed=false end end
- if not ok or not closed then return {ok=false,code='media_error'}end
+ if not ok or not closed then return {ok=false,code=not ok and tostring(value):match(': busy$') and 'busy' or 'media_error'}end
  return value
 end
-function M.list()return session(function(lib)return lib.list()end)end
+local function references(editor)
+ local draft=require('schoolbell.schedule_store').load(editor);assert(draft.ok,'draft_unavailable')
+ local A=require('schoolbell.automatic_store');local active=A.decode(editor.read(A.name,A.max_bytes))
+ local used={};local ids=require('schoolbell.media_ids')
+ for _,id in ipairs(ids.references(draft.data))do used[id]=true end
+ if active.plan then for _,id in ipairs(ids.references(active.plan))do used[id]=true end end
+ return used,active
+end
+-- UI hints only: read atomically published files, never validate calendars or hash
+-- entire plans on the hot listing path. remove() rechecks authoritative state.
+local function usage_hint()
+ local S=require('schoolbell.schedule_store');local A=require('schoolbell.automatic_store')
+ local root=A.root or '/etc/schoolbell-editor';local fs=require('nixio.fs')
+ local function read(name,maximum)
+  local f=io.open(root..'/'..name,'rb')
+  if not f then assert(not fs.lstat or not fs.lstat(root..'/'..name),'unreadable');return nil end
+  local raw=f:read(maximum+1);f:close();assert(raw and #raw<=maximum,'size');return C.decode(raw)
+ end
+ local used={};local ids=require('schoolbell.media_ids')
+ local function add(plan)
+  assert(type(plan)=='table' and type(plan.schedules)=='table','plan')
+  for _,id in ipairs(ids.references(plan))do used[id]=true end
+ end
+ local draft=read('current.json',S.file_bytes)
+ if draft then add(draft.data)else assert(not fs.lstat or not fs.lstat(root..'/previous.json'),'draft_missing')end
+ local active=read(A.name or 'automatic.json',A.max_bytes or 16384)
+ if active then assert(type(active.data)=='table','active');if active.data.plan then add(active.data.plan)end end
+ return used
+end
+function M.list()return session(function(lib)
+ local result=lib.list();local has_user=false
+ for _,v in ipairs(result.slots)do if v.source=='user'then has_user=true end end
+ if has_user then
+  local known,used=pcall(usage_hint)
+  for _,v in ipairs(result.slots)do if v.source=='user'then v.in_use=not known or used[v.id]==true end end
+ end
+ return result
+end)end
+function M.remove(args)
+ if not L.editable(args.id)or not C.integer(args.generation,0,2147483646)or not C.hex(args.operation,32)then return {ok=false,code='invalid'}end
+ return session(function(lib,fs,retain,editor)
+  local used,active=references(editor)
+  if active.enabled then return {ok=false,code='automatic_enabled'}end
+  if used[args.id]then return {ok=false,code='in_use'}end
+  local result=lib.remove(args.id,args.generation,args.operation)
+  return {ok=result.status=='saved',code=result.status,generation=result.generation,operation_id=result.operation_id}
+ end,true)
+end
 function M.lookup(op)
  if not C.hex(op,32)then return {ok=false,code='invalid'}end
  return session(function(lib)local v=lib.lookup(op);v.ok=true;return v end)
@@ -63,13 +112,13 @@ function M.decode(path,retain)
 end
 function M.upload(args,source)
  if (args.title~=nil and (type(args.title)~='string' or #args.title<1 or #args.title>96 or args.title:find('[%c]'))) or not (args.id=='new' or L.editable(args.id)) or type(args.name)~='string' or #args.name<1 or #args.name>96 or args.name:find('[%c]')
-  or not C.integer(args.generation,0,2147483646) or not C.hex(args.operation,32) or not C.integer(args.size,1,524288)then return {ok=false,code='invalid'}end
- return session(function(lib,fs,retain)
+  or not C.integer(args.generation,0,2147483646) or not C.hex(args.operation,32) or not C.integer(args.size,1,L.max_upload_bytes)then return {ok=false,code='invalid'}end
+ return session(function(lib,fs,retain,editor)
   local A=require('schoolbell.automatic_store');if A.decode(A.raw()).enabled then return {ok=false,code='automatic_enabled'}end
   local listing=lib.list();if args.id=='new'then
    args.id='user_'..args.operation
    for _,v in ipairs(listing.slots)do if v.id==args.id then return {ok=false,code='conflict'}end end
-   local S=require('schoolbell.schedule_store');local d=S.request(A.root or '/etc/schoolbell-editor','load');if not d.ok then return {ok=false,code='busy'}end
+   local S=require('schoolbell.schedule_store');local d=S.load(editor);if not d.ok then return {ok=false,code='busy'}end
    for _,id in ipairs(require('schoolbell.media_ids').references(d.data))do if id==args.id then return {ok=false,code='conflict'}end end
   end
   if listing.generation~=args.generation then return {ok=false,code='conflict'}end
@@ -95,7 +144,7 @@ function M.upload(args,source)
   if not uncertain and fs.stat('upload.part')then fs.unlink('upload.part');fs.sync('')end
   if not ok then return {ok=false,code='rejected'}end
   return result
- end)
+ end,true)
 end
 function M.sample(id,write)
  if not L.valid(id)then return {ok=false,code='invalid'}end

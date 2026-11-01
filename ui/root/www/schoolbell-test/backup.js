@@ -34,5 +34,9 @@ get('download').addEventListener('click',()=>run(async()=>{
 async function restore(resume){if(needsCheck)return;const selected=file.files[0];if(!resume&&(!selected||selected.size<1||selected.size>2162816))throw new Error('Выберите копию .sbb размером до 2,07 МиБ.');if(!confirm(resume?'Продолжить восстановление? Автозвонки останутся выключенными.':'Заменить сохранённые настройки, планы и пользовательские мелодии? Несохранённые правки страницы будут потеряны. Автозвонки останутся выключенными.'))return;
 const id=resume?pending:op();out.textContent='Проверяем и восстанавливаем. Не закрывайте страницу…';await request((resume?'resume':'restore')+'&operation='+id,{method:'POST',headers:{'Content-Type':'application/octet-stream','Authorization':'Bearer '+token},body:resume?'':selected});pending=null;out.textContent='Восстановлено. Автозвонки выключены. Обновляем страницу…';location.reload();}
 get('restore').addEventListener('click',()=>run(()=>restore(false)));get('resume').addEventListener('click',()=>run(()=>restore(true)));
-if(url.includes('demo-api')){for(const id of ['download','restore','resume','refresh','file'])get(id).disabled=true;out.textContent='Резервная копия устройства доступна в установленном модуле. Демо хранит только данные этого браузера.';}else run(check);
+if(url.includes('demo-api')){for(const id of ['download','restore','resume','refresh','file'])get(id).disabled=true;out.textContent='Резервная копия устройства доступна в установленном модуле. Демо хранит только данные этого браузера.';}else {
+ buttons();out.textContent='Откройте раздел, чтобы проверить состояние резервного копирования.';
+ panel.addEventListener('toggle',()=>{if(panel.open)run(check);});
+ if(panel.open)run(check);
+}
 })();

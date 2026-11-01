@@ -46,9 +46,15 @@
     },
     {
       "path": "melodies.json",
-      "bytes": 127,
-      "sha256": "8fc2aba4dfa278ac451197c48c4f931acbf3381daed0a20a4f34d85d3c66070f",
-      "git_blob": "46ddffec563ce2da6be58f1518708b172491d905"
+      "bytes": 140,
+      "sha256": "95f99bb6c1eff3b0a026fc7348a301892ba98ba91064d03bc057767598dcadad",
+      "git_blob": "c0b1984b2d5442c94694b10faf7ff868fd87b8c9",
+      "upstream": {
+        "bytes": 127,
+        "sha256": "8fc2aba4dfa278ac451197c48c4f931acbf3381daed0a20a4f34d85d3c66070f",
+        "git_blob": "46ddffec563ce2da6be58f1518708b172491d905"
+      },
+      "changes": "2026-11-01: owner corrected the title of 2.mp3 to Гостья из будущего; audio bytes unchanged."
     }
   ],
   "license_note": "No explicit upstream license; imported at repository owner request. No new audio license is assigned."

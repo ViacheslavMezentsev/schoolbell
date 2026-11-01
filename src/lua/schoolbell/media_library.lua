@@ -1,7 +1,7 @@
 local C=require('schoolbell.media_codec')
 local Manager=require('schoolbell.media_manager')
-local M={root='/etc/modbus-schoolbell/data',slots={'test','0','1','2','3','4'},sizes={test=13104,['0']=41273,['1']=63321,['2']=69904,['3']=68023,['4']=82368}}
-M.titles={test='Тестовый звонок',['0']='[Короткая] Время',['1']='Шутка Баха',['2']='Гостья из XXI',['3']='Князь Игорь',['4']='Усатый нянь'}
+local M={max_upload_bytes=65536,root='/etc/modbus-schoolbell/data',slots={'test','0','1','2','3','4'},sizes={test=13104,['0']=41273,['1']=63321,['2']=69904,['3']=68023,['4']=82368}}
+M.titles={test='Тестовый звонок',['0']='[Короткая] Время',['1']='Шутка Баха',['2']='Гостья из будущего',['3']='Князь Игорь',['4']='Усатый нянь'}
 M.editable=require('schoolbell.media_ids').user
 function M.valid(id)return type(id)=='string' and (M.sizes[id]~=nil or M.editable(id))end
 function M.open(fs,root,owned)
@@ -36,7 +36,7 @@ function M.open(fs,root,owned)
   local state,cat=read();if expected~=(state.generation or 0)then return {status='conflict'}end
   -- Any unreferenced leftovers are removed only with exclusive ownership.
   if state.state=='ready' then assert(manager.cleanup().status=='cleaned','cleanup')end
-  local st=assert(fs.stat('upload.part'));assert(st.size>0 and st.size<=524288,'size')
+  local st=assert(fs.stat('upload.part'));assert(st.size>0 and st.size<=M.max_upload_bytes,'size')
   local hash=fs.hash('upload.part');local revision={revision=hash,source='user',size_bytes=st.size,audio=audio}
   if title~=nil then assert(type(title)=='string' and #title>0 and #title<=96 and not title:find('[%c]'),'title')end
   local replacement={id=id,name=name,title=title or name,revisions={revision}};local found=false
@@ -48,6 +48,20 @@ function M.open(fs,root,owned)
   local free,capacity=fs.space();assert(free>=st.size+65536+math.max(524288,math.ceil(capacity/10)),'space reserve')
   local result=manager.commit(op,expected,docs,{[hash]=source},state.state=='empty')
   if result.status=='saved' then result.revision=hash;result.cleanup=manager.cleanup().status end
+  return result
+ end
+ function api.remove(id,expected,op)
+  assert(M.editable(id),'protected')
+  local state,cat=read()
+  if expected~=(state.generation or 0)then return {status='conflict'}end
+  local remaining=C.decode('[]');local found=false
+  for _,m in ipairs(cat.melodies)do if m.id==id then found=true else remaining[#remaining+1]=m end end
+  if not found then return {status='missing'}end
+  assert(manager.cleanup().status=='cleaned','cleanup')
+  local docs={['catalog.json']=C.encode({melodies=remaining}),['settings.json']='{"scope":"engineering-media-overrides"}',
+   ['schedules.json']='{"references":[]}',['plans.json']='{"references":[]}'}
+  local result=manager.commit(op,expected,docs,{})
+  if result.status=='saved'then result.cleanup=manager.cleanup().status end
   return result
  end
  function api.publish_catalog(cat,expected,op,imports)

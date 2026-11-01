@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Школьник · расписания</title>
-<link rel="stylesheet" href="/schoolbell-test/style.css?v=5132">
+<link rel="stylesheet" href="/schoolbell-test/style.css?v=5143">
 <script src="/schoolbell-test/theme.js?v=5132"></script></head>
 <body><main><header><div><p class="eyebrow">Настраиваемый музыкальный звонок</p>
 <h1>Школьник <sup class="header-version"><%=pcdata(module_version)%></sup></h1><div class="cpu-monitor"><div class="cpu-labels"><span id="cpu-value">CPU · нет измерения</span><span id="device-clock" title="Местное время устройства">—:—</span></div><div id="cpu-line" role="progressbar" aria-label="Загрузка CPU всего устройства между опросами" aria-valuemin="0" aria-valuemax="100"><i></i></div><div class="flash-labels"><span id="flash-value">Flash · нет данных</span><div id="device-uptime" title="Время работы устройства с последней загрузки">В работе · нет данных</div></div><div id="flash-line" role="progressbar" aria-label="Занято постоянного хранилища" aria-valuemin="0" aria-valuemax="100"><i></i></div><div class="audio-labels"><span id="audio-route">Аудио: нет данных</span><span id="audio-volume" title="Сохранённая громкость">—%</span></div></div></div><div class="header-controls"><div class="quick-controls"><button id="quick-automatic" type="button" aria-describedby="quick-automatic-status" disabled>▶ Автозвонки</button><button id="quick-mute" type="button" aria-pressed="false" disabled>Без звука · проверка…</button><button id="quick-bell" type="button" disabled>🔔 Подать звонок</button><button id="theme-toggle" type="button">Тема</button><div id="session-panel" class="session-controls" data-session="<%=pcdata(session_url)%>" data-user="<%=pcdata(auth_user)%>"><span id="session-warning" hidden></span><span id="session-countdown" hidden></span><a class="session-button" id="session-login" href="<%=pcdata(login_url)%>" hidden>Войти</a><button id="session-check" type="button" hidden>Проверить сеанс</button><button id="session-logout" type="button">Выйти</button></div></div><span id="quick-automatic-status" class="automatic-badge" data-tone="warning" role="status" aria-live="polite">Проверка…</span></div></header><p id="session-status" class="session-message" role="status" hidden></p><div class="header-status-row"><p id="quick-status" role="status" aria-live="polite">Получаем состояние звука…</p><button id="problem-open" type="button" aria-controls="problem-panel" aria-expanded="false">Решить проблему</button></div>
@@ -83,12 +83,15 @@
 <p id="schedule-result" role="status" aria-live="polite">Читаем сохранённые данные с устройства…</p>
 <fieldset id="schedule-fields" disabled>
 <section id="panel-schedules" role="tabpanel" aria-labelledby="tab-schedules" data-panel="schedules" hidden>
-<div class="editor-toolbar"><label>Расписание<select id="schedule-select"></select></label>
-<button type="button" id="schedule-add">+ Создать</button><button type="button" id="schedule-copy">Копировать</button><button type="button" id="schedule-delete">Удалить</button></div>
-<div id="selected-schedule"><label>Название<input id="schedule-name" type="text" maxlength="96" autocomplete="off"></label>
-<p>Цвет расписания</p><div id="schedule-colors" class="schedule-colors" role="group" aria-label="Цвет расписания"></div>
-<div class="table-scroll"><table class="schedule-table"><thead><tr><th>Время</th><th>Мелодия</th><th>Включён</th><th>Предзвонок</th><th>Прослушать</th><th>Удалить</th></tr></thead><tbody id="schedule-rows"></tbody></table></div><p id="row-preview-status" role="status" aria-live="polite"></p><audio id="row-preview-audio" controls hidden></audio>
-<p id="empty-rows">Нет строк — звонков нет.</p><div class="editor-toolbar"><button id="row-add" type="button">+ Добавить звонок</button><button id="rows-clear" type="button">Очистить строки</button><span id="row-count"></span></div></div>
+<div class="schedule-setup">
+<div id="schedule-palette"><p>Цвет расписания</p><div id="schedule-colors" class="schedule-colors" role="group" aria-label="Цвет расписания"></div></div>
+<div class="schedule-identity"><div class="editor-toolbar"><label>Расписание<select id="schedule-select"></select></label>
+<div class="schedule-tools"><button type="button" id="schedule-add" class="schedule-icon" title="Создать расписание" aria-label="Создать расписание">+</button><button type="button" id="schedule-copy" class="schedule-icon" title="Копировать расписание" aria-label="Копировать расписание">⧉</button><button type="button" id="schedule-delete" class="schedule-icon icon-delete" title="Удалить расписание" aria-label="Удалить расписание">×</button></div></div>
+<label id="schedule-name-field">Название<input id="schedule-name" type="text" maxlength="96" autocomplete="off"></label></div>
+</div>
+<div id="selected-schedule">
+<div class="table-scroll"><table class="schedule-table"><thead><tr><th>Время</th><th>Мелодия</th><th>Включён</th><th>Предзвонок</th><th class="actions-column">Действия</th></tr></thead><tbody id="schedule-rows"></tbody></table></div><p id="row-preview-status" role="status" aria-live="polite"></p><audio id="row-preview-audio" controls hidden></audio>
+<p id="empty-rows">Нет строк — звонков нет.</p><div class="editor-toolbar"><button id="row-add" type="button">+ Добавить звонок</button><button id="rows-clear" type="button">Очистить строки</button></div></div>
 </section>
 <section id="panel-calendar" role="tabpanel" aria-labelledby="tab-calendar" data-panel="calendar" class="annual-editor" hidden>
 <h2>Календарные планы</h2>
@@ -145,17 +148,18 @@
 </section>
 <section id="panel-media" role="tabpanel" aria-labelledby="tab-media" data-panel="media" hidden>
 <section class="details"><h2>Мелодии</h2>
-<div class="storage-status"><strong>Постоянное хранилище устройства</strong><p id="storage-text" role="status">Обновите список, чтобы узнать свободное место.</p><progress id="storage-bar" max="100" value="0" aria-label="Занятое место в постоянном хранилище" hidden></progress><p id="storage-reserve"></p></div>
-<p>Штатные композиции зарезервированы и защищены от замены и удаления. Пользовательские мелодии добавляются в список по мере загрузки. При замене выбранной мелодии ссылки расписаний сохраняются.</p>
-<p>Используйте только MP3. Рекомендуем размер не более 64 КБ (64 000 байт): короткие файлы экономят память устройства. Это рекомендация, а не запрет загрузки большего MP3. Перед загрузкой отключите автозвонки; файл и свободное место проверяются без звука. Текущий файловый допуск: до 512 КиБ и 60 секунд.</p>
-<div class="table-scroll"><table class="schedule-table"><thead><tr><th>№</th><th>Название</th><th>Файл</th><th>Размер</th><th>Источник</th><th>Прослушивание</th></tr></thead><tbody id="media-rows"></tbody></table></div>
+<details class="storage-status traffic-panel"><summary>Постоянное хранилище устройства</summary><p id="storage-text" role="status">Обновите список, чтобы узнать свободное место.</p><progress id="storage-bar" max="100" value="0" aria-label="Занятое место в постоянном хранилище" hidden></progress><p id="storage-reserve"></p><p id="storage-policy"></p></details>
+<p>Штатные мелодии нельзя заменить или удалить. Для своих мелодий используйте: формат MP3, размер до 64 КиБ (65 536 байт) и длительность до 60 секунд.</p>
+<p>Как заменить мелодию:</p><ol><li>Отключите автозвонки.</li><li>В списке «Добавить или заменить» выберите нужную мелодию.</li><li>Выберите новый MP3 и укажите название.</li><li>Нажмите «Загрузить и заменить». Мелодия изменится во всех расписаниях, где она используется.</li></ol>
+<p>Удалить можно только неиспользуемую пользовательскую мелодию. Если она выбрана в расписании, ручном звонке или предзвонке, сначала измените выбор и сохраните настройки. Применённый план также не должен её использовать.</p>
+<div class="table-scroll"><table class="schedule-table"><thead><tr><th>№</th><th>Название</th><th>Файл</th><th>Размер</th><th>Источник</th><th class="actions-column">Действия</th></tr></thead><tbody id="media-rows"></tbody></table></div>
 <label>Добавить или заменить<select id="media-slot"><option value="new">＋ Добавить мелодию</option></select></label>
 <label>Название мелодии<input id="media-title" type="text" maxlength="96" placeholder="Например: Начало урока"></label>
 <label>Новый MP3<input id="media-file" type="file" accept=".mp3,audio/mpeg"></label>
 <div class="editor-toolbar"><button id="media-upload" type="button" disabled>Загрузить мелодию</button><button id="media-refresh" type="button">Обновить список</button><button id="media-listen" type="button" disabled>Послушать выбранную здесь</button></div>
 <audio id="media-audio" controls preload="none"></audio><p id="media-status" role="status">Загрузите список мелодий.</p>
 </section>
-<h2 class="sound-heading">Ручная проверка звука</h2><p>Эти две кнопки воспроизводят штатную тестовую мелодию сразу, независимо от черновика.</p>
+<details id="manual-sound-check" class="details"><summary>Ручная проверка звука</summary><p>Эти две кнопки воспроизводят штатную тестовую мелодию сразу, независимо от черновика.</p>
 <section class="routes"><article><span class="badge">1 · РЯДОМ С ВАМИ</span><h2>В браузере</h2>
 <p>Звук из динамика телефона, планшета или компьютера, на котором открыта страница.</p>
 <div class="diagram"><div><span class="output-icon icon-browser" aria-hidden="true"></span><br><strong>Ваш браузер</strong></div><b>→</b><div>🔊<br><strong>Динамики компьютера / телефона</strong></div></div>
@@ -172,6 +176,7 @@
 <section class="details"><h2>Проверка звука</h2><p>Тестовая мелодия прозвучит один раз, около 3 секунд.</p>
 <p id="media-output-summary">Аудио: нет данных —%</p>
 <p>В браузере звук прозвучит на вашем компьютере или телефоне. Через Школьника — в подключённых колонках, с сохранённой громкостью.</p></section>
+</details>
 </section>
 <section id="panel-sound" role="tabpanel" aria-labelledby="tab-sound" data-panel="sound" hidden>
 <details id="time-settings" class="details time-settings"><summary>Дата и время</summary><h3>Часовой пояс школы</h3>
@@ -224,7 +229,14 @@
 <button id="backup-restore" type="button" disabled>Восстановить из файла</button>
 <button id="backup-resume" type="button" hidden>Продолжить прерванное восстановление</button>
 <button id="backup-refresh" type="button">Проверить состояние</button>
-<p id="backup-status" role="status">Проверяем состояние восстановления…</p></details>
+<p id="backup-status" role="status">Откройте раздел, чтобы проверить состояние резервного копирования.</p></details>
+
+<details id="system-settings" class="details" data-system="<%=pcdata(system_url)%>"><summary>Система</summary>
+<div class="system-action"><button id="system-reboot" type="button" disabled>Перезагрузить устройство</button><p>После подтверждения устройство перезагрузится. Интерфейс временно станет недоступен, автозвонки останутся выключенными. Настройки, мелодии и журнал сохранятся.</p></div>
+<div class="system-action"><button id="system-reset" type="button" disabled>Сбросить настройки Школьника</button><p>После подтверждения расписания и календарные планы будут удалены. Настройки звонков вернутся к начальным: громкость 100%, ручной звонок и предзвонок — тестовая мелодия, предзвонок за 2 минуты. Контроль времени включится, автозвонки будут выключены. Загруженные мелодии и журнал сохранятся. Сеть, пароль OpenWrt, часы и часовой пояс не изменятся.</p></div>
+<div id="system-review" hidden><p id="system-review-text"></p><button id="system-confirm" type="button">Подтвердить</button><button id="system-cancel" type="button">Отмена</button></div>
+<p id="system-result" role="status"></p><button id="system-reload" type="button" hidden>Обновить страницу</button>
+</details>
 
 </section>
 <section id="panel-journal" role="tabpanel" aria-labelledby="tab-journal" data-panel="journal" class="details" hidden>
@@ -263,6 +275,6 @@
 <p>Если формы ещё недоступны, они появятся после слияния соответствующей ветки в main.</p>
 </section>
 <footer><a href="<%=url('admin')%>">← Управление устройством LuCI</a> · Расписания сохраняются без активации</footer>
-</main><script src="/schoolbell-test/traffic.js?v=5132"></script><script src="/schoolbell-test/session.js?v=5132"></script><script src="/schoolbell-test/backup.js?v=5132"></script><script src="/schoolbell-test/media.js?v=5132"></script><script src="/schoolbell-test/clock-trust.js?v=5132"></script><script src="/schoolbell-test/diagnostics.js?v=5132"></script><script src="/schoolbell-test/cpu.js?v=5132"></script><script src="/schoolbell-test/automatic.js?v=5132"></script><script src="/schoolbell-test/controls.js?v=5132"></script><script src="/schoolbell-test/app.js?v=5132"></script><script src="/schoolbell-test/ranges.js?v=5132"></script><script src="/schoolbell-test/schedules.js?v=5132"></script><script src="/schoolbell-test/dashboard.js?v=5132"></script><script src="/schoolbell-test/plan-import.js?v=5132"></script><script src="/schoolbell-test/plan-export.js?v=5132"></script><script src="/schoolbell-test/row-preview.js?v=5132"></script>
-<script src="/schoolbell-test/time-settings.js?v=5132"></script>
+</main><script src="/schoolbell-test/system.js?v=5138"></script><script src="/schoolbell-test/traffic.js?v=5132"></script><script src="/schoolbell-test/session.js?v=5132"></script><script src="/schoolbell-test/backup.js?v=5139"></script><script src="/schoolbell-test/ranges.js?v=5132"></script><script src="/schoolbell-test/schedules.js?v=5144"></script><script src="/schoolbell-test/media.js?v=5141"></script><script src="/schoolbell-test/clock-trust.js?v=5132"></script><script src="/schoolbell-test/diagnostics.js?v=5132"></script><script src="/schoolbell-test/cpu.js?v=5132"></script><script src="/schoolbell-test/automatic.js?v=5141"></script><script src="/schoolbell-test/controls.js?v=5141"></script><script src="/schoolbell-test/app.js?v=5133-storage"></script><script src="/schoolbell-test/dashboard.js?v=5141"></script><script src="/schoolbell-test/plan-import.js?v=5132"></script><script src="/schoolbell-test/plan-export.js?v=5132"></script><script src="/schoolbell-test/row-preview.js?v=5132"></script>
+<script src="/schoolbell-test/time-settings.js?v=5140"></script>
 </body></html>

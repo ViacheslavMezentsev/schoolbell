@@ -12,7 +12,7 @@
   var draft=null, revision=null, selected=null, dirty=false, busy=false, reconcile=false, activationLock=false;
   var compared=null, handoffReady=false, sessionEpoch=0;
   var handoffKey="schoolbell-editor-handoff-v1";
-  var mediaNames={test:'Тестовый звонок','0':'[Короткая] Время','1':'Шутка Баха','2':'Гостья из XXI','3':'Князь Игорь','4':'Усатый нянь'};
+  var mediaNames={test:'Тестовый звонок','0':'[Короткая] Время','1':'Шутка Баха','2':'Гостья из будущего','3':'Князь Игорь','4':'Усатый нянь'};
   function mediaLabel(id){return (mediaNames[id] || ('Пользовательская '+id.slice(4)))+' · '+id;}
   function mediaOptions(box,value){box.replaceChildren();var ids=mediaIds.slice();if(value && ids.indexOf(value)<0)ids.push(value);ids.forEach(function(id){box.appendChild(textOption(id,mediaLabel(id)));});box.value=value;}
   window.addEventListener('schoolbell-media',function(e){mediaIds=e.detail.filter(function(v){return v.source!=='empty';}).map(function(v){return v.id;});e.detail.forEach(function(v){mediaNames[v.id]=v.title || v.name;});document.querySelectorAll('#manual-media,#pre-media,#schedule-rows select').forEach(function(box){mediaOptions(box,box.value);});});
@@ -195,6 +195,8 @@
     select.value=selected || '';
     var s=current();
     document.getElementById('selected-schedule').hidden=!s;
+    document.getElementById('schedule-name-field').hidden=!s;
+    document.getElementById('schedule-palette').hidden=!s;
     document.getElementById('schedule-add').disabled=draft.schedules.length>=16;
     document.getElementById('schedule-copy').disabled=!s || draft.schedules.length>=16;
     document.getElementById('schedule-delete').disabled=!s;
@@ -223,18 +225,17 @@
           box.setAttribute('aria-label',(key==='enabled'?'Включить звонок ':'Предзвонок ')+(index+1));
           box.addEventListener('change',function () { row[key]=box.checked; changed(); }); cell(box);
         });
-        var listening=document.createElement('div');listening.className='row-listen';
+        var listening=document.createElement('div');listening.className='row-actions';
         [false,true].forEach(function(hardware){
           var b=document.createElement('button');b.type='button';b.textContent=hardware?'🔔':'🔊';
           b.title=hardware?'Проиграть через Школьника':'Проиграть в браузере';b.setAttribute('aria-label',b.title+' — звонок '+(index+1));
           if(hardware && root.dataset.load.indexOf('demo-api')>=0){b.disabled=true;b.title='Через Школьника недоступно: демо без оборудования';}
           b.addEventListener('click',function(){if(window.schoolbellRowPreview)window.schoolbellRowPreview(row.media,hardware);});listening.appendChild(b);
-        });cell(listening);
+        });
         var del=document.createElement('button'); del.type='button'; del.textContent='×'; del.className='icon-delete'; del.title='Удалить звонок '+(index+1); del.setAttribute('aria-label','Удалить звонок '+(index+1));
-        del.addEventListener('click',function () { s.rows.splice(index,1); changed(); render(); }); cell(del); rows.appendChild(tr);
+        del.addEventListener('click',function () { s.rows.splice(index,1); changed(); render(); }); listening.appendChild(del);cell(listening);rows.appendChild(tr);
       });
       document.getElementById('empty-rows').hidden=s.rows.length!==0;
-      document.getElementById('row-count').textContent='Звонков в расписании: '+s.rows.length;
       document.getElementById('row-add').disabled=false;
     }
     renderColors();
@@ -473,7 +474,7 @@
   window.addEventListener('pointerup',function(){painting=false;});
   window.addEventListener('pointercancel',function(){painting=false;});
   window.addEventListener('blur',function(){painting=false;});
-  window.schoolbellEditor={exportSnapshot:function(){return {draft:draft?JSON.parse(JSON.stringify(draft)):null,dirty:dirty||formPending,busy:busy||activationLock,reconcile:reconcile,revision:revision};},prepareNavigation:prepareNavigation,snapshot:function(){return {loaded:!!draft,dirty:dirty || formPending,busy:busy || activationLock,reconcile:reconcile,revision:revision};},lock:function(options){if(busy || activationLock || !draft || dirty || formPending || reconcile || (revision==='empty' && !(options && options.allowEmpty)))return false;activationLock=true;state();return true;},reloadImported:async function(){if(dirty||formPending)return false;activationLock=false;await load();return true;},unlock:function(){activationLock=false;state();}};
+  window.schoolbellEditor={systemLock:function(){if(busy||activationLock)return false;activationLock=true;state();return true;},systemResetComplete:function(){dirty=false;formPending=false;reconcile=false;handoffReady=false;try{sessionStorage.removeItem(handoffKey);}catch(_){}activationLock=true;state();},exportSnapshot:function(){return {draft:draft?JSON.parse(JSON.stringify(draft)):null,dirty:dirty||formPending,busy:busy||activationLock,reconcile:reconcile,revision:revision};},prepareNavigation:prepareNavigation,snapshot:function(){return {loaded:!!draft,dirty:dirty || formPending,busy:busy || activationLock,reconcile:reconcile,revision:revision};},lock:function(options){if(busy || activationLock || !draft || dirty || formPending || reconcile || (revision==='empty' && !(options && options.allowEmpty)))return false;activationLock=true;state();return true;},reloadImported:async function(){if(dirty||formPending)return false;activationLock=false;await load();return true;},unlock:function(){activationLock=false;state();}};
   document.getElementById('workflow-save').addEventListener('click',function(){save.click();});
   reload.addEventListener('click',load);
   window.addEventListener('beforeunload',function (e) { if((dirty || formPending) && !handoffReady) { e.preventDefault(); e.returnValue=''; } });
@@ -482,5 +483,5 @@
     reconcile=true;compared=null;document.getElementById('draft-comparison').hidden=true;
     result.textContent='Сеанс недоступен. Правки остаются в этой вкладке; после входа нажмите «Сверить с устройством».';state();
   });
-  load();
+  window.schoolbellInitialDraft=load();
 }());

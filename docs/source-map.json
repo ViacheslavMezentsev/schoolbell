@@ -62,8 +62,8 @@
       "source": "packages/schoolbell/lua/schoolbell/clock_mailbox.lua",
       "destination": "src/lua/schoolbell/clock_mailbox.lua",
       "source_sha256": "e014931d483c9beb993d4f62780d2a3968bf733e46ef0154f2bf169efd46703a",
-      "changes": "none",
-      "destination_sha256": "e014931d483c9beb993d4f62780d2a3968bf733e46ef0154f2bf169efd46703a"
+      "changes": "none; confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80)",
+      "destination_sha256": "ec89c8d75baa5a3c81224cbd85b88563fdcd88c3c917f41c21cf9efa1ace1c77"
     },
     {
       "source": "packages/schoolbell/lua/schoolbell/clock_policy.lua",
@@ -118,8 +118,8 @@
       "source": "packages/schoolbell/lua/schoolbell/journal.lua",
       "destination": "src/lua/schoolbell/journal.lua",
       "source_sha256": "ee2c01422fe2c3128359ff158bbef964196a52f8b18c0243d64f2e67ff41260c",
-      "changes": "none; owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
-      "destination_sha256": "b52ffd461cd76c8093ca3ab7ec3a7bf04a70c753d84b82e20c8cd7c184568784"
+      "changes": "none; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80)",
+      "destination_sha256": "c535b075b761a51e1e650f2f0f53a1be8e3b4f7fcc945317685c12c8dfdce72b"
     },
     {
       "source": "packages/schoolbell/lua/schoolbell/media_codec.lua",
@@ -146,8 +146,8 @@
       "source": "packages/schoolbell/lua/schoolbell/media_library.lua",
       "destination": "src/lua/schoolbell/media_library.lua",
       "source_sha256": "d9fda8f3c2610f178532a3d588a16230986a8fe1b4f8bf8262147e17ae78ad60",
-      "changes": "none",
-      "destination_sha256": "d9fda8f3c2610f178532a3d588a16230986a8fe1b4f8bf8262147e17ae78ad60"
+      "changes": "none; owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79)",
+      "destination_sha256": "d7024604e9c66b3448beb023cd31bd4d608aa316a535ef9ba2b85b13a9e495c7"
     },
     {
       "source": "packages/schoolbell/lua/schoolbell/media_manager.lua",
@@ -279,29 +279,29 @@
       "source": "packages/schoolbell/media/README.en.md",
       "destination": "assets/melodies/README.en.md",
       "source_sha256": "4b50e14168c9255a1253d96e562eeabf588655d2f1cf39377bf66dcc05962f46",
-      "changes": "2026-10-31 licensing: own-code MIT scope and exclusions; owner clarified audio provenance where applicable; original source hash retained",
-      "destination_sha256": "5ed07dfe5182c6559e5658115472927a90b91b756a2fbe248001a7cced3d1b5a"
+      "changes": "2026-10-31 licensing: own-code MIT scope and exclusions; owner clarified audio provenance where applicable; original source hash retained; owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); preserve original title-list provenance for corrected name; corrected title inventory heading",
+      "destination_sha256": "810bc442379c2f508902e418e067f69b02ba3ffae91560aac1a099ef720f6a48"
     },
     {
       "source": "packages/schoolbell/media/README.md",
       "destination": "assets/melodies/README.md",
       "source_sha256": "83c679c0bcbc43a61ed9c67869f20b283b381f4dfb963b4fb9fcb105fc41fc7c",
-      "changes": "2026-10-31 licensing: own-code MIT scope and exclusions; owner clarified audio provenance where applicable; original source hash retained",
-      "destination_sha256": "80d2d55adb32ad9b1eb313cf3e92a47f302eaaafb71d7b014e96843488aaff37"
+      "changes": "2026-10-31 licensing: own-code MIT scope and exclusions; owner clarified audio provenance where applicable; original source hash retained; owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); preserve original title-list provenance for corrected name",
+      "destination_sha256": "a0d0727d36fe85ab52b90520f25d11ad308763f2fd33f0c6db5403a6da4b1830"
     },
     {
       "source": "packages/schoolbell/media/manifest.json",
       "destination": "assets/melodies/manifest.json",
       "source_sha256": "7a92b23aa967231ba4fc3dd6d679cee41c06313a3682cc8d685a912e9a91c910",
-      "changes": "none",
-      "destination_sha256": "7a92b23aa967231ba4fc3dd6d679cee41c06313a3682cc8d685a912e9a91c910"
+      "changes": "none; preserve original title-list provenance for corrected name",
+      "destination_sha256": "74bc1042df5ea9684e2b112c30f6a99b655971611fe0b1f9d3fe3429b729c308"
     },
     {
       "source": "packages/schoolbell/media/melodies.json",
       "destination": "assets/melodies/melodies.json",
       "source_sha256": "8fc2aba4dfa278ac451197c48c4f931acbf3381daed0a20a4f34d85d3c66070f",
-      "changes": "none",
-      "destination_sha256": "8fc2aba4dfa278ac451197c48c4f931acbf3381daed0a20a4f34d85d3c66070f"
+      "changes": "none; owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79)",
+      "destination_sha256": "95f99bb6c1eff3b0a026fc7348a301892ba98ba91064d03bc057767598dcadad"
     },
     {
       "source": "packages/schoolbell/media/test.mp3",
@@ -419,36 +419,36 @@
       "source": "packages/schoolbell/portable-plan/preview.js",
       "destination": "src/portable-plan/preview.js",
       "source_sha256": "b3fed908a17be40ad40f79c3e0932945e4cdc0007ef2e82d304e93dd8ea86326",
-      "changes": "adapted; review destination against pinned source",
-      "destination_sha256": "7723241bf169294742d06c121b1fc65276f5978c43407b408452d56d54f434be"
+      "changes": "adapted; review destination against pinned source; owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79)",
+      "destination_sha256": "03b47331bce6d29c7ab63feed5e99a23421972147b678c5488d0d32b5bb6e49b"
     },
     {
       "source": "packages/schoolbell/portable-plan/preview.lua",
       "destination": "src/portable-plan/preview.lua",
       "source_sha256": "408236694613b5c30db54691979ab3e288ff4a285bddf36cbcec726316489419",
-      "changes": "adapted; review destination against pinned source",
-      "destination_sha256": "1fa2eb9513f0002c88d35ba0a73e01a25734c46422915525a3a86774c65d763f"
+      "changes": "adapted; review destination against pinned source; owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79)",
+      "destination_sha256": "dde036c903581ccf6e6d66e454873ae306beda3f853bb977979980e49f4728e9"
     },
     {
       "source": "packages/schoolbell/portable-plan/test-export.js",
       "destination": "src/portable-plan/test-export.js",
       "source_sha256": "bac721a3db3ac62daf353d05c48baed1c9edef71831b4cf7d6477cef74554c3e",
-      "changes": "none",
-      "destination_sha256": "bac721a3db3ac62daf353d05c48baed1c9edef71831b4cf7d6477cef74554c3e"
+      "changes": "none; owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79)",
+      "destination_sha256": "3845f29f39b576b50559cf126ed4c713bfb9525d7b197045836b241cfd3bbf65"
     },
     {
       "source": "packages/schoolbell/portable-plan/test-export.lua",
       "destination": "src/portable-plan/test-export.lua",
       "source_sha256": "2649b8bb323ae5c29420c1897dc69b7cc9b408f663eb42b999170392ad041401",
-      "changes": "adapted; review destination against pinned source",
-      "destination_sha256": "92ff1c37f5c318b43181ff8d9db75c6d179f8ff2ff1a069b1f1042e3f6ea7b79"
+      "changes": "adapted; review destination against pinned source; owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79)",
+      "destination_sha256": "a80b31c729aafb1bb772484af5835ef2e013eb07070b10e791b28e5781bc7f21"
     },
     {
       "source": "packages/schoolbell/portable-plan/test-export.py",
       "destination": "src/portable-plan/test-export.py",
       "source_sha256": "0c8c7e6f401f48764481c2fc3345eab45863afff22bfc25f548a34c8542f7b6a",
-      "changes": "adapted; review destination against pinned source",
-      "destination_sha256": "eda5e373912ab40685f533fa1c2f84e8a0f83bcb37ede1b352fab1d235426367"
+      "changes": "adapted; review destination against pinned source; owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79)",
+      "destination_sha256": "9785b553e6eb7c477361bd4861d2939ec4165da4e4cfe4c52658b0ded433d2f5"
     },
     {
       "source": "packages/schoolbell/portable-plan/test-preview.js",
@@ -503,15 +503,15 @@
       "source": "packages/schoolbell/router-page/root/usr/lib/lua/luci/controller/schoolbell_test.lua",
       "destination": "packaging/openwrt/root/usr/lib/lua/luci/controller/schoolbell_test.lua",
       "source_sha256": "1963bc18fc4f40ef70dfd7cf809384af0a4da99c565e9acc3ea45c10f6d27f8c",
-      "changes": "none; default audio status and blue Flash (5.1.29)",
-      "destination_sha256": "41d5beb2680097fcb738c5e53b8279d440eba58a31ea109cfe7d1045062971c7"
+      "changes": "none; default audio status and blue Flash (5.1.29); owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80)",
+      "destination_sha256": "3d6594b82e45fc51fc0821f51eb0f1d23a56e5bd1624a00dae3c157172d547d5"
     },
     {
       "source": "packages/schoolbell/router-page/root/usr/lib/lua/luci/view/schoolbell_test.htm",
       "destination": "ui/root/usr/lib/lua/luci/view/schoolbell_test.htm",
       "source_sha256": "526214f183ea8526785239074189d00cc03e7251323ee4146f75f0a53a015a54",
-      "changes": "none; default audio status and blue Flash (5.1.29); wider header and CSS cache key (5.1.30); owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner clarification of playback action icons (5.1.32, spec 1.78)",
-      "destination_sha256": "deab90d7a5fe08b578aebc2d9040eaee5843d7de2a9b0479d8fd99ae8fa877dc"
+      "changes": "none; default audio status and blue Flash (5.1.29); wider header and CSS cache key (5.1.30); owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner clarification of playback action icons (5.1.32, spec 1.78); manual sound check grouped in a collapsed disclosure; collapsed manual sound check, version 5.1.33; concise playback completion and collapsed storage information; separate actual storage use from upload conditions; owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); 5.1.39 lazy backup status check and release notes; 5.1.40 initial page-load performance; 5.1.41 startup priority and shared Actions column; compact 4x4 schedule palette; 5.1.42 reduced action spacing; 5.1.43 playback icon size; 5.1.44 approved contrast palette",
+      "destination_sha256": "1a78decbe63937782bccd1ae473d3b2b3a002e5b32ab1d57f89a847c10af114f"
     },
     {
       "source": "packages/schoolbell/router-page/root/usr/lib/lua/schoolbell/backup_web.lua",
@@ -524,8 +524,8 @@
       "source": "packages/schoolbell/router-page/root/usr/lib/lua/schoolbell/media_web.lua",
       "destination": "packaging/openwrt/root/usr/lib/lua/schoolbell/media_web.lua",
       "source_sha256": "3a7631ec0cc1265720ba70bb0e8cf462e8d31f76e7401de4b158bc66690016f4",
-      "changes": "none",
-      "destination_sha256": "3a7631ec0cc1265720ba70bb0e8cf462e8d31f76e7401de4b158bc66690016f4"
+      "changes": "none; owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); fast advisory media listing, authoritative checks retained for deletion",
+      "destination_sha256": "055ad23b2a6f6fcbf55c1e50347e57195040a68c2435fc97fda6f76e7749dce2"
     },
     {
       "source": "packages/schoolbell/router-page/root/usr/lib/lua/schoolbell/plan_export_web.lua",
@@ -552,8 +552,8 @@
       "source": "packages/schoolbell/router-page/root/usr/sbin/schoolbell-auto",
       "destination": "packaging/openwrt/root/usr/sbin/schoolbell-auto",
       "source_sha256": "9ef66a98ac6fb710f9b1b13d5997b3cdf6b1271d0f2c99d172ed3bc09b55d907",
-      "changes": "none; owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
-      "destination_sha256": "6254ba7d95cf7673fcc61d099770179c0f17b03f76762caf654bc7c74709db20"
+      "changes": "none; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80)",
+      "destination_sha256": "dcea9e92250ae0808f97e97b77bbec3d6c3c3e195ada76b6dd2f3fa6a7289d48"
     },
     {
       "source": "packages/schoolbell/router-page/root/usr/sbin/schoolbell-package",
@@ -566,22 +566,22 @@
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/app.js",
       "destination": "ui/root/www/schoolbell-test/app.js",
       "source_sha256": "265696eb80858b64764268b7870a33f6ff7ab55c0ef286de8faa7519c4883118",
-      "changes": "none",
-      "destination_sha256": "265696eb80858b64764268b7870a33f6ff7ab55c0ef286de8faa7519c4883118"
+      "changes": "none; concise playback completion and collapsed storage information",
+      "destination_sha256": "831c800cd0da5a15e73ba612eb92245949660925826f3bdfde3b2cd6635c0a58"
     },
     {
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/automatic.js",
       "destination": "ui/root/www/schoolbell-test/automatic.js",
       "source_sha256": "1a68ffe9c98311464217a369cccc6da76426a96d6083288ab47e2f441d1e828c",
-      "changes": "none; owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
-      "destination_sha256": "f70bab995bae7a5bef894b2f67f8048f04328b5faddaa32c97e200f8ae7071a4"
+      "changes": "none; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); 5.1.41 startup priority and shared Actions column",
+      "destination_sha256": "5f734a4f81c12ebfc6a16f0fe6151c4574a8508ded6138c7ceef7bb0dc90ce78"
     },
     {
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/backup.js",
       "destination": "ui/root/www/schoolbell-test/backup.js",
       "source_sha256": "1e12119b24f79ea622d81a05f2eae5298555de8656da96a0061b4fd7bfb8355c",
-      "changes": "none",
-      "destination_sha256": "1e12119b24f79ea622d81a05f2eae5298555de8656da96a0061b4fd7bfb8355c"
+      "changes": "none; 5.1.39 lazy backup status check and release notes",
+      "destination_sha256": "a89886217a1c8e08121a12ce22031de4f48dd92b45402824223d78d91b02dde4"
     },
     {
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/clock-trust.js",
@@ -594,8 +594,8 @@
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/controls.js",
       "destination": "ui/root/www/schoolbell-test/controls.js",
       "source_sha256": "d54bd395645778dc54f3047973372f1da8237cccda8e20a282cfcf307d1e8ff1",
-      "changes": "none; default audio status and blue Flash (5.1.29); owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
-      "destination_sha256": "ced6c01e2db2c10540439fcb46fe2b0f25c428b8b23b58bca713436f09f4f111"
+      "changes": "none; default audio status and blue Flash (5.1.29); owner-requested UI and size-only journal policy (5.1.31, spec 1.77); 5.1.41 startup priority and shared Actions column",
+      "destination_sha256": "f33298200366f1bdae534a1515986dca50a11f75661a6c16590d2abcbe765b80"
     },
     {
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/cpu.js",
@@ -608,8 +608,8 @@
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/dashboard.js",
       "destination": "ui/root/www/schoolbell-test/dashboard.js",
       "source_sha256": "d2f4fba470da0160da0d2a47f8986c485346e103a4debf15a37ec55eeb7a9476",
-      "changes": "none; owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
-      "destination_sha256": "771512d956f7efe99a8870f1733327051b4c940bbf8b10635cc39a1a97be382d"
+      "changes": "none; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); 5.1.41 startup priority and shared Actions column",
+      "destination_sha256": "a66d942571d48a336902d41270479aa7131ce5b0a54120d801b5adb473c98dd3"
     },
     {
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/diagnostics.js",
@@ -622,8 +622,8 @@
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/media.js",
       "destination": "ui/root/www/schoolbell-test/media.js",
       "source_sha256": "79b52ae442a583d3df5ab20db499c2c62f572908ddc8c5e6de0c30079a49c225",
-      "changes": "none; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner clarification of playback action icons (5.1.32, spec 1.78)",
-      "destination_sha256": "e113436fb812a41d1af6b213cb27b9c36502a25782ddb6476b4af0979bb1c39d"
+      "changes": "none; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner clarification of playback action icons (5.1.32, spec 1.78); separate actual storage use from upload conditions; owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); 5.1.41 startup priority and shared Actions column",
+      "destination_sha256": "9ad50e107bbd5853b3038088dfdc449e491f006d31b828905a66ff6f9dcef9fb"
     },
     {
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/plan-export.js",
@@ -657,8 +657,8 @@
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/schedules.js",
       "destination": "ui/root/www/schoolbell-test/schedules.js",
       "source_sha256": "0bc0f6d87c79856181ed81326f0f4728872783e19f55d99249b3eea5f8042a6f",
-      "changes": "none; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner clarification of playback action icons (5.1.32, spec 1.78)",
-      "destination_sha256": "dcef6277cadb3eca23898458d73d5d023a64a4f60eba7d4403867f19305cd7e9"
+      "changes": "staged UI integration; baseline palette follows separately",
+      "destination_sha256": "87b4192d0baaddc68cf446bafe2090ca226f77e38770a070e3ce87aab8dc6fd8"
     },
     {
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/session.js",
@@ -671,8 +671,8 @@
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/style.css",
       "destination": "ui/root/www/schoolbell-test/style.css",
       "source_sha256": "046d8f5ba5461e83f8c4412b368b227ae34a98eef741d500af2117eefa4ff0ba",
-      "changes": "none; default audio status and blue Flash (5.1.29); wider header and CSS cache key (5.1.30); stable two-line audio layer; owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
-      "destination_sha256": "b34cc514cc424285a45cb7a9732355b0c4a4ae36ae2d7d72526db972665fab42"
+      "changes": "none; default audio status and blue Flash (5.1.29); wider header and CSS cache key (5.1.30); stable two-line audio layer; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); collapsed manual sound check, version 5.1.33; confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); 5.1.41 startup priority and shared Actions column; compact 4x4 schedule palette; 5.1.42 reduced action spacing; 5.1.43 playback icon size",
+      "destination_sha256": "363a718580140b0b117e923ad62816f320dd5245e7e2b10b3a709150612f61f2"
     },
     {
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/theme.js",
@@ -685,8 +685,8 @@
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/time-settings.js",
       "destination": "ui/root/www/schoolbell-test/time-settings.js",
       "source_sha256": "dfb1234a4d60cd22921ad44753ed43ffc0465467970d471a0e1757d7d5b165f7",
-      "changes": "none",
-      "destination_sha256": "dfb1234a4d60cd22921ad44753ed43ffc0465467970d471a0e1757d7d5b165f7"
+      "changes": "none; 5.1.40 initial page-load performance",
+      "destination_sha256": "34aad8eb376519ca214b7c9d06c442e7031176a283f74957503145bfd82b527b"
     },
     {
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/traffic.js",
@@ -965,8 +965,8 @@
       "source": "packages/schoolbell/tests/test_media_http.lua",
       "destination": "tests/test_media_http.lua",
       "source_sha256": "9df200dab57ae50b2ee9bdf15109482e7f9d10cb081e57b9e2e9c5198f3c7947",
-      "changes": "adapted; review destination against pinned source",
-      "destination_sha256": "5906045ce62d9cefd77bd8404975826bf234320eb22d2c31319f1d9bb9ffa3ec"
+      "changes": "adapted; review destination against pinned source; owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); deletion uncertainty and boundary regression coverage",
+      "destination_sha256": "3d505a4ce825a2a8252d84083e4932e5c9c5a5d9a41cfdd568b1e300f0a31060"
     },
     {
       "source": "packages/schoolbell/tests/test_media_library.lua",
@@ -993,8 +993,8 @@
       "source": "packages/schoolbell/tests/test_media_web.lua",
       "destination": "tests/test_media_web.lua",
       "source_sha256": "bb76b305eec591e51011e13071815df2217093ab9a4f900a708c625c15f5fd89",
-      "changes": "adapted; review destination against pinned source",
-      "destination_sha256": "2709d1bc8a5697c9fbab561017840cf4464b7e22eef19fc6550450d117e04146"
+      "changes": "adapted; review destination against pinned source; owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); fast advisory media listing, authoritative checks retained for deletion",
+      "destination_sha256": "081aa570d47a2b1af6d49846102dd03606a8807fb89c227cd412a021551900c3"
     },
     {
       "source": "packages/schoolbell/tests/test_metadata_progress.lua",
@@ -1238,8 +1238,8 @@
       "source": "scripts/test-schoolbell-backup-ui.js",
       "destination": "scripts/test-schoolbell-backup-ui.js",
       "source_sha256": "bc61851bd6c5fa1f49d9b2e5031abf5a04e363c9652323df8a93113c6cc1f048",
-      "changes": "adapted; review destination against pinned source",
-      "destination_sha256": "2bbd86b87fd8fa10156c86b9862e3cdb99f9105d63e2befed193e2d1ddeab95b"
+      "changes": "adapted; review destination against pinned source; 5.1.39 lazy backup status check and release notes",
+      "destination_sha256": "9e00f3444e1a62e3c2dda24a0d54cc5bf89a60f469f5f2afd212d44de4d56819"
     },
     {
       "source": "scripts/test-schoolbell-cpu.js",
@@ -1266,8 +1266,8 @@
       "source": "scripts/test-schoolbell-media-ui.js",
       "destination": "scripts/test-schoolbell-media-ui.js",
       "source_sha256": "e2994b282b544a50b4a6922fc23c6471db79ae0684679fc668d5fd5bf482aed8",
-      "changes": "adapted; review destination against pinned source",
-      "destination_sha256": "f9e6b52cc9f4c679ac1474ee88be878adb4420a075744ac64b7811bafda12096"
+      "changes": "adapted; review destination against pinned source; separate actual storage use from upload conditions; owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); deletion uncertainty and boundary regression coverage; 5.1.41 startup priority and shared Actions column",
+      "destination_sha256": "6378b9cf63b165456ddf9858349db52bacba6294435ce26358726b0e45bffa83"
     },
     {
       "source": "scripts/test-schoolbell-plan-export.js",
@@ -1294,8 +1294,8 @@
       "source": "scripts/test-schoolbell-routes.js",
       "destination": "scripts/test-schoolbell-routes.js",
       "source_sha256": "44039356f5822154bf05e200d93c5e6bc0f5959e73dc452f49c401b96126e8ec",
-      "changes": "adapted; review destination against pinned source; owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
-      "destination_sha256": "8a150b8543bc2b664c19f96a6a15809c7cfc4d7836caad8599df9249593991b0"
+      "changes": "staged UI integration; baseline palette follows separately",
+      "destination_sha256": "4f41d4e8c9870c1ba9a784476adcf3de1b43976211130ee25e876aa4fc360e4b"
     },
     {
       "source": "scripts/test-schoolbell-row-preview.js",
@@ -1315,8 +1315,8 @@
       "source": "scripts/test-schoolbell-time-settings.js",
       "destination": "scripts/test-schoolbell-time-settings.js",
       "source_sha256": "d20cdd0b75520bae05b3b51061244657bcd0402cadd8b1ddcef649d5c4dd625a",
-      "changes": "adapted; review destination against pinned source",
-      "destination_sha256": "740202f603f57aee74e025b173e65cd78c0ed01cdfed775d0782f0544966a042"
+      "changes": "adapted; review destination against pinned source; 5.1.40 initial page-load performance",
+      "destination_sha256": "047aef596de975dc759ba342165404c43aacd3af360bc7e7f00bffb12acc87be"
     },
     {
       "source": "scripts/test-schoolbell-traffic.js",
@@ -1329,8 +1329,8 @@
       "source": "scripts/test-schoolbell.sh",
       "destination": "scripts/test-schoolbell.sh",
       "source_sha256": "5abd8849062bc51e53907344210cb487f9e115458e196f3667753f29553ed282",
-      "changes": "staged UI integration; baseline palette follows separately",
-      "destination_sha256": "6172afdc757565278bc4f50618c295f0c81712faa1895c5175f404191d15e50c"
+      "changes": "adapted; review destination against pinned source; standalone target migration: deterministic native gzip / pinned-input tests; default audio status and blue Flash (5.1.29); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); 5.1.40 initial page-load performance",
+      "destination_sha256": "f315f262fb6e1d762cc844d4c50ec63730c448d90d37afb530c6ca7bb299555f"
     },
     {
       "source": "scripts/test-site-demo.js",
@@ -1371,8 +1371,8 @@
       "source": "site/demo.js",
       "destination": "site/demo.js",
       "source_sha256": "e188761949f7a69432ec440c619a95bf1f36d721c910f3a6c866a7c194677f5f",
-      "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer; default audio status and blue Flash (5.1.29); owner-requested UI and size-only journal policy (5.1.31, spec 1.77)",
-      "destination_sha256": "bbfa1498f892de8bda66ce2a8cbdb30b09904a2fac13babfa2884670eaa4b13d"
+      "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer; default audio status and blue Flash (5.1.29); owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79)",
+      "destination_sha256": "219c8912f3b177c7687a06d117805c9045799bcf9ab9a08643780acc8aa82e91"
     },
     {
       "source": "site/portable-pages.js",
@@ -1385,8 +1385,8 @@
       "source": "packages/schoolbell/router-page/build-payload.py",
       "destination": "scripts/build-payload.py",
       "source_sha256": "15ee676879b82aeb4a7ee343623ac98cbf9f849c569598eb40ee4eb93c373c45",
-      "changes": "adapted; review destination against pinned source; default audio status and blue Flash (5.1.29)",
-      "destination_sha256": "d93a07c5ee26568ad05bfa55778ac7e29585d07cd16386ac5047efe909c5059f"
+      "changes": "adapted; review destination against pinned source; default audio status and blue Flash (5.1.29); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80)",
+      "destination_sha256": "8539ba26764e8edeabd3e5cdf842c4bef4d597bbe77929c48c2f9f4f257e208c"
     },
     {
       "source": "site/portable-zones.json",
@@ -2085,8 +2085,8 @@
       "source": "scripts/build-site.py",
       "destination": "scripts/build-site.py",
       "source_sha256": "7b581e66a713901cc092b9afcd5ff99155aaaa2bbf8d292dd251a3680f9247b9",
-      "destination_sha256": "fa6d544986a526400b6bb76e911c6ae3cd44606ac73b5b0f4712a20f1a3fd4a1",
-      "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer; 2026-10-31 license delivery: shared artifact notices and verification; owner-requested UI and size-only journal policy (5.1.31, spec 1.77)"
+      "destination_sha256": "ab8a776074c9fb3b1649bfeb8313292bf79fb4f40949b3ff548b1c0e8e1f67c9",
+      "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer; 2026-10-31 license delivery: shared artifact notices and verification; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80)"
     },
     {
       "source": "site/devices/index.en.html",

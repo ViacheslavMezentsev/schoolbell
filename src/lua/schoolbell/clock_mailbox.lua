@@ -3,7 +3,13 @@ local C=require('schoolbell.media_codec');local M={}
 local function hex(s,n)return type(s)=='string' and #s==n and s:match('^[0-9a-f]+$')end
 function M.valid(q)
  if type(q)~='table' or not hex(q.id,32) or not hex(q.owner,64)then return false end
- for k in pairs(q)do if not ({id=true,owner=true,action=true,challenge=true,ack=true,enforced=true,revision=true,generation=true,epoch=true})[k]then return false end end
+ for k in pairs(q)do if not ({id=true,owner=true,action=true,challenge=true,ack=true,enforced=true,revision=true,generation=true,epoch=true,target=true})[k]then return false end end
+ if q.action=='system_prepare'or q.action=='system_reset'or q.action=='system_reboot'then
+  if q.epoch~=nil or q.revision~=nil or q.generation~=nil or q.enforced~=nil then return false end
+  if q.action=='system_prepare'then return (q.target=='reset'or q.target=='reboot')and q.challenge==nil and q.ack==nil end
+  return q.target==nil and hex(q.challenge,32)and q.ack=='true'
+ end
+ if q.target~=nil then return false end
  if q.action=='set_prepare' or q.action=='set_time'then
   if not require('schoolbell.clock_set').epoch(q.epoch) or q.revision~=nil or q.generation~=nil or q.enforced~=nil then return false end
   if q.action=='set_prepare'then return q.challenge==nil and q.ack==nil end

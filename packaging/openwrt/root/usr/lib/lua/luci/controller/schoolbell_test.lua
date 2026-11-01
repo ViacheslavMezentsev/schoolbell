@@ -2,6 +2,7 @@ module("luci.controller.schoolbell_test", package.seeall)
 function index()
     local page=entry({"admin","schoolbell"},call("page"),"Schoolbell",70)
     page.dependent=false
+    entry({"admin","schoolbell","system"},call("system_action")).leaf=true
     entry({"admin","schoolbell","plan-export"},call("plan_export")).leaf=true
     entry({"admin","schoolbell","plan-import"},call("plan_import")).leaf=true
     entry({"admin","schoolbell","session"},call("session")).leaf=true
@@ -68,6 +69,21 @@ function journal()
     local h=require('luci.http')
     if h.getenv('REQUEST_METHOD')~='GET' then h.status(405,'Method Not Allowed');return end
     editor();respond(require('schoolbell.journal').request('/etc/schoolbell-editor'))
+end
+function system_action()
+ local h=require('luci.http');local d=require('luci.dispatcher');local method=h.getenv('REQUEST_METHOD')
+ if method~='GET'and method~='POST'then h.status(405,'Method Not Allowed');return end
+ if type(d.context.authsession)~='string'or d.context.authsession==''then h.status(403,'Forbidden');return end
+ if method=='POST'then
+  local size=tonumber(h.getenv('CONTENT_LENGTH'))
+  if not size or size<1 or size>1024 or not (h.getenv('CONTENT_TYPE')or ''):match('^application/x%-www%-form%-urlencoded')then h.status(413,'Unsupported request');return end
+  if not d.test_post_security()then return end
+ end
+ local _,C=editor();local owner=C.sha(d.context.authsession);local mailbox=require('schoolbell.clock_mailbox').system()
+ if method=='GET'then respond(mailbox.poll(h.formvalue('operation',true),owner));return end
+ local action=h.formvalue('action')
+ if action~='system_prepare'and action~='system_reset'and action~='system_reboot'then h.status(400,'Bad Request');return end
+ respond(mailbox.submit({id=h.formvalue('operation'),owner=owner,action=action,target=h.formvalue('target'),challenge=h.formvalue('challenge'),ack=h.formvalue('ack')}))
 end
 function clock_trust()
  local h=require('luci.http');local d=require('luci.dispatcher');local method=h.getenv('REQUEST_METHOD')
@@ -232,6 +248,7 @@ function page()
         trust_url=d.build_url('admin','schoolbell','clock-trust'),
         automatic_url=d.build_url('admin','schoolbell','automatic'),
         controls_url=d.build_url('admin','schoolbell','controls'),
+        system_url=d.build_url('admin','schoolbell','system'),
         manual_url=d.build_url('admin','schoolbell','manual'),
         journal_url=d.build_url('admin','schoolbell','journal'),
         clock_url=d.build_url('admin','schoolbell','clock'),
@@ -254,8 +271,13 @@ function media()
  -- Cookie session is still required; Bearer carries its CSRF token, not a login.
  local token=(h.getenv('HTTP_AUTHORIZATION') or ''):match('^Bearer ([^%s]+)$');local expected=require('luci.dispatcher').context.authtoken
  if type(token)~='string' or token=='' or token~=expected then h.status(403,'Forbidden');return end
+ if h.formvalue('action',true)=='delete'then
+  if tonumber(h.getenv('CONTENT_LENGTH')or '0')~=0 then h.status(413,'Unsupported request');return end
+  local result=m.remove({id=h.formvalue('id',true),generation=tonumber(h.formvalue('generation',true)),operation=h.formvalue('operation',true)})
+  audit(result.ok and 'media_ok' or 'media_failed',result);respond(result);return
+ end
  local size=tonumber(h.getenv('CONTENT_LENGTH'))
- if not size or size<1 or size>524288 or h.getenv('CONTENT_TYPE')~='application/octet-stream'then h.status(413,'Unsupported request');return end
+ if not size or size<1 or size>65536 or h.getenv('CONTENT_TYPE')~='application/octet-stream'then h.status(413,'Unsupported request');return end
  local result=m.upload({id=h.formvalue('id',true),name=h.formvalue('name',true),title=h.formvalue('title',true),generation=tonumber(h.formvalue('generation',true)),operation=h.formvalue('operation',true),size=size},h.source())
  audit(result.ok and 'media_ok' or 'media_failed',result);respond(result)
 end

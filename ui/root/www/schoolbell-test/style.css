@@ -14,7 +14,7 @@ fieldset{border:0;padding:0;margin:0;min-width:0}label{display:flex;gap:8px;flex
 
 .duty-box:not([open]) > :not(summary){display:none!important}
 
-#journal-rows td{text-align:left;vertical-align:top}.schedule-colors{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 20px}.schedule-colors button{width:42px;height:38px;padding:4px}.schedule-colors [aria-pressed=true]{outline:3px solid var(--accent);outline-offset:2px}
+#journal-rows td{text-align:left;vertical-align:top}.schedule-colors{display:grid;grid-template-columns:repeat(4,36px);gap:8px;margin:12px 0 0}.schedule-colors button{width:36px;height:36px;padding:4px}.schedule-colors [aria-pressed=true]{outline:3px solid var(--accent);outline-offset:2px}
 
 .inline-button{padding:0;border:0;background:transparent;color:var(--accent);text-decoration:underline;font-weight:400}.time-settings{margin-bottom:28px}.time-settings select{max-width:520px}
 
@@ -111,7 +111,7 @@ html[data-theme="dark"] .automatic-badge[data-tone="success"]{background:#143b27
 
 /* Shared user controls: stable header, disclosures and accessible native switches. */
 header{align-items:flex-start}.header-controls{margin-top:46px}.header-version{font-size:.38em;line-height:1;vertical-align:super;white-space:nowrap;color:var(--muted);font-weight:500}
-.editor-toolbar{align-items:flex-end}#panel-sound>details{margin-bottom:16px}#panel-sound>details>summary{cursor:pointer;font-size:20px;font-weight:600}#panel-sound>details[open]>summary{margin-bottom:16px}
+.editor-toolbar{align-items:flex-end}#panel-sound>details{margin-bottom:16px}#panel-sound>details>summary,#manual-sound-check>summary{cursor:pointer;font-size:20px;font-weight:600}#panel-sound>details[open]>summary,#manual-sound-check[open]>summary{margin-bottom:16px}
 input.schedule-switch{appearance:none;-webkit-appearance:none;position:relative;display:inline-block;width:42px;height:24px;padding:0;border:1px solid var(--muted);border-radius:12px;background:var(--border);cursor:pointer;vertical-align:middle;flex-shrink:0}
 input.schedule-switch::before{content:"";position:absolute;width:18px;height:18px;left:2px;top:2px;border-radius:50%;background:var(--text);transition:transform .12s}
 input.schedule-switch:checked{background:var(--accent);border-color:var(--accent)}input.schedule-switch:checked::before{transform:translateX(18px);background:var(--bg)}input.schedule-switch:focus-visible{outline:3px solid var(--accent);outline-offset:3px}input.schedule-switch:disabled{opacity:.5;cursor:default}
@@ -120,3 +120,7 @@ input.schedule-switch:checked{background:var(--accent);border-color:var(--accent
 .output-icon{display:inline-block;width:1.25em;height:1.25em;vertical-align:-.2em;background:currentColor;mask:var(--output-icon) center/contain no-repeat;-webkit-mask:var(--output-icon) center/contain no-repeat}
  .icon-browser{--output-icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%223%22%20y%3D%224%22%20width%3D%2218%22%20height%3D%2216%22%20rx%3D%222%22%2F%3E%3Cpath%20d%3D%22M3%209h18M6%206.5h1M9%206.5h1%22%2F%3E%3C%2Fsvg%3E")}
  .icon-device{--output-icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%223%22%20y%3D%225%22%20width%3D%2218%22%20height%3D%226%22%20rx%3D%222%22%2F%3E%3Crect%20x%3D%223%22%20y%3D%2213%22%20width%3D%2218%22%20height%3D%226%22%20rx%3D%222%22%2F%3E%3Cpath%20d%3D%22M6%208h1M6%2016h1M11%208h7M11%2016h7%22%2F%3E%3C%2Fsvg%3E")}
+
+.schedule-table .actions-column{width:1%;white-space:nowrap}.row-actions{display:inline-grid;grid-template-columns:44px 44px 14px 44px;gap:8px;align-items:center}.schedule-table .row-actions button{width:44px;min-width:44px;height:48px;padding:0}.schedule-table .row-actions button:not(.icon-delete){font-size:24px;line-height:1}.row-actions .icon-delete{grid-column:4}.system-action{display:grid;grid-template-columns:minmax(180px,280px) 1fr;gap:20px;align-items:start;margin:20px 0}.system-action p{margin:0}@media(max-width:700px){.system-action{grid-template-columns:1fr;gap:8px}}
+
+.schedule-setup{display:grid;grid-template-columns:auto minmax(0,1fr);gap:28px;align-items:start;margin:18px 0 24px}.schedule-setup:has(#schedule-palette[hidden]){grid-template-columns:1fr}.schedule-setup p{margin:0}.schedule-identity{display:grid;gap:24px;min-width:0}.schedule-identity .editor-toolbar{margin:0;align-items:flex-end}.schedule-identity label{min-width:0}.schedule-identity #schedule-name{max-width:none}.schedule-tools{display:flex;gap:8px}.schedule-tools .schedule-icon{width:44px;height:48px;padding:0;font-size:26px;line-height:1}.schedule-tools .icon-delete{color:var(--danger)}@media(max-width:600px){.schedule-setup{grid-template-columns:1fr;gap:20px}.schedule-identity .editor-toolbar label{min-width:120px}}

@@ -20,7 +20,7 @@ for _,v in ipairs(assert(J.decode(read(dir..'/index.json'))))do
   local i=1;local parsed=D.decode(function()if i>#archive then return nil end;local c=archive:sub(i,i+16383);i=i+#c;return c end,factory)
   local inventory=array();for _,m in ipairs(input.media)do if not m.id:match('^user')then inventory[#inventory+1]={id=m.id,size_bytes=m.size_bytes,sha256=m.sha256}end end
   local ctx={draft={schedules=array(),plans=array(),pre_minutes=2,pre_media='test'},timezone=input.timezone,media=inventory,operation_id='0123456789abcdef0123456789abcdef',automatic_enabled=false,dirty=false,target='device',names={plans={},schedules={}}}
-  local preview=P.preview(archive:sub(83,82+tonumber(archive:sub(9,16))),parsed.calendar,ctx);assert(preview.ok,C.encode(preview))
+  local preview=P.preview(archive:sub(83,82+tonumber(archive:sub(9,16))),parsed.calendar,ctx);local large=false;for _,m in ipairs(input.media)do if m.id:match('^user')and m.size_bytes>65536 then large=true end end;if large then local size=false;for _,b in ipairs(preview.blockers)do if b.code=='size'then size=true end end;assert(not preview.ok and size,C.encode(preview))else assert(preview.ok,C.encode(preview))end
  end)
  assert(C.encode(input)==before,'mutated input');assert(ok==v.ok,v.name..': '..tostring(why));if v.early then assert(emitted==0,v.name..' emitted before validation')end
  print(C.encode({name=v.name,ok=ok,opened=opened}))

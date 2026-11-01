@@ -25,7 +25,7 @@
   const inventory=new Map();for(const v of ctx.media){if(!fields(v,['id','size_bytes','sha256'])||!slot(v.id)||inventory.has(v.id)||!Number.isInteger(v.size_bytes)||v.size_bytes<1||v.size_bytes>524288||typeof v.sha256!=='string'||!/^[0-9a-f]{64}$/.test(v.sha256))return fail('format','inventory');inventory.set(v.id,v);}
   if(!fields(c,['plans','schedules','pre_minutes','pre_media'])||!Array.isArray(c.plans)||c.plans.length<1||c.plans.length>8||!Array.isArray(c.schedules)||c.schedules.length>16)return fail('format','calendar');
   const media=new Map(m.media.map(x=>[x.id,x])),used=new Set(),scIds=new Set(),needed=new Set(),planIds=new Set();let user=0;const temporary=new Map();
-  for(const v of m.media){const t=v.source==='bundled'?v.bundled_id:'user'+(++user);temporary.set(v.id,t);}
+  for(const v of m.media){if(v.source==='user'&&v.size_bytes>65536)add('size','media.'+v.id);const t=v.source==='bundled'?v.bundled_id:'user'+(++user);temporary.set(v.id,t);}
   const ref=(key,path)=>{if(!media.has(key))add('dependency',path);else used.add(key);};
   ref(c.pre_media,'pre_media');
   for(let i=0;i<c.schedules.length;i++){const s=c.schedules[i];if(!fields(s,['id','name','color','rows'])||!id(s.id)||scIds.has(s.id)||!title(s.name)||!Number.isInteger(s.color)||s.color<1||s.color>16||!Array.isArray(s.rows))return fail('format','schedules');scIds.add(s.id);

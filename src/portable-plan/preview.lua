@@ -28,7 +28,7 @@ local function preview(manifest_raw,calendar_raw,input)
  local inventory={};for _,v in ipairs(ctx.media)do if not fields(v,{'id','size_bytes','sha256'})or not slot(v.id)or inventory[v.id]or not C.integer(v.size_bytes,1,524288)or not C.hex(v.sha256,64)then return fail('format','inventory')end;inventory[v.id]=v end
  if not fields(c,{'plans','schedules','pre_minutes','pre_media'})or not list(c.plans,8)or #c.plans<1 or not list(c.schedules,16)then return fail('format','calendar')end
  local media,used,scids,needed,planids,temp={},{},{},{},{},{};local users=0
- for _,v in ipairs(m.media)do media[v.id]=v;if v.source=='bundled'then temp[v.id]=v.bundled_id else users=users+1;temp[v.id]='user'..users end end
+ for _,v in ipairs(m.media)do if v.source=='user'and v.size_bytes>65536 then add('size','media.'..v.id)end;media[v.id]=v;if v.source=='bundled'then temp[v.id]=v.bundled_id else users=users+1;temp[v.id]='user'..users end end
  local function ref(key,path)if type(key)~='string'or not media[key]then add('dependency',path)else used[key]=true end end
  ref(c.pre_media,'pre_media')
  for i,s in ipairs(c.schedules)do if not fields(s,{'id','name','color','rows'})or not id(s.id)or scids[s.id]or not title(s.name)or not C.integer(s.color,1,16)or not list(s.rows)then return fail('format','schedules')end;scids[s.id]=true

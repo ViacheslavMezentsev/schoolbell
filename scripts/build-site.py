@@ -43,7 +43,7 @@ for name in ['codec','export','preview']:
  shutil.copyfile(root/('src/portable-plan/'+name+'.js'),assets/('portable-'+name+'.js'))
 for name in ['portable-pages.js','portable-ui.js','portable.css','portable-zones.NOTICE','LUCI-LICENSE']:
  shutil.copyfile(root/'site'/name,assets/name)
-titles=['Тестовый звонок','[Короткая] Время','Шутка Баха','Гостья из XXI','Князь Игорь','Усатый нянь']
+titles=['Тестовый звонок','[Короткая] Время','Шутка Баха','Гостья из будущего','Князь Игорь','Усатый нянь']
 inventory=[]
 for name,title in zip(['test','0','1','2','3','4'],titles):
  data=(assets/(name+'.mp3')).read_bytes()
@@ -55,7 +55,7 @@ text=re.sub(r'<!-- device-plan-export:start -->.*?<!-- device-plan-export:end --
 text=re.sub(r'<script src="/schoolbell-test/plan-export.js[^"]*"></script>','',text)
 text=re.sub(r'<!-- device-plan-import:start -->.*?<!-- device-plan-import:end -->','',text,flags=re.S)
 text=re.sub(r'<script src="/schoolbell-test/plan-import.js[^"]*"></script>','',text)
-values={'session_url':'./demo-api/session','login_url':'./','auth_user':'Демо без входа','trust_url':'./demo-api/clock-trust','backup_url':'./demo-api/backup','media_url':'./demo-api/media','automatic_url':'./demo-api/automatic','controls_url':'./demo-api/controls','manual_url':'./demo-api/no-router','preview_url':'./demo-api/preview','schedules_url':'./demo-api/load','save_url':'./demo-api/save','clock_url':'./demo-api/clock','journal_url':'./demo-api/journal','timezone_url':'./demo-api/timezone','sample_url':'./assets/test.mp3','play_url':'./demo-api/no-router','module_version':version+' · Демо','core_version':'не подключено','token':'demo'}
+values={'system_url':'./demo-api/system','session_url':'./demo-api/session','login_url':'./','auth_user':'Демо без входа','trust_url':'./demo-api/clock-trust','backup_url':'./demo-api/backup','media_url':'./demo-api/media','automatic_url':'./demo-api/automatic','controls_url':'./demo-api/controls','manual_url':'./demo-api/no-router','preview_url':'./demo-api/preview','schedules_url':'./demo-api/load','save_url':'./demo-api/save','clock_url':'./demo-api/clock','journal_url':'./demo-api/journal','timezone_url':'./demo-api/timezone','sample_url':'./assets/test.mp3','play_url':'./demo-api/no-router','module_version':version+' · Демо','core_version':'не подключено','token':'demo'}
 for key,value in values.items():text=text.replace('<%=pcdata('+key+')%>',html.escape(value,quote=True))
 text=text.replace("<%=url('admin')%>",'https://github.com/ViacheslavMezentsev/schoolbell').replace('← Управление устройством LuCI','← Репозиторий проекта').replace('← Управление роутером LuCI','← Репозиторий проекта')
 text=text.replace('/schoolbell-test/','./assets/')

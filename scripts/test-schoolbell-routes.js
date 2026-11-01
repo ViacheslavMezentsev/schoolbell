@@ -194,15 +194,15 @@ function fixture(storage={},initialRevision="r1",loadCodes=[]){
  x.get('schedule-name').value='New edit';await x.get('schedule-name').fire('input');assert(x.get('draft-comparison').hidden && x.get('draft-use-router').disabled);assert(!x.saves.length && !x.posts.length);
  console.log('PASS failed comparison preserves edits; content is text; edits invalidate stale comparison');
  x=fixture();await x.tick();const listens=[];x.window.schoolbellRowPreview=(id,hw)=>listens.push([id,hw]);
- const row=x.get('schedule-rows').children[0];assert.equal(row.children.length,6);
+ const row=x.get('schedule-rows').children[0];assert.equal(row.children.length,5);
  const media=row.children[1].children[0];media.value='user3';await media.fire('change');
- const actions=row.children[4].children[0].children;await actions[0].click();await actions[1].click();
+ const actions=row.children[4].children[0].children;assert.equal(actions.length,3);assert.equal(actions[2].className,'icon-delete');await actions[0].click();await actions[1].click();
  assert.deepEqual(listens,[['user3',false],['user3',true]]);assert(!x.saves.length && !x.posts.length);
  console.log('PASS row preview uses current unsaved selection without save or activation');
  x=fixture();await x.tick();
  for(let i=1;i<129;i++)await x.get('row-add').click();
  assert.equal(x.get('schedule-rows').children.length,129);
- assert.equal(x.get('row-count').textContent,'Звонков в расписании: 129');
+ assert.equal(x.get('schedule-rows').children.length,129);
  assert(!x.get('row-add').disabled && !x.get('schedule-copy').disabled);
  assert(!x.posts.length);
  console.log('PASS real editor allows adding beyond 32/128, count has no quota and no activation');

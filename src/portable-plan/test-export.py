@@ -34,6 +34,8 @@ case('unused-listed',lambda x,p:(second(x,p),x['draft']['plans'][0]['schedule_id
 case('default-color',lambda x,p:x['draft']['schedules'][0].pop('color'))
 case('legacy-year',lambda x,p:(x['draft'].update(plans=[dict(year=2028,schedule_ids=['normal'],days='A'+'.'*365)]),x.update(selected=['year-2028'])))
 case('cross-year',lambda x,p:x['draft']['plans'][0].update(start='2027-12-31',end='2028-01-02',days='AAA'))
+case('upload-limit',lambda x,p:user(x,p,data=b'x'*65536))
+case('over-upload-limit',lambda x,p:user(x,p,data=b'x'*65537))
 case('max-file',lambda x,p:user(x,p,data=b'x'*524288))
 case('max-total',lambda x,p:[user(x,p,i,bytes([i])*524288)for i in range(1,5)])
 case('no-selection',lambda x,p:x.update(selected=[]),False,early=True)
