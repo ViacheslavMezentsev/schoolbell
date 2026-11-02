@@ -141,3 +141,15 @@ hardware acceptance protocol.
 - [x] 💾 для загрузки MP3, динамическая подсказка добавления/замены / MP3 upload icon with add/replace tooltip.
 
 - [x] 5.1.56: переключатель и текущий IP в существующем опросе шапки / Physical switch and current IP through existing header polling.
+
+- [ ] Согласовать синтетическое табло 5.1.70 на стенде; источник и сохранение реальной дневной статистики определить отдельно / Review the synthetic 5.1.70 bench heatmap; define real daily statistics and persistence separately.
+- [x] 5.1.70 установлена на разрешённый стенд: проверены бэкап/откат, 82 файла, 12 HTTP-ресурсов, сохранение журнала, громкости и auto-off / 5.1.70 installed on the authorized bench: backup/rollback, 82 files, 12 HTTP assets, preserved journal, volume and auto-off verified.
+
+- [ ] Согласовать расширенное табло 5.1.71 (33 недели) и поднятые кнопки шапки / Review the expanded 5.1.71 heatmap (33 weeks) and raised header controls.
+- [x] Стенд обновлён до 5.1.71: бэкап, файлы и HTTP проверены, настройки и журнал сохранены / Bench updated to 5.1.71: backup, files and HTTP verified; settings and journal preserved.
+
+- [ ] Согласовать область «Метрики» 5.1.72: показатели и синтетическое табло под шапкой, сворачивание и равные отступы / Review 5.1.72 collapsible Metrics below the header, grouping indicators and the synthetic heatmap with equal padding.
+- [x] Стенд обновлён до 5.1.72; бэкап, файлы, HTTP и сохранность настроек/журнала проверены / Bench updated to 5.1.72; backup, files, HTTP and preserved settings/journal verified.
+
+- [x] 5.1.75: постоянный учёт всех успешных автозвонков, «Ресурсы», реальное табло; проверены ротация/перезапуск/повтор, сбои записи и чтение без замка редактора. Стенд обновлён, сохранены два исторических завершения, громкость и auto-off / Persistent automatic completion counters, Resources and live grid; rotation/restart/replay, write failures and lock-free reads tested. Bench updated, two historical completions, gain and auto-off preserved.
+- [ ] Проверить счётчики в длительном реальном автоматическом режиме после отдельного разрешения; звук и автозвонки в этой итерации не включались / Verify long-running real automatic counting after separate authorization; no playback or automatic enable in this iteration.

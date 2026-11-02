@@ -18,7 +18,12 @@ C.set_observer(function()
  local now=mono()
  if now-observed>=0.5 then observed=now;Clock.observe(false)end
 end)
-local function audit(action)require('schoolbell.journal').request(Store.root,action)end
+local metrics_ok=true
+local function audit(action)
+ local r=require('schoolbell.journal').request(Store.root,action)
+ if r.metrics_warning then metrics_ok=false end
+ return r
+end
 local mailbox=require('schoolbell.clock_mailbox').system('worker')
 local command=require('schoolbell.clock_commands').new(Clock,{
  enable=function(revision)
@@ -60,6 +65,9 @@ local function commands()
   return value
  end)
 end
+local Metrics=require('schoolbell.bell_metrics')
+metrics_ok=Metrics.reconcile(Store.root)
+local metrics_attempt=mono()
 local Status=require('schoolbell.automatic_status')
 Status.invalidate()
 local cached,active,engine,key,events,calendar_error,previous_state
@@ -67,6 +75,7 @@ local started=Store.environment()
 local last_result
 local function status(v)
  v.last_result=last_result
+ v.metrics_warning=not metrics_ok or nil
  local clock=Clock.status()
  -- The engineering status codec uses 32-bit seconds, not UTC milliseconds.
  v.clock_trust={enforced=clock.enforced,state=clock.state,reason=clock.reason,automatic_permitted=clock.automatic_permitted,accuracy_known=false,source=clock.source}
@@ -82,6 +91,7 @@ local function status(v)
 end
 local function tick()
  assert(not fs.lstat(Store.root..'/package.pending'),'package operation pending')
+ if not metrics_ok and mono()-metrics_attempt>=60 then metrics_attempt=mono();metrics_ok=Metrics.reconcile(Store.root)end
  commands();Clock.observe()
  local raw=Store.raw();local env=Store.environment();local now,up=env.now,mono()
  if started.zone~=env.zone then os.exit(0)end -- procd respawns with libc's new TZ

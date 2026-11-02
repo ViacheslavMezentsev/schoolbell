@@ -11,6 +11,7 @@ function index()
     entry({"admin","schoolbell","automatic"},call("automatic")).leaf=true
     entry({"admin","schoolbell","controls"},call("controls")).leaf=true
     entry({"admin","schoolbell","manual"},call("manual")).leaf=true
+    entry({"admin","schoolbell","metrics"},call("metrics")).leaf=true
     entry({"admin","schoolbell","journal"},call("journal")).leaf=true
     entry({"admin","schoolbell","timezone"},call("timezone")).leaf=true
     entry({"admin","schoolbell","clock-trust"},call("clock_trust")).leaf=true
@@ -64,6 +65,11 @@ end
 local function audit(action,result)
     local ok,value=pcall(function()editor();return require('schoolbell.journal').request('/etc/schoolbell-editor',action)end)
     if result and (not ok or not value.ok) then result.journal_warning=true end
+end
+function metrics()
+    local h=require('luci.http')
+    if h.getenv('REQUEST_METHOD')~='GET' then h.status(405,'Method Not Allowed');return end
+    editor();respond(require('schoolbell.bell_metrics').request('/etc/schoolbell-editor'))
 end
 function journal()
     local h=require('luci.http')
@@ -251,6 +257,7 @@ function page()
         controls_url=d.build_url('admin','schoolbell','controls'),
         system_url=d.build_url('admin','schoolbell','system'),
         manual_url=d.build_url('admin','schoolbell','manual'),
+        metrics_url=d.build_url('admin','schoolbell','metrics'),
         journal_url=d.build_url('admin','schoolbell','journal'),
         clock_url=d.build_url('admin','schoolbell','clock'),
         timezone_url=d.build_url('admin','schoolbell','timezone'),

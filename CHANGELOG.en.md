@@ -4,6 +4,18 @@
 
 ## Unreleased
 
+- 5.1.75: periodic metrics GET reads the persisted snapshot without decoding the full journal; aggregation reuses already parsed events. The executor retries failed persistence without an open browser.
+
+- 5.1.74: retained journal events are aggregated on service startup even with automatic bells disabled; failed initialization retries at most once per minute.
+
+- 5.1.73: Resources heading and persistent daily counters for all successful automatic playbacks, including pre-bells; independent of the browser and journal rotation. Live 33-week heatmap distinguishes unknown history from zero; Pages does not fabricate device activity.
+
+- 5.1.72: device indicators and the synthetic activity grid share a collapsible Metrics area below the header, with equal top and bottom padding.
+
+- 5.1.71: extended the synthetic activity preview by 13 weeks (March 16 — November 1), widened its grid and aligned the right header controls with the top tagline.
+
+- 5.1.70: a temporary 20-week activity preview below the main controls clearly labels synthetic data and shows example automatic bell counts on day selection. Journal, execution and saved settings are unchanged; real statistics are not connected.
+
 - 5.1.69 / spec 1.97: UI/Pages consistency review; the save toolbar no longer overlays the editor on phones. Stale guide/README labels are updated; every volume step is tested through save/readback.
 
 - 5.1.68: consistent 💾 draft/settings save labels and a concise discard button with a detailed tooltip. Settings explain that the whole draft is saved; toolbars and status spacing are aligned. Comparison and activation are unchanged.

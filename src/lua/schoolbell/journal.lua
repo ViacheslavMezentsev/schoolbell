@@ -29,7 +29,8 @@ end
 function M.append(fs,action,now)
  local a=assert(actions[action],'action');assert(C.integer(now,0,4102444800),'time')
  local rows,last=entries(fs);assert(last<2147483647,'sequence exhausted')
- local line=C.encode({seq=last+1,time=now,source=a[1],level=a[2],action=action})..'\n'
+ local row={seq=last+1,time=now,source=a[1],level=a[2],action=action}
+ local line=C.encode(row)..'\n'
  assert(#line<=M.record_bytes,'record size')
  local current=fs.read(names[2],M.segment_bytes) or ''
  -- An interrupted temp is uncommitted; only fixed private filenames are touched.
@@ -37,15 +38,26 @@ function M.append(fs,action,now)
  assert(fs.space()>=65536+M.segment_bytes,'space reserve')
  local rotate=#current+#line>M.segment_bytes
  fs.write('journal-next.tmp',(rotate and '' or current)..line);fs.sync('journal-next.tmp')
- if rotate then fs.rename(names[2],names[1]);fs.sync('')end
+ if rotate then
+  -- Commit counts before any journal segment can be evicted. On failure retain evidence.
+  require('schoolbell.bell_metrics').sync(fs,rows)
+  fs.rename(names[2],names[1]);fs.sync('')
+ end
  fs.rename('journal-next.tmp',names[2]);fs.sync('')
- return true
+ rows[#rows+1]=row
+ return true,rows
 end
 function M.request(root,action,host)
  local ok,fs=pcall(require('schoolbell.media_fs').new,root,host)
  if not ok then return {ok=false,code='journal_unavailable'}end
  local success,value=pcall(function()
-  if action then M.append(fs,action,os.time());return {ok=true}end
+  if action then
+   local _,rows=M.append(fs,action,os.time())
+   -- The journal is a recovery source if aggregation is interrupted after append.
+   local saved=true
+   if action=='auto_ok' or action=='auto_enabled'then saved=pcall(function()require('schoolbell.bell_metrics').sync(fs,rows)end)end
+   return {ok=true,metrics_warning=not saved or nil}
+  end
   local rows=M.read(fs,os.time())
   for _,row in ipairs(rows)do row.local_time=os.date('%d.%m.%Y %H:%M:%S %z',row.time) end
   return {ok=true,entries=rows,limit_bytes=2*M.segment_bytes,peak_bytes=3*M.segment_bytes}

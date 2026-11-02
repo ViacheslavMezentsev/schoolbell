@@ -28,3 +28,6 @@ lua5.1 tests/test_system_actions.lua
 lua5.1 tests/test_system_reset.lua
 lua5.1 tests/test_system_http.lua
 lua5.1 tests/test_system_ports.lua
+
+lua5.1 tests/test_bell_metrics.lua
+lua5.1 tests/test_metrics_http.lua

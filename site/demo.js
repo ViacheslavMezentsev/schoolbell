@@ -81,6 +81,7 @@ window.fetch=async function(url,options){
  }else out={ok:false,code:'demo_no_pending'};
  }
  else if(name==='controls'){if(options && options.method==='POST'){if(body.has('volume_db')){s.volume_db=Number(body.get('volume_db'));log(s,'volume_ok');}else{s.muted=body.get('muted')==='true';log(s,s.muted?'mute_on':'mute_off');}}out={ok:true,muted:!!s.muted,volume_db:s.volume_db || 0,playing:false,hardware:false,audio:{state:"demo"}};}
+ else if(name==='metrics')out={ok:true,demo:true,today:new Intl.DateTimeFormat('sv-SE',{timeZone:s.zone || 'UTC',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date()),days:[],max_days:400};
  else if(name==='journal')out={ok:true,entries:clone(s.log).map(function(e){e.local_time=new Intl.DateTimeFormat('ru-RU',{timeZone:s.zone || 'UTC',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23',timeZoneName:'shortOffset'}).format(new Date(e.time*1000));return e;}),limit_bytes:32768};
  else if(name==='clock'){
   var t={};new Intl.DateTimeFormat('en-GB',{timeZone:s.zone,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'}).formatToParts(new Date()).forEach(function(p){t[p.type]=Number(p.value);});

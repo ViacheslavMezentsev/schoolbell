@@ -295,3 +295,9 @@ The blue bar below the audio row shows saved volume, not signal level; mute does
 Move the volume slider to a step and select ✓ Apply volume. The saved gain stays unchanged until applied. Steps are evenly spaced: 0, 10, 20…100 %, mapped to the nearest supported device gain. Existing settings stay unchanged until applied; 0 % is a rounded minimum, while Mute fully disables sound. Journal controls: ↻ refresh, ⧉ copy, ⏮/⏭ first/last page.
 
 💾 Save draft saves current edits. 💾 Save settings saves bell settings together with the entire schedule/plan draft. Neither action enables automatic bells. Discard edits reloads the saved draft with confirmation before losing unsaved changes; Compare with device lets you compare copies.
+
+## Automatic bell metrics
+
+Metrics combines device resources and recorded automatic playbacks. Successful scheduled and calendar-plan playbacks count, including pre-bells; manual tests, cancellations and failures do not. Player success does not prove sound reached the speakers.
+
+Counters persist independently of journal rotation, across restarts and settings reset. Up to 400 recorded dates are retained; the grid shows 33 weeks. Pre-upgrade history may be incomplete: only retained journal events can be recovered. Unknown dates do not imply silence. Zero is the recorded completion count for a date when automation was enabled, not proof of continuous operation. Counters are not transferred in .sbb/.sbp.
