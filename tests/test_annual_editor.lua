@@ -5,7 +5,7 @@ local count=0
 local function test(name,f) f();count=count+1;print("PASS annual editor: "..name)end
 local original='{"pre_minutes":5,"pre_media":"test","schedules":[{"id":"day","name":"Day","rows":[{"id":"r1","time":"08:00","media":"test","enabled":true,"pre":true}]}]}'
 local function data()return assert(J.decode(original))end
-local function plan(d,y,days) d.plans=assert(J.decode("[]"));d.plans[1]={year=y,schedule_ids={"day"},days=days};return C.encode(d)end
+local function plan(d,y,days) d.active_plan="year-"..y;d.plans=assert(J.decode("[]"));d.plans[1]={year=y,schedule_ids={"day"},days=days};return C.encode(d)end
 test("legacy bytes and revision stay unchanged",function()
  local d,body=S.validate(original);assert(d and not d.plans)
  assert(body==C.encode(assert(J.decode(original))))
@@ -35,7 +35,7 @@ test("Dec to Jan across explicitly assigned years",function()
  local d=data();d.schedules[1].rows[1].time="00:03";plan(d,2026,string.rep("A",365))
  d.plans[2]={year=2027,schedule_ids={"day"},days="A"..string.rep(".",364)}
  local p=S.preview(C.encode(d),"2026-12-31")
- assert(p.ok and p.events[#p.events].origin_date=="2027-01-01")
+ assert(p.ok and #p.events==1 and p.events[1].origin_date=="2026-12-31")
 end)
 test("disabled rows and empty schedules stay quiet",function()
  local d=data();d.schedules[1].rows[1].enabled=false
@@ -80,7 +80,7 @@ print("annual editor: "..count.." groups passed")
 
 -- TC-143: named ranges share the same date assignment semantics as legacy years.
 test("named multi-year range and inclusive endpoints",function()
- local d=data();d.mode='annual';d.plans={{id='academic',name='Учебный год',start='2026-12-31',["end"]='2028-01-01',schedule_ids={'day'},days=string.rep('A',367)}}
+ local d=data();d.mode='annual';d.active_plan='academic';d.plans={{id='academic',name='Учебный год',start='2026-12-31',["end"]='2028-01-01',schedule_ids={'day'},days=string.rep('A',367)}}
  local text=C.encode(d);assert(S.validate(text))
  for _,date in ipairs({'2026-12-31','2027-06-01','2028-01-01'})do assert(#S.preview(text,date).events==2,date)end
  assert(#S.preview(text,'2026-12-30').events==0);assert(#S.preview(text,'2028-01-02').events==0)
@@ -109,7 +109,7 @@ test("no fixed day quota and data size limit still enforced",function()
  d.plans[1].days=string.rep('.',13000);local v,e=S.validate(C.encode(d));assert(not v and e.code=='size')
 end)
 test("pre-bell crosses range boundary only into an audible day",function()
- local d=data();d.schedules[1].rows[1].time='00:03';d.plans={{id='a',name='A',start='2026-12-31',["end"]='2026-12-31',schedule_ids={'day'},days='A'},{id='b',name='B',start='2027-01-01',["end"]='2027-01-01',schedule_ids={'day'},days='A'}}
- local p=S.preview(C.encode(d),'2026-12-31');assert(#p.events==2 and p.events[2].origin_date=='2027-01-01')
- d.plans[1].days='.';assert(#S.preview(C.encode(d),'2026-12-31').events==0);assert(#S.preview(C.encode(d),'2027-01-01').events==1)
+ local d=data();d.schedules[1].rows[1].time='00:03';d.active_plan='a';d.plans={{id='a',name='A',start='2026-12-31',["end"]='2026-12-31',schedule_ids={'day'},days='A'},{id='b',name='B',start='2027-01-01',["end"]='2027-01-01',schedule_ids={'day'},days='A'}}
+ local p=S.preview(C.encode(d),'2026-12-31');assert(#p.events==1 and p.events[1].origin_date=='2026-12-31')
+ d.plans[1].days='.';assert(#S.preview(C.encode(d),'2026-12-31').events==0);assert(#S.preview(C.encode(d),'2027-01-01').events==0);d.active_plan='b';assert(#S.preview(C.encode(d),'2027-01-01').events==1)
 end)

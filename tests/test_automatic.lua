@@ -14,16 +14,23 @@ local d=S.empty();d.fixed_schedule='s';d.schedules={{id='s',name='School',rows={
 local resolver=function(_,t)return {t=='08:00' and 200 or 80}end
 test('fixed and pre melody',function()local e=assert(A.events(d,'2026-10-25',resolver));assert(#e==2 and e[1].media=='test' and e[2].media=='1')end)
 test('annual missing year/date stays quiet',function()d.mode='annual';assert(#assert(A.events(d,'2026-10-25',resolver))==0);d.mode='fixed'end)
-test('annual explicit date and no repeated year',function()d.mode='annual';d.plans={{year=2026,schedule_ids={'s'},days='A'..string.rep('.',364)}};assert(#assert(A.events(d,'2026-01-01',resolver))==2);assert(#assert(A.events(d,'2027-01-01',resolver))==0);d.mode='fixed';d.plans=nil end)
+test('annual explicit date and no repeated year',function()d.mode='annual';d.active_plan='year-2026';d.plans={{year=2026,schedule_ids={'s'},days='A'..string.rep('.',364)}};assert(#assert(A.events(d,'2026-01-01',resolver))==2);assert(#assert(A.events(d,'2027-01-01',resolver))==0);d.mode='fixed';d.plans=nil;d.active_plan=nil end)
 test('named range resolves across years and leaves gaps quiet',function()
- d.mode='annual';d.plans={{id='academic',name='School year',start='2026-12-31',["end"]='2027-01-01',schedule_ids={'s'},days='AA'}}
+ d.mode='annual';d.active_plan='academic';d.plans={{id='academic',name='School year',start='2026-12-31',["end"]='2027-01-01',schedule_ids={'s'},days='AA'}}
  assert(#assert(A.events(d,'2026-12-31',resolver))==2);assert(#assert(A.events(d,'2027-01-01',resolver))==2)
- assert(#assert(A.events(d,'2027-01-02',resolver))==0);d.mode='fixed';d.plans=nil
+ assert(#assert(A.events(d,'2027-01-02',resolver))==0);d.mode='fixed';d.plans=nil;d.active_plan=nil
 end)
 test('gap fold and simultaneous times reject day',function()local e,why=A.events(d,'2026-10-25',function()return {}end);assert(not e and why=='nonexistent_time');e,why=A.events(d,'2026-10-25',function()return {1,2}end);assert(not e and why=='ambiguous_time');e,why=A.events(d,'2026-10-25',function()return {1}end);assert(not e and why=='simultaneous_events')end)
 test('libc roundtrip and DST',function()
  local e=A.resolve('2026-01-01','08:00');assert(#e==1)
  if os.getenv('TZ')=='Europe/Berlin' then assert(#A.resolve('2026-03-29','02:30')==0);assert(#A.resolve('2026-10-25','02:30')==2)end
+end)
+test('selected plan context is independent of other plans',function()
+ local data=C.decode('{"mode":"annual","active_plan":"b","schedules":[{"id":"holiday","name":"Праздники","rows":[]}],"plans":[{"id":"a","name":"First","start":"2026-10-01","end":"2026-10-01","schedule_ids":[],"days":"."},{"id":"b","name":"Second","start":"2026-11-01","end":"2026-11-02","schedule_ids":["holiday"],"days":"A."}]}')
+ assert(S.context(data,'2026-10-01').day=='outside')
+ local today=S.context(data,'2026-11-01');assert(today.plan=='Second' and today.schedule=='Праздники' and today.day=='empty')
+ assert(S.context(data,'2026-11-02').day=='quiet')
+ data.active_plan=nil;assert(S.context(data,'2026-11-01').day=='no_plan')
 end)
 local files={};local fail_at;local steps=0
 local function op()steps=steps+1;if steps==fail_at then error('fault')end end
@@ -86,6 +93,38 @@ test('legacy stopped state and failed resume cannot invent a plan',function()
  files['automatic.json']=nil
  local stopped=Store.change(fs,false,nil,env);assert(not stopped.plan)
  assert(not pcall(Store.resume,fs,draft.revision,stopped.generation,env,function()return true end))
+end)
+test('save cannot remove applied calendar plan, running or stopped',function()
+ files={}
+ local data=S.empty();data.mode='annual';data.active_plan='a'
+ local function plan(id,date)return {id=id,name=id,start=date,['end']=date,schedule_ids=C.decode('[]'),days='.'}end
+ data.plans={plan('a','2026-10-25'),plan('b','2026-10-26'),plan('c','2026-10-27')}
+ local saved=S.save(fs,C.encode(data),S.load(fs).revision);assert(saved.ok)
+ local prepared=Store.change(fs,'apply',saved.revision,env);assert(not prepared.enabled)
+ Store.resume(fs,saved.revision,prepared.generation,env,function()return true end)
+ data.plans[1].name='Changed'
+ assert(S.save(fs,C.encode(data),saved.revision).code=='source_running');data.plans[1].name='a'
+ assert(Store.change(fs,'apply',saved.revision,env).enabled)
+ data.active_plan='b';table.remove(data.plans,3)
+ saved=S.save(fs,C.encode(data),saved.revision);assert(saved.ok)
+ table.remove(data.plans,1)
+ local old=files['current.json']
+ assert(S.save(fs,C.encode(data),saved.revision).code=='plan_in_use' and files['current.json']==old)
+ Store.change(fs,false,nil,env)
+ assert(S.save(fs,C.encode(data),saved.revision).code=='plan_in_use' and files['current.json']==old)
+ Store.change(fs,true,saved.revision,env)
+ assert(S.save(fs,C.encode(data),saved.revision).ok)
+end)
+test('save cannot remove retained fixed schedule',function()
+ local current=S.load(fs);local data=current.data
+ data.mode='fixed';data.fixed_schedule='day'
+ data.schedules={{id='day',name='Day',rows=C.decode('[]')}}
+ local saved=S.save(fs,C.encode(data),current.revision);assert(saved.ok)
+ Store.change(fs,true,saved.revision,env);data.schedules[1].name='Renamed'
+ assert(S.save(fs,C.encode(data),saved.revision).code=='source_running');Store.change(fs,false,nil,env)
+ saved=S.save(fs,C.encode(data),saved.revision);assert(saved.ok)
+ data.fixed_schedule='quiet';data.schedules=C.decode('[]')
+ assert(S.save(fs,C.encode(data),saved.revision).code=='schedule_in_use')
 end)
 test('corruption refuses recovery/activation',function()files['automatic.json']='broken';assert(not pcall(Store.change,fs,true,draft.revision,env))end)
 local method,length,security,status='POST','2000',0,nil

@@ -32,12 +32,17 @@ end
 function M.change(fs,enabled,revision,env)
  local current=M.decode(fs.read(M.name,M.max_bytes))
  assert(current.generation<2147483647,'generation')
+ local applying=enabled=="apply"
+ if applying then enabled=current.enabled end
  local v={enabled=enabled,generation=current.generation+1,watermark=enabled and math.max(current.watermark,env.now) or current.watermark}
- if enabled then
+ if applying or enabled then
   local draft=S.load(fs);assert(draft.ok and draft.revision~='empty' and draft.revision==revision,'draft_conflict')
-  assert(env.now>=1577836800 and env.now<2145916800,'clock_range')
-  local events,why=require('schoolbell.automatic').events(draft.data,env.date,env.resolve)
-  assert(events,why)
+  if enabled then assert(env.now>=1577836800 and env.now<2145916800,'clock_range') end
+  assert(draft.data.mode=='fixed' or S.selected_plan(draft.data),'select_plan')
+  if enabled then
+   local events,why=require('schoolbell.automatic').events(draft.data,env.date,env.resolve)
+   assert(events,why)
+  end
   v.plan=draft.data;v.revision=draft.revision;v.boot=env.boot;v.zone=env.zone
  elseif current.plan then
   v.plan=current.plan;v.revision=current.revision;v.boot=current.boot;v.zone=current.zone
@@ -51,7 +56,8 @@ function M.resume(fs,revision,generation,env,admit)
  assert(current.revision==revision and current.generation==generation,'active_conflict')
  assert(current.generation<2147483647,'generation')
  assert(env.now>=1577836800 and env.now<2145916800,'clock_range')
- local events,why=require('schoolbell.automatic').events(current.plan,env.date,env.resolve)
+ assert(current.plan.mode=='fixed' or S.selected_plan(current.plan),'select_plan')
+  local events,why=require('schoolbell.automatic').events(current.plan,env.date,env.resolve)
  assert(events,why)
  assert(admit(current.plan),'resume_not_ready')
  local v={enabled=true,generation=current.generation+1,plan=current.plan,revision=current.revision,

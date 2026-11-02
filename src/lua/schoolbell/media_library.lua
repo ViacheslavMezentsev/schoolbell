@@ -3,6 +3,12 @@ local Manager=require('schoolbell.media_manager')
 local M={max_upload_bytes=65536,root='/etc/modbus-schoolbell/data',slots={'test','0','1','2','3','4'},sizes={test=13104,['0']=41273,['1']=63321,['2']=69904,['3']=68023,['4']=82368}}
 M.titles={test='Тестовый звонок',['0']='[Короткая] Время',['1']='Шутка Баха',['2']='Гостья из будущего',['3']='Князь Игорь',['4']='Усатый нянь'}
 M.editable=require('schoolbell.media_ids').user
+function M.valid_title(title)
+ if type(title)~='string' or #title>96 or title:find('[%c]') then return false end
+ local visible=title:gsub('%s','')
+ for _,space in ipairs({' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','　','﻿'}) do visible=visible:gsub(space,'') end
+ return #visible>0
+end
 function M.valid(id)return type(id)=='string' and (M.sizes[id]~=nil or M.editable(id))end
 function M.open(fs,root,owned)
  local manager=Manager.new(fs,{ownership_safe=owned});local api={}
@@ -32,13 +38,13 @@ function M.open(fs,root,owned)
   for _,v in ipairs(list.slots)do if v.id==id then assert(v.source~='empty','missing media');return v.source=='user' and root..'/objects/'..v.revision or '/usr/share/schoolbell-sound-test/'..id..'.mp3',v end end
  end
  function api.replace(id,name,expected,op,source,audio,title)
+  assert(M.valid_title(title or name),'title')
   assert(M.editable(id) and type(name)=='string' and #name>0 and #name<=96 and not name:find('[%c]'),'name')
   local state,cat=read();if expected~=(state.generation or 0)then return {status='conflict'}end
   -- Any unreferenced leftovers are removed only with exclusive ownership.
   if state.state=='ready' then assert(manager.cleanup().status=='cleaned','cleanup')end
   local st=assert(fs.stat('upload.part'));assert(st.size>0 and st.size<=M.max_upload_bytes,'size')
   local hash=fs.hash('upload.part');local revision={revision=hash,source='user',size_bytes=st.size,audio=audio}
-  if title~=nil then assert(type(title)=='string' and #title>0 and #title<=96 and not title:find('[%c]'),'title')end
   local replacement={id=id,name=name,title=title or name,revisions={revision}};local found=false
   for i,m in ipairs(cat.melodies)do if m.id==id then cat.melodies[i]=replacement;found=true end end
   if not found then cat.melodies[#cat.melodies+1]=replacement end
@@ -52,7 +58,7 @@ function M.open(fs,root,owned)
  end
  function api.rename(id,title,expected,op)
   assert(M.editable(id),'protected')
-  assert(type(title)=='string' and #title>0 and #title<=96 and title:find('%S') and not title:find('[%c]'),'title')
+  assert(M.valid_title(title),'title')
   local state,cat=read()
   if expected~=(state.generation or 0)then return {status='conflict'}end
   local found

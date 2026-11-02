@@ -26,7 +26,7 @@ local function check(date)
  print('PASS independent 15+6 worker-calendar oracle '..date..' '..d.mode)
 end
 check('2026-10-25');check('2026-10-26')
-d.mode='annual';d.plans={{year=2026,schedule_ids={'school'},days=string.rep('.',297)..'A'..string.rep('.',67)}}
+d.mode='annual';d.active_plan='year-2026';d.plans={{year=2026,schedule_ids={'school'},days=string.rep('.',297)..'A'..string.rep('.',67)}}
 check('2026-10-25')
 assert(#assert(A.events(d,'2026-10-24'))==0)
 assert(#assert(A.events(d,'2026-10-26'))==0)

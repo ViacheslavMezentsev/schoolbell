@@ -40,8 +40,11 @@ assert(drain(function()assert(W.sample('user1',function(s)coroutine.yield(s)end)
 local failed;drain(function()failed=W.sample('user1',function()coroutine.yield('chunk');error('disconnected')end)end);assert(not failed.ok and W.list().ok)
 print('PASS yielding media upload/download and disconnected sink cleanup on Lua 5.1')
 assert(W.lookup(string.rep('d',32)).state=='unknown')
-local plan={pre_media='test',schedules={{rows={{media='user5',enabled=true,pre=false}}}}}
-assert(not W.plan_ready(plan));plan.schedules[1].rows[1].media='user1';assert(W.plan_ready(plan))
+local plan={mode='fixed',fixed_schedule='s',pre_media='test',schedules={{id='s',rows={{media='user5',enabled=true,pre=false}}}}}
+assert(not W.plan_ready(plan))
+plan.mode='annual';plan.active_plan='p';plan.plans={{id='p',schedule_ids={'s'},days='.'}}
+assert(W.plan_ready(plan));plan.plans[1].days='A';assert(not W.plan_ready(plan))
+plan.mode='fixed';plan.schedules[1].rows[1].media='user1';assert(W.plan_ready(plan))
 for i=2,8 do
  local at=1;local result=W.upload({id='user'..i,name='bell'..i..'.mp3',size=#bytes,generation=i-1,operation=string.rep(tostring(i),32)},function()if at>#bytes then return nil end;local b=bytes:sub(at,at+4095);at=at+#b;return b end);assert(result.ok)
 end
@@ -109,6 +112,7 @@ S.load=savedload;package.loaded['schoolbell.automatic_store'].decode=olddecode
 print('PASS fast listing: no full draft/active validation or editor lock; malformed hints disable deletion')
 
 -- TC-199: metadata-only rename preserves the exact audio object and all row references.
+for _,title in ipairs({'','   ',' ','　'}) do assert(not require('schoolbell.media_library').valid_title(title)) end
 local function rename(id,title,gen,op)return W.rename({id=id,title=title,generation=gen,operation=string.rep(op,32)})end
 local listing=W.list();local gen=listing.generation;local original
 for _,v in ipairs(listing.slots)do if v.id=='user5' then original=v end end

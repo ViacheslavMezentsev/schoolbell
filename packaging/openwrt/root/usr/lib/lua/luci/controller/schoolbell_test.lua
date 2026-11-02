@@ -101,6 +101,7 @@ function clock_trust()
  end
  local _,C=editor();local session=d.context.authsession
  if type(session)~='string' or #session==0 then h.status(403,'Forbidden');return end
+ if h.formvalue('action')=='enable' then respond({ok=false,code='reload_interface'});return end
  local owner=C.sha(session);local m=require('schoolbell.clock_mailbox').system()
  if method=='GET'then respond(m.poll(h.formvalue('operation',true),owner));return end
  respond(m.submit({id=h.formvalue('operation'),owner=owner,action=h.formvalue('action'),challenge=h.formvalue('challenge'),ack=h.formvalue('ack'),enforced=h.formvalue('enforced'),revision=h.formvalue('revision'),generation=h.formvalue('generation'),epoch=h.formvalue('epoch')}))
@@ -123,23 +124,24 @@ function automatic()
   local size=tonumber(h.getenv('CONTENT_LENGTH'))
   if not size or size<1 or size>1024 or not (h.getenv('CONTENT_TYPE') or ''):match('^application/x%-www%-form%-urlencoded')then h.status(413,'Unsupported request');return end
   if not require('luci.dispatcher').test_post_security()then return end
-  local enabled=h.formvalue('enabled');if enabled~='true' and enabled~='false' then respond({ok=false,code='invalid'});return end
+  local apply=h.formvalue('action')=='apply';local enabled=h.formvalue('enabled');if not apply and enabled~='true' and enabled~='false' then respond({ok=false,code='invalid'});return end
   if enabled=='true'then respond({ok=false,code='use_clock_command'});return end
   editor();local m=require('schoolbell.automatic_store')
   local gate=require('schoolbell.sound_test').lock;local fs=require('nixio.fs');local acquired=false
-  if enabled=='true' then acquired=fs.mkdir(gate,700);if not acquired then respond({ok=false,code='busy'});return end end
+  if apply then acquired=fs.mkdir(gate,700);if not acquired then respond({ok=false,code='busy'});return end end
   local safe,result=pcall(function()
    if acquired then
     local saved=require('schoolbell.schedule_store').request('/etc/schoolbell-editor','load')
+    if saved.ok and saved.data.mode~='fixed' and not require('schoolbell.schedule_store').selected_plan(saved.data) then return {ok=false,code='select_plan'} end
     if not saved.ok or not require('schoolbell.media_web').plan_ready(saved.data)then return {ok=false,code='missing_media'}end
    end
-   return m.transaction(m.change,enabled=='true',h.formvalue('revision'),m.environment())
+   return m.transaction(m.change,apply and 'apply' or false,h.formvalue('revision'),m.environment())
   end)
   if acquired and not fs.rmdir(gate)then safe=false end
   if not safe then result={ok=false,code='automatic_storage'}end
-  audit(result.ok and (enabled=='true' and 'auto_enabled' or 'auto_disabled') or 'auto_blocked',result)
+  audit(result.ok and (apply and 'draft_applied' or 'auto_disabled') or 'auto_blocked',result)
   -- Never echo the private snapshot or internal storage error to the browser.
-  respond({ok=result.ok,code=result.code,generation=result.ok and result.state.generation or nil});return
+  respond({ok=result.ok,code=result.code,enabled=result.ok and result.state.enabled,generation=result.ok and result.state.generation or nil});return
  end
  editor();local m=require('schoolbell.automatic_store')
  local ok,result=pcall(function()

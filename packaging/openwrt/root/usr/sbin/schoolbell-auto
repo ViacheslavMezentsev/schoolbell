@@ -28,6 +28,7 @@ local mailbox=require('schoolbell.clock_mailbox').system('worker')
 local command=require('schoolbell.clock_commands').new(Clock,{
  enable=function(revision)
   local saved=require('schoolbell.schedule_store').request(Store.root,'load')
+  if saved.ok and saved.data.mode~='fixed' and not require('schoolbell.schedule_store').selected_plan(saved.data)then return {ok=false,code='select_plan'}end
   if not saved.ok or not require('schoolbell.media_web').plan_ready(saved.data)then return {ok=false,code='missing_media'}end
   if not Clock.admit()then return {ok=false,code='clock_untrusted'}end
   local v=Store.transaction(Store.change,true,revision,Store.environment());return {ok=v.ok,code=v.code,generation=v.ok and v.state.generation or nil}
@@ -112,7 +113,10 @@ local function tick()
   active=v;cached=raw
  end
  local v={ok=true,enabled=active.enabled,generation=active.generation,revision=active.revision,now=now}
- if active.plan then v.mode=active.plan.mode or 'annual' end
+ if active.plan then
+  v.mode=active.plan.mode or 'annual'
+  v.context=require('schoolbell.schedule_store').context(active.plan,env.date)
+ end
  if not active.enabled then v.state='disabled'
  elseif active.boot~=env.boot then v.state='confirm_clock'
  elseif active.zone~=env.zone or started.zone~=env.zone then v.state='timezone_changed'

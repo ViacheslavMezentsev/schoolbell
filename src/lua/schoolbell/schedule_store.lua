@@ -11,7 +11,15 @@ local function object(t,fields,path)
     for k in pairs(t) do if fields[k]==nil then fail("unknown_field",path.."."..tostring(k)) end end
     for k,required in pairs(fields) do if required and t[k]==nil then fail("missing_field",path.."."..k) end end
 end
-local function expand_plans(d)
+local function plan_id(plan)
+    return plan.id or "year-"..plan.year
+end
+function M.selected_plan(d)
+    for _,plan in ipairs(d.plans or {}) do
+        if plan_id(plan)==d.active_plan then return plan end
+    end
+end
+local function expand_plans(d,selected_only)
     if d.plans==nil then return {} end -- legacy drafts are read without rewriting
     if J.kind(d.plans)~="array" or #d.plans>8 then fail("limit","plans") end
     local ids,plan_ids,ranges,out={},{},{},{}
@@ -53,7 +61,9 @@ local function expand_plans(d)
                 days[assert(Calendar.add_days(first,day-1))]=p.schedule_ids[slot]
             end
         end
-        out[i]={start=first,["end"]=last,days=days}
+        if not selected_only or plan_id(p)==d.active_plan then
+            out[#out+1]={start=first,["end"]=last,days=days}
+        end
     end
     return out
 end
@@ -62,7 +72,7 @@ function M.validate(text)
     local d,e=J.decode(text)
     if not d then return nil,{code="json",path=e.code} end
     local ok,why=pcall(function()
-        object(d,{schedules=true,pre_minutes=true,pre_media=true,plans=false,mode=false,fixed_schedule=false,manual_media=false},"draft")
+        object(d,{schedules=true,pre_minutes=true,pre_media=true,plans=false,mode=false,active_plan=false,fixed_schedule=false,manual_media=false},"draft")
         if J.kind(d.schedules)~="array" or #d.schedules>16 then fail("limit","schedules") end
         if not Media.valid(d.pre_media) then fail("media_reference","pre_media") end
         if d.mode~=nil and d.mode~='fixed' and d.mode~='annual' then fail('mode','mode')end
@@ -84,6 +94,7 @@ function M.validate(text)
             pre_minutes=d.pre_minutes,pre_media=d.pre_media,media=Media.references(d),
             schedules=schedules,plans=expand_plans(d)})
         if not valid then fail(err.code,err.path) end
+        if d.active_plan~=nil and not M.selected_plan(d) then fail("plan_reference","active_plan") end
     end)
     if not ok then return nil,type(why)=="table" and why or {code="invalid"} end
     local encoded=C.encode(d)
@@ -99,7 +110,7 @@ function M.preview(text,date)
     local fixed=d.fixed_schedule or 'quiet'
     local model,err=Calendar.compile({revision="preview",mode=mode,fixed_schedule=fixed,timezone="civil",
         pre_minutes=d.pre_minutes,pre_media=d.pre_media,media=Media.references(d),
-        schedules=schedules,plans=expand_plans(d)})
+        schedules=schedules,plans=expand_plans(d,true)})
     if not model then return {ok=false,code="invalid",detail=err} end
     -- Offset zero is an arithmetic coordinate for wall times, not UTC or a router zone.
     local preview,why=model.calculate(date,date,assert(Calendar.fixed_offset("civil",0)))
@@ -111,6 +122,34 @@ function M.preview(text,date)
     end
     return {ok=true,active=false,clock_basis="civil",date=date,
         selected_schedule=preview.days[1].schedule_id,events=events}
+end
+-- Read only the assignment for today from the worker's validated snapshot.
+function M.context(d,date)
+    local sid=d.fixed_schedule or "quiet"
+    local info={}
+    if d.mode=="fixed" then info.fixed_id=sid end
+    if d.mode~="fixed" then
+        local plan=M.selected_plan(d)
+        if not plan then return {day="no_plan"} end
+        info.plan_id=plan_id(plan)
+        info.plan=plan.name or ("План "..plan.year)
+        local first=plan.start or string.format("%04d-01-01",plan.year)
+        local offset=Calendar.ordinal(date)-Calendar.ordinal(first)+1
+        if offset<1 or offset>#plan.days then info.day="outside";return info end
+        sid=plan.schedule_ids[plan.days:byte(offset)-64]
+    end
+    info.day="quiet"
+    for _,schedule in ipairs(d.schedules) do
+        if schedule.id==sid then
+            info.schedule=schedule.name
+            info.day="empty"
+            for _,row in ipairs(schedule.rows) do
+                if row.enabled then info.day="scheduled";break end
+            end
+            break
+        end
+    end
+    return info
 end
 function M.empty()
     return {schedules=array(),pre_minutes=2,pre_media="test",manual_media="test",mode="fixed",fixed_schedule="quiet"}
@@ -132,6 +171,12 @@ function M.load(fs)
     local ok,result=pcall(read,fs)
     return ok and result or {ok=false,code="recovery_required"}
 end
+local function removed_ids(before,after,key)
+    local removed={}
+    for _,item in ipairs(before or {}) do removed[key(item)]=true end
+    for _,item in ipairs(after or {}) do removed[key(item)]=nil end
+    return removed
+end
 function M.save(fs,text,expected)
     local data,body=M.validate(text)
     if not data then return {ok=false,code="invalid",detail=body} end
@@ -141,6 +186,36 @@ function M.save(fs,text,expected)
     local ok,result=pcall(function()
         local current,old=read(fs)
         if expected~=current.revision then return {ok=false,code="conflict"} end
+        -- Check against the applied snapshot under the same lock as activation.
+        local removed_plans=removed_ids(current.data.plans,data.plans,plan_id)
+        local removed_schedules=removed_ids(current.data.schedules,data.schedules,function(s)return s.id end)
+        do
+            local store=require('schoolbell.automatic_store')
+            local snapshot=store.decode(fs.read(store.name,store.max_bytes))
+            local applied=snapshot.plan
+            if current.data.mode=='fixed' and removed_schedules[current.data.fixed_schedule] then return {ok=false,code="schedule_in_use"} end
+            if current.data.mode~='fixed' and removed_plans[current.data.active_plan] then return {ok=false,code="plan_in_use"} end
+            if applied and applied.mode~='fixed' and removed_plans[applied.active_plan] then
+                return {ok=false,code="plan_in_use"}
+            end
+            if applied and applied.mode=='fixed' and removed_schedules[applied.fixed_schedule] then
+                return {ok=false,code="schedule_in_use"}
+            end
+            if snapshot.enabled and applied then
+                local fixed=applied.mode=='fixed'
+                local key=fixed and 'schedules' or 'plans'
+                local id=fixed and applied.fixed_schedule or applied.active_plan
+                local function source(config)
+                    for _,item in ipairs(config[key] or {}) do
+                        if (fixed and item.id or plan_id(item))==id then return item end
+                    end
+                end
+                local before,after=source(current.data),source(data)
+                if before and after and C.encode(before)~=C.encode(after) then
+                    return {ok=false,code="source_running",detail={name=before.name or id}}
+                end
+            end
+        end
         local digest=C.sha(body)
         if digest==current.revision then current.unchanged=true; return current end
         local raw=C.encode({data=data,checksum=digest})

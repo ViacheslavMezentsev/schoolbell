@@ -71,7 +71,7 @@ function M.remove(args)
  end,true)
 end
 function M.rename(args)
- if not L.editable(args.id) or type(args.title)~='string' or #args.title<1 or #args.title>96 or not args.title:find('%S') or args.title:find('[%c]')
+ if not L.editable(args.id) or not L.valid_title(args.title)
   or not C.integer(args.generation,0,2147483646) or not C.hex(args.operation,32)then return {ok=false,code='invalid'}end
  return session(function(lib)
   local A=require('schoolbell.automatic_store');if A.decode(A.raw()).enabled then return {ok=false,code='automatic_enabled'}end
@@ -97,8 +97,18 @@ function M.plan_ready(plan)
  local ok,ready=pcall(function()
   lib=L.open(fs,L.root,function()return true end);local available={}
   for _,v in ipairs(lib.list().slots)do if v.source~='empty'then available[v.id]=true end end
+  local used={}
+  if plan.mode=='fixed' then
+   used[plan.fixed_schedule or 'quiet']=true
+  else
+   local selected=require('schoolbell.schedule_store').selected_plan(plan)
+   if not selected then return false end
+   for i,id in ipairs(selected.schedule_ids)do
+    if selected.days:find(string.char(64+i),1,true)then used[id]=true end
+   end
+  end
   for _,schedule in ipairs(plan.schedules)do for _,row in ipairs(schedule.rows)do
-   if row.enabled and (not available[row.media] or (row.pre and not available[plan.pre_media]))then return false end
+   if used[schedule.id] and row.enabled and (not available[row.media] or (row.pre and not available[plan.pre_media]))then return false end
   end end
   return true
  end)
@@ -120,7 +130,7 @@ function M.decode(path,retain)
  assert(result.ok,'decoder failed')
 end
 function M.upload(args,source)
- if (args.title~=nil and (type(args.title)~='string' or #args.title<1 or #args.title>96 or args.title:find('[%c]'))) or not (args.id=='new' or L.editable(args.id)) or type(args.name)~='string' or #args.name<1 or #args.name>96 or args.name:find('[%c]')
+ if not L.valid_title(args.title or args.name) or not (args.id=='new' or L.editable(args.id)) or type(args.name)~='string' or #args.name<1 or #args.name>96 or args.name:find('[%c]')
   or not C.integer(args.generation,0,2147483646) or not C.hex(args.operation,32) or not C.integer(args.size,1,L.max_upload_bytes)then return {ok=false,code='invalid'}end
  return session(function(lib,fs,retain,editor)
   local A=require('schoolbell.automatic_store');if A.decode(A.raw()).enabled then return {ok=false,code='automatic_enabled'}end
