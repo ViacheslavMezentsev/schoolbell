@@ -2,6 +2,10 @@
 
 ## Приоритет: надёжная подача звонков / Priority: reliable playback
 
+- [ ] На стенде подтвердить подачу следующего звонка после отдельного включения применённого источника в каждом из двух режимов. / On the bench, verify the next audible bell after separately starting each applied source mode.
+- [ ] Приёмка маршрута дежурного: связать запись о выполненном звонке с планом, расписанием дня и назначенным местным временем. Сейчас журнал хранит тип события и время регистрации, карта — дневное число успешных завершений. / Operator acceptance: trace completed playback to its applied plan, daily schedule and scheduled time.
+- [ ] Явный выбор исполняемого календарного плана, статус применённого снимка и сквозная приёмка TC-207–TC-210 / Explicit calendar plan selection, applied status and end-to-end acceptance.
+
 - [ ] Установить причину оставшегося пустого замка медиатеки после завершения запросов; безопасное восстановление выполнено, автоматическое снятие не добавлялось / Identify the cause of the orphan empty media gate; safe recovery performed, no automatic gate removal added.
 
 - [x] Прежняя AB13X напрямую/OHCI: 100 успехов подряд, −60 дБ, auto-off; без новых ошибок URB, одна запись cannot get freq / Original AB13X direct/OHCI: 100 consecutive successes, -60 dB, auto off; no new URB errors, one cannot get freq message.

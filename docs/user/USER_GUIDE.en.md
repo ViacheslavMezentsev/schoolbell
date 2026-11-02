@@ -23,7 +23,7 @@ The Draft panel starts collapsed. Click its summary to see the active-plan compa
 
 Use Resolve problem in the header. The panel explains the latest confirmed state. Read status again never repeats commands or replaces edits. Suggested actions open the relevant section; time confirmation, saving and enabling remain separate actions. An expired session offers sign-in.
 
-No fresh data means no current module response, not a confirmed Wi-Fi failure. Technical details contain draft and applied-copy identifiers for version comparison; these are not error codes. For recurring problems, open the journal and feedback. Time protection and locks are never automatically cleared.
+No fresh data means no current module response, not a confirmed Wi-Fi failure. Details show whether the saved and working copies match. For recurring problems, open the journal and feedback. Time protection and locks are never automatically cleared.
 
 Calendar months run consecutively across year boundaries. Longer plans use pages of 12 months with previous/next buttons. Navigation does not require saving.
 
@@ -73,7 +73,7 @@ the draft; «Мелодии» manages audio; «Настройки» controls tim
    router time. Disable preliminary ringing for this test.
 4. In Settings select «По расписанию» and that schedule, then «💾 Сохранить настройки».
 5. Preview today and check there are no unsaved changes.
-6. Click «Применить сохранённый план и включить», review/confirm, ensure Mute is off
+6. Click «Применить сохранённый черновик», confirm, start Automatic bells in the header, and ensure Mute is off
    and the executor permits ringing. Use a short melody and low speaker volume.
 7. After the test click «Отключить автозвонки». The schedule remains saved.
 
@@ -112,16 +112,10 @@ time/audio; it does not check timezone transitions or execution readiness.
 | Editing | Changes remain in the browser |
 | «Сохранить черновик» / «Сохранить черновик на роутере» | Persist the draft without replacing the active copy |
 | «Загрузить сохранённое» | Reload saved data; unsaved work may be lost |
-| «Применить сохранённый план и включить» | Explicitly activate the saved copy after confirmation |
+| «Применить сохранённый черновик» | Explicitly activate the saved copy after confirmation |
 | «Отключить автозвонки» | Disable automatic bells without deleting the plan |
 
-Read the separate draft and active-plan lines. For conflicts or unknown save outcomes,
-click «Сверить с роутером». Local edits remain; read the two summaries and expand full
-fields as needed. «Оставить локальные правки» prepares a separate future save against
-the inspected revision; «Взять копию роутера» discards local edits only after confirmation.
-Matching copies after a lost reply need no repeated write. Editing invalidates the
-comparison. Failed reads preserve edits and require another comparison. Choosing a
-copy never activates bells. Once enabled, bells work with the browser
+Read the separate draft and active-plan lines. If saving fails, your edits stay in the browser. Choose Discard edits and confirm to load the saved draft. Once enabled, bells work with the browser
 closed. Missed bells are not replayed. Use Mute for urgently stopping current sound;
 disabling automatic bells alone does not prohibit manual ringing.
 
@@ -255,7 +249,7 @@ The Journal shows 20 entries per page. Errors toggles red error records; Copy co
 
 ## Temporary contention and backup time
 
-Draft reads retry temporary contention a bounded number of times. After failure use Retry read; for an open draft use Compare with device to retain local edits. Saves never replay automatically. Do not remove locks manually.
+Draft reads retry temporary contention a bounded number of times. After failure use Retry read; to reload an open draft use Discard edits and confirm replacement. Saves never replay automatically. Do not remove locks manually.
 
 A separately powered Modbus RTC board is proposed for future post-reboot time recovery; it is not implemented. Discovery does not establish trust. Freshness/health checks, explicit trusted-source selection and separate permission to resume the previously applied plan are required. A backup battery/UPS can power the device and speakers, but has finite capacity; it neither verifies clock accuracy nor replaces an RTC after full power loss. Power compatibility and runtime need validation on the actual setup.
 
@@ -294,10 +288,14 @@ The blue bar below the audio row shows saved volume, not signal level; mute does
 
 Move the volume slider to a step and select ✓ Apply volume. The saved gain stays unchanged until applied. Steps are evenly spaced: 0, 10, 20…100 %, mapped to the nearest supported device gain. Existing settings stay unchanged until applied; 0 % is a rounded minimum, while Mute fully disables sound. Journal controls: ↻ refresh, ⧉ copy, ⏮/⏭ first/last page.
 
-💾 Save draft saves current edits. 💾 Save settings saves bell settings together with the entire schedule/plan draft. Neither action enables automatic bells. Discard edits reloads the saved draft with confirmation before losing unsaved changes; Compare with device lets you compare copies.
+💾 Save draft saves current edits. 💾 Save settings saves bell settings together with the entire schedule/plan draft. Neither action enables automatic bells. Discard edits reloads the saved draft with confirmation before losing unsaved changes;
 
 ## Automatic bell metrics
 
 Metrics combines device resources and recorded automatic playbacks. Successful scheduled and calendar-plan playbacks count, including pre-bells; manual tests, cancellations and failures do not. Player success does not prove sound reached the speakers.
 
 Counters persist independently of journal rotation, across restarts and settings reset. Up to 400 recorded dates are retained; the grid shows 33 weeks. Pre-upgrade history may be incomplete: only retained journal events can be recovered. Unknown dates do not imply silence. Zero is the recorded completion count for a date when automation was enabled, not proof of continuous operation. Counters are not transferred in .sbb/.sbp.
+
+In Settings select calendar mode, choose a plan and save. Apply the saved draft to select the working plan while preserving the current on/off state. Confirm the clock and use Automatic bells to start. Fixed mode displays the working schedule name. Stop automatic bells before saving changes to the working source. The calendar outlines today according to the device clock. The header button resumes the previously applied version. The header shows the plan and daily schedule used by the worker.
+
+To delete the applied calendar plan, apply another plan or a fixed schedule first. Stopping retains the plan for resume. Check the plan name in the date preview.

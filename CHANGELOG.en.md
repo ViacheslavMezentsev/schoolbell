@@ -4,6 +4,19 @@
 
 ## Unreleased
 
+- 5.1.79: Compact sound test routes and separate clock verification settings.
+
+- 5.1.78: Removed the manual comparison and raw draft data from the editor.
+
+- 5.1.77: Apply the draft separately from starting automatic bells. Protect the running source on save.
+
+- Applied calendar plans are protected from deletion, including stopped snapshots. Date previews identify the plan and playback admission checks the selected mode’s media dependencies.
+
+- 5.1.76: explicit calendar plan selection in Settings and applied plan name in the header.
+
+
+- Draft specification 1.99 defines explicit calendar plan selection in Settings and acceptance from scheduled playback through the activity chart.
+
 - 5.1.75: periodic metrics GET reads the persisted snapshot without decoding the full journal; aggregation reuses already parsed events. The executor retries failed persistence without an open browser.
 
 - 5.1.74: retained journal events are aggregated on service startup even with automatic bells disabled; failed initialization retries at most once per minute.
