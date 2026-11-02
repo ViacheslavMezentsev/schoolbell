@@ -34,7 +34,7 @@ confirm.addEventListener('click',async function(){
  busy=true;draw();message.textContent='Устанавливаем время. Не повторяйте запрос…';
  try{
  var q=await window.schoolbellClockCommand({action:'set_time',challenge:p.id,epoch:String(Math.floor(Date.now()/1000)),ack:'true'});
- message.textContent=(q.simulated?'ДЕМО: установка имитирована. Реальные часы не менялись. ':'Время установлено и проверено. ')+'Автозвонки выключены. Сверьте показания и подтвердите время в этом блоке; включение плана выполняется отдельно.';
+ message.textContent=(q.simulated?'ДЕМО: установка имитирована. Реальные часы не менялись. ':'Время установлено и проверено. ')+'Автозвонки выключены. Если контроль включён, подтвердите показания в разделе «Проверка времени». Для запуска нажмите «Автозвонки».';
  }catch(e){message.textContent='Установка не подтверждена: '+explain(e)+' Сначала обновите показания; запрос автоматически не повторяется.';}
  finally{busy=false;draw();window.dispatchEvent(new Event('schoolbell-time-changed'));await read();}
 });

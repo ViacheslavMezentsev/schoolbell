@@ -10,10 +10,10 @@
   var name=document.getElementById('schedule-name');
   var rows=document.getElementById('schedule-rows');
   var draft=null, revision=null, selected=null, dirty=false, busy=false, reconcile=false, activationLock=false;
-  var compared=null, handoffReady=false, sessionEpoch=0;
+  var handoffReady=false, sessionEpoch=0;
   var handoffKey="schoolbell-editor-handoff-v1";
   var mediaNames={test:'Тестовый звонок','0':'[Короткая] Время','1':'Шутка Баха','2':'Гостья из будущего','3':'Князь Игорь','4':'Усатый нянь'};
-  function mediaLabel(id){return (mediaNames[id] || ('Пользовательская '+id.slice(4)))+' · '+id;}
+  function mediaLabel(id){return mediaNames[id] || 'Пользовательская мелодия';}
   function mediaOptions(box,value){box.replaceChildren();var ids=mediaIds.slice();if(value && ids.indexOf(value)<0)ids.push(value);ids.forEach(function(id){box.appendChild(textOption(id,mediaLabel(id)));});box.value=value;}
   window.addEventListener('schoolbell-media',function(e){mediaIds=e.detail.filter(function(v){return v.source!=='empty';}).map(function(v){return v.id;});e.detail.forEach(function(v){mediaNames[v.id]=v.title || v.name;});document.querySelectorAll('#manual-media,#pre-media,#schedule-rows select').forEach(function(box){mediaOptions(box,box.value);});});
   var mediaIds=["test","0","1","2","3","4"];
@@ -21,7 +21,7 @@
   var counter=0;
   var R=window.RangePlans,monthPage=0, brush='view', painting=false,planId=null,formPending=false,newPlan=false,copyPlan=null;
   var routerDate=null,trust=null;
-  window.addEventListener('schoolbell-router-date',function(e){routerDate={date:e.detail,at:performance.now()};});
+
   window.addEventListener('schoolbell-clock-state',function(e){trust=e.detail;});
   var monthNames=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
   // Schoolbell specification 4.6.64: built-in IDs and order are stable.
@@ -95,7 +95,45 @@
     });
     document.getElementById('plan-status').textContent=(p?p.name:'План ещё не создан')+': назначено '+(p?p.days.replace(/\./g,'').length:0)+' из '+(p?p.days.length:0)+' дней. Остальные тихие.';
   }
+
+  function markToday(button){
+    if(routerDate && button.dataset.date===routerDate.date)button.setAttribute('aria-current','date');
+    else button.removeAttribute('aria-current');
+  }
+  window.addEventListener('schoolbell-router-date',function(event){
+    var previous=routerDate;
+    routerDate={date:event.detail,at:performance.now()};
+    if(previous && previous.date===event.detail)return;
+    document.querySelectorAll('.calendar-day').forEach(markToday);
+  });
   function chooseBrush(value) {brush=value;renderAnnual();}
+  var appliedPlanId=null,appliedFixedId=null,running=false,savedDraft=null;
+  function protectedEdit(){
+    if(!running || !savedDraft || !draft || !dirty)return '';
+    var key=appliedFixedId?'schedules':'plans',id=appliedFixedId || appliedPlanId;
+    var before=savedDraft[key].find(x=>x.id===id),after=draft[key].find(x=>x.id===id);
+    return before && canonical(before)!==canonical(after)?'Чтобы изменить «'+before.name+'», остановите автозвонки.':'';
+  }
+  function deletionReason(){
+    if(planId && planId===appliedPlanId)return 'Этот план применён. Чтобы удалить его, сначала примените другой план или ежедневное расписание.';
+    if(planId && draft && draft.mode==='annual' && planId===draft.active_plan)return 'Этот план выбран в Настройках. Сначала измените выбор.';
+    return '';
+  }
+  function updateScheduleDelete(){
+    var button=document.getElementById('schedule-delete'),inUse=selected &&  (selected===appliedFixedId || draft && draft.mode==='fixed' && selected===draft.fixed_schedule);
+    button.disabled=!current() || !!inUse;
+    button.title=inUse?'Расписание применено. Сначала примените другой выбор.':'Удалить расписание';
+  }
+  function updateDelete(){
+    var button=document.getElementById('year-clear'),reason=deletionReason();
+    button.disabled=!plan() || !!reason;
+    button.title=reason || 'Удалить выбранный план';
+    document.getElementById('plan-delete-hint').textContent=reason;
+  }
+  window.addEventListener('schoolbell-diagnostic-state',function(event){
+    var v=event.detail && event.detail.value;
+    if(v){var changedStatus=running!==v.enabled || appliedPlanId!==(v.context && v.context.plan_id) || appliedFixedId!==(v.context && v.context.fixed_id);running=v.enabled;appliedPlanId=v.context && v.context.plan_id;appliedFixedId=v.context && v.context.fixed_id;if(draft){updateDelete();updateScheduleDelete();if(changedStatus)state();}}
+  });
   function renderAnnual() {
     var selectedPlan=plan();
     var plansBox=document.getElementById('calendar-plan');plansBox.replaceChildren();
@@ -103,7 +141,7 @@
     (draft.plans || []).forEach(function(p){plansBox.appendChild(textOption(p.id,p.name+' · '+p.start+' — '+p.end));});plansBox.value=planId || '';
     document.getElementById('plan-copy').disabled=!selectedPlan || (draft.plans || []).length>=8;
     document.getElementById('plan-new').disabled=(draft.plans || []).length>=8;
-    document.getElementById('year-clear').disabled=!selectedPlan;
+    updateDelete();
     var firstMonth=selectedPlan?Number(selectedPlan.start.slice(0,4))*12+Number(selectedPlan.start.slice(5,7))-1:0;
     var lastMonth=selectedPlan?Number(selectedPlan.end.slice(0,4))*12+Number(selectedPlan.end.slice(5,7))-1:0;
     var pages=selectedPlan?Math.ceil((lastMonth-firstMonth+1)/12):0;
@@ -144,7 +182,7 @@
         var sid=assigned(p,i),b=document.createElement('button');b.type='button';b.textContent=Number(date.slice(-2));
         b.title=date+' · '+scheduleName(sid);b.setAttribute('aria-label',b.title);b.className='calendar-day'+(weekday(date)>=5?' weekend':'');
         if(sid!=='quiet'){b.style.background=colorOf(sid);b.style.color=ink(colorOf(sid));}
-        b.dataset.index=i;b.dataset.date=date;
+        b.dataset.index=i;b.dataset.date=date;markToday(b);
         b.addEventListener('pointerdown',function(e){
           if(e.pointerType!=='mouse' || e.button!==0 || busy || activationLock || brush==='view')return;
           e.preventDefault();painting=true;document.getElementById('preview-date').value=date;paint([i],true);
@@ -179,29 +217,29 @@
   function state() {
     var locked=busy || activationLock || !!window.schoolbellSessionBlocked;
     document.getElementById('plan-apply').disabled=locked || !formPending;document.getElementById('plan-cancel').disabled=locked || !formPending;
-    document.getElementById('workflow-draft').textContent='Черновик: '+(formPending?'название и даты ещё не применены':reconcile?'нужно сверить сохранение':!draft?'ещё не загружен':dirty?'есть несохранённые изменения':revision==='empty'?'ещё не сохранён':'сохранён');
+    document.getElementById('workflow-draft').textContent='Черновик: '+(formPending?'название и даты ещё не применены':reconcile?'требуется повторная загрузка':!draft?'ещё не загружен':dirty?'есть несохранённые изменения':revision==='empty'?'ещё не сохранён':'сохранён');
     document.getElementById('workflow-save').disabled=locked || !draft || !dirty || reconcile || formPending;
-    ['manual-media','pre-media','pre-minutes','work-mode','fixed-schedule'].forEach(function(id){document.getElementById(id).disabled=locked || !draft || (id==='fixed-schedule' && draft.mode!=='fixed');});
+    ['manual-media','pre-media','pre-minutes','work-mode','fixed-schedule','active-plan'].forEach(function(id){document.getElementById(id).disabled=locked || !draft || (id==='fixed-schedule' && draft.mode!=='fixed') || (id==='active-plan' && draft.mode!=='annual');});
 
     document.getElementById('duty-state').textContent=busy?'Обмен с устройством…':reconcile?'Требуется сверка данных':!draft?'Данные недоступны':dirty?'Черновик изменён · не сохранён':revision==='empty'?'План ещё не сохранён':'Черновик сохранён';
 
     root.setAttribute('aria-busy',String(locked));
-    save.textContent=busy?'Обмен с устройством…':formPending?'Сначала примените название и даты':reconcile?'Сначала сверьте сохранённое':dirty?'💾 Сохранить черновик':'Нет изменений для сохранения';
+    var blocked=protectedEdit();
+    save.textContent=busy?'Обмен с устройством…':formPending?'Сначала примените название и даты':reconcile?'Загрузите сохранённую копию':dirty?'💾 Сохранить черновик':'Нет изменений для сохранения';
     fields.disabled=locked || !draft;
     save.disabled=locked || !draft || !dirty || reconcile || formPending;
     reload.disabled=locked;reload.title=draft?"Отменить несохранённые правки и загрузить сохранённый черновик":"Повторить чтение сохранённых данных";
     reload.textContent=draft?"Отменить правки":"Повторить чтение";
-    document.getElementById('draft-compare').disabled=locked || !draft || formPending;
-    document.getElementById('draft-keep-local').disabled=locked || !compared || formPending;
-    document.getElementById('draft-use-router').disabled=locked || !compared || formPending;
     document.getElementById('settings-save').disabled=locked || !dirty || reconcile || formPending;
+    if(blocked){save.disabled=true;document.getElementById('settings-save').disabled=true;document.getElementById('workflow-save').disabled=true;save.title=blocked;result.textContent=blocked;}
+    else {save.title='';if(result.textContent.startsWith('Чтобы изменить «'))result.textContent='Можно сохранить правки.';}
     document.getElementById('settings-result').textContent=result.textContent;
     document.getElementById('preview-day').disabled=locked || formPending;
     badge.textContent=!draft?'Черновик ещё не загружен':formPending?'Есть неприменённый ввод':busy?'Обмен с устройством…':dirty?'Есть несохранённые изменения':revision==='empty'?'Пока не сохранено':'Черновик сохранён';
     badge.dataset.dirty=dirty?'true':'false';
     window.dispatchEvent(new CustomEvent('schoolbell-editor-state'));
   }
-  function changed() { handoffReady=false;try{sessionStorage.removeItem(handoffKey);}catch(_){} compared=null;document.getElementById('draft-comparison').hidden=true; document.getElementById('preview-events').replaceChildren(); document.getElementById('preview-status').textContent='Черновик изменён. Обновите предпросмотр.'; dirty=true; result.textContent='Изменения только в браузере. Нажмите «Сохранить черновик». Активный план не меняется.'; state(); }
+  function changed() { handoffReady=false;try{sessionStorage.removeItem(handoffKey);}catch(_){}  document.getElementById('preview-events').replaceChildren(); document.getElementById('preview-status').textContent='Черновик изменён. Обновите предпросмотр.'; dirty=true; result.textContent='Изменения только в браузере. Нажмите «Сохранить черновик». Активный план не меняется.'; state(); }
   function textOption(value,text) { var o=document.createElement('option'); o.value=value; o.textContent=text; return o; }
   function render() {
     // Legacy drafts are only materialized in browser memory; disk changes on explicit save.
@@ -216,16 +254,22 @@
     document.getElementById('schedule-palette').hidden=!s;
     document.getElementById('schedule-add').disabled=draft.schedules.length>=16;
     document.getElementById('schedule-copy').disabled=!s || draft.schedules.length>=16;
-    document.getElementById('schedule-delete').disabled=!s;
+    updateScheduleDelete();
     document.getElementById('pre-minutes').value=draft.pre_minutes;
     ['manual-media','pre-media'].forEach(function(id){var box=document.getElementById(id);mediaOptions(box,id==='manual-media'?(draft.manual_media || 'test'):draft.pre_media);box.disabled=false;});
     if(!draft.mode)draft.mode=(draft.plans || []).length?'annual':'fixed';
     var mode=document.getElementById('work-mode');mode.disabled=false;mode.value=draft.mode;mode.querySelector('[value="annual"]').disabled=!(draft.plans || []).length;
+    var annual= document.getElementById('active-plan');
+    annual.replaceChildren(textOption('','Выберите план'));
+    (draft.plans || []).forEach(function(p){annual.appendChild(textOption(p.id,p.name+' · '+p.start+' — '+p.end));});
+    annual.value=draft.active_plan || '';
+    document.getElementById('annual-choice').hidden=draft.mode!=='annual';
+    document.getElementById('fixed-choice').hidden=draft.mode!=='fixed';
     var fixed=document.getElementById('fixed-schedule');fixed.replaceChildren(textOption('quiet','Тихий день'));
     draft.schedules.forEach(function(s){fixed.appendChild(textOption(s.id,s.name));});
     if(draft.fixed_schedule===undefined)draft.fixed_schedule='quiet';
     fixed.value=draft.fixed_schedule;fixed.disabled=draft.mode!=='fixed';document.getElementById('pre-minutes').disabled=false;
-    document.getElementById('work-mode-hint').textContent=draft.mode==='annual'?'Используется назначение датам; даты без назначения и периоды без плана тихие.':'Одно расписание на каждый день. По умолчанию — тихий день.';
+    document.getElementById('work-mode-hint').textContent=draft.mode==='annual'?'Звонки подаются только по выбранному плану. Вне его дат звонков нет.':'Одно расписание на каждый день. По умолчанию — тихий день.';
     rows.replaceChildren();
     if(s) {
       name.value=s.name;
@@ -269,13 +313,13 @@
     state();
   }
   var errors={
-    conflict:'Расписания изменены в другой вкладке. Ваши правки сохранены в браузере. Сверьте их, затем загрузите данные устройства; автоматической перезаписи нет.',
+    conflict:'Расписания изменены в другой вкладке. Ваши правки сохранены в браузере. Для загрузки сохранённой копии нажмите «Отменить правки».',
     invalid:'Не удалось сохранить: проверьте время, название, флажки и лимиты.',
     space:'Недостаточно свободного места с защитным запасом. Черновик в браузере сохранён.',
     recovery_required:'Сохранённые данные повреждены или неполны. Они не заменены. Нужна проверка по SSH.',
     busy:'Хранилище временно занято. Повторите чтение.',
     storage_unavailable:'Хранилище недоступно. Автоматический повтор не выполняется.',
-    storage_uncertain:'Результат записи не подтверждён. Не повторяем сохранение: нажмите «Сверить с устройством».',
+    storage_uncertain:'Результат записи не подтверждён. Не повторяем сохранение: для загрузки сохранённой копии нажмите «Отменить правки».',
     revision:'Неизвестная ревизия. Загрузите данные устройства.',size:'Превышен размер черновика: 12 КиБ.'
   };
   async function request(url,options) {
@@ -330,11 +374,11 @@
     busy=true; state();
     try {
       var value=await readDraft();
-      if(guard!==readGuard()){reconcile=true;result.textContent="Во время чтения появились правки. Они сохранены в браузере; сверьте копии.";return;}
-      if(!value.ok) { result.textContent=(errors[value.code] || 'Ошибка чтения.')+(draft?' Правки в браузере не изменены.':' Черновик ещё не загружен.')+(draft?' Нажмите «Сверить с устройством».':' Нажмите «Повторить чтение».'); reconcile=!!draft; return; }
-      document.getElementById('preview-events').replaceChildren(); document.getElementById('preview-status').textContent='Предпросмотр использует текущий черновик.'; draft=normalize(value.data);if(!draft.plans.some(function(p){return p.id===planId;}))planId=draft.plans[0]?.id || null;fillPlan(); revision=value.revision; dirty=false; reconcile=false; compared=null;document.getElementById('draft-comparison').hidden=true; brush='view'; render();
+      if(guard!==readGuard()){reconcile=true;result.textContent="Во время чтения появились правки. Они остались в браузере.";return;}
+      if(!value.ok) { result.textContent=(errors[value.code] || 'Ошибка чтения.')+(draft?' Правки в браузере не изменены.':' Черновик ещё не загружен.')+(draft?' Чтобы загрузить сохранённую копию, нажмите «Отменить правки».':' Нажмите «Повторить чтение».'); reconcile=!!draft; return; }
+      document.getElementById('preview-events').replaceChildren(); document.getElementById('preview-status').textContent='Предпросмотр использует текущий черновик.'; draft=normalize(value.data);savedDraft=JSON.parse(JSON.stringify(draft));if(!draft.plans.some(function(p){return p.id===planId;}))planId=draft.plans[0]?.id || null;fillPlan(); revision=value.revision; dirty=false; reconcile=false;  brush='view'; render();
       result.textContent=revision==='empty'?'Сохранённых расписаний ещё нет. Создайте первое.':'Черновик прочитан с устройства. Состояние автозвонков указано в верхней плашке.';
-      if(restoreNavigation()){render();result.textContent=reconcile?'Правки восстановлены. Сохранённый план изменился: сверьте копии перед записью.':'Несохранённые правки восстановлены после входа. Автозвонки не включались.';}
+      if(restoreNavigation()){render();result.textContent=reconcile?'Правки восстановлены. Сохранённый план изменился: загрузите сохранённую копию кнопкой «Отменить правки».':'Несохранённые правки восстановлены после входа. Автозвонки не включались.';}
     } catch (_) { result.textContent='Не удалось загрузить данные. Проверьте вход и повторите чтение.'+(draft?' Правки в браузере не изменены.':' Черновик ещё не загружен.'); }
     finally { busy=false; state(); }
   }
@@ -351,48 +395,16 @@
     if(data.fixed_schedule===undefined)data.fixed_schedule='quiet';
     return data;
   }
-  function describe(data) {
-    var mode=data.mode==='annual'?'Календарный план':'По расписанию';
-    var fixed=data.schedules.find(function(s){return s.id===data.fixed_schedule;});
-    return mode+' · ежедневное: '+(fixed?fixed.name:'Тихий день')+' · расписания: '+data.schedules.map(function(s){return s.name+' ('+s.rows.length+' строк)';}).join(', ')+' · планы: '+(data.plans || []).map(function(p){return p.name+' ['+p.start+' — '+p.end+'] ('+p.days.replace(/\./g,'').length+' назначений)';}).join(', ')+' · предзвонок: '+data.pre_minutes+' мин, '+data.pre_media+' · ручной: '+(data.manual_media || 'test');
-  }
-  async function compare() {
-    if(busy || activationLock || !draft || formPending)return;
-    busy=true;compared=null;document.getElementById('draft-comparison').hidden=true;state();
-    try {
-      var value=await readDraft();
-      if(!value.ok)throw Error('read');
-      var remote=normalize(value.data);
-      compared={data:remote,revision:value.revision};reconcile=true;
-      document.getElementById('draft-local-summary').textContent='Локально: '+describe(draft);
-      document.getElementById('draft-router-summary').textContent='Сохранено: '+describe(remote);
-      document.getElementById('draft-local-json').textContent=JSON.stringify(draft,null,2);
-      document.getElementById('draft-router-json').textContent=JSON.stringify(remote,null,2);
-      document.getElementById('draft-comparison-status').textContent=(canonical(draft)===canonical(remote)?'Данные совпадают.':'Данные различаются.')+' На устройстве: '+value.revision+'. Выберите, какую копию оставить в редакторе. Это не сохранение и не включение звонков.';
-      document.getElementById('draft-comparison').hidden=false;
-      result.textContent='Сверка прочитана. Локальные правки сохранены; выберите копию ниже.';
-    } catch(_){reconcile=true;result.textContent='Сверка недоступна. Локальные правки сохранены. Проверьте соединение и вход LuCI, затем повторите чтение.';}
-    finally{busy=false;state();}
-  }
-  function chooseCompared(local) {
-    if(busy || activationLock || !compared || formPending)return;
-    if(!window.confirm(local?'Оставить локальную копию для следующего явного сохранения поверх проверенной версии устройства? Изменения другого редактора могут быть заменены.':'Заменить правки в браузере проверенной копией устройства?'))return;
-    var same=canonical(draft)===canonical(compared.data);
-    if(!local){draft=compared.data;if(!draft.plans.some(function(p){return p.id===planId;}))planId=draft.plans[0]?.id || null;fillPlan();}
-    revision=compared.revision;dirty=local && !same;reconcile=false;compared=null;
-    document.getElementById('draft-comparison').hidden=true;
-    document.getElementById('preview-events').replaceChildren();document.getElementById('preview-status').textContent='Черновик сверен. Обновите предпросмотр.';
-    render();result.textContent=dirty?'Локальные правки оставлены. Для записи нажмите «Сохранить черновик». Активный план не менялся.':'Копия сверена. Автозвонки не включались.';state();
-  }
-  document.getElementById('draft-compare').addEventListener('click',compare);
-  document.getElementById('draft-keep-local').addEventListener('click',function(){chooseCompared(true);});
-  document.getElementById('draft-use-router').addEventListener('click',function(){chooseCompared(false);});
   select.addEventListener('change',function () { selected=select.value; render(); });
   name.addEventListener('input',function () {
     if(!current()) return; current().name=name.value;
     select.options[select.selectedIndex].textContent=name.value; changed(); renderAnnual();
   });
   document.getElementById('settings-save').addEventListener('click',function(){save.click();});
+  document.getElementById('active-plan').addEventListener('change',function(e){
+    if(e.target.value)draft.active_plan=e.target.value;else delete draft.active_plan;
+    changed();render();
+  });
   [['manual-media','manual_media'],['pre-media','pre_media'],['work-mode','mode'],['fixed-schedule','fixed_schedule']].forEach(function(pair){document.getElementById(pair[0]).addEventListener('change',function(e){draft[pair[1]]=e.target.value;changed();render();});});
   document.getElementById('pre-minutes').addEventListener('input',function (e) { draft.pre_minutes=Number(e.target.value); changed(); });
   document.getElementById('schedule-add').addEventListener('click',function () {
@@ -406,6 +418,7 @@
   });
   document.getElementById('schedule-delete').addEventListener('click',function () {
     if(!current() || busy || activationLock)return;
+    if(appliedFixedId===selected){result.textContent='Это применённое ежедневное расписание. Сначала примените другой выбор.';return;}
     if(draft.fixed_schedule===selected){result.textContent='Это ежедневное расписание. В «Настройках» явно выберите другое или «Тихий день», затем повторите удаление. Активный план не меняется.';return;}
     var used=(draft.plans || []).some(function(p){var i=p.schedule_ids.indexOf(selected);return i>=0 && p.days.includes(String.fromCharCode(65+i));});
     if(used){result.textContent='Расписание назначено датам. Сначала снимите назначения во всех планах.';return;}
@@ -421,20 +434,20 @@
     current().rows=[]; changed(); render();
   });
   save.addEventListener('click',async function () {
-    if(busy || activationLock || !draft || !dirty || reconcile || formPending)return;
+    if(busy || activationLock || !draft || !dirty || reconcile || formPending || protectedEdit())return;
     busy=true; state(); result.textContent='Сохраняем без активации…';
     try {
       try{R.validateDraft(draft,root.dataset.load.indexOf('demo-api')>=0);}catch(e){result.textContent=e.message;return;}
       var body=new URLSearchParams({token:root.dataset.token,revision:revision,draft:JSON.stringify(draft)});
       var value=await request(root.dataset.save,{method:'POST',body:body});
       if(!value.ok) {
-        reconcile=['storage_uncertain','recovery_required','conflict'].includes(value.code);
-        result.textContent=(errors[value.code] || 'Ошибка сохранения.')+(value.detail?' Поле: '+(value.detail.path || value.detail.code):'');
+        reconcile=['storage_uncertain','recovery_required','conflict','plan_in_use','schedule_in_use'].includes(value.code);
+        result.textContent=(value.code==='source_running'?'Чтобы изменить «'+(value.detail && value.detail.name || 'рабочий источник')+'», остановите автозвонки.':value.code==='plan_in_use'?'Удаление отклонено: план применён на устройстве. Загрузите сохранённую копию или сверьте правки.':value.code==='schedule_in_use'?'Удаление отклонено: ежедневное расписание применено на устройстве. Сверьте правки.':errors[value.code] || 'Ошибка сохранения.');
         return;
       }
-      document.getElementById('preview-events').replaceChildren(); document.getElementById('preview-status').textContent='Предпросмотр использует текущий черновик.'; draft=normalize(value.data);if(!draft.plans.some(function(p){return p.id===planId;}))planId=draft.plans[0]?.id || null;fillPlan(); revision=value.revision; dirty=false; reconcile=false; render();
+      document.getElementById('preview-events').replaceChildren(); document.getElementById('preview-status').textContent='Предпросмотр использует текущий черновик.'; draft=normalize(value.data);savedDraft=JSON.parse(JSON.stringify(draft));if(!draft.plans.some(function(p){return p.id===planId;}))planId=draft.plans[0]?.id || null;fillPlan(); revision=value.revision; dirty=false; reconcile=false; render();
       result.textContent='Сохранено на устройстве. Активный план не меняется до отдельного применения.'+(value.journal_warning?' Внимание: событие не удалось записать в журнал.':'');
-    } catch (_) { reconcile=true; result.textContent='Ответ потерян: запись могла завершиться. Правки остались в браузере. Нажмите «Сверить с устройством».'; }
+    } catch (_) { reconcile=true; result.textContent='Ответ потерян: запись могла завершиться. Правки остались в браузере. Чтобы загрузить сохранённую копию, нажмите «Отменить правки».'; }
     finally { busy=false; state(); }
   });
   ['name','start','end'].forEach(function(k){document.getElementById('plan-'+k).addEventListener('input',function(){formPending=true;handoffReady=false;state();formStatus('Примените название и даты к черновику или отмените ввод.');});});
@@ -476,21 +489,26 @@
     if(indices.length && window.confirm('Назначить «'+scheduleName(brush)+'» для '+indices.length+' дат?'))paint(indices);
   });
   document.getElementById('year-clear').addEventListener('click',function(){
+    if(deletionReason())return;
     if(!plan() || busy || activationLock || !leaveForm())return;
     var lastAnnual=draft.mode==='annual' && draft.plans.length===1;
     var consequence=lastAnnual?' Это последний план. В черновике будет выбран режим «По расписанию» и «Тихий день».':'';
     if(window.confirm('Удалить план «'+plan().name+'» и его назначения?' +consequence+' Активный план не изменится; черновик потребуется сохранить и применить отдельно.')){
-      draft.plans=draft.plans.filter(function(p){return p.id!==planId;});if(lastAnnual){draft.mode='fixed';draft.fixed_schedule='quiet';}planId=draft.plans[0]?.id || null;fillPlan();changed();render();
+      if(draft.active_plan===planId)delete draft.active_plan;draft.plans=draft.plans.filter(function(p){return p.id!==planId;});if(lastAnnual){draft.mode='fixed';draft.fixed_schedule='quiet';}planId=draft.plans[0]?.id || null;fillPlan();changed();render();
     }
   });
   document.getElementById('preview-day').addEventListener('click',async function(){
     if(busy || activationLock || !draft)return;
     busy=true;state();var status=document.getElementById('preview-status'),output=document.getElementById('preview-events');output.replaceChildren();
+    if(draft.mode==='annual' && !draft.active_plan){status.textContent='Черновик · выберите календарный план в Настройках.';busy=false;state();return;}
     status.textContent='Вычисляем текущий черновик без сохранения и звука…';
     try {
       var value=await request(root.dataset.preview,{method:'POST',body:new URLSearchParams({token:root.dataset.token,draft:JSON.stringify(draft),date:document.getElementById('preview-date').value})});
       if(!value.ok){status.textContent='Предпросмотр отклонён: '+(value.detail?(value.detail.path || value.detail.code):value.code);return;}
-      status.textContent='Черновик'+(dirty || revision==='empty'?' · НЕ СОХРАНЁН':' · сохранён')+' · '+value.date+' · '+scheduleName(value.selected_schedule)+' · '+value.events.length+' событий. Местные часы; не UTC и не проверка переходов часов.';
+      var chosenPlan=draft.mode==='annual' && draft.plans.find(function(p){return p.id===draft.active_plan;});
+      var source=chosenPlan?' · план «'+chosenPlan.name+'»':' · ежедневное расписание';
+      if(chosenPlan && (value.date<chosenPlan.start || value.date>chosenPlan.end))source+=' · вне дат плана';
+      status.textContent='Черновик'+source+(dirty || revision==='empty'?' · НЕ СОХРАНЁН':' · сохранён')+' · '+value.date+' · '+scheduleName(value.selected_schedule)+' · '+value.events.length+' событий. Местные часы; не UTC и не проверка переходов часов.';
       value.events.forEach(function(e){var li=document.createElement('li');li.style.borderLeft='10px solid '+colorOf(e.schedule_id);li.style.paddingLeft='10px';li.textContent=e.time+' — '+(e.kind==='pre'?'Предзвонок':'Основной звонок')+' · '+scheduleName(e.schedule_id)+' · '+e.media+(e.origin_date!==e.date?' (основной звонок '+e.origin_date+')':'');output.appendChild(li);});
       if(!value.events.length){var li=document.createElement('li');li.textContent='В этот день звонков нет.';output.appendChild(li);}
     } catch(_){status.textContent='Предпросмотр недоступен. Проверьте соединение и вход LuCI.';}
@@ -499,14 +517,14 @@
   window.addEventListener('pointerup',function(){painting=false;});
   window.addEventListener('pointercancel',function(){painting=false;});
   window.addEventListener('blur',function(){painting=false;});
-  window.schoolbellEditor={systemLock:function(){if(busy||activationLock)return false;activationLock=true;state();return true;},systemResetComplete:function(){dirty=false;formPending=false;reconcile=false;handoffReady=false;try{sessionStorage.removeItem(handoffKey);}catch(_){}activationLock=true;state();},exportSnapshot:function(){return {draft:draft?JSON.parse(JSON.stringify(draft)):null,dirty:dirty||formPending,busy:busy||activationLock,reconcile:reconcile,revision:revision};},prepareNavigation:prepareNavigation,snapshot:function(){return {loaded:!!draft,dirty:dirty || formPending,busy:busy || activationLock,reconcile:reconcile,revision:revision};},lock:function(options){if(busy || activationLock || !draft || dirty || formPending || reconcile || (revision==='empty' && !(options && options.allowEmpty)))return false;activationLock=true;state();return true;},reloadImported:async function(){if(dirty||formPending)return false;activationLock=false;await load();return true;},unlock:function(){activationLock=false;state();}};
+  window.schoolbellEditor={systemLock:function(){if(busy||activationLock)return false;activationLock=true;state();return true;},systemResetComplete:function(){dirty=false;formPending=false;reconcile=false;handoffReady=false;try{sessionStorage.removeItem(handoffKey);}catch(_){}activationLock=true;state();},exportSnapshot:function(){return {draft:draft?JSON.parse(JSON.stringify(draft)):null,dirty:dirty||formPending,busy:busy||activationLock,reconcile:reconcile,revision:revision};},prepareNavigation:prepareNavigation,snapshot:function(){return {needsPlan:!!draft && draft.mode==='annual' && !draft.active_plan,loaded:!!draft,dirty:dirty || formPending,busy:busy || activationLock,reconcile:reconcile,revision:revision};},lock:function(options){if(busy || activationLock || !draft || dirty || formPending || reconcile || (revision==='empty' && !(options && options.allowEmpty)))return false;activationLock=true;state();return true;},reloadImported:async function(){if(dirty||formPending)return false;activationLock=false;await load();return true;},unlock:function(){activationLock=false;state();}};
   document.getElementById('workflow-save').addEventListener('click',function(){save.click();});
   reload.addEventListener('click',load);
   window.addEventListener('beforeunload',function (e) { if((dirty || formPending) && !handoffReady) { e.preventDefault(); e.returnValue=''; } });
   window.addEventListener('schoolbell-session-lost',function(){
     sessionEpoch++;
-    reconcile=true;compared=null;document.getElementById('draft-comparison').hidden=true;
-    result.textContent='Сеанс недоступен. Правки остаются в этой вкладке; после входа нажмите «Сверить с устройством».';state();
+    reconcile=true;
+    result.textContent='Сеанс недоступен. Правки остаются в этой вкладке; после входа можно загрузить сохранённую копию кнопкой «Отменить правки».';state();
   });
   window.schoolbellInitialDraft=load();
 }());

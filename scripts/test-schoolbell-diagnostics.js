@@ -5,7 +5,7 @@ const cases=[
  [{blocked:true},'session-login'],[{pending:true},'tab-sound'],[{},'tab-feedback'],[{uncertain:true},'tab-feedback'],
  [{value:{state:'running'}},'tab-preview'],[{value:{state:'playing'}},'tab-preview'],[{value:{state:'disabled',revision:'r'}},'tab-sound'],
  [{value:{state:'disabled'}},'tab-sound'],[{value:{state:'muted'}},'tab-sound'],[{value:{state:'recovery_required'}},'tab-media'],
- [{value:{state:'executor_error'}},'tab-journal'],[{value:{state:'clock_untrusted',clock_trust:{enforced:true,state:'review_required',reason:'observation_gap'}}},'tab-sound']
+ [{value:{state:'executor_error'}},'tab-journal'],[{value:{state:'clock_untrusted',clock_trust:{enforced:true,state:'review_required',reason:'observation_gap'}}},'clock-check-settings']
 ];
 for(const [s,target] of cases)assert.equal(diagnose(s).target,target);
 assert(diagnose({}).text.includes('не доказывает'));
@@ -18,7 +18,7 @@ el('problem-open').click();assert(!el('problem-panel').hidden);
 el('problem-refresh').click();assert.deepEqual(emitted,['schoolbell-diagnostic-refresh']);
 window.dispatchEvent({type:'schoolbell-diagnostic-state',detail:{value:{state:'running',revision:'active123',generation:4,simulated:true,token:'must-not-leak'}}});
 assert(el('problem-summary').textContent.includes('работает'));el('problem-action').click();assert(clicks.includes('tab-preview'));
-const details=el('problem-details').textContent;assert(details.includes('draft123')&&details.includes('active123')&&details.includes('true'));assert(!details.includes('must-not-leak'));
+const details=el('problem-details').textContent;assert(!details.includes('draft123')&&!details.includes('active123')&&details.includes('различаются'));assert(!details.includes('must-not-leak'));
 window.dispatchEvent({type:'schoolbell-session-lost'});el('problem-action').click();assert.equal(clicks.at(-1),'session-login');
 el('problem-journal').click();assert.equal(clicks.at(-1),'tab-journal');
 el('problem-close').click();assert(el('problem-panel').hidden);assert(draft.dirty && draft.revision==='draft123');

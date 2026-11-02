@@ -15,18 +15,32 @@ function nextDate(day){var d=new Date(day+'T00:00:00Z');d.setUTCDate(d.getUTCDat
 function seed(){var year=new Date().getFullYear(),date=year+'-01-01',days='';
  while(Number(date.slice(0,4))===year){var w=new Date(date+'T00:00:00Z').getUTCDay();days+=w===0 || w===6?'.':w===5?'B':'A';date=nextDate(date);}
  function rows(times){return times.map(function(time,i){return {id:'r'+i,time:time,media:'test',enabled:true,pre:i===0};});}
- return {format:1,revision:1,zone:Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',log:[],seq:0,data:{pre_minutes:2,pre_media:'test',schedules:[
+ return {format:1,revision:1,zone:Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',log:[],seq:0,data:{mode:'annual',active_plan:'year-'+year,pre_minutes:2,pre_media:'test',schedules:[
  {id:'normal',name:'Обычный день',color:1,rows:rows(['08:30','09:15','09:25','10:10','10:30','11:15'])},
  {id:'short',name:'Короткие уроки',color:2,rows:rows(['08:30','09:00','09:10','09:40'])},
- {id:'exam',name:'Экзамены',color:7,rows:rows(['09:00','12:00'])}],plans:[{id:'year-'+year,name:'Учебный пример '+year,start:year+'-01-01',end:year+'-12-31',schedule_ids:['normal','short','exam'],days:days}]}};}
+ {id:'exam',name:'Экзамены',color:7,rows:rows(['09:00','12:00'])}],plans:[{id:'year-'+year,name:'Учебный пример '+year,start:year+'-01-01',end:year+'-12-31',schedule_ids:['normal','short','exam'],days:days},{id:'exam-'+(year+1),name:'Экзаменационная неделя',start:(year+1)+'-06-01',end:(year+1)+'-06-07',schedule_ids:['exam'],days:'AAAAA..'}]}};}
 function read(){try{var value=JSON.parse(localStorage.getItem(key));if(value && value.format===1 && value.data && Array.isArray(value.log)){memory=value;return value;}}catch(_){}if(!memory)memory=seed();return memory;}
 window.schoolbellDemo={portableState:function(){return {automatic_enabled:!!read().autoEnabled};}};
 function write(v){memory=v;try{localStorage.setItem(key,JSON.stringify(v));}catch(_){document.getElementById('demo-storage').textContent='Хранилище браузера недоступно: изменения живут только в этой вкладке.';}}
 function log(s,action,source){s.log.push({seq:++s.seq,time:Math.floor(Date.now()/1000),source:source || 'user',level:'info',action:action});while(new TextEncoder().encode(JSON.stringify(s.log)).length>32768)s.log.shift();write(s);}
-function assigned(data,date){if(data.mode==='fixed')return data.fixed_schedule && data.fixed_schedule!=='quiet'?data.fixed_schedule:false;var plan=R.migrate(data.plans || []).find(function(p){return date>=p.start && date<=p.end;});if(!plan)return false;
+function assigned(data,date){if(data.mode==='fixed')return data.fixed_schedule && data.fixed_schedule!=='quiet'?data.fixed_schedule:false;var plan=R.migrate(data.plans || []).find(function(p){return p.id===data.active_plan && date>=p.start && date<=p.end;});if(!plan)return false;
  var index=R.ordinal(date)-R.ordinal(plan.start),c=plan.days[index];
  return c && c!=='.'?plan.schedule_ids[c.charCodeAt(0)-65]:false;}
 
+function appliedContext(data,zone){
+ var date=new Intl.DateTimeFormat('sv-SE',{timeZone:zone,year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+ var result=data.mode==='fixed'?{fixed_id:data.fixed_schedule || 'quiet'}:{};
+ if(data.mode!=='fixed'){
+  var plan=R.migrate(data.plans || []).find(p=>p.id===data.active_plan);
+  if(!plan)return {day:'no_plan'};
+  result.plan=plan.name;result.plan_id=plan.id;
+  if(date<plan.start || date>plan.end)return {plan:plan.name,plan_id:plan.id,day:'outside'};
+ }
+ var schedule=data.schedules.find(s=>s.id===assigned(data,date));
+ result.day=schedule?(schedule.rows.some(r=>r.enabled)?'scheduled':'empty'):'quiet';
+ if(schedule)result.schedule=schedule.name;
+ return result;
+}
 function preview(data,date){
  if(!/^\d{4}-\d{2}-\d{2}$/.test(date) || !Number.isFinite(Date.parse(date+'T00:00:00Z')) || iso(new Date(date+'T00:00:00Z'))!==date)return {ok:false,code:'date'};
  var selected=assigned(data,date),events=[];
@@ -40,6 +54,13 @@ function preview(data,date){
  events.sort(function(a,b){return a.time.localeCompare(b.time) || (a.origin_date+'/'+a.schedule_id+'/'+a.row_id+'/'+a.kind).localeCompare(b.origin_date+'/'+b.schedule_id+'/'+b.row_id+'/'+b.kind);});
  return {ok:true,active:false,clock_basis:'civil',date:date,selected_schedule:selected || 'quiet',events:events};
 }
+function runningSourceChange(state,draft){
+ if(!state.autoEnabled || !state.applied)return '';
+ var applied=state.applied.data,fixed=applied.mode==='fixed',id=fixed?applied.fixed_schedule:applied.active_plan;
+ function source(config){return (fixed?config.schedules:R.migrate(config.plans || [])).find(x=>x.id===id);}
+ var before=source(state.data),after=source(draft);
+ return before && JSON.stringify(before)!==JSON.stringify(after)?before.name || id:'';
+}
 function valid(d){try{return R.validateDraft(d,true);}catch(_){return false;}}
 function zones(){var z=Intl.supportedValuesOf?Intl.supportedValuesOf('timeZone'):['Europe/Moscow','Asia/Yekaterinburg','Europe/Berlin','America/New_York'];return ['UTC'].concat(z);}
 var timeProposal=null;
@@ -52,12 +73,26 @@ window.fetch=async function(url,options){
   var d;try{d=JSON.parse(body.get('draft'));}catch(_){}
   if(body.get('revision')!==String(s.revision))out={ok:false,code:'conflict'};
   else if(!valid(d) || new TextEncoder().encode(JSON.stringify(d)).length>12288)out={ok:false,code:'invalid'};
+  else if(s.data.mode==='fixed' && s.data.schedules.some(x=>x.id===s.data.fixed_schedule) && !d.schedules.some(x=>x.id===s.data.fixed_schedule))out={ok:false,code:'schedule_in_use'};
+  else if(s.data.mode!=='fixed' && R.migrate(s.data.plans || []).some(x=>x.id===s.data.active_plan) && !R.migrate(d.plans || []).some(x=>x.id===s.data.active_plan))out={ok:false,code:'plan_in_use'};
+  else if(s.applied && s.applied.data.mode!=='fixed' &&
+    R.migrate(s.data.plans || []).some(p=>p.id===s.applied.data.active_plan) &&
+    !R.migrate(d.plans || []).some(p=>p.id===s.applied.data.active_plan))out={ok:false,code:'plan_in_use'};
+  else if(s.applied && s.applied.data.mode==='fixed' &&
+    s.data.schedules.some(item=>item.id===s.applied.data.fixed_schedule) &&
+    !d.schedules.some(item=>item.id===s.applied.data.fixed_schedule))out={ok:false,code:'schedule_in_use'};
+  else if(runningSourceChange(s,d))out={ok:false,code:'source_running',detail:{name:runningSourceChange(s,d)}};
   else{s.data=d;s.revision++;log(s,'save_ok');out={ok:true,active:false,data:clone(d),revision:String(s.revision)};}
  }else if(name==='preview'){try{var data=JSON.parse(body.get('draft'));out=valid(data)?preview(data,body.get('date')):{ok:false,code:'invalid'};}catch(_){out={ok:false,code:'invalid'};}}
  else if(name==='media')out={ok:true,demo:true,generation:0,storage:{total_kib:4096,free_kib:1536,used_kib:2560,reserve_kib:512,media_kib:0},slots:['test','0','1','2','3','4'].map(function(id,i){return {id:id,name:i<6?id+'.mp3':'Свободная позиция',title:['Тестовый звонок','[Короткая] Время','Шутка Баха','Гостья из будущего','Князь Игорь','Усатый нянь'][i] || ('Пользовательская '+(i-5)),source:i<6?'bundled':'empty',size_bytes:[13104,41273,63321,69904,68023,82368][i] || 0};})};
  else if(name==='automatic'){
+ if(options && options.method==='POST' && body.get('action')==='apply'){
+  if(body.get('revision')!==String(s.revision))out={ok:false,code:'draft_conflict'};
+  else if(appliedContext(s.data,s.zone).day==='no_plan')out={ok:false,code:'select_plan'};
+  else {s.applied={revision:String(s.revision),data:clone(s.data)};s.autoGeneration=(s.autoGeneration || 0)+1;log(s,'draft_applied');}
+ }
  if(options && options.method==='POST' && body.get('enabled')==='false'){s.autoEnabled=false;s.autoGeneration=(s.autoGeneration || 0)+1;log(s,'auto_disabled');}
- out={ok:true,state:s.autoEnabled?(s.muted?'muted':'running'):'disabled',enabled:!!s.autoEnabled,generation:s.autoGeneration || 0,revision:s.applied && s.applied.revision,mode:s.applied && s.applied.data.mode,hardware:false,simulated:true,queue:queueDemo(false),cpu:{available:false,simulated:true,storage:{total_kib:4096,free_kib:1536},uptime_seconds:Math.max(0,Math.floor((performance.now()-demoStarted)/1000))},clock_trust:{enforced:s.clockEnforced!==false,state:s.clockConfirmed?'confirmed':s.clockEnforced===false?'unchecked':'unconfirmed',reason:'demo'}};}
+ if(!out)out={ok:true,state:s.autoEnabled?(s.muted?'muted':'running'):'disabled',enabled:!!s.autoEnabled,generation:s.autoGeneration || 0,revision:s.applied && s.applied.revision,context:s.applied && appliedContext(s.applied.data,s.zone),mode:s.applied && s.applied.data.mode,hardware:false,simulated:true,queue:queueDemo(false),cpu:{available:false,simulated:true,storage:{total_kib:4096,free_kib:1536},uptime_seconds:Math.max(0,Math.floor((performance.now()-demoStarted)/1000))},clock_trust:{enforced:s.clockEnforced!==false,state:s.clockConfirmed?'confirmed':s.clockEnforced===false?'unchecked':'unconfirmed',reason:'demo'}};}
  else if(name==='clock-trust'){
  if(options && options.method==='POST'){
  var action=body.get('action');out={ok:true};
@@ -71,11 +106,12 @@ window.fetch=async function(url,options){
  else if(action==='prepare')out={ok:true,challenge:'demo',utc:Math.floor(Date.now()/1000),rollback:false,zone:s.zone || 'UTC'};
  else if(action==='confirm'){s.autoEnabled=false;s.autoGeneration=(s.autoGeneration || 0)+1;s.clockConfirmed=true;log(s,'clock_confirmed');}
  else if(action==='policy'){s.autoEnabled=false;s.autoGeneration=(s.autoGeneration || 0)+1;s.clockEnforced=body.get('enforced')==='true';s.clockConfirmed=false;log(s,s.clockEnforced?'clock_control_on':'clock_control_off');}
- else if(action==='enable' || action==='resume'){
+ else if(action==='enable')out={ok:false,code:'reload_interface'};
+ else if(action==='resume'){
   if(s.clockEnforced!==false && !s.clockConfirmed)out={ok:false,code:'clock_untrusted'};
-  else if(action==='enable' && body.get('revision')!==String(s.revision))out={ok:false,code:'draft_conflict'};
-  else if(action==='resume' && (!s.applied || s.autoEnabled || body.get('revision')!==s.applied.revision || body.get('generation')!==String(s.autoGeneration)))out={ok:false,code:'active_conflict'};
-  else{if(action==='enable')s.applied={revision:String(s.revision),data:clone(s.data)};s.autoEnabled=true;s.autoGeneration=(s.autoGeneration || 0)+1;log(s,'auto_enabled');out={ok:true,generation:s.autoGeneration};}
+  else if(!s.applied || s.autoEnabled || body.get('revision')!==s.applied.revision || body.get('generation')!==String(s.autoGeneration))out={ok:false,code:'active_conflict'};
+  else if(appliedContext(s.applied.data,s.zone).day==='no_plan')out={ok:false,code:'select_plan'};
+  else{s.autoEnabled=true;s.autoGeneration=(s.autoGeneration || 0)+1;log(s,'auto_enabled');out={ok:true,generation:s.autoGeneration};}
  }
  else out={ok:false,code:'demo_no_hardware'};
  }else out={ok:false,code:'demo_no_pending'};

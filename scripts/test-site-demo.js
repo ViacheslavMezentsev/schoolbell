@@ -15,7 +15,7 @@ async function api(name,data){return (await context.window.fetch('./demo-api/'+n
  let saved=await api('save',{revision:first.revision,draft:JSON.stringify(first.data)});assert(saved.ok);
  assert((await api('load')).data.schedules[0].color===16);
  assert((await api('save',{revision:first.revision,draft:JSON.stringify(first.data)})).code==='conflict');
- const draft={pre_minutes:5,pre_media:'test',schedules:[{id:'s',name:'Test',color:1,rows:[{id:'r',time:'00:03',media:'test',enabled:true,pre:true}]}],plans:[{year:2026,schedule_ids:['s'],days:'.AA'+'.'.repeat(362)}]};
+ const draft={active_plan:'year-2026',pre_minutes:5,pre_media:'test',schedules:[{id:'s',name:'Test',color:1,rows:[{id:'r',time:'00:03',media:'test',enabled:true,pre:true}]}],plans:[{year:2026,schedule_ids:['s'],days:'.AA'+'.'.repeat(362)}]};
  assert((await api('preview',{date:'2026-01-01',draft:JSON.stringify(draft)})).events.length===0);
  let events=(await api('preview',{date:'2026-01-02',draft:JSON.stringify(draft)})).events;
  assert(events.length===2 && events[1].time==='23:58' && events[1].origin_date==='2026-01-03');
@@ -25,8 +25,8 @@ async function api(name,data){return (await context.window.fetch('./demo-api/'+n
  await assert.rejects(()=>context.window.fetch('http://192.0.2.1/api'));await assert.rejects(()=>context.window.fetch('/cgi-bin/luci'));
  assert((await api('no-router',{})).state==='unavailable');
  assert((await api('automatic')).hardware===false);
- const appliedDraft=await api('load');await api('clock-trust',{action:'confirm'});
- assert((await api('clock-trust',{action:'enable',revision:appliedDraft.revision})).ok);
+ const appliedDraft=await api('load');assert((await api('automatic',{action:'apply',revision:appliedDraft.revision})).enabled===false);await api('clock-trust',{action:'confirm'});
+ assert((await api('clock-trust',{action:'resume',revision:appliedDraft.revision,generation:String((await api('automatic')).generation)})).ok);
  let auto=await api('automatic');assert(auto.enabled && auto.simulated && auto.hardware===false);
  await api('automatic',{enabled:'false'});auto=await api('automatic');assert(!auto.enabled && auto.revision===appliedDraft.revision);
  const changedDraft=JSON.parse(JSON.stringify(appliedDraft.data));changedDraft.schedules[0].name='Newer draft';
@@ -36,6 +36,17 @@ async function api(name,data){return (await context.window.fetch('./demo-api/'+n
  assert((await api('clock-trust',{action:'resume',revision:auto.revision,generation:String(auto.generation)})).code==='active_conflict');
  await api('automatic',{enabled:'false'});
 
+ // A fixed schedule is editable after stop, but the retained snapshot still protects deletion.
+ const beforeFixed=await api('load'),fixed=JSON.parse(JSON.stringify(beforeFixed.data));
+ fixed.mode='fixed';fixed.fixed_schedule=fixed.schedules[0].id;
+ const fixedSave=await api('save',{revision:beforeFixed.revision,draft:JSON.stringify(fixed)});assert(fixedSave.ok);
+ const staged=await api('automatic',{action:'apply',revision:fixedSave.revision});assert(staged.ok && !staged.enabled);
+ assert((await api('clock-trust',{action:'resume',revision:fixedSave.revision,generation:String(staged.generation)})).ok);
+ fixed.schedules[0].name='Edited fixed';
+ assert.equal((await api('save',{revision:fixedSave.revision,draft:JSON.stringify(fixed)})).code,'source_running');
+ assert((await api('automatic',{action:'apply',revision:fixedSave.revision})).enabled);
+ await api('automatic',{enabled:'false'});
+ assert((await api('save',{revision:fixedSave.revision,draft:JSON.stringify(fixed)})).ok);
  let prep=await api('clock-trust',{action:'set_prepare',operation:'a'.repeat(32)});assert(prep.simulated && prep.ttl===60);
  const timeData={action:'set_time',challenge:prep.challenge,epoch:String(Math.floor(Date.now()/1000)),ack:'true'};
  assert((await api('clock-trust',timeData)).simulated);assert(!(await api('automatic')).enabled);
@@ -51,7 +62,7 @@ async function api(name,data){return (await context.window.fetch('./demo-api/'+n
 
  const rangeRaw=fs.readFileSync('tests/range-plan.json','utf8');const rangeDates=['2026-12-29','2026-12-30','2026-12-31','2027-01-01','2027-01-02','2027-01-03','2027-01-04'];
  const results=[];for(const date of rangeDates)results.push(await api('preview',{date,draft:rangeRaw}));
- assert.equal(results[1].events.length,0);assert.equal(results[2].events.length,3);assert.equal(results[2].events[2].origin_date,'2027-01-01');assert.equal(results[4].events.length,0);
+ assert.equal(results[1].events.length,0);assert.equal(results[2].events.length,2);assert.equal(results[3].events.length,0);assert.equal(results[4].events.length,0);
  if(process.env.SCHOOLBELL_LUA){const cp=require('child_process');const lua=cp.execFileSync(process.env.SCHOOLBELL_LUA,['tests/range-preview.lua','tests/range-plan.json',...rangeDates],{encoding:'utf8'}).trim().split('\n').map(JSON.parse);for(let i=0;i<results.length;i++)assert.deepStrictEqual(results[i],lua[i]);console.log('PASS exact Pages/Lua preview parity for range edges, gaps and cross-midnight pre-bell');}
  const bad=JSON.parse(rangeRaw);bad.plans[1].start='2026-12-31';assert.equal((await api('preview',{date:'2027-01-01',draft:JSON.stringify(bad)})).code,'invalid');
  bad.plans=JSON.parse(rangeRaw).plans;bad.schedules[0].rows[0].media='user1';assert.equal((await api('preview',{date:'2027-01-01',draft:JSON.stringify(bad)})).code,'invalid');

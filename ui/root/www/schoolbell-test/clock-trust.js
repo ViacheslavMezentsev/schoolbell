@@ -14,7 +14,7 @@ async function command(body){
   result=await request(root.dataset.trust+'?operation='+operation);
  }
  if(result.pending || result.code==='busy')throw Error('Исполнитель не завершил ответ за отведённое время. Проверьте состояние перед повтором. Операция '+operation);
- if(!result.ok)throw Error(result.code==='stale_confirmation'?'Подтверждение времени устарело. Снова запросите проверку времени и подтвердите показанную дату.':result.code==='clock_untrusted'?'Проверка времени прервана. Автозвонки не включены; проверьте состояние времени.':result.code==='mailbox_storage'?'Не удалось прочитать результат: ошибка хранилища команд. Проверьте состояние перед повтором.':result.code==='outcome_unknown'?'Связь с результатом операции потеряна. Проверьте состояние перед повтором.':'Операция не выполнена: '+result.code);
+ if(!result.ok)throw Error(result.code==='stale_confirmation'?'Подтверждение времени устарело. Снова запросите проверку времени и подтвердите показанную дату.':result.code==='clock_untrusted'?'Откройте «Проверка времени» в Настройках, сверьте и подтвердите время устройства. Затем повторите включение автозвонков.':result.code==='mailbox_storage'?'Не удалось прочитать результат: ошибка хранилища команд. Проверьте состояние перед повтором.':result.code==='outcome_unknown'?'Связь с результатом операции потеряна. Проверьте состояние перед повтором.':'Операция не выполнена: '+result.code);
  return result;
 }
 window.schoolbellClockCommand=command;

@@ -14,7 +14,7 @@ function fields(o,allowed,required){if(!o||typeof o!=='object'||Array.isArray(o)
 function goodId(s){return typeof s==='string'&&/^[A-Za-z0-9_-]{1,64}$/.test(s);}
 function title(s){return typeof s==='string'&&s.trim()&&new TextEncoder().encode(s).length<=96&&!/[\x00-\x1f\x7f]/.test(s);}
 function validateDraft(d,bundledOnly){
- fields(d,['schedules','pre_minutes','pre_media','plans','mode','fixed_schedule','manual_media'],['schedules','pre_minutes','pre_media']);
+ fields(d,['schedules','pre_minutes','pre_media','plans','mode','fixed_schedule','manual_media','active_plan'],['schedules','pre_minutes','pre_media']);
  if(new TextEncoder().encode(JSON.stringify(d)).length>12288)throw Error('Черновик превышает 12 КиБ');
  const media={includes:v=>typeof v==='string'&&v.length<=64&&(['test','0','1','2','3','4'].includes(v)||(!bundledOnly&&/^user(?:[1-9][0-9]*|_[0-9a-f]+)$/.test(v)))};
  if(!Number.isInteger(d.pre_minutes)||d.pre_minutes<1||d.pre_minutes>10||!media.includes(d.pre_media)||d.manual_media!==undefined&&!media.includes(d.manual_media))throw Error('Параметры мелодий');
@@ -25,6 +25,7 @@ function validateDraft(d,bundledOnly){
  if(sc.color!==undefined&&(!Number.isInteger(sc.color)||sc.color<1||sc.color>16))throw Error('Цвет');
  if(!Array.isArray(sc.rows))throw Error('Строки');const rows=new Set();
  for(const row of sc.rows){fields(row,['id','time','media','enabled','pre'],['id','time','media','enabled','pre']);if(!goodId(row.id)||rows.has(row.id)||typeof row.time!=='string'||!/^([01]\d|2[0-3]):[0-5]\d$/.test(row.time)||!media.includes(row.media)||typeof row.enabled!=='boolean'||typeof row.pre!=='boolean')throw Error('Строка звонка');rows.add(row.id);}}
+ if(d.active_plan!==undefined && !migrate(d.plans || []).some(p=>p.id===d.active_plan))throw Error('Неизвестный календарный план');
  if(d.fixed_schedule!==undefined&&d.fixed_schedule!=='quiet'&&!ids.has(d.fixed_schedule))throw Error('Ежедневное расписание');
  const plans=migrate(d.plans===undefined?[]:d.plans);for(const p of plans){if(p.schedule_ids.some(id=>!ids.has(id)))throw Error('Ссылка расписания');}return true;
 }
