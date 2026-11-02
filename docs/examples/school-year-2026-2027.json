@@ -1,0 +1,224 @@
+{
+  "fixed_schedule": "quiet",
+  "mode": "annual",
+  "plans": [
+    {
+      "days": "AAAAB.AAAAAB.AAAAAB.AAAAAB.AAAAAB.AAAAAB.AAAAAB.AAAAAB.AAAAAB.AACAAB.AAAAAB.AAAAAB.AAAAAB.AAAAAB.AAAAAB.AAAAAB.AAAAAB.AAACCC.CCCCCB.AAAAAB.AAAAAB.AAAAAB.AAAAAB.AAAAAB.AAAAAB.ACAAAB.AAAAAB.CAAAAB.AAAAAB.AAAAAB.AAAAAB.AAAAAB.AAAAAB.AAAAAB.AAAAAC.AAAAAB.CAAAAB.AAAAAB.AAAAAB.A",
+      "end": "2027-05-31",
+      "id": "school-year-2026-2027",
+      "name": "Учебный план 2026–2027",
+      "schedule_ids": [
+        "weekdays",
+        "saturday",
+        "holidays"
+      ],
+      "start": "2026-09-01"
+    }
+  ],
+  "pre_media": "0",
+  "pre_minutes": 2,
+  "schedules": [
+    {
+      "color": 1,
+      "id": "weekdays",
+      "name": "Будни",
+      "rows": [
+        {
+          "enabled": true,
+          "id": "weekdays-1",
+          "media": "0",
+          "pre": false,
+          "time": "07:55"
+        },
+        {
+          "enabled": true,
+          "id": "weekdays-2",
+          "media": "3",
+          "pre": false,
+          "time": "08:00"
+        },
+        {
+          "enabled": true,
+          "id": "weekdays-3",
+          "media": "1",
+          "pre": false,
+          "time": "08:45"
+        },
+        {
+          "enabled": true,
+          "id": "weekdays-4",
+          "media": "3",
+          "pre": true,
+          "time": "08:55"
+        },
+        {
+          "enabled": true,
+          "id": "weekdays-5",
+          "media": "1",
+          "pre": false,
+          "time": "09:40"
+        },
+        {
+          "enabled": true,
+          "id": "weekdays-6",
+          "media": "3",
+          "pre": true,
+          "time": "09:55"
+        },
+        {
+          "enabled": true,
+          "id": "weekdays-7",
+          "media": "1",
+          "pre": false,
+          "time": "10:40"
+        },
+        {
+          "enabled": true,
+          "id": "weekdays-8",
+          "media": "3",
+          "pre": true,
+          "time": "10:55"
+        },
+        {
+          "enabled": true,
+          "id": "weekdays-9",
+          "media": "1",
+          "pre": false,
+          "time": "11:40"
+        },
+        {
+          "enabled": true,
+          "id": "weekdays-10",
+          "media": "3",
+          "pre": true,
+          "time": "12:00"
+        },
+        {
+          "enabled": true,
+          "id": "weekdays-11",
+          "media": "1",
+          "pre": false,
+          "time": "12:45"
+        },
+        {
+          "enabled": true,
+          "id": "weekdays-12",
+          "media": "3",
+          "pre": true,
+          "time": "12:55"
+        },
+        {
+          "enabled": true,
+          "id": "weekdays-13",
+          "media": "2",
+          "pre": false,
+          "time": "13:40"
+        },
+        {
+          "enabled": true,
+          "id": "weekdays-14",
+          "media": "3",
+          "pre": true,
+          "time": "13:50"
+        },
+        {
+          "enabled": true,
+          "id": "weekdays-15",
+          "media": "2",
+          "pre": false,
+          "time": "14:35"
+        }
+      ]
+    },
+    {
+      "color": 2,
+      "id": "saturday",
+      "name": "Суббота",
+      "rows": [
+        {
+          "enabled": true,
+          "id": "saturday-1",
+          "media": "0",
+          "pre": false,
+          "time": "07:55"
+        },
+        {
+          "enabled": true,
+          "id": "saturday-2",
+          "media": "3",
+          "pre": false,
+          "time": "08:00"
+        },
+        {
+          "enabled": true,
+          "id": "saturday-3",
+          "media": "1",
+          "pre": false,
+          "time": "08:45"
+        },
+        {
+          "enabled": true,
+          "id": "saturday-4",
+          "media": "3",
+          "pre": true,
+          "time": "09:00"
+        },
+        {
+          "enabled": true,
+          "id": "saturday-5",
+          "media": "1",
+          "pre": false,
+          "time": "09:45"
+        },
+        {
+          "enabled": true,
+          "id": "saturday-6",
+          "media": "3",
+          "pre": true,
+          "time": "10:00"
+        },
+        {
+          "enabled": true,
+          "id": "saturday-7",
+          "media": "1",
+          "pre": false,
+          "time": "10:45"
+        },
+        {
+          "enabled": true,
+          "id": "saturday-8",
+          "media": "3",
+          "pre": true,
+          "time": "11:00"
+        },
+        {
+          "enabled": true,
+          "id": "saturday-9",
+          "media": "2",
+          "pre": false,
+          "time": "11:45"
+        },
+        {
+          "enabled": true,
+          "id": "saturday-10",
+          "media": "3",
+          "pre": true,
+          "time": "11:55"
+        },
+        {
+          "enabled": true,
+          "id": "saturday-11",
+          "media": "2",
+          "pre": false,
+          "time": "12:40"
+        }
+      ]
+    },
+    {
+      "color": 3,
+      "id": "holidays",
+      "name": "Праздники",
+      "rows": []
+    }
+  ]
+}
