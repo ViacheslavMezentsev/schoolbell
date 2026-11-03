@@ -1365,7 +1365,7 @@
       "destination": "site/README.md",
       "source_sha256": "411ead0a2d3e281f493c20f1172f8a63d8299f35968d1e4f92a6ed32d660ddf4",
       "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer",
-      "destination_sha256": "44563f49d951a814d6154c1c2c42392876da1b411b96510b374d6fbdad141f85"
+      "destination_sha256": "c03c000155e0035d98071812b246e618c7487628f93d730e47f848e7a64ad6af"
     },
     {
       "source": "site/demo.js",
@@ -2046,18 +2046,18 @@
       "source": "docs/packages/schoolbell/USER_GUIDE.en.md",
       "destination": "docs/user/USER_GUIDE.en.md",
       "source_sha256": "45cada2eb0064aa88df66a57a4e80f593cc259497ea41817e66eb42fcf678921",
-      "destination_sha256": "c26d3ef37dca3557934ec1456014718150b7d2e0db9ea4b116d6540bad3e5dd0",
+      "destination_sha256": "fa08ec0665fcaf6b218653f49880311c8e70535b5b952b7bec60d5a2674cd912",
       "changes": "Markdown link destinations only; original text and requirement/TC IDs preserved; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); schoolbell feedback issue forms and RU/EN guide links (5.1.45); insert and reorder bell rows (5.1.48); triangle and bulk action icons (5.1.51); melody table add and replace (5.1.52); metadata-only melody rename (5.1.53); passive switch and IP header (5.1.56); saved volume header bar; UI consistency review and mobile layout",
-      "prose_sha256": "f46972d651761c3636e4ba490a2656c84d8f539875418165d77e0d8aec109e7d",
+      "prose_sha256": "7b439987117c4c96cc71646687a8e789a25dae8177ca173f47ef3f483f29d3b6",
       "migrated_prose_sha256": "ca3efd23e3a9a2c17b796ed94a73f372ad98853e29c32591d2525368a2e9fee8"
     },
     {
       "source": "docs/packages/schoolbell/USER_GUIDE.md",
       "destination": "docs/user/USER_GUIDE.md",
       "source_sha256": "9753511757ffb71652f00145a30dc1421e5e3bc3e775b0b357f9d46a93704807",
-      "destination_sha256": "38fcf5e39bf2bf01476d1fd9dfcdf39a443fa901e2c5d3c1877bb4d7a5309ae8",
+      "destination_sha256": "7091f641806dc2a441d7f4fec7df9b53b28d5c65058ee04dc0a35ae4feb40614",
       "changes": "Markdown link destinations only; original text and requirement/TC IDs preserved; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); schoolbell feedback issue forms and RU/EN guide links (5.1.45); insert and reorder bell rows (5.1.48); triangle and bulk action icons (5.1.51); melody table add and replace (5.1.52); metadata-only melody rename (5.1.53); passive switch and IP header (5.1.56); saved volume header bar; UI consistency review and mobile layout",
-      "prose_sha256": "2239c9f4fb709fce1c12ffafc4de1257c8cbb48397562a3cf51bfa016dabdc32",
+      "prose_sha256": "2fb22c64e9acbbe858c4eda2e8b7032bc13ef8b7624d3635e69fbc184fec515a",
       "migrated_prose_sha256": "3d8d69c4d89c627f85c1db40f3e4b2e8e1222460ef7ab761eb50e2bdb05ed600"
     },
     {
@@ -2183,28 +2183,28 @@
       "source": "site/schoolbell-guide.en.html",
       "destination": "site/schoolbell-guide.en.html",
       "source_sha256": "18683743a71f8fa8592cde379dd2e17917bb29ed1198ea23fd1cf34abdcc1800",
-      "destination_sha256": "2777f55727eed2602b7f2a38690bcba910adbee37b0b2dfaeaeb270614605a79",
+      "destination_sha256": "eb01adfdd7777c021254e8e0f4e98ddfdabcfe9c144d6ae908ae0baf52d37e35",
       "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer"
     },
     {
       "source": "site/schoolbell-guide.html",
       "destination": "site/schoolbell-guide.html",
       "source_sha256": "225d8a980bcc59a786451fdc67acf26afe0065a7ea2b2a9a50990304817da702",
-      "destination_sha256": "1c0cdf5867761bc239b1309c4c3d7b740a452b6ebacf68652b36d52990ea7fd1",
+      "destination_sha256": "539101f96ce4c5fff53f4a2993b55f4c418142ec60198fdca9b1af497dc83cfc",
       "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer"
     },
     {
       "source": "site/schoolbell-training.en.html",
       "destination": "site/schoolbell-training.en.html",
       "source_sha256": "6c4db8d94dc8678fde27be05210660648cbde61b2b7fd0ad3d1ac6ac9e65d50e",
-      "destination_sha256": "1ba5efde63220b6b7bdf701c0818df0b35fa5410eb2ec84987da59e2e22c0427",
+      "destination_sha256": "adc34b2d49b64e2461e791bc306a9eacbdd4a8d746306a13802e3d4b4c3c48d9",
       "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer"
     },
     {
       "source": "site/schoolbell-training.html",
       "destination": "site/schoolbell-training.html",
       "source_sha256": "380923c0532e2428a9f5007fc05e3946a73eba853417b9a1eb223c8df572f2e6",
-      "destination_sha256": "5d1570861ff7d9161e5816c2ed480a1c62fdd295c514ddf2865033181d7c74de",
+      "destination_sha256": "2677b6fe6e82313fbbbfa9f66e7108ad6aed22854868586b78480ad8575d7780",
       "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer; UI consistency review and mobile layout"
     },
     {

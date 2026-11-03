@@ -9,6 +9,8 @@ bell UI directly. Guides, training (RU/EN) and `devices/` are separate pages;
 API never contacts hardware. Six built-in MP3s play in the browser. User media
 and real device commands are unavailable. Issue forms target schoolbell.
 
+The demo shares the 5.1.90 interface. Under General, try header labels. Apply a draft and explicitly start Automatic bells; Simulate reboot stops them and adds a journal entry. Repeating a preview reuses its result only for identical draft bytes and the same date.
+
 ## Drafts
 
 The new key is `schoolbell-public-demo-v1`. The old key

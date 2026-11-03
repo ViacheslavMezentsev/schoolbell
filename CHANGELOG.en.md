@@ -4,6 +4,28 @@
 
 ## Unreleased
 
+- 5.1.90: Reuse a checked preview for the same draft and date. Both sound test routes use the bundled asset directly; browser playback supports conditional requests.
+
+- 5.1.89: Manual bells reuse a previously validated draft and log the request after starting the player.
+
+- 5.1.88: Browser playback and timezone reads remain available during device playback or draft writes.
+
+- 5.1.87: General appears first in Settings. Draft, melody list and backup status reads no longer acquire writer or playback locks.
+
+- 5.1.86: The first quick-guide entry explains how to show or hide header labels.
+
+- 5.1.85: Optional header button labels in General settings and a centered automatic status below the header.
+
+- 5.1.84: Read a consistent journal snapshot without contending with the editor during page reload.
+
+- 5.1.83: Automatic bell attempts and outcomes include the scheduled local time, bell type and working schedule. Copy retains UTC offsets.
+
+- 5.1.82: Independent warning (!) and error (!!) filters in the journal.
+
+- 5.1.81: Prepare the durable checkpoint before the bell, report after launch, and use sign-in and sign-out icons.
+
+- 5.1.80: Require manual start after device boot, log boots and audio failures, and remove the clock confirmation setting.
+
 - 5.1.79: Compact sound test routes and separate clock verification settings.
 
 - 5.1.78: Removed the manual comparison and raw draft data from the editor.

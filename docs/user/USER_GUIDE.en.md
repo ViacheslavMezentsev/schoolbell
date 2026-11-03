@@ -21,7 +21,7 @@ The Draft panel starts collapsed. Click its summary to see the active-plan compa
 
 ## When a problem occurs
 
-Use Resolve problem in the header. The panel explains the latest confirmed state. Read status again never repeats commands or replaces edits. Suggested actions open the relevant section; time confirmation, saving and enabling remain separate actions. An expired session offers sign-in.
+Use Resolve problem in the header. The panel explains the latest confirmed state. Read status again never repeats commands or replaces edits. Suggested actions open the relevant section; saving and enabling remain separate actions. An expired session offers sign-in.
 
 No fresh data means no current module response, not a confirmed Wi-Fi failure. Details show whether the saved and working copies match. For recurring problems, open the journal and feedback. Time protection and locks are never automatically cleared.
 
@@ -30,7 +30,7 @@ Calendar months run consecutively across year boundaries. Longer plans use pages
 
 After session loss, sound and automation controls are disabled and the status panel requests login. This does not mean the service stopped. An unconfirmed logout does not prove the server session ended: sign in normally and retry logout after connectivity returns.
 
-The header contains compact Login/Logout controls, with no visible countdown. Idle duration is under Settings → Login and automatic logout (1–120 minutes, default 15); it is a running-page timer, not LuCI server policy. Polling does not renew it. Logout does not stop automatic bells.
+The header contains compact Login/Logout controls, with no visible countdown. Idle duration is under Settings → General (1–120 minutes, default 15); it is a running-page timer, not LuCI server policy. Polling does not renew it. Logout does not stop automatic bells. General is the first section in Settings. Header labels are hidden by default. Use General settings to show them. The preference is saved in this browser.
 Login uses the same tab. Before navigation, the unsaved draft is temporarily stored in this tab’s sessionStorage (32768 characters, up to 8 hours, no password/token); storage failure cancels navigation. The same user gets the edits back automatically, without writing them to the router. A changed server revision requires reconciliation. This is not a backup: closing the tab, clearing browser storage, expiry or another user can lose edits; selected upload files are not transferred.
 
 
@@ -67,8 +67,7 @@ the draft; «Мелодии» manages audio; «Настройки» controls tim
 
 1. In Settings, check school timezone and router date/time. Ask the administrator
    to correct wrong time before continuing.
-2. Under time verification, click «Проверить и подтвердить время», review and click
-   «Время верно — подтвердить».
+2. Check the device date and time in the expanded header.
 3. Create a schedule with an enabled test-melody row a few minutes after current
    router time. Disable preliminary ringing for this test.
 4. In Settings select «По расписанию» and that schedule, then «💾 Сохранить настройки».
@@ -160,24 +159,7 @@ Uploads are rejected when space is insufficient.
 
 ## 8. Timezone and verification
 
-School timezone is first in Settings. For Yekaterinburg select Asia/Yekaterinburg and
-«Применить часовой пояс», wait for confirmation and check the status panel. Copy the
-browser zone only when it matches the school's location. The setting affects all
-router applications, does not fix wrong date/minutes, and does not rewrite schedule
-HH:MM entries. Recheck/confirm time and apply the plan separately after changing zone.
-
-Trust confirmation does not set the clock. From 5.1.25, Settings → Date and time contains the complete workflow. Verify your computer/phone clock, choose Set time from browser, compare both dates and the difference, then confirm within one minute or cancel. The device reading in the confirmation is UTC to avoid mixing zones.
-
-Setting time disables automatic bells and revokes prior trust. After verified readback, check local readings and confirm trust separately; enabling the plan remains a separate action. Playback blocks setting: wait for completion or stop sound. After an uncertain outcome, refresh readings; commands are never automatically replayed. NTP, services and timezone are unchanged; running NTP may subsequently adjust time. Pages only simulates the operation. This is neither an accuracy guarantee nor a retained date after power loss. Clock changes during drift measurements need separate agreement. This version has only been tested on the host.
-
-Request verification, check the displayed date and confirm within 15 seconds; request
-again if expired. Acknowledging intentional time earlier than the saved reference
-requires careful review with the administrator; it does not repair the clock.
-
-The gate may be disabled with confirmation, removing part of the wrong-date protection
-without establishing accuracy. Toggling the gate or confirming time disables automatic
-bells; enable separately. The approximate browser comparison within five seconds is
-neither an accuracy certificate nor executor confirmation.
+Automatic bells are off after a router boot. Check the device date and time in the expanded header. Use Settings → Date and time to correct the zone or set the time from your browser. Use Automatic bells to start the applied plan. Restarting the service in the same boot preserves its state. Setting the clock preserves the switch and missed bells are not replayed.
 
 ## 9. Backup, restore and transfer
 
@@ -222,7 +204,7 @@ restore leave bells off. Unattended recovery after power loss is not yet promise
 | Unknown outcome | Inspect state/list/title/revision before retrying upload, restore or ringing |
 | No sound | Distinguish browser/router, check Mute, volume, speaker power/cable; for automatic bells also time, active plan/date and enabled row |
 | No next bell | Check mode/today/active copy; countdown currently covers today only |
-| Time verification needed | Review and confirm correct time, then enable separately |
+| Device booted | Check the local time, then start automatic bells |
 | MP3 will not fit | Use a shorter/more compact MP3; allow for reserve and temporary copies |
 | Bad backup/storage error | Keep bells off; check archive, compatibility and timezone; contact administrator for storage failures |
 | Old UI after upgrade | Save needed edits, then Ctrl+F5; reload normally on mobile |
@@ -296,6 +278,10 @@ Metrics combines device resources and recorded automatic playbacks. Successful s
 
 Counters persist independently of journal rotation, across restarts and settings reset. Up to 400 recorded dates are retained; the grid shows 33 weeks. Pre-upgrade history may be incomplete: only retained journal events can be recovered. Unknown dates do not imply silence. Zero is the recorded completion count for a date when automation was enabled, not proof of continuous operation. Counters are not transferred in .sbb/.sbp.
 
-In Settings select calendar mode, choose a plan and save. Apply the saved draft to select the working plan while preserving the current on/off state. Confirm the clock and use Automatic bells to start. Fixed mode displays the working schedule name. Stop automatic bells before saving changes to the working source. The calendar outlines today according to the device clock. The header button resumes the previously applied version. The header shows the plan and daily schedule used by the worker.
+In Settings select calendar mode, choose a plan and save. Apply the saved draft to select the working plan while preserving the current on/off state. After each device boot, review the local time and use Automatic bells to start. The journal records the boot. The next scheduled playback uses the available audio output after a card replacement. Fixed mode displays the working schedule name. Stop automatic bells before saving changes to the working source. The calendar outlines today according to the device clock. The header button resumes the previously applied version. The header shows the plan and daily schedule used by the worker.
 
 To delete the applied calendar plan, apply another plan or a fixed schedule first. Stopping retains the plan for resume. Check the plan name in the date preview.
+
+The journal shows the actual local event time. New automatic bell entries also show the scheduled time, pre-bell or main bell, calendar plan (when selected) and schedule. Copying the journal retains the UTC offset.
+
+When you change a melody or a date, preview uses the new selection. Reopening the same day can reuse its prepared result. Each device playback still checks mute and output availability. The browser can reuse the bundled test MP3 after checking its version.
