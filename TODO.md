@@ -2,8 +2,12 @@
 
 ## Приоритет: надёжная подача звонков / Priority: reliable playback
 
+- [ ] При аппаратной приёмке измерить время от нажатия ручной кнопки до слышимого звука; серверный замер до запуска процесса не учитывает браузер и USB. / Measure click-to-audible latency on hardware; handler-to-fork timing excludes the browser and USB output.
+
+- [ ] Аппаратная приёмка 5.1.80: проверить холодную загрузку и горячую замену карты с прослушиванием следующего автоматического звонка (TC-217–TC-220). / Hardware acceptance: verify a cold boot and replace the audio card before the next audible automatic bell.
+
 - [ ] На стенде подтвердить подачу следующего звонка после отдельного включения применённого источника в каждом из двух режимов. / On the bench, verify the next audible bell after separately starting each applied source mode.
-- [ ] Приёмка маршрута дежурного: связать запись о выполненном звонке с планом, расписанием дня и назначенным местным временем. Сейчас журнал хранит тип события и время регистрации, карта — дневное число успешных завершений. / Operator acceptance: trace completed playback to its applied plan, daily schedule and scheduled time.
+- [ ] Приёмка маршрута дежурного: связать запись о выполненном звонке с планом, расписанием дня и назначенным местным временем. В 5.1.83 новые записи содержат рабочий источник и назначенное время; на карте остаётся число успешных завершений. / Operator acceptance: verify the applied source and scheduled time in the new journal entries against a live scheduled bell.
 - [ ] Явный выбор исполняемого календарного плана, статус применённого снимка и сквозная приёмка TC-207–TC-210 / Explicit calendar plan selection, applied status and end-to-end acceptance.
 
 - [ ] Установить причину оставшегося пустого замка медиатеки после завершения запросов; безопасное восстановление выполнено, автоматическое снятие не добавлялось / Identify the cause of the orphan empty media gate; safe recovery performed, no automatic gate removal added.

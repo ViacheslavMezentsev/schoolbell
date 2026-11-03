@@ -2021,9 +2021,9 @@
       "source": "docs/packages/schoolbell/TECHNICAL_SPECIFICATION.md",
       "destination": "docs/requirements/TECHNICAL_SPECIFICATION.md",
       "source_sha256": "61b760731a5c4f6c53ed67726cd8667136ee194692aa517aa2b3ded7e9f07aad",
-      "destination_sha256": "8ba5d1300dd7db76b55a5139aab9a26dbafb136a10652a799b6353f1287ed5c4",
+      "destination_sha256": "2977e1c94467ee17b64e9a0bedff6e0d9d7604af64d5a98a081abc5c754ec838",
       "changes": "Markdown link destinations only; original text and requirement/TC IDs preserved; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner clarification of playback action icons (5.1.32, spec 1.78); owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); owner-approved baseline CSS palette and fixed order, spec 1.81 (documentation only); baseline CSS palette implementation, spec 1.81; insert and reorder bell rows (5.1.48); shared UI conventions and large action icons (5.1.50); triangle and bulk action icons (5.1.51); melody table add and replace (5.1.52); metadata-only melody rename (5.1.53); passive switch and IP header (5.1.56); saved volume header bar; UI consistency review and mobile layout; explicit active calendar plan requirements (spec 1.99)",
-      "prose_sha256": "016754cb7c79d74cb106db93ffc8155153d075c2147817e09addd987cb264da7",
+      "prose_sha256": "93d425f059b4e26ea77d97ffbdf8cc9b0802f52c81caec73903bd79f8abf4398",
       "migrated_prose_sha256": "7a7b8c5652b4353f90f58c476218ca443a2dbb2be0af2516e6e735ea8fa30be5"
     },
     {
