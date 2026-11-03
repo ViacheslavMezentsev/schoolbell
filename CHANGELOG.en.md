@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+- Added a diagnostic btop build for MR3020 and a Windows 11 first-install wizard for Schoolbell 5.1.100.
+
 - 5.1.101: Daily bell counts use ten-bell bands. Reopening metrics reuses the minute cache; resource readings persist between polls.
 
 - 5.1.100: Starting automatic bells reuses the verified applied plan when its stored bytes still match. Icon tools and paging buttons inside tabs measure 48 × 48 CSS px.

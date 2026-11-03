@@ -1,5 +1,7 @@
 # Задачи проекта / Project tasks
 
+- [ ] Проверить полный путь Setup.cmd на отдельном заводском TL-MR3020 EU v3.30 с Windows 11 без интернета. / Verify the offline Windows 11 setup end to end on a spare factory TL-MR3020 EU v3.30.
+
 ## Приоритет: надёжная подача звонков / Priority: reliable playback
 
 - [ ] При аппаратной приёмке измерить время от нажатия ручной кнопки до слышимого звука; серверный замер до запуска процесса не учитывает браузер и USB. / Measure click-to-audible latency on hardware; handler-to-fork timing excludes the browser and USB output.

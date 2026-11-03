@@ -45,3 +45,5 @@ Own code and documentation: [MIT](LICENSE). Audio, historical archive and
 third-party components are excluded; see [scope](docs/LICENSING.en.md) and [NOTICE](NOTICE).
 
 Below Flash, saved volume is on the left and the default `/dev/dsp` controller/card name is on the right, followed by the volume bar. Missing output is explicit; other cards are not selected automatically. Volume steps from 0 to 100 % in increments of 10 map to the nearest supported gain, not measured loudness. Flash uses MiB (1024² bytes), with blue fill up to 75 %.
+
+[btop for MR3020](tools/btop/README.md) · [Offline Windows 11 setup](tools/setup/README.md)
