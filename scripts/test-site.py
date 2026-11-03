@@ -55,10 +55,11 @@ assert (out/'assets/media-manifest.json').read_bytes()==(root/'assets/melodies/m
 print('PASS Pages license navigation, MIT, scope, audio manifest and LuCI notice delivery')
 
 # Device HTML must carry correct feedback links itself; Pages must not repair it.
-feedback_base='https://github.com/ViacheslavMezentsev/schoolbell/issues'
+repository='https://github.com/ViacheslavMezentsev/schoolbell'
+feedback_base=repository+'/issues'
 guides=['https://viacheslavmezentsev.github.io/schoolbell/guide.html',
         'https://viacheslavmezentsev.github.io/schoolbell/guide.en.html']
-expected={feedback_base,feedback_base+'/new?template=bug_report.yml',
+expected={repository,feedback_base,feedback_base+'/new?template=bug_report.yml',
           feedback_base+'/new?template=feature_request.yml',*guides}
 for text in [home,(root/'ui/root/usr/lib/lua/luci/view/schoolbell_test.htm').read_text()]:
  panel=text.split('<section id="panel-feedback"',1)[1].split('</section>',1)[0]
@@ -77,3 +78,18 @@ print('PASS Feedback: device/Pages share exact schoolbell issue-form and guide l
 # Keep the HTTP validator in step with the actual packaged recording.
 test_digest=hashlib.sha256((root/'assets/melodies/test.mp3').read_bytes()).hexdigest()
 assert f"""M.test_etag='"{test_digest}"'""" in (root/'src/lua/schoolbell/media_ids.lua').read_text()
+
+# The bell range controls belong only to the schedules panel.
+for markup in [(out/'index.html').read_text(),(root/'ui/root/usr/lib/lua/luci/view/schoolbell_test.htm').read_text()]:
+    schedules=markup.split('id="panel-schedules"',1)[1].split('id="panel-',1)[0]
+    for name in ('rows-prev','rows-range','rows-next'):
+        marker=f'id="{name}"'
+        assert markup.count(marker)==1 and marker in schedules, name
+
+    toolbar=schedules.split('<div class="list-toolbar">',1)[1].split('<div class="table-scroll">',1)[0]
+    assert all(f'id="{key}"' in toolbar for key in ('row-add','rows-clear','rows-prev','rows-next'))
+    help_panel=markup.split('id="panel-help"',1)[1].split('</section>',1)[0]
+    assert '<h2>' not in help_panel and help_panel.count('<details class="details">')==4
+    media=markup.split('id="panel-media"',1)[1].split('id="media-rows"',1)[0]
+    media_toolbar=media.split('<div class="list-toolbar">',1)[1].split('<div class="table-scroll">',1)[0]
+    assert all(f'id="{key}"' in media_toolbar for key in ('media-add','media-refresh','media-prev','media-next'))

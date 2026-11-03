@@ -16,7 +16,7 @@ function contextLabel(v){
 }
 function header(){
  var v=confirmed(),text,tone='warning',demo=v && v.simulated;
- quick.dataset.icon=v && v.enabled?'⏸':'▶';
+ quick.dataset.icon=v && v.enabled?'■':'▶';
  quick.setAttribute('aria-label','Автозвонки'+(v && v.mode==='annual'?' · календарный план':v && v.mode==='fixed'?' · расписание':''));
  quick.title=v && v.enabled?'Выключить автоматические звонки':'Включить ранее применённый план, не черновик';
  if(window.schoolbellSessionBlocked){text='Войдите';tone='warning';}

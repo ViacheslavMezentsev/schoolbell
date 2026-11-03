@@ -1,4 +1,4 @@
-# План миграции / Migration checklist
+# Задачи проекта / Project tasks
 
 ## Приоритет: надёжная подача звонков / Priority: reliable playback
 

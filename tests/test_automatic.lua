@@ -97,7 +97,10 @@ test('stop retains applied plan, resume ignores newer draft and preserves waterm
  assert(not pcall(Store.resume,fs,stopped.revision,stopped.generation-1,env,function()return true end))
  assert(not pcall(Store.resume,fs,stopped.revision,stopped.generation,env,function()return false end))
  assert(files['automatic.json']==snapshot)
- local resumed=Store.resume(fs,stopped.revision,stopped.generation,env,function(plan)checked=checked+1;assert(plan.schedules[1].name=='School');return true end)
+ local decode=Store.decode;Store.decode=function()error('unexpected decode on exact cache hit')end
+ local resumed=Store.resume(fs,stopped.revision,stopped.generation,env,function(plan)checked=checked+1;assert(plan.schedules[1].name=='School');return true end,snapshot,stopped)
+ Store.decode=decode
+ assert(not pcall(Store.resume,fs,stopped.revision,stopped.generation,env,function()return true end,snapshot,stopped))
  assert(resumed.enabled and resumed.revision==draft.revision and resumed.watermark==env.now+60 and checked==1)
  assert(S.load(fs).revision==saved.revision)
  assert(not pcall(Store.resume,fs,stopped.revision,stopped.generation,env,function()return true end))

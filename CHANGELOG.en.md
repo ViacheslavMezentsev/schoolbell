@@ -4,6 +4,26 @@
 
 ## Unreleased
 
+- 5.1.100: Starting automatic bells reuses the verified applied plan when its stored bytes still match. Icon tools and paging buttons inside tabs measure 48 × 48 CSS px.
+
+- 5.1.99: Paging buttons in Schedules, Melodies and Journal share the standard 44 × 48 CSS px toolbar button size.
+
+- 5.1.98: Melodies now places Add and Refresh in the paging toolbar above the table.
+
+- 5.1.97: Add bell and delete all bells now share the paging toolbar above the schedule table.
+
+- 5.1.96: The cheat sheet opens with four collapsed sections. Melodies and Journal use ▲ and ▼ buttons with a row range.
+
+- 5.1.95: Grouped the quick guide into four topics and added the project repository to Feedback.
+
+- 5.1.94: Use the stop square ■ for automatic bells in the header and Settings.
+
+- 5.1.93: Restrict bell row pagination to the Schedules tab.
+
+- 5.1.92: Show ten bells per schedule page and follow the inserted or moved bell across page boundaries.
+
+- 5.1.91: Group journal entries by local day and filter by source. Show melody titles in the schedule preview.
+
 - 5.1.90: Reuse a checked preview for the same draft and date. Both sound test routes use the bundled asset directly; browser playback supports conditional requests.
 
 - 5.1.89: Manual bells reuse a previously validated draft and log the request after starting the player.

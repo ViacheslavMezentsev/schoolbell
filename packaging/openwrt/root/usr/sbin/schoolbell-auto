@@ -17,13 +17,15 @@ local function audit(action,bell)
  return r
 end
 local mailbox=require('schoolbell.clock_mailbox').system('worker')
+local cached,active,resumed
 local function resume(revision,generation)
   if not fs.mkdir(Player.lock,700)then return {ok=false,code='busy'}end
   local ok,v=pcall(function()return Store.transaction(Store.resume,revision,generation,Store.environment(),function(plan)
    return require('schoolbell.media_web').plan_ready(plan)
-  end)end)
+  end,cached,active)end)
   local closed=fs.rmdir(Player.lock)
   if not ok or not closed then return {ok=false,code='automatic_storage'}end
+  if v.ok then resumed=v end
   return {ok=v.ok,code=v.code,generation=v.ok and v.state.generation or nil}
 end
 local set_clock=require("schoolbell.clock_set").system(
@@ -51,7 +53,7 @@ metrics_ok=Metrics.reconcile(Store.root)
 local metrics_attempt=mono()
 local Status=require('schoolbell.automatic_status')
 Status.invalidate()
-local cached,active,engine,key,events,calendar_error,previous_state
+local engine,key,events,calendar_error,previous_state
 local started=Store.environment()
 local boot_recorded=false
 local prepared_claim
@@ -78,7 +80,7 @@ local function tick()
  local raw=Store.raw();local env=Store.environment();local now,up=env.now,mono()
  if started.zone~=env.zone then os.exit(0)end -- procd respawns with libc's new TZ
  if raw~=cached or not active then
-  local v=Store.decode(raw)
+  local v=resumed and resumed.raw==raw and resumed.state or Store.decode(raw)
   if v.enabled and v.boot~=env.boot then
    local stopped=Store.transaction(Store.on_boot,env.boot)
    assert(stopped.ok,'boot state');v=stopped.state;raw=stopped.raw
@@ -87,7 +89,7 @@ local function tick()
    -- Persist the startup floor too: downtime followed by clock rollback and
    -- another restart must not resurrect an event missed during downtime.
    if v.enabled and v.boot==env.boot and v.zone==env.zone then
-    local checkpoint=Store.transaction(Store.advance,v.generation,now)
+    local checkpoint=Store.transaction(Store.advance,v.generation,now,raw,v)
     assert(checkpoint.ok,'startup checkpoint');v=checkpoint.state
     raw=assert(checkpoint.raw)
    end
@@ -96,6 +98,7 @@ local function tick()
   end
   active=v;cached=raw
  end
+ resumed=nil
  local v={ok=true,enabled=active.enabled,generation=active.generation,revision=active.revision,now=now}
  if active.plan then
   v.mode=active.plan.mode or 'annual'

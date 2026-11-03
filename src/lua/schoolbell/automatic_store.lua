@@ -54,8 +54,12 @@ function M.change(fs,enabled,revision,env)
  return write(fs,v)
 end
 -- Resume the retained applied snapshot under the same storage lock. Never load draft.
-function M.resume(fs,revision,generation,env,admit)
- local current=M.decode(fs.read(M.name,M.max_bytes))
+local function verified_state(raw,expected,state)
+ if state and raw and raw==expected then return state end
+ return M.decode(raw)
+end
+function M.resume(fs,revision,generation,env,admit,expected,state)
+ local current=verified_state(fs.read(M.name,M.max_bytes),expected,state)
  assert(current.plan and not current.enabled,'no_stopped_plan')
  assert(current.revision==revision and current.generation==generation,'active_conflict')
  assert(current.generation<2147483647,'generation')
@@ -75,11 +79,13 @@ function M.on_boot(fs,boot)
  if current.enabled and current.boot~=boot then return M.change(fs,false,nil,{}) end
  return current,raw
 end
-function M.advance(fs,generation,now)
- local raw=fs.read(M.name,M.max_bytes);local v=M.decode(raw)
+function M.advance(fs,generation,now,expected,state)
+ local raw=fs.read(M.name,M.max_bytes);local v=verified_state(raw,expected,state)
  assert(v.enabled and v.generation==generation,'stale_checkpoint')
  if now<=v.watermark then return v,raw end
- v.watermark=now;return write(fs,v)
+ local next_state={}
+ for k,value in pairs(v)do next_state[k]=value end
+ next_state.watermark=now;return write(fs,next_state)
 end
 -- Prepare the next minute's checkpoint in RAM. Publish only at the due time,
 -- after comparing the complete on-disk snapshot under the normal writer lock.

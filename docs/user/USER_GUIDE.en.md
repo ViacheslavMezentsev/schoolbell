@@ -34,7 +34,7 @@ The header contains compact Login/Logout controls, with no visible countdown. Id
 Login uses the same tab. Before navigation, the unsaved draft is temporarily stored in this tab’s sessionStorage (32768 characters, up to 8 hours, no password/token); storage failure cancels navigation. The same user gets the edits back automatically, without writing them to the router. A changed server revision requires reconciliation. This is not a backup: closing the tab, clearing browser storage, expiry or another user can lose edits; selected upload files are not transferred.
 
 
-The first **Cheat sheet** tab offers short operator journeys. It opens by default; the last tab is remembered within the same session.
+The first **Cheat sheet** tab groups instructions under General, Interface, Plans and schedules, and Sound and melodies. All four sections start collapsed. The tab opens by default; the last tab is remembered within the same session.
 
 [Русский](USER_GUIDE.md)
 
@@ -215,7 +215,7 @@ Use «Обновить журнал». Table times are UTC; rotation discards ol
 is not permanent history. Full core system-event subscription is still pending.
 Player success does not confirm audible sound.
 
-In Feedback, search [schoolbell Issues](https://github.com/ViacheslavMezentsev/schoolbell/issues) or use the bug/feature forms, which also link to the RU/EN guides. Include the Schoolbell version,
+Feedback links to the [project repository](https://github.com/ViacheslavMezentsev/schoolbell). Search [schoolbell Issues](https://github.com/ViacheslavMezentsev/schoolbell/issues) or use the bug/feature forms, which also link to the RU/EN guides. Include the Schoolbell version,
 equipment, steps, expected/actual result and exact error/operation ID. Attach a
 screenshot or short log only after removing credentials/tokens/personal data.
 GitHub submission requires Internet/account and is performed by you, not automatically.
@@ -260,7 +260,7 @@ If a response is lost, check state before repeating. Commands are never replayed
 automatically. An interrupted reset can be completed by explicitly confirming
 reset again. Both hardware operations are disabled in the demo.
 
-In Melodies, + below the table opens the add form. The `*` button on a user melody opens replacement for that entry, retaining schedule references. Choose an MP3, review its title and confirm the upload. Bundled melodies cannot be replaced; deletion restrictions are unchanged.
+In Melodies, + above the table opens the add form. The `*` button on a user melody opens replacement for that entry, retaining schedule references. Choose an MP3, review its title and confirm the upload. Bundled melodies cannot be replaced; deletion restrictions are unchanged.
 
 To rename a user melody, select `*`, edit the title and select ✓ Save title without choosing an MP3. Automatic bells must be off. The file and schedule references remain unchanged. To replace the audio, choose an MP3 and use the separate upload button.
 
@@ -268,7 +268,7 @@ Below Audio, the header shows the physical switch position and current device IP
 
 The blue bar below the audio row shows saved volume, not signal level; mute does not change its fill.
 
-Move the volume slider to a step and select ✓ Apply volume. The saved gain stays unchanged until applied. Steps are evenly spaced: 0, 10, 20…100 %, mapped to the nearest supported device gain. Existing settings stay unchanged until applied; 0 % is a rounded minimum, while Mute fully disables sound. Journal controls: ↻ refresh, ⧉ copy, ⏮/⏭ first/last page.
+Move the volume slider to a step and select ✓ Apply volume. The saved gain stays unchanged until applied. Steps are evenly spaced: 0, 10, 20…100 %, mapped to the nearest supported device gain. Existing settings stay unchanged until applied; 0 % is a rounded minimum, while Mute fully disables sound. Journal controls: ↻ refresh, ⧉ copy, ▲/▼ previous/next page with the filtered row range. Melodies uses the same controls for pages of ten.
 
 💾 Save draft saves current edits. 💾 Save settings saves bell settings together with the entire schedule/plan draft. Neither action enables automatic bells. Discard edits reloads the saved draft with confirmation before losing unsaved changes;
 
@@ -285,3 +285,7 @@ To delete the applied calendar plan, apply another plan or a fixed schedule firs
 The journal shows the actual local event time. New automatic bell entries also show the scheduled time, pre-bell or main bell, calendar plan (when selected) and schedule. Copying the journal retains the UTC offset.
 
 When you change a melody or a date, preview uses the new selection. Reopening the same day can reuse its prepared result. Each device playback still checks mute and output availability. The browser can reuse the bundled test MP3 after checking its version.
+
+In the journal choose all sources, user actions, or module and system events. Warning and error filters apply within that source. A local-date heading appears at the start of each page and at each change of day. Copy includes the whole journal. The preview names the schedule and melody beside each bell time.
+
+Above the bell table, ▲ and ▼ page through ten rows at a time. The range shows each page’s position in the full schedule. Inserting or moving a bell opens its page. Confirming ×× removes all rows in the selected schedule.

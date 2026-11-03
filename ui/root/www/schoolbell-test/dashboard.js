@@ -54,17 +54,32 @@
   }
   function journalSource(e){return {user:'Пользователь',module:'Модуль',system:'Система'}[e.source] || e.source;}
   function journalText(){return journalEntries.map(function(e){return '#'+e.seq+' · '+journalTime(e)+' | '+journalSource(e)+' | '+e.level+' | '+journalEvent(e,true);}).join('\n');}
+  var sourceChoices=['all','user','system'],sourceFilter='all';
+  var dayHeading=new Intl.DateTimeFormat('ru-RU',{year:'numeric',month:'long',day:'numeric',timeZone:'UTC'});
+  function localDay(e){
+    var local=/^(\d{2})\.(\d{2})\.(\d{4})/.exec(e.local_time || '');
+    return local?local[3]+'-'+local[2]+'-'+local[1]:new Date(e.time*1000).toISOString().slice(0,10);
+  }
   function renderJournal(){
-    var selected=journalEntries.filter(function(e){return (!journalWarnings && !journalErrors) || (journalWarnings && e.level==='warning') || (journalErrors && e.level==='error');});
+    var selected=journalEntries.filter(function(e){var sourceMatches=sourceFilter==='all' || e.source===sourceFilter || (sourceFilter==='system' && e.source==='module');
+      var levelMatches=(!journalWarnings && !journalErrors) || (journalWarnings && e.level==='warning') || (journalErrors && e.level==='error');
+      return sourceMatches && levelMatches;});
     var pages=Math.max(1,Math.ceil(selected.length/journalPageSize));journalPage=Math.max(0,Math.min(journalPage,pages-1));
     var rows=document.getElementById('journal-rows');rows.replaceChildren();
+    var previousDay=null;
     selected.slice(journalPage*journalPageSize,(journalPage+1)*journalPageSize).forEach(function(e){
+      var day=localDay(e);
+      if(day!==previousDay){
+        var divider=document.createElement('tr'),heading=document.createElement('th');
+        divider.className='journal-day';heading.colSpan=3;
+        heading.textContent=dayHeading.format(new Date(day+'T00:00:00Z'));
+        divider.appendChild(heading);rows.appendChild(divider);previousDay=day;
+      }
       var tr=document.createElement('tr');tr.className='journal-'+e.level;
       ['#'+e.seq+' · '+displayTime(journalTime(e)),journalSource(e),journalEvent(e,false)].forEach(function(text){var td=document.createElement('td');td.textContent=text;tr.appendChild(td);});rows.appendChild(tr);
     });
-    document.getElementById('journal-page').textContent='Страница '+(journalPage+1)+' из '+pages+' · Записей: '+selected.length;
-    document.getElementById('journal-first').disabled=journalPage===0;
-    document.getElementById('journal-last').disabled=journalPage>=pages-1;
+    var start=journalPage*journalPageSize;
+    document.getElementById('journal-page').textContent=selected.length?(start+1)+'–'+Math.min(start+journalPageSize,selected.length)+' из '+selected.length:'0 из 0';
     document.getElementById('journal-prev').disabled=journalPage===0;
     document.getElementById('journal-next').disabled=journalPage>=pages-1;
     document.getElementById('journal-warnings').setAttribute('aria-pressed',String(journalWarnings));
@@ -86,10 +101,15 @@
     finally{clearTimeout(timer);button.disabled=false;journalBusy=false;}
   }
   document.getElementById('journal-reload').addEventListener('click',loadJournal);
+  sourceChoices.forEach(function(source){
+    document.getElementById('journal-source-'+source).addEventListener('click',function(){
+      sourceFilter=source;journalPage=0;
+      sourceChoices.forEach(function(key){document.getElementById('journal-source-'+key).setAttribute('aria-pressed',String(key===source));});
+      renderJournal();
+    });
+  });
   document.getElementById('journal-warnings').addEventListener('click',function(){journalWarnings=!journalWarnings;journalPage=0;renderJournal();});
   document.getElementById('journal-errors').addEventListener('click',function(){journalErrors=!journalErrors;journalPage=0;renderJournal();});
-  document.getElementById('journal-first').addEventListener('click',function(){journalPage=0;renderJournal();});
-  document.getElementById('journal-last').addEventListener('click',function(){journalPage=Math.max(0,Math.ceil(journalEntries.filter(function(e){return (!journalWarnings && !journalErrors) || (journalWarnings && e.level==='warning') || (journalErrors && e.level==='error');}).length/journalPageSize)-1);renderJournal();});
   document.getElementById('journal-prev').addEventListener('click',function(){journalPage--;renderJournal();});
   document.getElementById('journal-next').addEventListener('click',function(){journalPage++;renderJournal();});
   document.getElementById('journal-copy').addEventListener('click',async function(){

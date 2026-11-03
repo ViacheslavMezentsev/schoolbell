@@ -81,10 +81,10 @@ html[data-theme="dark"] .automatic-badge[data-tone="success"]{background:#143b27
 #journal-warnings[aria-pressed=true]{background:#f4b740;color:#211900;border-color:#f4b740}
 #journal-errors[aria-pressed=true]{background:#a40e26;color:#fff;border-color:#a40e26}
 
-.journal-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin: 18px 0; }
+.list-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin: 18px 0; }
 .journal-actions, .journal-navigation { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .journal-navigation { margin-left: auto; justify-content: flex-end; }
-.journal-navigation button { width: 44px; min-width: 44px; height: 48px; padding: 0; font-size: 28px; line-height: 1; font-weight: 700; }
+.journal-navigation button { width: 48px; min-width: 48px; height: 48px; padding: 0; font-size: 28px; line-height: 1; font-weight: 700; }
 .demo-notice { border-left-color: var(--accent); }
 .demo-notice summary strong { font-weight: 600; }
 
@@ -96,16 +96,16 @@ html[data-theme="dark"] .automatic-badge[data-tone="success"]{background:#143b27
 /* One rhythm for large content blocks, shared with the tab-to-content gap. */
 :root{--section-gap:12px}
 .page-tabs{margin-bottom:var(--section-gap)}
-#panel-sound,#panel-media{display:flex;flex-direction:column;gap:var(--section-gap)}
-#panel-sound>.details,#panel-media>.details{margin:0}
+#panel-help,#panel-sound,#panel-media{display:flex;flex-direction:column;gap:var(--section-gap)}
+#panel-help>.details,#panel-sound>.details,#panel-media>.details{margin:0}
 [data-panel]>.plan-workflow,[data-panel]>.traffic-panel,[data-panel]>.calendar-tools{margin-top:var(--section-gap);margin-bottom:var(--section-gap)}
 [data-panel] .routes{margin-top:var(--section-gap);margin-bottom:var(--section-gap);gap:var(--section-gap)}
 [data-panel] .storage-status{margin-top:var(--section-gap);margin-bottom:var(--section-gap)}
-.schedule-table td button.icon-delete,.schedule-tools button.icon-delete{width:44px;min-width:44px;height:48px;padding:0;font-size:28px;line-height:1;font-weight:700}
+.schedule-table td button.icon-delete,.schedule-tools button.icon-delete{width:48px;min-width:48px;height:48px;padding:0;font-size:28px;line-height:1;font-weight:700}
 
 .automatic-badge{border:1px solid currentColor}
 .schedule-table td button.icon-delete{color:var(--danger)}
-.row-listen{display:flex;gap:6px;white-space:nowrap}.row-listen button{min-width:44px;min-height:44px;font-size:20px}
+.row-listen{display:flex;gap:6px;white-space:nowrap}.row-listen button{min-width:48px;min-height:48px;font-size:20px}
 
 .flash-labels{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-top:8px;flex-wrap:wrap}.flash-labels #device-uptime{margin:0 0 0 auto}#flash-line{height:4px;background:var(--border);border-radius:3px;margin-top:6px}#flash-line i{display:block;height:100%;width:var(--cpu-fill,0%);background:var(--accent);border-radius:3px}#flash-line[data-tone=warning] i{background:#bf8700}#flash-line[data-tone=danger] i{background:#da3633}#flash-line[data-tone=unknown]{opacity:.5}
 
@@ -113,7 +113,7 @@ html[data-theme="dark"] .automatic-badge[data-tone="success"]{background:#143b27
 
 /* Shared user controls: stable header, disclosures and accessible native switches. */
 header{align-items:flex-start}.header-controls{margin-top:12px}.header-version{font-size:.38em;line-height:1;vertical-align:super;white-space:nowrap;color:var(--muted);font-weight:500}
-.editor-toolbar{align-items:flex-end}#panel-sound>details{margin-bottom:16px}#panel-sound>details>summary,#manual-sound-check>summary{cursor:pointer;font-size:20px;font-weight:600}#panel-sound>details[open]>summary,#manual-sound-check[open]>summary{margin-bottom:16px}
+.editor-toolbar{align-items:flex-end}#panel-help>details,#panel-sound>details{margin-bottom:16px}#panel-help>details>summary,#panel-sound>details>summary,#manual-sound-check>summary{cursor:pointer;font-size:20px;font-weight:600}#panel-help>details[open]>summary,#panel-sound>details[open]>summary,#manual-sound-check[open]>summary{margin-bottom:16px}
 input.schedule-switch{appearance:none;-webkit-appearance:none;position:relative;display:inline-block;width:42px;height:24px;padding:0;border:1px solid var(--muted);border-radius:12px;background:var(--border);cursor:pointer;vertical-align:middle;flex-shrink:0}
 input.schedule-switch::before{content:"";position:absolute;width:18px;height:18px;left:2px;top:2px;border-radius:50%;background:var(--text);transition:transform .12s}
 input.schedule-switch:checked{background:var(--accent);border-color:var(--accent)}input.schedule-switch:checked::before{transform:translateX(18px);background:var(--bg)}input.schedule-switch:focus-visible{outline:3px solid var(--accent);outline-offset:3px}input.schedule-switch:disabled{opacity:.5;cursor:default}
@@ -123,9 +123,9 @@ input.schedule-switch:checked{background:var(--accent);border-color:var(--accent
  .icon-browser{--output-icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%223%22%20y%3D%224%22%20width%3D%2218%22%20height%3D%2216%22%20rx%3D%222%22%2F%3E%3Cpath%20d%3D%22M3%209h18M6%206.5h1M9%206.5h1%22%2F%3E%3C%2Fsvg%3E")}
  .icon-device{--output-icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%223%22%20y%3D%225%22%20width%3D%2218%22%20height%3D%226%22%20rx%3D%222%22%2F%3E%3Crect%20x%3D%223%22%20y%3D%2213%22%20width%3D%2218%22%20height%3D%226%22%20rx%3D%222%22%2F%3E%3Cpath%20d%3D%22M6%208h1M6%2016h1M11%208h7M11%2016h7%22%2F%3E%3C%2Fsvg%3E")}
 
-.schedule-table .actions-column{width:1%;white-space:nowrap}.row-actions{display:inline-grid;grid-template-columns:44px 44px 14px 44px;gap:8px;align-items:center}.schedule-table .row-actions button{width:44px;min-width:44px;height:48px;padding:0}.schedule-table .row-actions button:not(.icon-delete){font-size:24px;line-height:1}.row-actions .icon-delete{grid-column:4}.system-action{display:grid;grid-template-columns:minmax(180px,280px) 1fr;gap:20px;align-items:start;margin:20px 0}.system-action p{margin:0}@media(max-width:700px){.system-action{grid-template-columns:1fr;gap:8px}}
+.schedule-table .actions-column{width:1%;white-space:nowrap}.row-actions{display:inline-grid;grid-template-columns:44px 44px 14px 44px;gap:8px;align-items:center}.schedule-table .row-actions button{width:48px;min-width:48px;height:48px;padding:0}.schedule-table .row-actions button:not(.icon-delete){font-size:24px;line-height:1}.row-actions .icon-delete{grid-column:4}.system-action{display:grid;grid-template-columns:minmax(180px,280px) 1fr;gap:20px;align-items:start;margin:20px 0}.system-action p{margin:0}@media(max-width:700px){.system-action{grid-template-columns:1fr;gap:8px}}
 
-.schedule-setup{display:grid;grid-template-columns:auto minmax(0,1fr);gap:28px;align-items:start;margin:18px 0 24px}.schedule-setup:has(#schedule-palette[hidden]){grid-template-columns:1fr}.schedule-setup p{margin:0}.schedule-identity{display:grid;gap:24px;min-width:0}.schedule-identity .editor-toolbar{margin:0;align-items:flex-end}.schedule-identity label{min-width:0}.schedule-identity #schedule-name{max-width:none}.schedule-tools{display:flex;gap:8px}.schedule-tools .schedule-icon{width:44px;height:48px;padding:0;font-size:26px;line-height:1}.schedule-tools .icon-delete{color:var(--danger)}@media(max-width:600px){.schedule-setup{grid-template-columns:1fr;gap:20px}.schedule-identity .editor-toolbar label{min-width:120px}}
+.schedule-setup{display:grid;grid-template-columns:auto minmax(0,1fr);gap:28px;align-items:start;margin:18px 0 24px}.schedule-setup:has(#schedule-palette[hidden]){grid-template-columns:1fr}.schedule-setup p{margin:0}.schedule-identity{display:grid;gap:24px;min-width:0}.schedule-identity .editor-toolbar{margin:0;align-items:flex-end}.schedule-identity label{min-width:0}.schedule-identity #schedule-name{max-width:none}.schedule-tools{display:flex;gap:8px}.schedule-tools .schedule-icon{width:48px;height:48px;padding:0;font-size:26px;line-height:1}.schedule-tools .icon-delete{color:var(--danger)}@media(max-width:600px){.schedule-setup{grid-template-columns:1fr;gap:20px}.schedule-identity .editor-toolbar label{min-width:120px}}
 
 .schedule-table th.switches-column,.schedule-table th.actions-column{text-align:center}
 
@@ -136,7 +136,7 @@ input.schedule-switch:checked{background:var(--accent);border-color:var(--accent
 /* Shared monochrome icon buttons: add, copy and move. */
 .media-actions button.row-edit,.schedule-table .row-actions button.row-edit,.schedule-tools .schedule-icon:not(.icon-delete){font-size:32px;font-weight:700;line-height:1}
 
-.row-tools{gap:30px}.editor-toolbar .icon-action{width:44px;min-width:44px;height:48px;padding:0;font-size:32px;font-weight:700;line-height:1}.editor-toolbar .icon-action.icon-delete{font-size:28px;color:var(--danger)}
+.row-tools{gap:30px}.editor-toolbar .icon-action,.journal-actions .icon-action,.volume-controls .icon-action,.schedule-pages .icon-action{width:48px;min-width:48px;height:48px;padding:0;font-size:32px;font-weight:700;line-height:1}.editor-toolbar .icon-action.icon-delete{font-size:28px;color:var(--danger)}
 
 .media-actions{grid-template-columns:44px 14px 44px 44px 14px 44px}.media-actions .row-edit{grid-column:1}.media-actions .media-browser{grid-column:3}.media-actions .media-device{grid-column:4}.media-actions .icon-delete{grid-column:6}
 
@@ -155,8 +155,8 @@ input.schedule-switch:checked{background:var(--accent);border-color:var(--accent
 .audio-volume-label{white-space:nowrap}
 
 /* Compact list tools and discrete volume slider. */
-#selected-schedule>.table-scroll>.schedule-table{margin-bottom:0}#selected-schedule>.row-tools{margin-top:48px;margin-bottom:0}#row-preview-status:empty{min-height:0;margin:0}
-.journal-actions .icon-action,.volume-controls .icon-action{width:44px;min-width:44px;height:48px;padding:0;font-size:32px;font-weight:700;line-height:1}
+#selected-schedule>.table-scroll>.schedule-table{margin-bottom:0}#row-preview-status:empty{min-height:0;margin:0}
+
 #panel-sound .volume-editor>label{display:block;margin:0 0 8px}.volume-editor{max-width:720px}.volume-controls{display:flex;align-items:center;gap:12px}.volume-controls output{min-width:54px;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
 #router-volume{appearance:none;-webkit-appearance:none;flex:1;min-width:80px;width:100%;height:44px;padding:0;border:0;border-radius:0;cursor:pointer;background:linear-gradient(to right,var(--accent) 0 var(--slider-fill,0%),var(--border) var(--slider-fill,0%) 100%) center/100% 6px no-repeat}
 #router-volume::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:var(--accent);border:2px solid var(--panel)}
@@ -228,3 +228,12 @@ html[data-theme=dark] .bell-activity{--activity-zero:#222a34;--activity-1:#14365
 html[data-header-labels="true"] .quick-controls .control-label{display:inline}
 .quick-controls button:not([hidden]),.quick-controls .session-button:not([hidden]),#theme-toggle:not([hidden]){display:inline-flex;align-items:center;justify-content:center;gap:.45em}
 .quick-controls [data-icon]::before{content:attr(data-icon);font-size:1.2em;line-height:1}
+
+.journal-sources{display:inline-flex;gap:4px;padding-inline:6px;border-inline:1px solid var(--border)}
+.journal-sources .icon-action[aria-pressed=true]{background:var(--accent);color:var(--bg)}
+.journal-sources svg{display:block;margin:auto}
+#journal-rows .journal-day th{padding:.65rem .4rem .3rem;text-align:left;border-top:1px solid var(--border);color:var(--muted);background:var(--panel)}
+
+.schedule-pages{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin:.5rem 0}.schedule-pages span{font-variant-numeric:tabular-nums}
+
+.list-toolbar .editor-toolbar{margin:0}.list-toolbar .schedule-pages{margin:0 0 0 auto}

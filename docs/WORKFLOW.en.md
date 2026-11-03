@@ -34,7 +34,3 @@ fast-forward, atomic push and topic deletion. After exact-HEAD CI, `git land BRA
 is supported. It does not check CI itself and deletes the completed topic branch.
 Never run it with a dirty tree or a mismatched CI SHA.
 If fast-forward fails, resolve integration explicitly and rerun CI.
-
-After migration verification the owner creates a separate schoolbell workspace.
-The current workspace then continues the core project. For now schoolbell work
-remains in this conversation but is edited only in its own WSL checkout.

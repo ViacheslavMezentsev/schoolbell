@@ -32,7 +32,7 @@ function fixture(storage={},initialRevision="r1",loadCodes=[]){
   const post=options.method==='POST',body=post?Object.fromEntries(options.body):{};let value;
   if(url==='load'){x.loads=(x.loads || 0)+1;if(x.pauseLoad)await new Promise(resolve=>x.releaseLoad=resolve);if(x.failLoad)throw Error('network');value=loadCodes.length?{ok:false,code:loadCodes.shift()}:{ok:true,data:clone(x.data),revision:x.rev};}
   else if(url==='save'){x.saves.push(body);if(body.revision!==x.rev)value={ok:false,code:'conflict'};else{x.data=JSON.parse(body.draft);x.rev='r2';if(x.loseSave)throw Error('lost response');value={ok:true,data:clone(x.data),revision:x.rev};}}
-  else if(url==='preview'){x.previews.push(JSON.parse(body.draft));value={ok:true,date:body.date,selected_schedule:'s',events:[]};}
+  else if(url==='preview'){x.previews.push(JSON.parse(body.draft));value={ok:true,date:body.date,selected_schedule:'s',events:x.previewEvents || []};}
   else if(url==='auto'){if(post){x.posts.push(body);value=x.reject?{ok:false,code:'conflict'}:{ok:true,generation:x.commandGeneration || 2};}else value=x.active;}
   else throw Error('unexpected URL');return {ok:true,json:async()=>clone(value)};
  };
@@ -105,7 +105,7 @@ function fixture(storage={},initialRevision="r1",loadCodes=[]){
  assert(h.get('quick-automatic').disabled);assert(h.get('quick-automatic-status').textContent.includes('подтверждения'));
  await h.poll();assert(h.get('quick-automatic').disabled); // Old generation cannot confirm.
  h.active={ok:true,state:'running',enabled:true,generation:2,revision:'applied'};await h.poll();
- assert.equal(h.get('quick-automatic-status').dataset.tone,'success');assert.equal(h.get('quick-automatic-status').textContent,'Работают');
+ assert.equal(h.get('quick-automatic-status').dataset.tone,'success');assert.equal(h.get('quick-automatic-status').textContent,'Работают');assert.equal(h.get('quick-automatic').dataset.icon,'■');
  assert.equal(h.get('schedule-name').value,'Unsaved name');assert(!h.get('automatic-status').textContent.includes('Ожидаем подтверждения'));
  h.commandGeneration=3;await h.get('quick-automatic').click();await h.tick();assert.equal(h.posts[1].enabled,'false');
  h.active={ok:true,state:'disabled',enabled:false,generation:3,revision:'applied'};await h.poll();assert.equal(h.get('quick-automatic-status').textContent,'Выключены');assert(!h.get('automatic-status').textContent.includes('Ожидаем подтверждения'));
@@ -146,8 +146,10 @@ function fixture(storage={},initialRevision="r1",loadCodes=[]){
  const today=x.day().dataset.date;
  x.window.dispatchEvent({type:'schoolbell-router-date',detail:today});assert.equal(x.day()['aria-current'],'date');
  x.window.dispatchEvent({type:'schoolbell-router-date',detail:'2090-01-01'});assert.equal(x.day()['aria-current'],undefined);
+ x.previewEvents=[{time:'23:58',kind:'pre',media:'0',schedule_id:'s',date:'2026-01-01',origin_date:'2026-01-02'}];
  await x.day().fire('pointerdown',{pointerType:'mouse',button:0});await x.day().click();await x.tick();
  assert(x.previews.length===1 && x.previews[0].plans[0].days[0]==='A');assert(!x.window.schoolbellEditor.snapshot().dirty);
+ const shown=x.get('preview-events').children[0];assert.equal(shown.children[0].textContent,'[Короткая] Время');assert(shown.children[1].textContent.includes('2026-01-02'));
  assert(x.get('preview-status').textContent.startsWith('Черновик'));console.log('PASS view date does not mutate; preview explicitly draft');
  await x.brush('Тихий день / ластик').click();await x.day().click();assert(x.window.schoolbellEditor.snapshot().dirty);assert(x.get('automatic-enable').disabled);
  await x.get('automatic-enable').fire('click');assert(!x.posts.length && !x.confirms);
@@ -242,8 +244,17 @@ function fixture(storage={},initialRevision="r1",loadCodes=[]){
 
  x=fixture();await x.tick();
  for(let i=1;i<129;i++)await x.get('row-add').click();
- assert.equal(x.get('schedule-rows').children.length,129);
- assert.equal(x.get('schedule-rows').children.length,129);
+ assert.equal(snapshot().length,129);assert.equal(x.get('schedule-rows').children.length,9);
+ assert.equal(x.get('rows-range').textContent,'121–129 из 129');assert(x.get('rows-next').disabled);
+ for(let page=12;page>0;page--)await x.get('rows-prev').click();
+ const tenth=snapshot()[9];
+ await rowButtons(9)[2].click();assert.equal(x.get('rows-range').textContent,'11–20 из 129');
+ assert.equal(snapshot()[10].id,tenth.id);assert.equal(x.focused,x.get('schedule-rows').children[0].children[0].children[0]);
+ await rowButtons(0)[1].click();assert.equal(snapshot()[9].id,tenth.id);
+ assert.equal(x.focused,x.get('schedule-rows').children[9].children[0].children[0]);
+ await rowButtons(9)[0].click();assert.equal(x.get('rows-range').textContent,'11–20 из 130');
+ assert.equal(x.focused,x.get('schedule-rows').children[0].children[0].children[0]);assert.equal(x.saves.length,0);
+ x.confirm=false;await x.get('rows-clear').click();assert(x.confirmMessages.at(-1).includes('130'));
  assert(!x.get('row-add').disabled && !x.get('schedule-copy').disabled);
  assert(!x.posts.length);
  console.log('PASS real editor allows adding beyond 32/128, count has no quota and no activation');
