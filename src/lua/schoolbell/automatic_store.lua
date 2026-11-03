@@ -7,6 +7,7 @@ function M.decode(raw)
  assert(v and C.sha(C.encode(v))==envelope.checksum,'checksum')
  assert(type(v.enabled)=='boolean' and C.integer(v.generation,1,2147483647) and C.integer(v.watermark,0,2147483647),'state')
  if v.enabled or v.plan~=nil then
+  if v.boot==nil then v.boot='' end -- Legacy snapshot without proof of this boot.
   assert(type(v.boot)=='string' and #v.boot<=64 and type(v.zone)=='string' and #v.zone<=256,'environment')
   local data,body=S.validate(C.encode(v.plan));assert(data and C.sha(body)==v.revision,'plan')
  elseif v.revision~=nil then error('orphan_revision')
@@ -20,8 +21,11 @@ function M.raw()
  if not f then assert(not require('nixio.fs').lstat(path),'unreadable');return nil end
  local raw=f:read(M.max_bytes+1);f:close();assert(raw and #raw<=M.max_bytes,'size');return raw
 end
-local function write(fs,v)
- local body=C.encode(v);local raw=C.encode({data=v,checksum=C.sha(body)})
+local function encode(v)
+ return C.encode({data=v,checksum=C.sha(C.encode(v))})
+end
+local function write(fs,v,prepared)
+ local raw=prepared or encode(v)
  assert(#raw<=M.max_bytes,'size')
  local free,total=fs.space();assert(free>=math.max(524288,math.ceil(total/10))+2*M.max_bytes,'space')
  if fs.stat('automatic-next.json')then fs.unlink('automatic-next.json')end
@@ -33,7 +37,7 @@ function M.change(fs,enabled,revision,env)
  local current=M.decode(fs.read(M.name,M.max_bytes))
  assert(current.generation<2147483647,'generation')
  local applying=enabled=="apply"
- if applying then enabled=current.enabled end
+ if applying then enabled=current.enabled and current.boot==env.boot end
  local v={enabled=enabled,generation=current.generation+1,watermark=enabled and math.max(current.watermark,env.now) or current.watermark}
  if applying or enabled then
   local draft=S.load(fs);assert(draft.ok and draft.revision~='empty' and draft.revision==revision,'draft_conflict')
@@ -64,14 +68,36 @@ function M.resume(fs,revision,generation,env,admit)
   boot=env.boot,zone=env.zone,watermark=math.max(current.watermark,env.now)}
  return write(fs,v)
 end
+-- Recheck under the editor lock: a concurrent user decision belongs to its own boot.
+function M.on_boot(fs,boot)
+ local raw=fs.read(M.name,M.max_bytes)
+ local current=M.decode(raw)
+ if current.enabled and current.boot~=boot then return M.change(fs,false,nil,{}) end
+ return current,raw
+end
 function M.advance(fs,generation,now)
  local raw=fs.read(M.name,M.max_bytes);local v=M.decode(raw)
  assert(v.enabled and v.generation==generation,'stale_checkpoint')
  if now<=v.watermark then return v,raw end
  v.watermark=now;return write(fs,v)
 end
-function M.claim(fs,generation,utc,now)
- local v=M.decode(fs.read(M.name,M.max_bytes))
+-- Prepare the next minute's checkpoint in RAM. Publish only at the due time,
+-- after comparing the complete on-disk snapshot under the normal writer lock.
+function M.prepare_claim(current,expected,utc)
+ assert(current.enabled and utc>current.watermark,'stale_claim')
+ local next_state={}
+ for k,v in pairs(current) do next_state[k]=v end
+ next_state.watermark=utc
+ return {expected=expected,state=next_state,bytes=encode(next_state)}
+end
+function M.claim(fs,generation,utc,now,prepared)
+ local raw=fs.read(M.name,M.max_bytes)
+ if prepared then
+  assert(raw==prepared.expected and generation==prepared.state.generation and
+   utc==prepared.state.watermark and now>=utc,'stale_claim')
+  return write(fs,prepared.state,prepared.bytes)
+ end
+ local v=M.decode(raw)
  assert(v.enabled and v.generation==generation and utc>v.watermark,'stale_claim')
  assert(now>=utc,'expired')
  v.watermark=math.max(now,utc);return write(fs,v)

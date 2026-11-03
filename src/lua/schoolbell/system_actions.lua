@@ -14,7 +14,7 @@ function M.new(ports)
   return ports.run(target,q.id)
  end
 end
-function M.system(clock,now)
+function M.system(now)
  local n=require('nixio');local nativefs=require('nixio.fs');local A=require('schoolbell.automatic_store')
  local reboot_until=0
  local function run(target,operation)
@@ -25,7 +25,6 @@ function M.system(clock,now)
   local ok,result=pcall(function()
    assert(not nativefs.lstat(A.root..'/package.pending'),'package_maintenance')
    editor=require('schoolbell.media_fs').new(A.root,nil,target=='reset')
-   clock.disable()
    if target=='reset'then
     local value=require('schoolbell.system_reset').apply(editor,operation)
     return value
@@ -43,7 +42,6 @@ function M.system(clock,now)
   local closed=true;if editor then closed=pcall(editor.close)end
   if not nativefs.rmdir(gate)then closed=false end
   if not ok or not closed then return {ok=false,code='system_failed'}end
-  if target=='reset'then clock.configure(false);clock.configure(true)end
   return result
  end
  return M.new({now=now,run=run}),function()return now()<reboot_until end

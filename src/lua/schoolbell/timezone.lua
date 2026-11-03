@@ -80,7 +80,7 @@ end
 function M.run(zone,revision)
  local lock,backend
  local ok,result=pcall(function()
-  lock=require('schoolbell.media_fs').new('/etc/schoolbell-editor')
+  if zone~=nil then lock=require('schoolbell.media_fs').new('/etc/schoolbell-editor')end
   backend=M.system();return M.request(backend,zone,revision)
  end)
  if backend then pcall(backend.close)end

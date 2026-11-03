@@ -3,7 +3,7 @@ local C=require('schoolbell.media_codec')
 local J=require('modbus.json_strict')
 local M={segment_bytes=16384,record_bytes=320}
 local names={'journal-previous.jsonl','journal-current.jsonl'}
-local actions={system_reset={'user','warning'},system_reboot={'user','warning'},system_failed={'system','error'},clock_set_ok={'user','warning'},clock_set_failed={'system','error'},clock_confirmed={'user','info'},clock_control_on={'user','info'},clock_control_off={'user','warning'},clock_control_failed={'system','error'},restore_ok={'user','info'},restore_failed={'user','error'},media_ok={'user','info'},media_renamed={'user','info'},media_failed={'user','error'},volume_ok={'user','info'},volume_failed={'system','error'},draft_applied={'user','info'},auto_enabled={'user','info'},auto_disabled={'user','info'},auto_requested={'module','info'},auto_ok={'module','info'},auto_skipped={'module','warning'},auto_blocked={'system','error'},mute_on={"user","info"},mute_off={"user","info"},mute_failed={"system","error"},manual_requested={"user","info"},timezone_ok={'user','info'},timezone_failed={'system','error'},save_ok={'user','info'},save_failed={'user','error'},preview_ok={'user','info'},
+local actions={device_boot={'system','info'},auto_audio_unavailable={'module','error'},auto_player_failed={'module','error'},auto_expired={'module','warning'},system_reset={'user','warning'},system_reboot={'user','warning'},system_failed={'system','error'},clock_set_ok={'user','warning'},clock_set_failed={'system','error'},clock_confirmed={'user','info'},clock_control_on={'user','info'},clock_control_off={'user','warning'},clock_control_failed={'system','error'},restore_ok={'user','info'},restore_failed={'user','error'},media_ok={'user','info'},media_renamed={'user','info'},media_failed={'user','error'},volume_ok={'user','info'},volume_failed={'system','error'},draft_applied={'user','info'},auto_enabled={'user','info'},auto_disabled={'user','info'},auto_requested={'module','info'},auto_ok={'module','info'},auto_skipped={'module','warning'},auto_blocked={'system','error'},mute_on={"user","info"},mute_off={"user","info"},mute_failed={"system","error"},manual_requested={"user","info"},timezone_ok={'user','info'},timezone_failed={'system','error'},save_ok={'user','info'},save_failed={'user','error'},preview_ok={'user','info'},
  preview_failed={'user','warning'},play_requested={'user','info'},play_ok={'module','info'},
  play_failed={'module','error'},sample_requested={'user','info'},storage_error={'system','error'},
  installed={'module','info'}}
@@ -26,11 +26,26 @@ end
 function M.read(fs,now)
  return entries(fs)
 end
-function M.append(fs,action,now)
+function M.append(fs,action,now,boot,bell)
  local a=assert(actions[action],'action');assert(C.integer(now,0,4102444800),'time')
  local rows,last=entries(fs);assert(last<2147483647,'sequence exhausted')
  local row={seq=last+1,time=now,source=a[1],level=a[2],action=action}
+ if action=='device_boot' then row.boot=assert(boot) end
+ if bell then
+  row.bell={kind=bell.kind,due=bell.due,plan=bell.plan,schedule=bell.schedule}
+  row.local_time=os.date('%d.%m.%Y %H:%M:%S %z',now)
+ end
  local line=C.encode(row)..'\n'
+ -- Preserve times and kind even when both user-defined names reach the maximum.
+ while bell and #line>M.record_bytes do
+  local key=#(row.bell.plan or '')>#(row.bell.schedule or '') and 'plan' or 'schedule'
+  local name=assert(row.bell[key])
+  if name:sub(-3)=='…' then name=name:sub(1,-4) end
+  local shorter=name:gsub('[%z\1-\127\194-\244][\128-\191]*$','')
+  assert(#shorter<#name,'record size')
+  row.bell[key]=shorter..'…'
+  line=C.encode(row)..'\n'
+ end
  assert(#line<=M.record_bytes,'record size')
  local current=fs.read(names[2],M.segment_bytes) or ''
  -- An interrupted temp is uncommitted; only fixed private filenames are touched.
@@ -47,19 +62,49 @@ function M.append(fs,action,now)
  rows[#rows+1]=row
  return true,rows
 end
-function M.request(root,action,host)
- local ok,fs=pcall(require('schoolbell.media_fs').new,root,host)
+-- A persistent marker also survives eviction of the boot event from the bounded log.
+-- If interrupted between journal and marker publication, find the committed event.
+function M.record_boot(fs,boot,at)
+ assert(type(boot)=='string' and #boot>0 and #boot<=64)
+ local marker='journal-boot'
+ if fs.read(marker,64)==boot then return true end
+ local found=false
+ for _,entry in ipairs(entries(fs)) do
+  if entry.action=='device_boot' and entry.boot==boot then found=true;break end
+ end
+ if not found then M.append(fs,'device_boot',at,boot) end
+ local tmp='journal-boot.next'
+ if fs.stat(tmp) then fs.unlink(tmp) end
+ fs.write(tmp,boot);fs.sync(tmp);fs.rename(tmp,marker);fs.sync('')
+ return true
+end
+-- Writers replace whole segments by rename. A rotation changes the previous
+-- segment first; retry if it changed while acquiring the two byte strings.
+function M.snapshot(reader)
+ for attempt=1,3 do
+  local previous=reader.read(names[1],M.segment_bytes)
+  local current=reader.read(names[2],M.segment_bytes)
+  if previous==reader.read(names[1],M.segment_bytes) then
+   local segments={[names[1]]=previous,[names[2]]=current}
+   return M.read({read=function(name)return segments[name]end})
+  end
+ end
+ error('journal rotated during read')
+end
+function M.request(root,action,host,bell)
+ local storage=require('schoolbell.media_fs')
+ local ok,fs=pcall(action and storage.new or storage.readonly,root,host)
  if not ok then return {ok=false,code='journal_unavailable'}end
  local success,value=pcall(function()
   if action then
-   local _,rows=M.append(fs,action,os.time())
+   local _,rows=M.append(fs,action,os.time(),nil,bell)
    -- The journal is a recovery source if aggregation is interrupted after append.
    local saved=true
    if action=='auto_ok' or action=='auto_enabled'then saved=pcall(function()require('schoolbell.bell_metrics').sync(fs,rows)end)end
    return {ok=true,metrics_warning=not saved or nil}
   end
-  local rows=M.read(fs,os.time())
-  for _,row in ipairs(rows)do row.local_time=os.date('%d.%m.%Y %H:%M:%S %z',row.time) end
+  local rows=M.snapshot(fs)
+  for _,row in ipairs(rows)do row.local_time=row.local_time or os.date('%d.%m.%Y %H:%M:%S %z',row.time) end
   return {ok=true,entries=rows,limit_bytes=2*M.segment_bytes,peak_bytes=3*M.segment_bytes}
  end)
  local closed=pcall(fs.close)

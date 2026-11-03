@@ -95,12 +95,12 @@ test("post-rename sync failure is uncertain not success",function()
  assert(out.code=="storage_uncertain" and not out.ok)
  assert(S.load(f).data.schedules[1].rows[1].time=="09:00")
 end)
-test("request distinguishes contention from missing/private/restore/I/O errors",function()
+test("read is independent of writer lock; writes and restore/private guards remain enforced",function()
  local function host(lock,restore,root)
   return {stat=function(p)if p=="/test" then return root or {type="dir",mode=448} end;if restore and p=="/test/restore.pending" then return {type="reg"} end end,lock=lock}
  end
- assert(S.request("/test","load",nil,nil,host(function()return nil end)).code=="busy")
- assert(S.request("/test","load",nil,nil,host(function()error("I/O")end)).code=="storage_unavailable")
+ assert(S.request("/test","load",nil,nil,host(function()error("must not lock")end)).ok)
+ assert(S.request("/test","save",nil,nil,host(function()return nil end)).code=="busy")
  assert(S.request("/test","load",nil,nil,host(function()error("must not lock")end,true)).code=="storage_unavailable")
  assert(S.request("/test","load",nil,nil,host(function()error("must not lock")end,false,{type="dir",mode=511})).code=="storage_unavailable")
 end)
@@ -125,4 +125,43 @@ test("no row-count caps: 129 rows save and reload",function()
  assert(#S.load(f).data.schedules[1].rows==129)
  d.schedules[1].rows[130]=d.schedules[1].rows[1]
  assert(not S.validate(C.encode(d)))
+end)
+
+test("manual warm read uses exact verified saved bytes; changes and damage cannot reuse selection",function()
+ local originalfs=package.loaded['schoolbell.media_fs']
+ local originalnative=package.loaded['nixio.fs']
+ local current,stored,validations=nil,{},0
+ local C=require('schoolbell.media_codec')
+ local function set(media)
+  local d=S.empty();d.manual_media=media
+  local _,body=S.validate(C.encode(d))
+  current=C.encode({data=d,checksum=C.sha(body)})
+ end
+ local source={read=function()return current end,stat=function()return nil end,close=function()end}
+ local cache={read=function(k)return stored[k]end,write=function(k,v)stored[k]=v end,
+  stat=function(k)return stored[k] and {size=#stored[k]} end,rename=function(a,b)stored[b]=stored[a];stored[a]=nil end,close=function()end}
+ package.loaded['schoolbell.media_fs']={inspect=function()return source end,readonly=function()return cache end,new=function()return cache end}
+ local owner=0
+ package.loaded['nixio.fs']={lstat=function()return {type='dir',uid=owner,modedec='700'}end}
+ set('0');assert(S.request('/test','load').ok)
+ local validate=S.validate;S.validate=function(...)validations=validations+1;return validate(...)end
+ assert(S.request('/test','load').data.manual_media=='0' and validations==0)
+ assert(S.request('/test','manual').media=='0' and validations==0)
+ owner=99;assert(S.request('/test','manual').media=='0' and validations==1);owner=0
+ set('1');assert(S.request('/test','manual').media=='1')
+ current=current:gsub('"manual_media":"1"','"manual_media":"0"')
+ assert(not S.request('/test','manual').ok)
+ local preview=S.preview;local calls=0
+ S.preview=function(...)calls=calls+1;return preview(...)end
+ assert(S.preview_cached(sample,'2026-11-03').ok and calls==1)
+ assert(S.preview_cached(sample,'2026-11-03').ok and calls==1)
+ assert(S.preview_cached(sample,'2026-11-04').ok and calls==2)
+ assert(S.preview_cached(sample:gsub('08:00','09:00'),'2026-11-04').ok and calls==3)
+ stored.preview=stored.preview:gsub('civil','civiX')
+ assert(S.preview_cached(sample,'2026-11-03').ok and calls==4)
+ stored.preview=stored.preview:sub(1,-3)..'xx'
+ assert(S.preview_cached(sample,'2026-11-03').ok and calls==5)
+ owner=99;assert(S.preview_cached(sample,'2026-11-03').ok and calls==6)
+ S.preview=preview
+ S.validate=validate;package.loaded['schoolbell.media_fs']=originalfs;package.loaded['nixio.fs']=originalnative
 end)

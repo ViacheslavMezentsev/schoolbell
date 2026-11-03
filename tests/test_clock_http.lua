@@ -7,7 +7,8 @@ local dispatcher={context={authsession='private-session'},test_post_security=fun
 -- Existing codec/store modules are used, but no filesystem route is entered.
 dofile('packaging/openwrt/root/usr/lib/lua/luci/controller/schoolbell_test.lua')
 local api=luci.controller.schoolbell_test.clock_trust
-api();assert(reply.pending and calls==1)
+api();assert(reply.code=='reload_interface' and calls==0)
+form.action='resume';api();assert(reply.pending and calls==1)
 security=false;api();assert(calls==1)
 security=true;size='1025';api();assert(code==413 and calls==1)
 size='100';content='application/octet-stream';api();assert(code==413 and calls==1)

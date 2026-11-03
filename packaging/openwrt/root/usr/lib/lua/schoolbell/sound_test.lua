@@ -38,9 +38,9 @@ function M.run(io)
 end
 function M.system(media)
     local n, fs = require("nixio"), require("nixio.fs")
-    local catalog={test=13104,['0']=41273,['1']=63321,['2']=69904,['3']=68023,['4']=82368}
-    media=media or 'test';assert(catalog[media] or require('schoolbell.media_library').editable(media),'unknown media')
-    local sample='/usr/share/schoolbell-sound-test/'..media..'.mp3'
+    local library=require('schoolbell.media_ids')
+    media=media or 'test';assert(library.valid(media),'unknown media')
+    local sample,bundled_size=library.packaged(media)
     local control=require('schoolbell.controls');local ok,initial=pcall(control.read)
     return {
         limit=620,
@@ -50,11 +50,16 @@ function M.system(media)
         end,
         acquire=function()
             if not fs.mkdir(M.lock,700)then return false end
-            local good,path=pcall(function()return require('schoolbell.media_web').resolve(media)end)
+            local good,path=pcall(function()
+                if not bundled_size then return require('schoolbell.media_web').resolve(media) end
+                local root=require('schoolbell.automatic_store').root
+                assert(not fs.lstat(root..'/import.pending') and not fs.lstat(root..'/restore.pending'),'maintenance')
+                return sample
+            end)
             if not good then fs.rmdir(M.lock);return false end
             local st=fs.lstat(path)
             if not st or st.type~='reg' or st.size<1 or st.size>524288 then fs.rmdir(M.lock);return false end
-            if path=='/usr/share/schoolbell-sound-test/'..media..'.mp3' and st.size~=catalog[media]then fs.rmdir(M.lock);return false end
+            if bundled_size and st.size~=bundled_size then fs.rmdir(M.lock);return false end
             sample=path;return true
         end,
         release=function() return fs.rmdir(M.lock) end,

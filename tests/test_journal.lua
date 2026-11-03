@@ -12,6 +12,21 @@ local function fixture(original,fail)
  function fs.space()return 1024*1024 end
  return fs,files
 end
+do
+ local fs=fixture()
+ M.record_boot(fs,'boot-a',100);M.record_boot(fs,'boot-a',105)
+ fs.unlink('journal-boot') -- journal committed before marker
+ M.record_boot(fs,'boot-a',120);M.record_boot(fs,'boot-b',80)
+ local rows=M.read(fs);assert(#rows==2 and rows[1].time==100 and rows[2].time==80)
+end
+do
+ local fs=fixture()
+ local long=string.rep('Я"',32)
+ M.append(fs,'auto_requested',1700000001,nil,{kind='pre',due='03.11.2026 10:53 +0500',plan=long,schedule=long})
+ local rows=M.read(fs)
+ assert(rows[1].bell.kind=='pre' and rows[1].bell.due=='03.11.2026 10:53 +0500' and rows[1].local_time)
+ assert(#fs.read('journal-current.jsonl',320)<=320)
+end
 local fs,files=fixture()
 for i=1,800 do M.append(fs,'save_ok',1700000000+i) end
 local rows,last=M.read(fs);assert(last==800 and #rows>1 and #rows<800)
@@ -56,9 +71,21 @@ print('PASS journal: evidence survives forward/backward jumps, long age and rest
 
 local localfs=fixture();M.append(localfs,'installed',epoch);localfs.close=function()return true end
 local original_fs=package.loaded['schoolbell.media_fs'];local original_time=os.time
-package.loaded['schoolbell.media_fs']={new=function()return localfs end};os.time=function()return epoch end
+package.loaded['schoolbell.media_fs']={readonly=function()return localfs end};os.time=function()return epoch end
 local response=M.request('/synthetic');os.time=original_time;package.loaded['schoolbell.media_fs']=original_fs
 assert(response.ok and response.retention_seconds==nil and response.limit_bytes==32768 and response.peak_bytes==49152)
 assert(response.entries[1].local_time==os.date('%d.%m.%Y %H:%M:%S %z',epoch))
 assert(response.entries[1].time==epoch,'stored UTC epoch unchanged')
 print('PASS journal: response has device-local time and offset without altering stored UTC')
+
+-- Rotation between reading the older and newer segments must not skip a segment.
+local rotating,segments=fixture();M.append(rotating,'installed',100)
+local first=segments['journal-current.jsonl']
+M.append(rotating,'save_ok',101)
+local second=segments['journal-current.jsonl']:sub(#first+1)
+local reads=0
+local snap=M.snapshot({read=function(name)
+ if name=='journal-current.jsonl' then return second end
+ reads=reads+1;if reads>1 then return first end
+end})
+assert(#snap==2 and snap[1].seq==1 and snap[2].seq==2)

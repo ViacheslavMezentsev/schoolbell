@@ -244,16 +244,96 @@ function M.save(fs,text,expected)
     -- A write/rename/sync error may have happened after commit; require a fresh GET.
     return {ok=false,code=code or "storage_uncertain"}
 end
+-- Cache only bytes already accepted by the full draft validator. This optional
+-- RAM witness accelerates independent LuCI requests; an old witness is harmless.
+local draft_cache='/tmp/schoolbell-draft-cache'
+local function private_cache(create)
+    local native=require('nixio.fs')
+    local st=native.lstat(draft_cache)
+    if not st and create then native.mkdir(draft_cache,700);st=native.lstat(draft_cache) end
+    assert(st and st.type=='dir' and st.uid==0 and tonumber(tostring(st.modedec),8)%64==0,'private cache')
+end
+-- Two bounded slots shared by independent LuCI requests. The writer lock
+-- protects only replacement in tmpfs; readers see complete bytes via rename.
+local function cache_read(name,limit)
+    private_cache(false)
+    return require('schoolbell.media_fs').readonly(draft_cache).read(name,limit)
+end
+local function cache_write(name,bytes,limit)
+    private_cache(true)
+    local fs=require('schoolbell.media_fs').new(draft_cache)
+    local ok,why=pcall(function()
+        local st=fs.stat(name)
+        if st and st.size<=limit and fs.read(name,limit)==bytes then return end
+        if fs.stat('next') then fs.unlink('next') end
+        fs.write('next',bytes);fs.rename('next',name)
+    end)
+    fs.close();assert(ok,why)
+end
+local validator_version='v2:'
+local function cache_draft(raw)
+    if raw then cache_write('verified',validator_version..raw,M.file_bytes+#validator_version) end
+end
+-- Detect damaged RAM entries cheaply. Directory ownership controls trust.
+local function checksum(bytes)
+    local a,b=1,0
+    for i=1,#bytes do a=(a+bytes:byte(i))%65521;b=(b+a)%65521 end
+    return string.format('%08x',b*65536+a)
+end
+function M.preview_cached(text,date)
+    if type(text)~='string' or #text>M.max_bytes or type(date)~='string' or #date~=10 then
+        return M.preview(text,date)
+    end
+    local key='civil-v1:'..date..'\0'..text..'\0'
+    local limit=32768
+    local hit,value=pcall(function()
+        local record=cache_read('preview',limit)
+        if not record or record:sub(9,8+#key)~=key or record:sub(1,8)~=checksum(record:sub(9)) then return end
+        return C.decode(record:sub(9+#key))
+    end)
+    if hit and type(value)=='table' and value.ok and value.date==date then return value end
+    value=M.preview(text,date)
+    if value.ok then
+        local payload=key..C.encode(value)
+        if #payload+8<=limit then pcall(cache_write,'preview',checksum(payload)..payload,limit) end
+    end
+    return value
+end
+local function load_verified(fs)
+    local raw=fs.read('current.json',M.file_bytes)
+    if raw then
+        local hit,verified=pcall(cache_read,'verified',M.file_bytes+#validator_version)
+        if hit and verified==validator_version..raw then
+            local saved=C.decode(raw)
+            return {ok=true,data=saved.data,revision=saved.checksum,active=false}
+        end
+    end
+    return read(fs)
+end
 function M.request(root,operation,text,expected,host)
     local FS=require("schoolbell.media_fs")
-    local ok,fs=pcall(FS.new,root,host)
+    local ok,fs=pcall(operation=="save" and FS.new or FS.inspect,root,host)
     if not ok then
         local busy=type(fs)=="string" and (fs=="busy" or fs:match(": busy$"))
         return {ok=false,code=busy and "busy" or "storage_unavailable"}
     end
-    local good,result=pcall(operation=="save" and M.save or M.load,fs,text,expected)
+    local good,result,verified
+    if operation=="save" then
+        good,result=pcall(M.save,fs,text,expected)
+        if good and result.ok and not host then
+            verified=C.encode({data=result.data,checksum=result.revision})
+        end
+    else
+        good,result,verified=pcall(load_verified,fs)
+        if good and operation=="manual" then result={ok=true,media=result.data.manual_media or "test"} end
+        if not good then result={ok=false,code="recovery_required"};good=true end
+    end
+    if good and operation~="save" then
+        good=pcall(function()assert(not fs.stat("restore.pending") and not fs.stat("import.pending"))end)
+    end
     local closed=pcall(fs.close)
     if not good or not closed then return {ok=false,code="storage_uncertain"} end
+    if result.ok and verified and not host then pcall(cache_draft,verified) end
     return result
 end
 return M

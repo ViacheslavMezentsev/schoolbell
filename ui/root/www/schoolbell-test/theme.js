@@ -5,6 +5,10 @@
   var labels = {system: 'как в системе', dark: 'тёмная', light: 'светлая'};
   var mode = 'system';
   try { var saved = localStorage.getItem(storageKey); if (modes.indexOf(saved) !== -1) mode = saved; } catch (_) {}
+  var labelKey='schoolbell.header.labels';
+  var showLabels=false;
+  try { showLabels=localStorage.getItem(labelKey)==='true'; } catch (_) {}
+  document.documentElement.dataset.headerLabels=String(showLabels);
   var system = window.matchMedia('(prefers-color-scheme: dark)');
   var icons = {
     system: '<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/>',
@@ -18,12 +22,20 @@
     var next = modes[(modes.indexOf(mode) + 1) % modes.length];
     button.setAttribute('aria-label', 'Тема: ' + labels[mode] + '. Переключить: ' + labels[next]);
     button.title = 'Тема: ' + labels[mode] + '. Следующая: ' + labels[next];
-    button.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + icons[mode] + '</svg>';
+    button.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + icons[mode] + '</svg><span class="control-label">Тема</span>';
   }
   // Apply before the body is painted; storage is optional for local-file use.
   apply();
   document.addEventListener('DOMContentLoaded', function () {
     apply();
+    var labels=document.getElementById('header-labels');
+    if(labels){
+      labels.checked=showLabels;
+      labels.addEventListener('change',function(){
+        document.documentElement.dataset.headerLabels=String(labels.checked);
+        try {localStorage.setItem(labelKey,String(labels.checked));} catch (_) {}
+      });
+    }
     document.getElementById('theme-toggle').addEventListener('click', function () {
       mode = modes[(modes.indexOf(mode) + 1) % modes.length];
       try { localStorage.setItem(storageKey, mode); } catch (_) {}

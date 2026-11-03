@@ -10,7 +10,7 @@ package.loaded['nixio.fs']={mkdir=function()if gate then return false end;gate=t
 package.loaded.nixio={fork=function()assert(not A.decode(files[A.name]).enabled);forks=forks+1;if failed then return nil end;return 123 end,exec=function()error('must not execute on host')end}
 local clock={disable=function()end,configure=function()assert(closed,'clock reopened under editor lock')end}
 local function perform(target,broken)
- failed=broken;local handle,busy=require('schoolbell.system_actions').system(clock,function()return now end)
+ failed=broken;local handle,busy=require('schoolbell.system_actions').system(function()return now end)
  local id=string.rep('a',32);local owner=string.rep('b',64)
  assert(handle({action='system_prepare',target=target,id=id,owner=owner}).ok)
  local r=handle({action='system_'..target,challenge=id,id=id,owner=owner,ack='true'})

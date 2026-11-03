@@ -3,7 +3,7 @@ local L=require('schoolbell.media_library');local C=require('schoolbell.media_co
 assert(host.mkdir(L.root..'/editor'))
 local applied=nil
 local enabled=false;local decoded=0;local decoder_ok=true
-package.loaded['schoolbell.media_fs']={new=function(p)return F.new(p,host)end}
+package.loaded['schoolbell.media_fs']={new=function(p)return F.new(p,host)end,inspect=function(p)return F.inspect(p,host)end}
 package.loaded.nixio={};package.loaded['nixio.fs']={mkdir=host.mkdir,rmdir=host.rmdir}
 package.loaded['schoolbell.sound_test']={lock=L.root..'/gate',run=function()decoded=decoded+1;return decoder_ok and {ok=true} or {ok=false,state='failed'}end}
 package.loaded['schoolbell.automatic_store']={root=L.root..'/editor',name='automatic.json',max_bytes=16384,raw=function()return '{}'end,decode=function()return {enabled=enabled,plan=applied}end}
@@ -52,7 +52,13 @@ assert(W.list().generation==8 and #W.list().slots==14)
 plan.schedules[1].rows[1].media='user5';assert(W.plan_ready(plan))
 local forbidden=W.upload({id='0',name='no.mp3',size=#bytes,generation=8,operation=string.rep('f',32)},function()error('protected file read')end);assert(forbidden.code=='invalid')
 local S=require('schoolbell.schedule_store');local draft=S.empty();draft.schedules={{id='u',name='User',rows={{id='r',time='08:00',media='user5',enabled=true,pre=false}}}};assert(S.validate(C.encode(draft)))
-assert(host.mkdir(L.root..'/gate'));assert(W.list().code=='busy');assert(host.rmdir(L.root..'/gate'))
+assert(host.mkdir(L.root..'/gate'))
+local writing=F.new(L.root,host)
+assert(W.list().ok,'view must not wait for player or media writer lock')
+local browser_bytes=''
+assert(W.sample('user1',function(chunk)browser_bytes=browser_bytes..chunk end).ok and browser_bytes==bytes)
+
+writing.close();assert(host.rmdir(L.root..'/gate'))
 print('PASS media gateway: disabled-auto, stream failure/bounds, invalid MP3, decoder refusal, CAS before read, lookup, preview, gate')
 
 local realload=S.load

@@ -56,22 +56,10 @@ function M.reconcile(root)
  if fs then local closed=pcall(fs.close);ok=ok and closed end
  return ok
 end
-local function readonly(root)
- assert(type(root)=='string' and root:match('^/[%w_./-]+$') and not root:find('..',1,true),'root')
- local nfs=require('nixio.fs');local st=assert(nfs.lstat(root),'root')
- assert(st.type=='dir' and tonumber(tostring(st.modedec),8)%64==0,'private root')
- return {read=function(name,max)
-  local path=root..'/'..name;local item=nfs.lstat(path)
-  if not item then return nil end
-  assert(item.type=='reg' and item.size<=max,'metrics file')
-  local f=assert(io.open(path,'rb'));local raw=f:read(max+1);local closed=f:close()
-  assert(closed and raw and #raw<=max,'bounded read');return raw
- end,close=function()end}
-end
 function M.request(root,reader)
  local fs
  local ok,result=pcall(function()
-  fs=reader or readonly(root)
+  fs=reader or require('schoolbell.media_fs').readonly(root)
   local v=M.load(fs);local pending=false;local newest=0
   -- Read only the checkpoint and scan bounded journal bytes for a newer relevant seq.
   -- Atomic published snapshots need no shared editor lock on a UI poll.

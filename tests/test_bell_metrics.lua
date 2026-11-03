@@ -41,6 +41,7 @@ print('PASS bell metrics integration: 650 journal events, rotation preserves all
 
 local requestfs,requestfiles=fixture(files);requestfs.close=function()end
 requestfiles['journal-current.jsonl']=C.encode({seq=8,time=2,action='auto_ok'})..'\n'
+local readonly=require('schoolbell.media_fs').readonly
 package.loaded['schoolbell.media_fs']={new=function()return requestfs end}
 local savedRead=Journal.read;Journal.read=function()return {{seq=8,time=2,action='auto_ok'}},8 end
 local beforeRequest=requestfs.read('bell-metrics.json',32768)
@@ -61,7 +62,7 @@ package.loaded['nixio.fs']={lstat=function(path)
  if path==tmp then return {type='dir',modedec='700'}end
  local f=io.open(path,'rb');if not f then return nil end;local size=f:seek('end');f:close();return {type='reg',size=size}
 end}
-package.loaded['schoolbell.media_fs']={new=function()error('GET must not acquire editor lock')end}
+package.loaded['schoolbell.media_fs']={readonly=readonly,new=function()error('GET must not acquire editor lock')end}
 local unlocked=M.request(tmp);assert(unlocked.ok and not unlocked.persistence_pending)
 for _,name in ipairs({'bell-metrics.json','journal-current.jsonl'})do assert(os.remove(tmp..'/'..name))end
 assert(os.remove(tmp))

@@ -20,9 +20,8 @@
   if(root.dataset.load.indexOf('demo-api')>=0)mediaIds=['test','0','1','2','3','4'];
   var counter=0;
   var R=window.RangePlans,monthPage=0, brush='view', painting=false,planId=null,formPending=false,newPlan=false,copyPlan=null;
-  var routerDate=null,trust=null;
+  var routerDate=null;
 
-  window.addEventListener('schoolbell-clock-state',function(e){trust=e.detail;});
   var monthNames=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
   // Schoolbell specification 4.6.64: built-in IDs and order are stable.
   var colorCssNames=['royalblue','green','firebrick','rebeccapurple','slategray','yellowgreen','maroon','mediumorchid',
@@ -454,7 +453,7 @@
   document.getElementById('calendar-plan').addEventListener('change',function(e){if(!leaveForm()){renderAnnual();return;}planId=e.target.value;fillPlan();brush='view';render();formStatus('');});
   document.getElementById('plan-new').addEventListener('click',function(){
     if(!leaveForm())return;planId=null;fillPlan();newPlan=true;formPending=true;
-    var suggested=routerDate && performance.now()-routerDate.at<45000 && trust && trust.state==='confirmed'?R.suggest(routerDate.date,true):null;
+    var suggested=routerDate && performance.now()-routerDate.at<45000?R.suggest(routerDate.date,true):null;
     document.getElementById('plan-name').value=suggested?suggested.name:'Новый план';
     document.getElementById('plan-start').value=suggested?suggested.start:'';document.getElementById('plan-end').value=suggested?suggested.end:'';
     formStatus(suggested?'Проверьте предложенный учебный год.':'Нет свежей подтверждённой даты устройства. Укажите диапазон вручную.');render();

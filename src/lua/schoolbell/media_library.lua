@@ -1,6 +1,7 @@
 local C=require('schoolbell.media_codec')
 local Manager=require('schoolbell.media_manager')
-local M={max_upload_bytes=65536,root='/etc/modbus-schoolbell/data',slots={'test','0','1','2','3','4'},sizes={test=13104,['0']=41273,['1']=63321,['2']=69904,['3']=68023,['4']=82368}}
+local ids=require('schoolbell.media_ids')
+local M={max_upload_bytes=65536,root='/etc/modbus-schoolbell/data',slots=ids.bundled,sizes=ids.sizes,bundled=ids.packaged}
 M.titles={test='Тестовый звонок',['0']='[Короткая] Время',['1']='Шутка Баха',['2']='Гостья из будущего',['3']='Князь Игорь',['4']='Усатый нянь'}
 M.editable=require('schoolbell.media_ids').user
 function M.valid_title(title)
@@ -10,8 +11,8 @@ function M.valid_title(title)
  return #visible>0
 end
 function M.valid(id)return type(id)=='string' and (M.sizes[id]~=nil or M.editable(id))end
-function M.open(fs,root,owned)
- local manager=Manager.new(fs,{ownership_safe=owned});local api={}
+function M.open(fs,root,owned,readonly)
+ local manager=Manager.new(fs,{ownership_safe=owned,readonly=readonly});local api={}
  local function read()
   local state=manager.recover();assert(state.state=='ready' or state.state=='empty','recovery_required')
   local catalog=state.state=='ready' and C.decode(fs.read('snapshots/'..state.pointer.current.snapshot..'/catalog.json',16384)) or {melodies=C.decode('[]')}

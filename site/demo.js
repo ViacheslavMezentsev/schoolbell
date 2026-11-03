@@ -61,6 +61,13 @@ function runningSourceChange(state,draft){
  var before=source(state.data),after=source(draft);
  return before && JSON.stringify(before)!==JSON.stringify(after)?before.name || id:'';
 }
+let cachedPreview=null;
+function previewRequest(text,date){
+ if(cachedPreview && cachedPreview.text===text && cachedPreview.date===date)return clone(cachedPreview.result);
+ const data=JSON.parse(text),result=valid(data)?preview(data,date):{ok:false,code:'invalid'};
+ if(result.ok && new TextEncoder().encode(text+JSON.stringify(result)).length<=32740)cachedPreview={text,date,result};
+ return result;
+}
 function valid(d){try{return R.validateDraft(d,true);}catch(_){return false;}}
 function zones(){var z=Intl.supportedValuesOf?Intl.supportedValuesOf('timeZone'):['Europe/Moscow','Asia/Yekaterinburg','Europe/Berlin','America/New_York'];return ['UTC'].concat(z);}
 var timeProposal=null;
@@ -83,7 +90,7 @@ window.fetch=async function(url,options){
     !d.schedules.some(item=>item.id===s.applied.data.fixed_schedule))out={ok:false,code:'schedule_in_use'};
   else if(runningSourceChange(s,d))out={ok:false,code:'source_running',detail:{name:runningSourceChange(s,d)}};
   else{s.data=d;s.revision++;log(s,'save_ok');out={ok:true,active:false,data:clone(d),revision:String(s.revision)};}
- }else if(name==='preview'){try{var data=JSON.parse(body.get('draft'));out=valid(data)?preview(data,body.get('date')):{ok:false,code:'invalid'};}catch(_){out={ok:false,code:'invalid'};}}
+ }else if(name==='preview'){try{out=previewRequest(body.get('draft'),body.get('date'));}catch(_){out={ok:false,code:'invalid'};}}
  else if(name==='media')out={ok:true,demo:true,generation:0,storage:{total_kib:4096,free_kib:1536,used_kib:2560,reserve_kib:512,media_kib:0},slots:['test','0','1','2','3','4'].map(function(id,i){return {id:id,name:i<6?id+'.mp3':'Свободная позиция',title:['Тестовый звонок','[Короткая] Время','Шутка Баха','Гостья из будущего','Князь Игорь','Усатый нянь'][i] || ('Пользовательская '+(i-5)),source:i<6?'bundled':'empty',size_bytes:[13104,41273,63321,69904,68023,82368][i] || 0};})};
  else if(name==='automatic'){
  if(options && options.method==='POST' && body.get('action')==='apply'){
@@ -92,7 +99,8 @@ window.fetch=async function(url,options){
   else {s.applied={revision:String(s.revision),data:clone(s.data)};s.autoGeneration=(s.autoGeneration || 0)+1;log(s,'draft_applied');}
  }
  if(options && options.method==='POST' && body.get('enabled')==='false'){s.autoEnabled=false;s.autoGeneration=(s.autoGeneration || 0)+1;log(s,'auto_disabled');}
- if(!out)out={ok:true,state:s.autoEnabled?(s.muted?'muted':'running'):'disabled',enabled:!!s.autoEnabled,generation:s.autoGeneration || 0,revision:s.applied && s.applied.revision,context:s.applied && appliedContext(s.applied.data,s.zone),mode:s.applied && s.applied.data.mode,hardware:false,simulated:true,queue:queueDemo(false),cpu:{available:false,simulated:true,storage:{total_kib:4096,free_kib:1536},uptime_seconds:Math.max(0,Math.floor((performance.now()-demoStarted)/1000))},clock_trust:{enforced:s.clockEnforced!==false,state:s.clockConfirmed?'confirmed':s.clockEnforced===false?'unchecked':'unconfirmed',reason:'demo'}};}
+ if(!out)out={ok:true,state:s.autoEnabled?(s.muted?'muted':'running'):'disabled',enabled:!!s.autoEnabled,generation:s.autoGeneration || 0,revision:s.applied && s.applied.revision,context:s.applied && appliedContext(s.applied.data,s.zone),mode:s.applied && s.applied.data.mode,hardware:false,simulated:true,queue:queueDemo(false),cpu:{available:false,simulated:true,storage:{total_kib:4096,free_kib:1536},uptime_seconds:Math.max(0,Math.floor((performance.now()-demoStarted)/1000))}};}
+ else if(name==='demo-boot' && options && options.method==='POST'){s.autoEnabled=false;s.autoGeneration=(s.autoGeneration || 0)+1;log(s,'device_boot','system');out={ok:true};}
  else if(name==='clock-trust'){
  if(options && options.method==='POST'){
  var action=body.get('action');out={ok:true};
@@ -101,15 +109,11 @@ window.fetch=async function(url,options){
   var p=timeProposal;timeProposal=null;var epoch=Number(body.get('epoch'));
   if(!p || p.id!==body.get('challenge') || performance.now()-p.at>=60000 || p.zone!==s.zone || body.get('ack')!=='true')out={ok:false,code:'stale_confirmation'};
   else if(!Number.isInteger(epoch) || epoch<1577836800 || epoch>2145916799)out={ok:false,code:'calendar_range'};
-  else{s.autoEnabled=false;s.autoGeneration=(s.autoGeneration || 0)+1;s.clockConfirmed=false;log(s,'clock_set_ok');out={ok:true,simulated:true,utc:Math.floor(Date.now()/1000),automatic_enabled:false,confirmation_required:true};}
+  else{log(s,'clock_set_ok');out={ok:true,simulated:true,utc:Math.floor(Date.now()/1000),confirmation_required:false};}
  }
- else if(action==='prepare')out={ok:true,challenge:'demo',utc:Math.floor(Date.now()/1000),rollback:false,zone:s.zone || 'UTC'};
- else if(action==='confirm'){s.autoEnabled=false;s.autoGeneration=(s.autoGeneration || 0)+1;s.clockConfirmed=true;log(s,'clock_confirmed');}
- else if(action==='policy'){s.autoEnabled=false;s.autoGeneration=(s.autoGeneration || 0)+1;s.clockEnforced=body.get('enforced')==='true';s.clockConfirmed=false;log(s,s.clockEnforced?'clock_control_on':'clock_control_off');}
  else if(action==='enable')out={ok:false,code:'reload_interface'};
  else if(action==='resume'){
-  if(s.clockEnforced!==false && !s.clockConfirmed)out={ok:false,code:'clock_untrusted'};
-  else if(!s.applied || s.autoEnabled || body.get('revision')!==s.applied.revision || body.get('generation')!==String(s.autoGeneration))out={ok:false,code:'active_conflict'};
+  if(!s.applied || s.autoEnabled || body.get('revision')!==s.applied.revision || body.get('generation')!==String(s.autoGeneration))out={ok:false,code:'active_conflict'};
   else if(appliedContext(s.applied.data,s.zone).day==='no_plan')out={ok:false,code:'select_plan'};
   else{s.autoEnabled=true;s.autoGeneration=(s.autoGeneration || 0)+1;log(s,'auto_enabled');out={ok:true,generation:s.autoGeneration};}
  }
@@ -151,6 +155,11 @@ migrationButton.addEventListener('click',function(){
   var raw=JSON.stringify(next);localStorage.setItem(key,raw);if(localStorage.getItem(key)!==raw)throw new Error('storage');
   memory=next;location.reload();
  }catch(_){migrationStatus.textContent='Не удалось перенести черновик. Прежнее демо не изменено; можно экспортировать .sbp на его странице.';}
+});
+document.getElementById('demo-boot').addEventListener('click',async function(){
+ if(!confirm('Имитировать перезагрузку? Автозвонки демо будут выключены.'))return;
+ await window.fetch('./demo-api/demo-boot',{method:'POST'});
+ window.dispatchEvent(new CustomEvent('schoolbell-diagnostic-refresh'));
 });
 document.getElementById('demo-reset').addEventListener('click',function(){if(confirm('Сбросить только данные этого демо в вашем браузере?')){write(seed());location.reload();}});
 document.getElementById('browser-audio').addEventListener('ended',function(){log(read(),'sample_requested');});

@@ -4,7 +4,7 @@ function M.epoch(s)
  if type(s)~='string' or not s:match('^[0-9]+$') or #s~=10 then return nil end
  local n=tonumber(s);if n<M.min_epoch or n>M.max_epoch then return nil end;return n
 end
-function M.new(gate,io)
+function M.new(io)
  local challenge
  local function fail(code)return {ok=false,code=code}end
  return function(q,meta)
@@ -27,9 +27,7 @@ function M.new(gate,io)
   if not release then return fail('sound_busy')end
   local attempted=false
   local ok,result=pcall(function()
-   gate.invalidate()
-   if not io.stop()then return fail('disable_failed')end
-   -- Stopping/persistence can take time: include it, but never install a stale value.
+   -- Lock acquisition can take time: include it, but never install a stale value.
    local ready=io.monotonic()
    if ready<now or ready-queued>M.max_queue or ready-old.at>=M.ttl then return fail('clock_request_expired')end
    target=epoch+math.floor(ready-queued)
@@ -38,12 +36,10 @@ function M.new(gate,io)
    if io.set(target)~=true then return fail('clock_set_failed')end
    local after,ended=io.read(),io.monotonic()
    if ended<ready or ended-ready>2 or type(after)~='number' or math.abs(after-(target+ended-ready))>2 then return fail('clock_verify_failed')end
-   return {ok=true,utc=after,automatic_enabled=false,confirmation_required=true}
+   return {ok=true,utc=after,confirmation_required=false}
   end)
-  -- Read trust anew after a step; never retain a pre-step confirmation, even on error.
-  local invalidated=pcall(gate.invalidate)
   local closed,done=pcall(release)
-  if not invalidated or not closed or done~=true then return fail('clock_cleanup_failed')end
+  if not closed or done~=true then return fail('clock_cleanup_failed')end
   if not ok then return fail(attempted and 'outcome_unknown' or 'operation_failed')end
   return result
  end
@@ -56,9 +52,9 @@ function M.system_set(epoch,execute)
  local command=string.format("/bin/date -u -s '%04d-%02d-%02d %02d:%02d:%02d' >/dev/null 2>&1",t.year,t.month,t.day,t.hour,t.min,t.sec)
  return (execute or os.execute)(command)==0
 end
-function M.system(gate,stop,zone,monotonic)
+function M.system(zone,monotonic)
  local fs=require('nixio.fs');local sound=require('schoolbell.sound_test').lock
- return M.new(gate,{monotonic=monotonic,read=os.time,zone=zone,stop=stop,set=M.system_set,
+ return M.new({monotonic=monotonic,read=os.time,zone=zone,set=M.system_set,
   lock=function()
    if not fs.mkdir(sound,700)then return nil end
    return function()return fs.rmdir(sound)end

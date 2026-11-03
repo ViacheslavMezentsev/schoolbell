@@ -73,3 +73,7 @@ for name in ['bug_report.yml','feature_request.yml']:
 config=(root/'.github/ISSUE_TEMPLATE/config.yml').read_text()
 assert all(url in config for url in guides)
 print('PASS Feedback: device/Pages share exact schoolbell issue-form and guide links; templates exist and target Schoolbell')
+
+# Keep the HTTP validator in step with the actual packaged recording.
+test_digest=hashlib.sha256((root/'assets/melodies/test.mp3').read_bytes()).hexdigest()
+assert f"""M.test_etag='"{test_digest}"'""" in (root/'src/lua/schoolbell/media_ids.lua').read_text()

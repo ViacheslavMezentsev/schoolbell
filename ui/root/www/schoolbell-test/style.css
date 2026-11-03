@@ -77,7 +77,8 @@ html[data-theme="dark"] .automatic-badge[data-tone="success"]{background:#143b27
 .page-tabs{margin:16px 0 12px}
 @media(max-width:580px){.header-status-row{flex-wrap:wrap}.header-status-row #quick-status{flex-basis:100%}.header-status-row #problem-open{margin-left:auto}}
 
-#journal-errors{font-weight:700}
+#journal-warnings,#journal-errors{font-weight:700}
+#journal-warnings[aria-pressed=true]{background:#f4b740;color:#211900;border-color:#f4b740}
 #journal-errors[aria-pressed=true]{background:#a40e26;color:#fff;border-color:#a40e26}
 
 .journal-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin: 18px 0; }
@@ -217,3 +218,13 @@ html[data-theme=dark] .bell-activity{--activity-zero:#222a34;--activity-1:#14365
 .calendar-day[aria-current="date"] { border: 2px solid currentColor; }
 
 #manual-sound-check .test-path{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;margin:.4rem 0} #manual-sound-check .test-path .output-icon{width:1.3em;height:1.3em}
+
+#session-login svg,#session-logout svg{display:block;margin:auto}
+
+.brand h1{margin:0}.brand .eyebrow{margin:.25rem 0 0}
+.automatic-status-strip{display:flex;justify-content:center;min-width:0;margin:.35rem 0}
+.automatic-status-strip .automatic-badge{text-align:center}
+.quick-controls .control-label{display:none}
+html[data-header-labels="true"] .quick-controls .control-label{display:inline}
+.quick-controls button:not([hidden]),.quick-controls .session-button:not([hidden]),#theme-toggle:not([hidden]){display:inline-flex;align-items:center;justify-content:center;gap:.45em}
+.quick-controls [data-icon]::before{content:attr(data-icon);font-size:1.2em;line-height:1}

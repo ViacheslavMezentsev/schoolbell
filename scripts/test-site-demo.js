@@ -8,7 +8,7 @@ vm.runInNewContext(fs.readFileSync(require('path').join(__dirname,'../site/demo.
 async function api(name,data){return (await context.window.fetch('./demo-api/'+name,data?{method:'POST',body:new URLSearchParams(data)}:undefined)).json();}
 (async()=>{
  let q=(await api('automatic')).queue;assert(q.available&&q.simulated&&q.bins.length===0);
- await api('clock-trust',{action:'prepare'});q=(await api('automatic')).queue;assert(q.bins[0].processed===1&&q.bins[0].wait_sum===0);
+ await api('clock-trust',{action:'set_prepare'});q=(await api('automatic')).queue;assert(q.bins[0].processed===1&&q.bins[0].wait_sum===0);
  demoNow=61000;assert((await api('automatic')).queue.bins.length===0);
  let first=await api('load');assert(first.ok && first.data.schedules.length===3);
  first.data.schedules[0].name='Changed';first.data.schedules[0].color=16;
@@ -17,6 +17,11 @@ async function api(name,data){return (await context.window.fetch('./demo-api/'+n
  assert((await api('save',{revision:first.revision,draft:JSON.stringify(first.data)})).code==='conflict');
  const draft={active_plan:'year-2026',pre_minutes:5,pre_media:'test',schedules:[{id:'s',name:'Test',color:1,rows:[{id:'r',time:'00:03',media:'test',enabled:true,pre:true}]}],plans:[{year:2026,schedule_ids:['s'],days:'.AA'+'.'.repeat(362)}]};
  assert((await api('preview',{date:'2026-01-01',draft:JSON.stringify(draft)})).events.length===0);
+ const input={date:'2026-01-02',draft:JSON.stringify(draft)};
+ const firstPreview=await api('preview',input),repeatPreview=await api('preview',input);
+ assert.deepEqual(repeatPreview,firstPreview);
+ const edited=JSON.parse(input.draft);edited.plans[0].days='.'.repeat(365);
+ assert.equal((await api('preview',{...input,draft:JSON.stringify(edited)})).events.length,0);
  let events=(await api('preview',{date:'2026-01-02',draft:JSON.stringify(draft)})).events;
  assert(events.length===2 && events[1].time==='23:58' && events[1].origin_date==='2026-01-03');
  let tz=await api('timezone');assert((await api('timezone',{zone:'UTC',revision:tz.revision})).ok);assert((await api('clock')).ok);
@@ -25,7 +30,7 @@ async function api(name,data){return (await context.window.fetch('./demo-api/'+n
  await assert.rejects(()=>context.window.fetch('http://192.0.2.1/api'));await assert.rejects(()=>context.window.fetch('/cgi-bin/luci'));
  assert((await api('no-router',{})).state==='unavailable');
  assert((await api('automatic')).hardware===false);
- const appliedDraft=await api('load');assert((await api('automatic',{action:'apply',revision:appliedDraft.revision})).enabled===false);await api('clock-trust',{action:'confirm'});
+ const appliedDraft=await api('load');assert((await api('automatic',{action:'apply',revision:appliedDraft.revision})).enabled===false);
  assert((await api('clock-trust',{action:'resume',revision:appliedDraft.revision,generation:String((await api('automatic')).generation)})).ok);
  let auto=await api('automatic');assert(auto.enabled && auto.simulated && auto.hardware===false);
  await api('automatic',{enabled:'false'});auto=await api('automatic');assert(!auto.enabled && auto.revision===appliedDraft.revision);
@@ -50,15 +55,17 @@ async function api(name,data){return (await context.window.fetch('./demo-api/'+n
  let prep=await api('clock-trust',{action:'set_prepare',operation:'a'.repeat(32)});assert(prep.simulated && prep.ttl===60);
  const timeData={action:'set_time',challenge:prep.challenge,epoch:String(Math.floor(Date.now()/1000)),ack:'true'};
  assert((await api('clock-trust',timeData)).simulated);assert(!(await api('automatic')).enabled);
- assert((await api('automatic')).clock_trust.state==='unconfirmed');
+
  assert((await api('clock-trust',timeData)).code==='stale_confirmation');
  prep=await api('clock-trust',{action:'set_prepare',operation:'b'.repeat(32)});demoNow+=60000;assert((await api('clock-trust',{...timeData,challenge:prep.challenge})).code==='stale_confirmation');
  let volume=await api('controls',{volume_db:'-12'});assert(volume.volume_db===-12);
  assert((await api('controls')).volume_db===-12);
  assert((await api('automatic',{enabled:'true'})).enabled===false);
- let challenge=await api('clock-trust',{action:'prepare'});assert(challenge.challenge==='demo');
- await api('clock-trust',{action:'confirm'});assert((await api('automatic')).clock_trust.state==='confirmed');
- await api('clock-trust',{action:'policy',enforced:'false'});assert((await api('automatic')).clock_trust.enforced===false);assert((await api('automatic')).enabled===false);
+ assert(!(await api('clock-trust',{action:'policy',enforced:'false'})).ok);
+ const stopped=await api('automatic');assert((await api('clock-trust',{action:'resume',revision:stopped.revision,generation:String(stopped.generation)})).ok);
+ assert((await api('automatic')).enabled);
+ await api('demo-boot',{});assert(!(await api('automatic')).enabled);
+ assert((await api('journal')).entries.filter(e=>e.action==='device_boot').length===1);
 
  const rangeRaw=fs.readFileSync('tests/range-plan.json','utf8');const rangeDates=['2026-12-29','2026-12-30','2026-12-31','2027-01-01','2027-01-02','2027-01-03','2027-01-04'];
  const results=[];for(const date of rangeDates)results.push(await api('preview',{date,draft:rangeRaw}));

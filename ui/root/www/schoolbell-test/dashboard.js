@@ -42,43 +42,54 @@
     }catch(_){zoneMessage.textContent='Ответ потерян. Пояс мог сохраниться; проверьте состояние перед повтором.';}
     finally{zoneBusy=false;zoneControls();await loadZones();sample=null;poll();}
   });
-  var journalBusy=false,journalEntries=[],journalPage=0,journalErrors=false,journalPageSize=20;
-  var actions={system_reset:'Настройки Школьника сброшены; мелодии и журнал сохранены',system_reboot:'Запрошена перезагрузка устройства',system_failed:'Системное действие не подтверждено',clock_set_ok:'Часы установлены из браузера; автозвонки выключены',clock_set_failed:'Установка часов не подтверждена; проверьте фактическое время',clock_confirmed:'Время подтверждено вручную; автозвонки выключены',clock_control_on:'Контроль времени включён; требуется подтверждение часов',clock_control_off:'Контроль времени отключён пользователем',clock_control_failed:'Действие контроля времени не подтверждено',restore_ok:'Резервная копия восстановлена; автозвонки выключены',restore_failed:'Восстановление копии не подтверждено',media_ok:'Мелодия заменена',media_renamed:'Название мелодии изменено',media_failed:'Замена мелодии отклонена',volume_ok:'Громкость устройства сохранена',volume_failed:'Ошибка сохранения громкости',draft_applied:'Применён сохранённый черновик',auto_enabled:'Сохранённый план включён',auto_disabled:'Автозвонки отключены',auto_requested:'Автоматический звонок рассмотрен',auto_ok:'Автоматический проигрыватель завершился',auto_skipped:'Автоматический звонок пропущен или остановлен',auto_blocked:'Исполнитель заблокирован: проверьте плашку состояния',mute_on:"Без звука включён",mute_off:"Без звука выключен",mute_failed:"Ошибка изменения Без звука",manual_requested:"Запрошен ручной звонок",timezone_ok:'Часовой пояс применён',timezone_failed:'Не удалось применить часовой пояс',save_ok:'Черновик сохранён',save_failed:'Сохранение отклонено',preview_ok:'Запрошен предпросмотр',preview_failed:'Предпросмотр отклонён',play_requested:'Запрошен звук на устройстве',play_ok:'Проигрыватель завершился успешно',play_failed:'Ошибка проигрывателя',sample_requested:'Передан файл для браузера (не подтверждение звука)',storage_error:'Ошибка хранилища',installed:'Установлен интерфейс schoolbell'};
+  var journalLoaded=false,journalBusy=false,journalEntries=[],journalPage=0,journalWarnings=false,journalErrors=false,journalPageSize=20;
+  var actions={device_boot:'Устройство загружено',auto_expired:'Звонок пропущен: истёк срок подачи',auto_audio_unavailable:'Звонок не подан: аудиовыход или проигрыватель недоступен',auto_player_failed:'Звонок не подан: ошибка проигрывателя',system_reset:'Настройки Школьника сброшены; мелодии и журнал сохранены',system_reboot:'Запрошена перезагрузка устройства',system_failed:'Системное действие не подтверждено',clock_set_ok:'Часы установлены из браузера',clock_set_failed:'Установка часов не подтверждена; проверьте фактическое время',clock_confirmed:'Время подтверждено вручную; автозвонки выключены',clock_control_on:'Контроль времени включён; требуется подтверждение часов',clock_control_off:'Контроль времени отключён пользователем',clock_control_failed:'Действие контроля времени не подтверждено',restore_ok:'Резервная копия восстановлена; автозвонки выключены',restore_failed:'Восстановление копии не подтверждено',media_ok:'Мелодия заменена',media_renamed:'Название мелодии изменено',media_failed:'Замена мелодии отклонена',volume_ok:'Громкость устройства сохранена',volume_failed:'Ошибка сохранения громкости',draft_applied:'Применён сохранённый черновик',auto_enabled:'Автозвонки включены',auto_disabled:'Автозвонки отключены',auto_requested:'Автоматический звонок рассмотрен',auto_ok:'Автоматический проигрыватель завершился',auto_skipped:'Автоматический звонок пропущен или остановлен',auto_blocked:'Исполнитель заблокирован: проверьте плашку состояния',mute_on:"Без звука включён",mute_off:"Без звука выключен",mute_failed:"Ошибка изменения Без звука",manual_requested:"Запрошен ручной звонок",timezone_ok:'Часовой пояс применён',timezone_failed:'Не удалось применить часовой пояс',save_ok:'Черновик сохранён',save_failed:'Сохранение отклонено',preview_ok:'Запрошен предпросмотр',preview_failed:'Предпросмотр отклонён',play_requested:'Запрошен звук на устройстве',play_ok:'Проигрыватель завершился успешно',play_failed:'Ошибка проигрывателя',sample_requested:'Передан файл для браузера (не подтверждение звука)',storage_error:'Ошибка хранилища',installed:'Установлен интерфейс schoolbell'};
   function journalTime(e){return e.local_time || new Date(e.time*1000).toISOString().replace('T',' ').replace('.000Z',' UTC');}
+  function displayTime(text){return text.replace(/\s+(?:(?:GMT|UTC)[+−-]\d{1,2}(?::?\d{2})?|[+-]\d{2}:?\d{2})$/,'');}
+  function journalEvent(e,full){
+    var label=actions[e.action] || e.action,bell=e.bell;
+    if(!bell)return label;
+    var due=full?bell.due:displayTime(bell.due);
+    return [label,(bell.kind==='pre'?'Предзвонок':'Основной звонок')+' по расписанию на '+due,bell.plan,bell.schedule].filter(Boolean).join(' · ');
+  }
   function journalSource(e){return {user:'Пользователь',module:'Модуль',system:'Система'}[e.source] || e.source;}
-  function journalText(){return journalEntries.map(function(e){return '#'+e.seq+' · '+journalTime(e)+' | '+journalSource(e)+' | '+e.level+' | '+(actions[e.action] || e.action);}).join('\n');}
+  function journalText(){return journalEntries.map(function(e){return '#'+e.seq+' · '+journalTime(e)+' | '+journalSource(e)+' | '+e.level+' | '+journalEvent(e,true);}).join('\n');}
   function renderJournal(){
-    var selected=journalEntries.filter(function(e){return !journalErrors || e.level==='error';});
+    var selected=journalEntries.filter(function(e){return (!journalWarnings && !journalErrors) || (journalWarnings && e.level==='warning') || (journalErrors && e.level==='error');});
     var pages=Math.max(1,Math.ceil(selected.length/journalPageSize));journalPage=Math.max(0,Math.min(journalPage,pages-1));
     var rows=document.getElementById('journal-rows');rows.replaceChildren();
     selected.slice(journalPage*journalPageSize,(journalPage+1)*journalPageSize).forEach(function(e){
       var tr=document.createElement('tr');tr.className='journal-'+e.level;
-      ['#'+e.seq+' · '+journalTime(e),journalSource(e),actions[e.action] || e.action].forEach(function(text){var td=document.createElement('td');td.textContent=text;tr.appendChild(td);});rows.appendChild(tr);
+      ['#'+e.seq+' · '+displayTime(journalTime(e)),journalSource(e),journalEvent(e,false)].forEach(function(text){var td=document.createElement('td');td.textContent=text;tr.appendChild(td);});rows.appendChild(tr);
     });
-    document.getElementById('journal-page').textContent='Страница '+(journalPage+1)+' из '+pages+' · Записей: '+selected.length+(journalErrors?' с ошибками':'');
+    document.getElementById('journal-page').textContent='Страница '+(journalPage+1)+' из '+pages+' · Записей: '+selected.length;
     document.getElementById('journal-first').disabled=journalPage===0;
     document.getElementById('journal-last').disabled=journalPage>=pages-1;
     document.getElementById('journal-prev').disabled=journalPage===0;
     document.getElementById('journal-next').disabled=journalPage>=pages-1;
+    document.getElementById('journal-warnings').setAttribute('aria-pressed',String(journalWarnings));
     document.getElementById('journal-errors').setAttribute('aria-pressed',String(journalErrors));
     document.getElementById('journal-copy').disabled=!journalEntries.length;
   }
   async function loadJournal(){
     if(journalBusy)return;journalBusy=true;
     var button=document.getElementById('journal-reload'),status=document.getElementById('journal-status');button.disabled=true;
-    var abort=new AbortController(),timer=setTimeout(function(){abort.abort();},10000);
+    var abort=new AbortController(),timer;
     try{
+      if(window.schoolbellInitialReady)await window.schoolbellInitialReady;
+      timer=setTimeout(function(){abort.abort();},10000);
       var response=await fetch(root.dataset.journal,{credentials:'same-origin',cache:'no-store',redirect:'error',signal:abort.signal});
       if(!response.ok)throw new Error('http');var value=await response.json();if(!value.ok || !Array.isArray(value.entries))throw new Error('journal');
-      journalEntries=value.entries.slice().reverse();journalPage=0;renderJournal();
+      journalEntries=value.entries.slice().reverse();journalPage=0;renderJournal();journalLoaded=true;
       status.textContent=journalEntries.length?'Журнал обновлён. Новые записи сверху.':'Журнал пока пуст.';
-    }catch(_){status.textContent='Не удалось прочитать журнал. Предыдущие строки могут быть устаревшими; повторите чтение.';}
+    }catch(_){if(!journalLoaded)document.getElementById('journal-page').textContent='Журнал не загружен';status.textContent=journalLoaded?'Не удалось обновить журнал. Показанные записи могут быть устаревшими.':'Не удалось загрузить журнал. Нажмите ↻ для повторного чтения.';}
     finally{clearTimeout(timer);button.disabled=false;journalBusy=false;}
   }
   document.getElementById('journal-reload').addEventListener('click',loadJournal);
+  document.getElementById('journal-warnings').addEventListener('click',function(){journalWarnings=!journalWarnings;journalPage=0;renderJournal();});
   document.getElementById('journal-errors').addEventListener('click',function(){journalErrors=!journalErrors;journalPage=0;renderJournal();});
   document.getElementById('journal-first').addEventListener('click',function(){journalPage=0;renderJournal();});
-  document.getElementById('journal-last').addEventListener('click',function(){journalPage=Math.max(0,Math.ceil(journalEntries.filter(function(e){return !journalErrors || e.level==='error';}).length/journalPageSize)-1);renderJournal();});
+  document.getElementById('journal-last').addEventListener('click',function(){journalPage=Math.max(0,Math.ceil(journalEntries.filter(function(e){return (!journalWarnings && !journalErrors) || (journalWarnings && e.level==='warning') || (journalErrors && e.level==='error');}).length/journalPageSize)-1);renderJournal();});
   document.getElementById('journal-prev').addEventListener('click',function(){journalPage--;renderJournal();});
   document.getElementById('journal-next').addEventListener('click',function(){journalPage++;renderJournal();});
   document.getElementById('journal-copy').addEventListener('click',async function(){

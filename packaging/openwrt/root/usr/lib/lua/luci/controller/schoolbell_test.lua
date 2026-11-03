@@ -101,7 +101,8 @@ function clock_trust()
  end
  local _,C=editor();local session=d.context.authsession
  if type(session)~='string' or #session==0 then h.status(403,'Forbidden');return end
- if h.formvalue('action')=='enable' then respond({ok=false,code='reload_interface'});return end
+ local action=h.formvalue('action')
+ if action=='enable' or action=='confirm' or action=='policy' or action=='prepare' then respond({ok=false,code='reload_interface'});return end
  local owner=C.sha(session);local m=require('schoolbell.clock_mailbox').system()
  if method=='GET'then respond(m.poll(h.formvalue('operation',true),owner));return end
  respond(m.submit({id=h.formvalue('operation'),owner=owner,action=h.formvalue('action'),challenge=h.formvalue('challenge'),ack=h.formvalue('ack'),enforced=h.formvalue('enforced'),revision=h.formvalue('revision'),generation=h.formvalue('generation'),epoch=h.formvalue('epoch')}))
@@ -175,14 +176,31 @@ function controls()
  if value~=nil then audit(result.ok and (value and 'mute_on' or 'mute_off') or 'mute_failed',result)end
  respond(result)
 end
+local function operator_play(media,action)
+ local player=require('schoolbell.sound_test')
+ local requested=false
+ local function report()
+  if not requested then requested=true;audit(action)end
+ end
+ local ok,result=pcall(function()
+  local ports=player.system(media)
+  local spawn=ports.spawn
+  ports.spawn=function()
+   local pid=spawn()
+   report()
+   return pid
+  end
+  return player.run(ports)
+ end)
+ report()
+ if not ok then result={ok=false,state='recovery_required'}end
+ audit(result.ok and 'play_ok' or 'play_failed',result);return result
+end
 function manual()
  if not require('luci.dispatcher').test_post_security()then return end
- local store=editor();local saved=store.request('/etc/schoolbell-editor','load')
+ local store=editor();local saved=store.request('/etc/schoolbell-editor','manual')
  if not saved.ok then respond({ok=false,state='unavailable'});return end
- local m=require('schoolbell.sound_test');audit('manual_requested')
- local ok,result=pcall(function()return m.run(m.system(saved.data.manual_media or 'test'))end)
- if not ok then result={ok=false,state='recovery_required'}end
- audit(result.ok and 'play_ok' or 'play_failed',result);respond(result)
+ respond(operator_play(saved.media,'manual_requested'))
 end
 function clock()
     local h=require('luci.http')
@@ -235,7 +253,7 @@ function preview()
     end
     if not require("luci.dispatcher").test_post_security() then return end
     local store=editor()
-    local value=store.preview(h.formvalue('draft'),h.formvalue('date'));audit(value.ok and 'preview_ok' or 'preview_failed',value);respond(value)
+    local value=store.preview_cached(h.formvalue('draft'),h.formvalue('date'));audit(value.ok and 'preview_ok' or 'preview_failed',value);respond(value)
 end
 local function installed_version(package_name)
     local f=io.open('/usr/lib/opkg/info/'..package_name..'.control','rb')
@@ -298,10 +316,19 @@ function media()
 end
 function sample()
  local h=require('luci.http');if h.getenv('REQUEST_METHOD')~='GET'then h.status(405,'Method Not Allowed');return end
- editor();h.header('Cache-Control','no-store');local started=false
- local result=require('schoolbell.media_web').sample(h.formvalue('id',true) or 'test',function(chunk)
+ editor();local id=h.formvalue('id',true) or 'test'
+ local media=require('schoolbell.media_web');local started=false
+ h.header('Cache-Control',id=='test' and 'private, no-cache' or 'no-store')
+ local function ready()
+  if id~='test' then return true end
+  local tag=require('schoolbell.media_ids').test_etag
+  h.header('ETag',tag)
+  if h.getenv('HTTP_IF_NONE_MATCH')~=tag then return true end
+  h.status(304,'Not Modified');started=true;return false
+ end
+ local result=media.sample(id,function(chunk)
   if not started then h.prepare_content('audio/mpeg');started=true end;h.write(chunk)
- end)
+ end,ready)
  if not result.ok and not started then h.status(503,'Media unavailable')end
 end
 function play()
@@ -309,13 +336,9 @@ function play()
     if not require("luci.dispatcher").test_post_security() then return end
     local id=h.formvalue('id') or 'test'
     if type(id)~='string' or not require('schoolbell.media_ids').valid(id) then respond({ok=false,state='invalid'});return end
-    editor();local m=require("schoolbell.sound_test")
-    audit('play_requested')
-    local ok,result=pcall(function()return m.run(m.system(id))end)
-    if not ok then result={ok=false,state="recovery_required"} end
+    editor();local result=operator_play(id,'play_requested')
     h.header("Cache-Control","no-store")
     h.prepare_content("application/json")
-    audit(result.ok and 'play_ok' or 'play_failed',result)
     h.write_json(result)
 end
 

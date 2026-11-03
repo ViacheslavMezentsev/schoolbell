@@ -27,7 +27,18 @@ local function session(fn)
  if not closed then return {ok=false,code='storage'}end
  return result
 end
-function M.status()return session(function(b)return b.status()end)end
+function M.status()
+ local ok,result=pcall(function()
+  local editor=require('schoolbell.media_fs').readonly(A.root)
+  for attempt=1,2 do
+   local before=editor.read('restore.pending',4096)
+   local value=require('schoolbell.backup').status(editor)
+   if before==editor.read('restore.pending',4096) and not editor.read('import.pending',16384) then return value end
+  end
+  return {ok=false,code='busy'}
+ end)
+ return ok and result or {ok=false,code='storage'}
+end
 function M.export(write)return session(function(b)return b.export(write)end)end
 function M.restore(operation,source,size)return session(function(b)return b.restore(operation,source,size)end)end
 function M.resume(operation)return session(function(b)return b.resume(operation)end)end

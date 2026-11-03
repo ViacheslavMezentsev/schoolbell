@@ -38,6 +38,28 @@ local fs={read=function(p)return files[p]end,stat=function(p)return files[p] and
  write=function(p,v)op();files[p]=v end,sync=function()op()end,rename=function(a,b)op();files[b]=files[a];files[a]=nil end,unlink=function(p)files[p]=nil end}
 local draft=assert(S.save(fs,C.encode(d),'empty'));assert(draft.ok)
 local env={now=1792886400,date='2026-10-25',boot='boot',zone='UTC',resolve=resolver}
+test('same boot retains permission; different boot stops once and retains working source',function()
+ local active=Store.change(fs,true,draft.revision,env)
+ assert(Store.on_boot(fs,env.boot).generation==active.generation)
+ local stopped=Store.on_boot(fs,'next-boot')
+ assert(not stopped.enabled and stopped.revision==active.revision)
+ assert(Store.on_boot(fs,'next-boot').generation==stopped.generation)
+end)
+test('prepared claim commits once and rejects a changed snapshot',function()
+ local original=files[Store.name]
+ local running,raw=Store.change(fs,true,draft.revision,env)
+ local due=env.now+60
+ local prepared=Store.prepare_claim(running,raw,due)
+ assert(running.watermark<due and files[Store.name]==raw)
+ assert(not pcall(Store.claim,fs,running.generation,due,due-1,prepared))
+ local claimed=Store.claim(fs,running.generation,due,due+1,prepared)
+ assert(claimed.watermark==due and Store.decode(files[Store.name]).watermark==due)
+ assert(not pcall(Store.claim,fs,running.generation,due,due+1,prepared))
+ local next_claim=Store.prepare_claim(claimed,files[Store.name],due+60)
+ Store.change(fs,false,nil,env)
+ assert(not pcall(Store.claim,fs,running.generation,due+60,due+60,next_claim))
+ files[Store.name]=original
+end)
 test('explicit revision activation and durable claim',function()
  assert(not pcall(Store.change,fs,true,'wrong',env));assert(Store.decode(nil).enabled==false)
  local active=Store.change(fs,true,draft.revision,env);assert(active.enabled and active.revision==draft.revision)

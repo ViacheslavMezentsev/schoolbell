@@ -1,6 +1,20 @@
 -- Trusted private root only; not a hostile-filesystem sandbox.
 local M={};local active={}
-function M.new(root,host,restore_owner)
+function M.readonly(root)
+ assert(type(root)=='string' and root:match('^/[%w_./-]+$') and not root:find('..',1,true),'root')
+ local nfs=require('nixio.fs');local st=assert(nfs.lstat(root),'root')
+ assert(st.type=='dir' and tonumber(tostring(st.modedec),8)%64==0,'private root')
+ return {read=function(name,max)
+  local path=root..'/'..name;local item,err=nfs.lstat(path)
+  if not item then assert(not err or err==2,'stat failed');return nil end
+  assert(item.type=='reg' and item.size<=max,'bounded regular file')
+  local f,why,errno=io.open(path,'rb')
+  if not f and errno==2 then return nil end -- Segment moved between stat and open.
+  assert(f,why);local raw=f:read(max+1);local closed=f:close()
+  assert(closed and raw and #raw<=max,'bounded read');return raw
+ end,close=function()end}
+end
+local function open(root,host,restore_owner,view)
  assert(type(root)=='string' and root:match('^/[%w_./-]+$') and not root:find('..',1,true) and not root:find('//',1,true) and not root:find('/./',1,true) and root:sub(-1)~='/','root')
  local b
  if host then b=host else
@@ -16,7 +30,16 @@ function M.new(root,host,restore_owner)
  local s=assert(b.stat(root),'root absent');assert(s.type=='dir' and s.mode%64==0,'root must be private')
  assert(restore_owner==true or not b.stat(root..'/restore.pending'),'restore_pending')
  assert(restore_owner=='import' or not b.stat(root..'/import.pending'),'import_pending')
- assert(not active[root],'busy');local lock=assert(b.lock(root..'/.lock'),'busy');if (restore_owner~=true and b.stat(root..'/restore.pending'))or(restore_owner~='import' and b.stat(root..'/import.pending'))then b.unlock(lock);error('recovery_required')end;active[root]=true
+ local lock
+ if not view then
+  assert(not active[root],'busy')
+  lock=assert(b.lock(root..'/.lock'),'busy')
+  if (restore_owner~=true and b.stat(root..'/restore.pending')) or
+     (restore_owner~='import' and b.stat(root..'/import.pending')) then
+   b.unlock(lock);error('recovery_required')
+  end
+  active[root]=true
+ end
  local self={}
  local function path(rel)
   assert(rel=='' or (rel:match('^[%w_./-]+$') and rel:sub(1,1)~='/' and not rel:find('..',1,true)),'relative path')
@@ -26,8 +49,8 @@ function M.new(root,host,restore_owner)
  end
  function self.stat(p)return b.stat(path(p))end
  function self.mkdir(p)local q=path(p);local st=b.stat(q);if st then assert(st.type=='dir')else assert(b.mkdir(q))end end
- function self.list(p)return assert(b.list(path(p)))end
- function self.read(p,max)local q=path(p);local st=b.stat(q);if not st then return nil end;assert(st.type=='reg' and st.size<=max,'file size');local f=assert(io.open(q,'rb'));local data=f:read(max+1);local ok=f:close();assert(ok and data and #data==st.size,'read');return data end
+ function self.list(p)local q=path(p);if view and not b.stat(q)then return {} end;return assert(b.list(q))end
+ function self.read(p,max)local q=path(p);local st=b.stat(q);if not st then return nil end;assert(st.type=='reg' and st.size<=max,'file size');local f=assert(io.open(q,'rb'));local data=f:read(max+1);local ok=f:close();assert(ok and data and #data<=max and (view or #data==st.size),'read');return data end
  function self.open_read(p)local q=path(p);local st=assert(b.stat(q));assert(st.type=='reg');return assert(io.open(q,'rb'))end
  function self.open_write(p)local q=path(p);assert(not b.stat(q),'exists');return assert(io.open(q,'wb'))end
  function self.write(p,data)local q=path(p);assert(not b.stat(q),'exists');local f=assert(io.open(q,'wb'));local ok=f:write(data);local closed=f:close();assert(ok and closed,'write')end
@@ -49,6 +72,11 @@ function M.new(root,host,restore_owner)
   local ca,cz=a:close(),z:close();assert(ok and ca and cz and count==st.size,why or 'copy');return count
  end
  function self.close()if lock then local h=lock;lock=nil;active[root]=nil;assert(b.unlock(h),'unlock')end end
+ if view then
+  return {stat=self.stat,read=self.read,list=self.list,hash=self.hash,space=self.space,close=self.close}
+ end
  return self
 end
+function M.new(root,host,restore_owner)return open(root,host,restore_owner,false)end
+function M.inspect(root,host)return open(root,host,false,true)end
 return M

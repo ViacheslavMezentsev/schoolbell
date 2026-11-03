@@ -51,7 +51,7 @@ local function usage_hint()
  if active then assert(type(active.data)=='table','active');if active.data.plan then add(active.data.plan)end end
  return used
 end
-function M.list()return session(function(lib)
+local function listed(lib)
  local result=lib.list();local has_user=false
  for _,v in ipairs(result.slots)do if v.source=='user'then has_user=true end end
  if has_user then
@@ -59,7 +59,30 @@ function M.list()return session(function(lib)
   for _,v in ipairs(result.slots)do if v.source=='user'then v.in_use=not known or used[v.id]==true end end
  end
  return result
-end)end
+end
+local function inspect(read_catalog)
+ local fs=require('schoolbell.media_fs')
+ local editor=require('schoolbell.automatic_store').root
+ local function available(view)
+  return not view.stat('restore.pending') and not view.stat('import.pending')
+ end
+ local ok,result=pcall(function()
+  local guard=fs.inspect(editor)
+  local view=fs.inspect(L.root)
+  local lib=L.open(view,L.root,function()return true end,true)
+  for attempt=1,2 do
+   local before=view.read('current.json',16384)
+   local read,value=pcall(read_catalog,lib)
+   if before==view.read('current.json',16384) and available(guard) then
+    if read then return value end
+    if attempt==2 then error(value) end
+   end
+  end
+  return {ok=false,code='busy'}
+ end)
+ return ok and result or {ok=false,code='media_error'}
+end
+function M.list()return inspect(listed)end
 function M.remove(args)
  if not L.editable(args.id)or not C.integer(args.generation,0,2147483646)or not C.hex(args.operation,32)then return {ok=false,code='invalid'}end
  return session(function(lib,fs,retain,editor)
@@ -81,7 +104,7 @@ function M.rename(args)
 end
 function M.lookup(op)
  if not C.hex(op,32)then return {ok=false,code='invalid'}end
- return session(function(lib)local v=lib.lookup(op);v.ok=true;return v end)
+ return inspect(function(lib)local v=lib.lookup(op);v.ok=true;return v end)
 end
 function M.resolve(id)
  assert(not require('nixio.fs').lstat or not require('nixio.fs').lstat((require('schoolbell.automatic_store').root or '/etc/schoolbell-editor')..'/import.pending'),'import_pending')
@@ -165,12 +188,36 @@ function M.upload(args,source)
   return result
  end,true)
 end
-function M.sample(id,write)
+function M.sample(id,write,ready)
  if not L.valid(id)then return {ok=false,code='invalid'}end
- return session(function(lib)
-  local path=lib.resolve(id);local f=assert(io.open(path,'rb'))
-  local ok,why=protect(function()while true do local chunk=f:read(16384);if not chunk then break end;write(chunk)end end)
-  f:close();assert(ok,why);return {ok=true}
- end)
+ -- Objects are immutable. Once opened, the descriptor pins the selected bytes
+ -- even if another request replaces the melody or removes the directory entry.
+ for attempt=1,2 do
+  local path,size=L.bundled(id)
+  local selected
+  if path then
+   local ok=pcall(require('schoolbell.media_fs').inspect,require('schoolbell.automatic_store').root)
+   if not ok then return {ok=false,code='media_error'} end
+   selected={ok=true,path=path,size=size}
+  else
+   selected=inspect(function(lib)
+    local source,slot=lib.resolve(id)
+    return {ok=true,path=source,size=slot.size_bytes}
+   end)
+  end
+  if not selected.ok then return selected end
+  local f=io.open(selected.path,'rb')
+  if f then
+   local ok=protect(function()
+    assert(f:seek('end')==selected.size and f:seek('set',0)==0,'size')
+    if ready and not ready() then return end
+    while true do local chunk=f:read(16384);if not chunk then break end;write(chunk)end
+   end)
+   local closed=f:close()
+   if ok and closed then return {ok=true}end
+   return {ok=false,code='media_error'}
+  end
+ end
+ return {ok=false,code='media_error'}
 end
 return M

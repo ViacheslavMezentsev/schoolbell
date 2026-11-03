@@ -8,8 +8,11 @@ function M.new(fs,options)
  local hook=options.checkpoint or function()end;local pins={};local closed=false;local blocked=false
  local function alive()check(not closed,'closed');check(safe()==true,'ownership_unknown')end
  local function point(x)hook(x)end
- for _,d in ipairs({'objects','snapshots','staging'})do fs.mkdir(d)end
- fs.sync('');local api={}
+ if not options.readonly then
+  for _,d in ipairs({'objects','snapshots','staging'})do fs.mkdir(d)end
+  fs.sync('')
+ end
+ local api={}
  local function catalog(raw)
   local t=C.decode(raw);C.fields(t,{'melodies'});check(J.kind(t.melodies)=='array','melodies')
   local ids,refs,count={},{},0

@@ -5,7 +5,7 @@ const cases=[
  [{blocked:true},'session-login'],[{pending:true},'tab-sound'],[{},'tab-feedback'],[{uncertain:true},'tab-feedback'],
  [{value:{state:'running'}},'tab-preview'],[{value:{state:'playing'}},'tab-preview'],[{value:{state:'disabled',revision:'r'}},'tab-sound'],
  [{value:{state:'disabled'}},'tab-sound'],[{value:{state:'muted'}},'tab-sound'],[{value:{state:'recovery_required'}},'tab-media'],
- [{value:{state:'executor_error'}},'tab-journal'],[{value:{state:'clock_untrusted',clock_trust:{enforced:true,state:'review_required',reason:'observation_gap'}}},'clock-check-settings']
+ [{value:{state:'executor_error'}},'tab-journal'],[{value:{state:'clock_untrusted',clock_trust:{enforced:true,state:'review_required',reason:'observation_gap'}}},'tab-journal']
 ];
 for(const [s,target] of cases)assert.equal(diagnose(s).target,target);
 assert(diagnose({}).text.includes('не доказывает'));

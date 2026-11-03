@@ -1,9 +1,7 @@
 local C=require('schoolbell.media_codec');local Codec=require('schoolbell.backup_codec')
 local S=require('schoolbell.schedule_store');local A=require('schoolbell.automatic_store');local Controls=require('schoolbell.controls');local L=require('schoolbell.media_library')
 local M={}
-function M.new(editor,media,root,env)
- local protect=env.protect or pcall;local lib=L.open(media,root,function()return true end);local hook=env.checkpoint or function()end;local api={}
- local function pending()
+local function pending(editor)
   local raw=editor.read('restore.pending',4096);if not raw then return nil end
   local envelope=C.decode(raw);C.fields(envelope,{'data','checksum'});local p=envelope.data
   assert(C.sha(C.encode(p))==envelope.checksum,'pending checksum')
@@ -11,9 +9,12 @@ function M.new(editor,media,root,env)
   assert(C.hex(p.operation_id,32) and C.hex(p.manifest_hash,64) and C.integer(p.media_generation,0,2147483646) and C.integer(p.auto_generation,1,2147483647) and C.integer(p.control_generation,1,2147483647) and C.integer(p.watermark,0,2147483647),'pending')
   assert(p.olddraft_hash==C.null or C.hex(p.olddraft_hash,64),'old draft');return p
  end
- function api.status()local p=pending();local last=editor.read('restore-last.json',4096);last=last and C.decode(last);return {ok=true,pending=p~=nil,operation_id=p and p.operation_id or nil,last_operation=last and last.operation_id or nil}end
+ function M.status(editor)local p=pending(editor);local last=editor.read('restore-last.json',4096);last=last and C.decode(last);return {ok=true,pending=p~=nil,operation_id=p and p.operation_id or nil,last_operation=last and last.operation_id or nil}end
+function M.new(editor,media,root,env)
+ local protect=env.protect or pcall;local lib=L.open(media,root,function()return true end);local hook=env.checkpoint or function()end;local api={}
+ function api.status()return M.status(editor)end
  function api.export(write)
-  assert(not pending(),'restore_pending');local auto=A.decode(editor.read(A.name,A.max_bytes));assert(not auto.enabled,'automatic_enabled')
+  assert(not pending(editor),'restore_pending');local auto=A.decode(editor.read(A.name,A.max_bytes));assert(not auto.enabled,'automatic_enabled')
   local draft=S.load(editor);assert(draft.ok,'draft');local controls=Controls.decode(editor.read('sound-control.json',512))
   local cat=lib.catalog();local _,objects,ids=Codec.catalog(C.encode(cat))
   local function ref(id)assert(not L.editable(id) or ids[id],'missing melody reference')end
@@ -55,7 +56,7 @@ function M.new(editor,media,root,env)
   local cleaned=pcall(Codec.clean,media);return {ok=true,state='restored',automatic_enabled=false,cleanup=cleaned}
  end
  function api.restore(operation,source,size)
-  assert(C.hex(operation,32),'operation');if pending()then return {ok=false,code='restore_pending'}end
+  assert(C.hex(operation,32),'operation');if pending(editor)then return {ok=false,code='restore_pending'}end
   local auto=A.decode(editor.read(A.name,A.max_bytes));assert(not auto.enabled,'automatic_enabled')
   local controls=Controls.decode(editor.read('sound-control.json',512));assert(auto.generation<2147483647 and controls.generation<2147483647,'generation exhausted')
   local old=S.load(editor);assert(old.ok,'existing draft needs investigation')
@@ -81,7 +82,7 @@ function M.new(editor,media,root,env)
   end;return result
  end
  function api.resume(operation)
-  local p=assert(pending(),'no pending restore');assert(p.operation_id==operation,'operation mismatch')
+  local p=assert(pending(editor),'no pending restore');assert(p.operation_id==operation,'operation mismatch')
   local ok,result=protect(function()return apply(p,Codec.validate(media,root,env.timezone,env.decode))end)
   return ok and result or {ok=false,code='restore_pending'}
  end

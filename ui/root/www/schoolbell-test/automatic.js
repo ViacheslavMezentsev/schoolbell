@@ -3,7 +3,7 @@
 var root=document.getElementById('schedule-editor'),on=document.getElementById('automatic-enable'),off=document.getElementById('automatic-disable'),message=document.getElementById('automatic-status');
 var quick=document.getElementById('quick-automatic'),badge=document.getElementById('quick-automatic-status');
 var busy=false,reading=false,sample=null,feedback='',generation=0,pending=null,uncertain=false;
-var names={clock_untrusted:'Время не подтверждено: откройте настройки проверки времени',backward_hold:'Часы переведены назад: ожидание прежней границы времени',disabled:'Автозвонки отключены',running:'Автозвонки включены',muted:'Автозвонки · Без звука',playing:'Выполняется звонок',waiting:'Нет свежего подтверждения службы',confirm_clock:'После перезагрузки проверьте часы и включите снова',timezone_changed:'Пояс изменён: проверьте часы и включите снова',clock_invalid:'Недопустимая дата устройства',control_unreadable:'Не читается Без звука',claim_failed:'Ошибка фиксации звонка',nonexistent_time:'В плане есть несуществующее местное время',ambiguous_time:'В плане есть неоднозначное местное время',simultaneous_events:'Несколько звонков назначены на одно время',calendar_invalid:'Ошибка календаря',executor_error:'Ошибка исполнителя',busy:'Звонок пропущен: проигрыватель занят',unavailable:'Исполнитель недоступен',recovery_required:'Проигрыватель требует проверки',expired:'Просроченный звонок пропущен',clock_gap:'Пропуск после скачка часов или задержки'};
+var names={backward_hold:'Часы переведены назад: ожидание прежней границы времени',disabled:'Автозвонки отключены',running:'Автозвонки включены',muted:'Автозвонки · Без звука',playing:'Выполняется звонок',waiting:'Нет свежего подтверждения службы',confirm_clock:'После перезагрузки проверьте часы и включите снова',timezone_changed:'Пояс изменён: проверьте часы и включите снова',clock_invalid:'Недопустимая дата устройства',control_unreadable:'Не читается Без звука',claim_failed:'Ошибка фиксации звонка',nonexistent_time:'В плане есть несуществующее местное время',ambiguous_time:'В плане есть неоднозначное местное время',simultaneous_events:'Несколько звонков назначены на одно время',calendar_invalid:'Ошибка календаря',executor_error:'Ошибка исполнителя',busy:'Звонок пропущен: проигрыватель занят',unavailable:'Исполнитель недоступен',recovery_required:'Проигрыватель требует проверки',expired:'Просроченный звонок пропущен',clock_gap:'Пропуск после скачка часов или задержки'};
 async function request(url,body){var abort=new AbortController(),timer=setTimeout(function(){abort.abort();},12000);try{var o={credentials:'same-origin',cache:'no-store',redirect:'error',signal:abort.signal};if(body){o.method='POST';o.body=new URLSearchParams(Object.assign({token:root.dataset.token},body));}var response=await fetch(url,o);if(!response.ok)throw Error('HTTP');return await response.json();}finally{clearTimeout(timer);}}
 function editor(){return window.schoolbellEditor && window.schoolbellEditor.snapshot();}
 function ready(e){return e && e.loaded && !e.dirty && !e.busy && !e.reconcile && e.revision && e.revision!=='empty';}
@@ -16,7 +16,7 @@ function contextLabel(v){
 }
 function header(){
  var v=confirmed(),text,tone='warning',demo=v && v.simulated;
- quick.textContent=(v && v.enabled?'⏸ ':'▶ ')+'Автозвонки';
+ quick.dataset.icon=v && v.enabled?'⏸':'▶';
  quick.setAttribute('aria-label','Автозвонки'+(v && v.mode==='annual'?' · календарный план':v && v.mode==='fixed'?' · расписание':''));
  quick.title=v && v.enabled?'Выключить автоматические звонки':'Включить ранее применённый план, не черновик';
  if(window.schoolbellSessionBlocked){text='Войдите';tone='warning';}
@@ -41,7 +41,6 @@ function draw(){
  }
 
  var fresh=sample && performance.now()-sample.at<15000,v=fresh?sample.value:null;
- window.dispatchEvent(new CustomEvent('schoolbell-clock-state',{detail:v && v.clock_trust || null}));
  var label=v?(names[v.state] || v.state):'Нет свежего ответа исполнителя';
  document.getElementById('duty-compact').textContent=label;
  document.getElementById('automatic-mode').textContent=label+(v && v.mode?' · '+(v.mode==='annual'?'Календарный план':'Ежедневное расписание'):'');

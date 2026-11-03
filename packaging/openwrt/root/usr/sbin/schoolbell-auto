@@ -7,49 +7,28 @@ local C=require('schoolbell.media_codec');local Controls=require('schoolbell.con
 local Player=require('schoolbell.sound_test')
 local lock=assert(n.open('/tmp/schoolbell-auto.lock','w',600))
 assert(lock:lock('tlock'),'another executor is running')
-local Clock=require('schoolbell.clock_gate').system()
 local function mono()
  local f=assert(io.open('/proc/uptime','r'));local t=f:read(64);f:close();return assert(tonumber(t:match('^[%d.]+')))
 end
--- Long Lua metadata work must not starve time observation. Observe only;
--- persistence remains in the normal tick, avoiding nested reference writes.
-local observed=mono()
-C.set_observer(function()
- local now=mono()
- if now-observed>=0.5 then observed=now;Clock.observe(false)end
-end)
 local metrics_ok=true
-local function audit(action)
- local r=require('schoolbell.journal').request(Store.root,action)
+local function audit(action,bell)
+ local r=require('schoolbell.journal').request(Store.root,action,nil,bell)
  if r.metrics_warning then metrics_ok=false end
  return r
 end
 local mailbox=require('schoolbell.clock_mailbox').system('worker')
-local command=require('schoolbell.clock_commands').new(Clock,{
- enable=function(revision)
-  local saved=require('schoolbell.schedule_store').request(Store.root,'load')
-  if saved.ok and saved.data.mode~='fixed' and not require('schoolbell.schedule_store').selected_plan(saved.data)then return {ok=false,code='select_plan'}end
-  if not saved.ok or not require('schoolbell.media_web').plan_ready(saved.data)then return {ok=false,code='missing_media'}end
-  if not Clock.admit()then return {ok=false,code='clock_untrusted'}end
-  local v=Store.transaction(Store.change,true,revision,Store.environment());return {ok=v.ok,code=v.code,generation=v.ok and v.state.generation or nil}
- end,
- resume=function(revision,generation)
+local function resume(revision,generation)
   if not fs.mkdir(Player.lock,700)then return {ok=false,code='busy'}end
   local ok,v=pcall(function()return Store.transaction(Store.resume,revision,generation,Store.environment(),function(plan)
-   return require('schoolbell.media_web').plan_ready(plan) and Clock.admit()
+   return require('schoolbell.media_web').plan_ready(plan)
   end)end)
   local closed=fs.rmdir(Player.lock)
   if not ok or not closed then return {ok=false,code='automatic_storage'}end
   return {ok=v.ok,code=v.code,generation=v.ok and v.state.generation or nil}
- end,
- localtime=function(utc)return os.date('%Y-%m-%d %H:%M:%S',utc)end,
- zone=function()return Store.environment().zone end,
- stop=function()local v=Store.transaction(Store.change,false,nil,Store.environment());return v.ok end,
- policy=function(value)return require('schoolbell.clock_policy').save(Store.root,value)end})
-local set_clock=require("schoolbell.clock_set").system(Clock,
- function()return Store.transaction(Store.change,false,nil,Store.environment()).ok end,
+end
+local set_clock=require("schoolbell.clock_set").system(
  function()return Store.environment().zone end,mono)
-local system_command,system_busy=require('schoolbell.system_actions').system(Clock,mono)
+local system_command,system_busy=require('schoolbell.system_actions').system(mono)
 local function commands()
  mailbox.process(function(q,meta)
   if system_busy()then return {ok=false,code='reboot_pending'}end
@@ -59,10 +38,11 @@ local function commands()
    return value
   end
   local setting=q.action=="set_time" or q.action=="set_prepare"
-  local value=setting and set_clock(q,meta) or command(q)
-  if q.action~='prepare' and q.action~='set_prepare'then
-   pcall(audit,q.action=='set_time' and (value.ok and 'clock_set_ok' or 'clock_set_failed') or value.ok and ((q.action=='enable' or q.action=='resume') and 'auto_enabled' or q.action=='confirm' and 'clock_confirmed' or q.enforced=='true' and 'clock_control_on' or 'clock_control_off') or 'clock_control_failed')
-  end
+  if not setting and q.action~='resume' then return {ok=false,code='invalid_action'} end
+  local value
+  if setting then value=set_clock(q,meta) else value=resume(q.revision,tonumber(q.generation)) end
+  if q.action=='set_time' then pcall(audit,value.ok and 'clock_set_ok' or 'clock_set_failed')
+  elseif q.action=='resume' then pcall(audit,value.ok and 'auto_enabled' or 'auto_blocked') end
   return value
  end)
 end
@@ -73,15 +53,12 @@ local Status=require('schoolbell.automatic_status')
 Status.invalidate()
 local cached,active,engine,key,events,calendar_error,previous_state
 local started=Store.environment()
+local boot_recorded=false
+local prepared_claim
 local last_result
 local function status(v)
  v.last_result=last_result
  v.metrics_warning=not metrics_ok or nil
- local clock=Clock.status()
- -- The engineering status codec uses 32-bit seconds, not UTC milliseconds.
- v.clock_trust={enforced=clock.enforced,state=clock.state,reason=clock.reason,automatic_permitted=clock.automatic_permitted,accuracy_known=false,source=clock.source}
- if clock.confirmed_utc_ms then v.clock_trust.confirmed_utc=math.floor(clock.confirmed_utc_ms/1000)end
- if clock.checkpoint_utc_ms then v.clock_trust.checkpoint_utc=math.floor(clock.checkpoint_utc_ms/1000)end
  v.updated=os.time();v.uptime=math.floor(mono())
  local f=assert(io.open('/tmp/schoolbell-auto-status.next','wb'));assert(f:write(C.encode(v)));assert(f:close())
  assert(fs.rename('/tmp/schoolbell-auto-status.next','/tmp/schoolbell-auto-status.json'))
@@ -93,21 +70,28 @@ end
 local function tick()
  assert(not fs.lstat(Store.root..'/package.pending'),'package operation pending')
  if not metrics_ok and mono()-metrics_attempt>=60 then metrics_attempt=mono();metrics_ok=Metrics.reconcile(Store.root)end
- commands();Clock.observe()
+ if not boot_recorded then
+  local recorded=Store.transaction(require('schoolbell.journal').record_boot,started.boot,math.max(0,os.time()-math.floor(mono())))
+  boot_recorded=recorded.ok
+ end
+ commands()
  local raw=Store.raw();local env=Store.environment();local now,up=env.now,mono()
  if started.zone~=env.zone then os.exit(0)end -- procd respawns with libc's new TZ
  if raw~=cached or not active then
   local v=Store.decode(raw)
+  if v.enabled and v.boot~=env.boot then
+   local stopped=Store.transaction(Store.on_boot,env.boot)
+   assert(stopped.ok,'boot state');v=stopped.state;raw=stopped.raw
+  end
   if not active or active.generation~=v.generation then
-   Clock.disable()
-   if v.enabled then Clock.enable()end
    -- Persist the startup floor too: downtime followed by clock rollback and
    -- another restart must not resurrect an event missed during downtime.
-   if v.enabled and v.boot==env.boot and v.zone==env.zone and Clock.status().automatic_permitted then
+   if v.enabled and v.boot==env.boot and v.zone==env.zone then
     local checkpoint=Store.transaction(Store.advance,v.generation,now)
     assert(checkpoint.ok,'startup checkpoint');v=checkpoint.state
     raw=assert(checkpoint.raw)
    end
+   prepared_claim=nil
    engine=A.new(now,up,v.watermark);key=nil
   end
   active=v;cached=raw
@@ -127,31 +111,55 @@ local function tick()
   if not events then v.state=calendar_error
   else
    local controls=Controls.snapshot()
-   local clock_allowed=Clock.status().automatic_permitted
-   v.state=not clock_allowed and 'clock_untrusted' or now<engine.watermark() and 'backward_hold' or not controls.ok and 'control_unreadable' or controls.muted and 'muted' or 'running'
+   v.state=now<engine.watermark() and 'backward_hold' or not controls.ok and 'control_unreadable' or controls.muted and 'muted' or 'running'
    for _,e in ipairs(events)do if e.utc>math.max(now,active.watermark,engine.watermark())then v.next=e;break end end
-   local event,skip,forward_jump=engine.step(now,up,events,not controls.ok or controls.muted or not clock_allowed)
-   if event and not clock_allowed then skip='clock_untrusted'end
+   local event,skip,forward_jump=engine.step(now,up,events,not controls.ok or controls.muted)
    if skip then v.skipped=skip end
-   if not event and forward_jump and clock_allowed then
+   if not event and forward_jump then
     local checkpoint=Store.transaction(Store.advance,active.generation,now)
     if checkpoint.ok then
      active=checkpoint.state;cached=assert(checkpoint.raw)
     else v.state='claim_failed' end
    end
-   if event and clock_allowed then
-    clock_allowed=Clock.admit()
-    if not clock_allowed then v.state='clock_untrusted';v.skipped='clock_untrusted'end
+   if not event and v.next and v.next.utc-now>3 and
+      (not prepared_claim or prepared_claim.expected~=cached or prepared_claim.state.watermark~=v.next.utc) then
+    prepared_claim=Store.prepare_claim(active,cached,v.next.utc)
    end
-   if event and clock_allowed then
-    local claimed=Store.transaction(Store.claim,active.generation,event.utc,os.time())
+   if event then
+    local prepared=prepared_claim
+    prepared_claim=nil
+    if prepared and (prepared.expected~=cached or prepared.state.watermark~=event.utc) then prepared=nil end
+    local claimed=Store.transaction(Store.claim,active.generation,event.utc,os.time(),prepared)
     if not claimed.ok then v.state='claim_failed'
     else
-     active=claimed.state;cached=assert(claimed.raw);v.state='playing';v.event=event;v.next=nil;status(v)
-     audit('auto_requested')
+     active=claimed.state;cached=assert(claimed.raw);v.state='playing';v.event=event;v.next=nil
+     local reported=false
+     local bell
+     local function report_attempt()
+      if reported then return end
+      reported=true
+      bell={kind=event.kind or 'main',due=os.date('%d.%m.%Y %H:%M %z',event.utc),plan=v.context.plan}
+      for _,schedule in ipairs(active.plan.schedules or {}) do
+       if schedule.id==event.schedule_id then bell.schedule=schedule.name;break end
+      end
+      pcall(audit,'auto_requested',bell)
+     end
      local io=Player.system(event.media);local muted=io.muted;local expected=cached
-     local sleep=io.sleep;local last_status=math.floor(mono());io.sleep=function()local tick=math.floor(mono());if tick~=last_status then commands();Clock.observe();status(v);last_status=tick end;sleep()end
-     local spawn=io.spawn;io.spawn=function()local t=os.time();if t<event.utc or t-event.utc>2 or not Clock.admit()then return nil end;return spawn()end
+     local sleep=io.sleep;local last_status=math.floor(mono())
+     io.sleep=function()
+      local tick=math.floor(mono())
+      if tick~=last_status then commands();status(v);last_status=tick end
+      sleep()
+     end
+     local missed=false;local spawn=io.spawn
+     io.spawn=function()
+      local t=os.time()
+      if t<event.utc or t-event.utc>2 then missed=true;return nil end
+      local pid=spawn()
+      report_attempt()
+      if pid then pcall(status,v) end
+      return pid
+     end
      io.muted=function()
       local ok,raw_now=pcall(Store.raw)
       local good,current=pcall(Store.environment)
@@ -160,17 +168,21 @@ local function tick()
      -- A slow claim/audit must never turn into a late launch.
      local result
      if skip then result={ok=false,state=skip}
-     elseif not Clock.admit()then result={ok=false,state='clock_untrusted'}
      elseif os.time()-event.utc>2 or os.time()<event.utc then result={ok=false,state='expired'}
-     else result=Player.run(io)end
-     v.state=result.ok and 'running' or result.state;v.result=result.state;v.event=nil
+     else result=Player.run(io);if missed then result.state='expired' end end
+     report_attempt()
+     v.state=controls.muted and 'muted' or 'running';v.result=result.state;v.event=nil
      last_result={state=result.state,exit_code=result.exit_code,time=os.time()}
-     audit(result.ok and 'auto_ok' or 'auto_skipped')
+     local outcome=result.ok and 'auto_ok' or result.state=='expired' and 'auto_expired'
+      or result.state=='unavailable' and 'auto_audio_unavailable'
+      or (result.state=='muted' or skip) and 'auto_skipped' or 'auto_player_failed'
+     audit(outcome,bell)
     end
    end
   end
  end
- if v.state~=previous_state then
+ if v.result then previous_state=nil
+ elseif v.state~=previous_state then
   if v.state~='running' and v.state~='disabled' and v.state~='muted' then audit('auto_blocked')end
   previous_state=v.state
  end
