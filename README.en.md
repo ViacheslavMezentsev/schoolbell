@@ -26,7 +26,7 @@ The [offline dependency bundle](docs/PACKAGING.en.md) is prepared separately.
 
 ## Status
 
-Package **5.1.100** targets OpenWrt 19.07.9 on the TL-MR3020 v3.
+Package **5.1.101** targets OpenWrt 19.07.9 on the TL-MR3020 v3.
 
 ## Documentation
 

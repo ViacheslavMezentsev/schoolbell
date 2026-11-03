@@ -18,7 +18,10 @@ for(const [i,db] of [-60,-20,-14,-10,-8,-6,-4,-3,-2,-1,0].entries()){
 }
 get('router-volume').value='99';get('router-volume').listeners.input();const invalidPosts=posts.length;await get('volume-save').listeners.click();assert.equal(posts.length,invalidPosts);get('router-volume').value='10';get('router-volume').listeners.input();
 reply={...reply,audio:{state:'ready',name:'<img onerror=bad>',controller:'EHCI'}};now+=16000;interval();await flush();assert(get('audio-route').textContent.includes('<img onerror=bad>'));
-fail=true;now+=16000;interval();await flush();assert.equal(get('audio-route').textContent,'нет данных');assert.equal(get('audio-volume').textContent,'— %');assert.equal(get('volume-line').attrs['aria-valuenow'],undefined);assert.equal(get('volume-line').attrs['data-tone'],'unknown');assert.equal(get('device-switch').textContent,'Переключатель: не определён');assert.equal(get('device-ip').textContent,'IP: —');
+fail=true;now+=16000;interval();
+assert(get('audio-route').textContent.includes('EHCI'),'keep the reading during normal poll latency');
+await flush();assert(get('audio-route').textContent.includes('EHCI'));assert(get('resource-audio-age').textContent.includes('последние данные'));assert(get('quick-bell').disabled);
+now+=45000;interval();await flush();assert.equal(get('audio-route').textContent,'нет данных');assert.equal(get('audio-volume').textContent,'— %');assert.equal(get('volume-line').attrs['aria-valuenow'],undefined);assert.equal(get('volume-line').attrs['data-tone'],'unknown');assert.equal(get('device-switch').textContent,'Переключатель: не определён');assert.equal(get('device-ip').textContent,'IP: —');
 fail=false;reply={ok:true,volume_db:-60,hardware:false,audio:{state:'demo'}};now+=16000;interval();await flush();assert(get('audio-route').textContent.includes('демо'));assert.equal(get('device-switch').textContent,'Переключатель: демо');
 win.schoolbellSessionBlocked=true;events['schoolbell-session-lost']();assert.equal(get('audio-route').textContent,'нет данных');
 const css=fs.readFileSync('ui/root/www/schoolbell-test/style.css','utf8');assert.match(css,/#flash-line i\{[^}]*background:var\(--accent\)/);assert.match(css,/#flash-line\[data-tone=warning\] i\{background:#bf8700/);assert.match(css,/#flash-line\[data-tone=danger\] i\{background:#da3633/);

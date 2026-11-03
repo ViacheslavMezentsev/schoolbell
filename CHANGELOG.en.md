@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+- 5.1.101: Daily bell counts use ten-bell bands. Reopening metrics reuses the minute cache; resource readings persist between polls.
+
 - 5.1.100: Starting automatic bells reuses the verified applied plan when its stored bytes still match. Icon tools and paging buttons inside tabs measure 48 × 48 CSS px.
 
 - 5.1.99: Paging buttons in Schedules, Melodies and Journal share the standard 44 × 48 CSS px toolbar button size.
