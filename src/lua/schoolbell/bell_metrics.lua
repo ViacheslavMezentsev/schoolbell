@@ -19,9 +19,9 @@ function M.load(fs)
  for _,r in ipairs(v.days)do C.fields(r,{'date','count'});assert(day(r.date) and not seen[r.date] and C.integer(r.count,0,999999999),'metrics day');seen[r.date]=true end
  return v
 end
-function M.project(v,rows,date)
+function M.project(v,rows,date,last)
  date=date or function(t)return os.date('%Y-%m-%d',t)end
- assert(v.cursor==0 or (#rows>0 and rows[#rows].seq>=v.cursor),'journal sequence regressed')
+ assert(v.cursor==0 or (last or (#rows>0 and rows[#rows].seq) or 0)>=v.cursor,'journal sequence regressed')
  local changed=false
  for _,r in ipairs(rows)do
   if r.seq>v.cursor and (r.action=='auto_ok' or r.action=='auto_enabled')then
@@ -37,8 +37,8 @@ function M.project(v,rows,date)
  end
  return v,changed
 end
-function M.sync(fs,rows,date)
- local v,changed=M.project(M.load(fs),rows,date)
+function M.sync(fs,rows,date,last)
+ local v,changed=M.project(M.load(fs),rows,date,last)
  if not changed then return v end
  local raw=C.encode(v);assert(#raw<=M.max_bytes,'metrics size')
  assert(fs.space()>=65536+M.max_bytes,'metrics reserve')
@@ -51,7 +51,8 @@ function M.reconcile(root)
  local fs
  local ok=pcall(function()
   fs=require('schoolbell.media_fs').new(root)
-  M.sync(fs,(require('schoolbell.journal').read(fs)))
+  local rows,last=require('schoolbell.journal').read(fs)
+  M.sync(fs,rows,nil,last)
  end)
  if fs then local closed=pcall(fs.close);ok=ok and closed end
  return ok
@@ -63,8 +64,9 @@ function M.request(root,reader)
   local v=M.load(fs);local pending=false;local newest=0
   -- Read only the checkpoint and scan bounded journal bytes for a newer relevant seq.
   -- Atomic published snapshots need no shared editor lock on a UI poll.
-  for _,name in ipairs({'journal-previous.jsonl','journal-current.jsonl'})do
-   local raw=fs.read(name,16384) or ''
+  local names,segment=require('schoolbell.journal').layout(fs)
+  for _,name in ipairs(names)do
+   local raw=fs.read(name,segment) or ''
    if raw~='' and raw:sub(-1)~='\n' then pending=true end
    for line in raw:gmatch('([^\n]+)\n')do
     newest=math.max(newest,tonumber(line:match('"seq":(%d+)')) or 0)

@@ -85,7 +85,54 @@ M.append(rotating,'save_ok',101)
 local second=segments['journal-current.jsonl']:sub(#first+1)
 local reads=0
 local snap=M.snapshot({read=function(name)
+ if name=='journal-limit.json' then return nil end
  if name=='journal-current.jsonl' then return second end
  reads=reads+1;if reads>1 then return first end
 end})
 assert(#snap==2 and snap[1].seq==1 and snap[2].seq==2)
+
+-- Clearing must commit uncounted bells before deleting evidence, even across a crash.
+local metrics=require('schoolbell.bell_metrics')
+local seeded,seed=fixture()
+M.append(seeded,'auto_ok',100)
+seed['journal-previous.jsonl']=seed['journal-current.jsonl'];seed['journal-current.jsonl']=nil
+M.append(seeded,'auto_ok',100)
+for step=1,12 do
+ local fault,storage=fixture(seed,step)
+ pcall(M.clear,fault)
+ local recovered=fixture(storage)
+ local rows,last=M.read(recovered)
+ assert((#rows==0 or #rows==2) and last==2)
+ M.clear(recovered);M.clear(recovered)
+ rows,last=M.read(recovered);assert(#rows==0 and last==2)
+ assert(metrics.sync(recovered,rows,nil,last).days[1].count==2)
+ recovered.close=function()end;local snapshot=metrics.request(nil,recovered);assert(snapshot.ok and not snapshot.persistence_pending)
+ M.append(recovered,'auto_ok',100)
+ rows,last=M.read(recovered);assert(#rows==1 and last==3 and metrics.sync(recovered,rows).days[1].count==3)
+end
+print('PASS clear: all entries, durable counts, crash recovery and sequence continuity')
+
+local enlarged,original=fixture()
+assert(M.resize(enlarged,128,32,false).ok)
+local function records(first,last)
+ local lines={}
+ for i=first,last do lines[#lines+1]='{"action":"auto_ok","source":"module","level":"info","time":100,"seq":'..i..'}\n' end
+ return table.concat(lines)
+end
+local bank=M.layout(enlarged)
+original[bank[1]]=records(1,400);original[bank[2]]=records(401,800)
+assert(not M.resize(enlarged,16,128,false).ok and #M.read(enlarged)==800)
+assert(not M.resize(enlarged,16,32,true).ok and not pcall(M.resize,enlarged,24,128,true))
+for step=1,17 do
+ local broken,files=fixture(original,step)
+ pcall(M.resize,broken,16,128,true)
+ local recovered=fixture(files)
+ local _,segment=M.layout(recovered);assert(segment==65536 or segment==8192)
+ if segment==65536 then assert(#M.read(recovered)==800 and M.resize(recovered,16,128,true).ok)end
+ local rows,last=M.snapshot(recovered);assert(last==800 and #rows>1 and #rows<800)
+ assert(rows[1].seq==801-#rows and metrics.load(recovered).days[1].count==800)
+ assert(M.resize(recovered,64,16,false).ok and #M.read(recovered)==#rows)
+ M.clear(recovered);assert(M.resize(recovered,32,64,true).ok)
+ M.append(recovered,'auto_ok',100);assert(metrics.sync(recovered,(M.read(recovered))).days[1].count==801)
+end
+print('PASS journal size: defaults, four sizes, conflict, confirmed immediate shrink, crash, newest rows and counts')
