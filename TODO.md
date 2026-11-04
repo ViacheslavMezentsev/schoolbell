@@ -8,8 +8,8 @@
 
 - [ ] Аппаратная приёмка 5.1.80: проверить холодную загрузку и горячую замену карты с прослушиванием следующего автоматического звонка (TC-217–TC-220). / Hardware acceptance: verify a cold boot and replace the audio card before the next audible automatic bell.
 
-- [ ] На стенде подтвердить подачу следующего звонка после отдельного включения применённого источника в каждом из двух режимов. / On the bench, verify the next audible bell after separately starting each applied source mode.
-- [ ] Приёмка маршрута дежурного: связать запись о выполненном звонке с планом, расписанием дня и назначенным местным временем. В 5.1.83 новые записи содержат рабочий источник и назначенное время; на карте остаётся число успешных завершений. / Operator acceptance: verify the applied source and scheduled time in the new journal entries against a live scheduled bell.
+- [x] 04.11.2026, стенд 5.1.108: после отдельного запуска по расписанию (20:47, 20:48) и по плану (20:51, 20:52) предзвонок и основной звонок в обоих режимах подтверждены на слух. / Both pre-bells and main bells were heard after separately starting each applied source.
+- [x] Для этих четырёх звонков сверены источник, тип и назначенное местное время с запросами и успешными завершениями в журнале. Счётчик дня на карте изменился с 0 до 2 и затем до 4. / Verified source, kind and local due time against journal requests and completions. The daily count rose from 0 to 2 to 4.
 - [ ] Явный выбор исполняемого календарного плана, статус применённого снимка и сквозная приёмка TC-207–TC-210 / Explicit calendar plan selection, applied status and end-to-end acceptance.
 
 - [ ] Установить причину оставшегося пустого замка медиатеки после завершения запросов; безопасное восстановление выполнено, автоматическое снятие не добавлялось / Identify the cause of the orphan empty media gate; safe recovery performed, no automatic gate removal added.
@@ -162,4 +162,4 @@ hardware acceptance protocol.
 - [x] Стенд обновлён до 5.1.72; бэкап, файлы, HTTP и сохранность настроек/журнала проверены / Bench updated to 5.1.72; backup, files, HTTP and preserved settings/journal verified.
 
 - [x] 5.1.75: постоянный учёт всех успешных автозвонков, «Ресурсы», реальное табло; проверены ротация/перезапуск/повтор, сбои записи и чтение без замка редактора. Стенд обновлён, сохранены два исторических завершения, громкость и auto-off / Persistent automatic completion counters, Resources and live grid; rotation/restart/replay, write failures and lock-free reads tested. Bench updated, two historical completions, gain and auto-off preserved.
-- [ ] Проверить счётчики в длительном реальном автоматическом режиме после отдельного разрешения; звук и автозвонки в этой итерации не включались / Verify long-running real automatic counting after separate authorization; no playback or automatic enable in this iteration.
+- [ ] 05.11.2026: сверить полный день «Будни» учебного плана 2026–2027 с журналом и картой после 14:35. Ожидается 15 основных и 6 предварительных звонков, первый в 07:55. / Reconcile all 21 weekday bells with the journal and daily count after the last bell.
