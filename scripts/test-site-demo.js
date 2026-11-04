@@ -7,9 +7,7 @@ vm.runInNewContext(fs.readFileSync('ui/root/www/schoolbell-test/ranges.js','utf8
 vm.runInNewContext(fs.readFileSync(require('path').join(__dirname,'../site/demo.js'),'utf8'),context);
 async function api(name,data){return (await context.window.fetch('./demo-api/'+name,data?{method:'POST',body:new URLSearchParams(data)}:undefined)).json();}
 (async()=>{
- let q=(await api('automatic')).queue;assert(q.available&&q.simulated&&q.bins.length===0);
- await api('clock-trust',{action:'set_prepare'});q=(await api('automatic')).queue;assert(q.bins[0].processed===1&&q.bins[0].wait_sum===0);
- demoNow=61000;assert((await api('automatic')).queue.bins.length===0);
+ assert(!('queue' in (await api('automatic'))));
  let first=await api('load');assert(first.ok && first.data.schedules.length===3);
  first.data.schedules[0].name='Changed';first.data.schedules[0].color=16;
  let saved=await api('save',{revision:first.revision,draft:JSON.stringify(first.data)});assert(saved.ok);
@@ -73,5 +71,8 @@ async function api(name,data){return (await context.window.fetch('./demo-api/'+n
  if(process.env.SCHOOLBELL_LUA){const cp=require('child_process');const lua=cp.execFileSync(process.env.SCHOOLBELL_LUA,['tests/range-preview.lua','tests/range-plan.json',...rangeDates],{encoding:'utf8'}).trim().split('\n').map(JSON.parse);for(let i=0;i<results.length;i++)assert.deepStrictEqual(results[i],lua[i]);console.log('PASS exact Pages/Lua preview parity for range edges, gaps and cross-midnight pre-bell');}
  const bad=JSON.parse(rangeRaw);bad.plans[1].start='2026-12-31';assert.equal((await api('preview',{date:'2027-01-01',draft:JSON.stringify(bad)})).code,'invalid');
  bad.plans=JSON.parse(rangeRaw).plans;bad.schedules[0].rows[0].media='user1';assert.equal((await api('preview',{date:'2027-01-01',draft:JSON.stringify(bad)})).code,'invalid');
+ const afterResize=await api('journal',{action:'resize',kib:16,expected:32,confirmed:'false'});
+ assert(!afterResize.ok);assert((await api('journal',{action:'resize',kib:16,expected:32,confirmed:'true'})).ok);
+ assert.equal((await api('journal')).limit_bytes,16384);
  console.log('PASS demo: local persistence, CAS, midnight/quiet-day preview, mock zone, bounded journal, blocked remote API');
 })().catch(e=>{console.error(e);process.exitCode=1;});

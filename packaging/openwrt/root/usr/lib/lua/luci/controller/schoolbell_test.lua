@@ -73,8 +73,19 @@ function metrics()
 end
 function journal()
     local h=require('luci.http')
+    if h.getenv('REQUEST_METHOD')=='POST' then
+        local size=tonumber(h.getenv('CONTENT_LENGTH'))
+        if not size or size<1 or size>1024 or not (h.getenv('CONTENT_TYPE') or ''):match('^application/x%-www%-form%-urlencoded') then h.status(413,'Unsupported request');return end
+        if not require('luci.dispatcher').test_post_security() then return end
+        if h.formvalue('action')=='resize' then
+            editor();respond(require('schoolbell.journal').request('/etc/schoolbell-editor','resize',nil,nil,{
+                kib=tonumber(h.formvalue('kib')),expected=tonumber(h.formvalue('expected')),confirmed=h.formvalue('confirmed')=='true'}));return
+        end
+        if h.formvalue('action')~='clear' then respond({ok=false,code='invalid'});return end
+        editor();respond(require('schoolbell.journal').request('/etc/schoolbell-editor','clear'));return
+    end
     if h.getenv('REQUEST_METHOD')~='GET' then h.status(405,'Method Not Allowed');return end
-    editor();respond(require('schoolbell.journal').request('/etc/schoolbell-editor'))
+    editor();respond(require('schoolbell.journal').request('/etc/schoolbell-editor',h.formvalue('action')=='limit' and 'limit' or nil))
 end
 function system_action()
  local h=require('luci.http');local d=require('luci.dispatcher');local method=h.getenv('REQUEST_METHOD')
@@ -149,7 +160,7 @@ function automatic()
   assert(not require('nixio.fs').lstat(m.root..'/package.pending'),'package_pending')
   return require('schoolbell.automatic_status').read(m.raw())
  end)
- if ok then local measured,metrics=pcall(function()return require('schoolbell.queue_metrics').read()end);result.queue=measured and metrics or {available=false};local cpu_ok,cpu=pcall(function()return require('schoolbell.system_metrics').read()end);result.cpu=cpu_ok and cpu or {available=false}end
+ if ok then local cpu_ok,cpu=pcall(function()return require('schoolbell.system_metrics').read()end);result.cpu=cpu_ok and cpu or {available=false}end
  respond(ok and result or {ok=false,state='unavailable'})
 end
 function controls()

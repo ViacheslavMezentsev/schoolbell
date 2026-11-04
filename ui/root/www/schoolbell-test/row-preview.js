@@ -15,13 +15,16 @@ window.schoolbellRowPreview=async function(id,hardware,statusTarget){
   status.textContent='В браузере.';
   try{await audio.play();}catch(_){status.textContent='Не удалось прослушать мелодию. Проверьте наличие файла и вход.';}return;
  }
- if(!window.confirm('Проиграть выбранную мелодию через колонки Школьника сейчас?'))return;
+
  pending=true;status.textContent='Через колонки Школьника… ожидаем завершения.';
  var timer,controller=new AbortController();
  try{
+  var data=await window.schoolbellSpeakerCommand(async function(ok){
   timer=setTimeout(function(){controller.abort();},90000);
-  var response=await fetch(document.getElementById('router-form').action,{method:'POST',credentials:'same-origin',redirect:'error',signal:controller.signal,body:new URLSearchParams({token:root.dataset.token,id:id})});
-  if(!response.ok)throw Error('http');var data=await response.json();
+  var response=await fetch(document.getElementById('router-form').action,{method:'POST',credentials:'same-origin',redirect:'error',signal:controller.signal,body:new URLSearchParams({token:root.dataset.token,id:id,...(ok?{confirmed:'true'}:{})})});
+  if(!response.ok)throw Error('http');clearTimeout(timer);return response.json();
+  });
+  if(!data){status.textContent='Прослушивание отменено.';return;}
   var messages={completed:'Мелодия завершена.',muted:'Звук отключён кнопкой «Без звука».',busy:'Проигрывание занято. Повторно не запускаем.',unavailable:'Мелодия или аудиовыход недоступны.',invalid:'Неверная мелодия.'};
   status.textContent=messages[data.state] || 'Проигрывание не подтверждено. Проверьте состояние устройства.';
  }catch(_){status.textContent='Ответ не получен. Звук мог начаться: не повторяйте сразу.';}

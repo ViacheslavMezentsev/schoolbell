@@ -23,6 +23,12 @@ assert(get('audio-route').textContent.includes('EHCI'),'keep the reading during 
 await flush();assert(get('audio-route').textContent.includes('EHCI'));assert(get('resource-audio-age').textContent.includes('последние данные'));assert(get('quick-bell').disabled);
 now+=45000;interval();await flush();assert.equal(get('audio-route').textContent,'нет данных');assert.equal(get('audio-volume').textContent,'— %');assert.equal(get('volume-line').attrs['aria-valuenow'],undefined);assert.equal(get('volume-line').attrs['data-tone'],'unknown');assert.equal(get('device-switch').textContent,'Переключатель: не определён');assert.equal(get('device-ip').textContent,'IP: —');
 fail=false;reply={ok:true,volume_db:-60,hardware:false,audio:{state:'demo'}};now+=16000;interval();await flush();assert(get('audio-route').textContent.includes('демо'));assert.equal(get('device-switch').textContent,'Переключатель: демо');
+reply={...reply,confirm_play:true};now+=16000;interval();await flush();
+let prompts=0,sends=0;win.confirm=()=>{prompts++;return false;};
+assert.equal(await win.schoolbellSpeakerCommand(()=>{sends++;}),null);assert.equal(prompts,1);assert.equal(sends,0);
+win.confirm=()=>true;await win.schoolbellSpeakerCommand(ok=>{assert.equal(ok,true);sends++;return {state:'completed'};});assert.equal(sends,1);
+reply={...reply,confirm_play:false};now+=16000;interval();await flush();
+const sent=[];await win.schoolbellSpeakerCommand(ok=>{sent.push(ok);return {state:ok?'completed':'confirmation_required'};});assert.deepEqual(sent,[false,true]);
 win.schoolbellSessionBlocked=true;events['schoolbell-session-lost']();assert.equal(get('audio-route').textContent,'нет данных');
 const css=fs.readFileSync('ui/root/www/schoolbell-test/style.css','utf8');assert.match(css,/#flash-line i\{[^}]*background:var\(--accent\)/);assert.match(css,/#flash-line\[data-tone=warning\] i\{background:#bf8700/);assert.match(css,/#flash-line\[data-tone=danger\] i\{background:#da3633/);
 console.log('PASS audio UI: saved dB/gain, default node, absence, network/logout/demo, safe text, Flash colors');})().catch(e=>{console.error(e);process.exitCode=1;});

@@ -7,7 +7,7 @@
     document.querySelectorAll('[data-panel]').forEach(function(p){p.hidden=p.dataset.panel!==name;});
     root.hidden=name==='help' || name==='sound' || name==='media' || name==='journal' || name==='feedback';
     if(name==='journal')loadJournal();
-    if(name==='sound' && !zoneState)loadZones();
+    if(name==='sound'){if(!zoneState)loadZones();readLimit();}
     document.querySelector('.savebar').hidden=false;
     try{sessionStorage.setItem('schoolbell-tab',name);}catch(_){}
   }
@@ -43,6 +43,48 @@
     finally{zoneBusy=false;zoneControls();await loadZones();sample=null;poll();}
   });
   var journalLoaded=false,journalBusy=false,journalEntries=[],journalPage=0,journalWarnings=false,journalErrors=false,journalPageSize=20;
+  var limitSelect=document.getElementById('journal-kib'),limitSave=document.getElementById('journal-limit-save'),limitNote=document.getElementById('journal-limit-status');
+  var limit=null,limitBusy=false;
+  function limitButtons(){
+    limitSelect.disabled=limitBusy || limit===null || !!window.schoolbellSessionBlocked;
+    limitSave.disabled=limitSelect.disabled || Number(limitSelect.value)===limit;
+  }
+  function showCapacity(bytes){
+    if([16384,32768,65536,131072].includes(bytes))document.getElementById('journal-capacity').textContent=(bytes/1024)+' КиБ';
+  }
+  async function limitRequest(change){
+    var abort=new AbortController(),timer=setTimeout(function(){abort.abort();},15000);
+    try{
+      var opts={credentials:'same-origin',cache:'no-store',redirect:'error',signal:abort.signal};
+      if(change){opts.method='POST';opts.body=new URLSearchParams(change);}
+      var url=root.dataset.journal+(change?'':'?action=limit');
+      var r=await fetch(url,opts);if(!r.ok)throw Error();
+      var v=await r.json();if(!v.ok || ![16384,32768,65536,131072].includes(v.limit_bytes))throw Error(v.code);
+      limit=v.limit_bytes/1024;limitSelect.value=String(limit);showCapacity(v.limit_bytes);
+    }finally{clearTimeout(timer);}
+  }
+  async function readLimit(){
+    if(limitBusy || window.schoolbellSessionBlocked)return;
+    limitBusy=true;limitButtons();
+    try{await limitRequest();limitNote.textContent='';}catch(_){limit=null;limitNote.textContent='Не удалось прочитать размер журнала. Откройте настройки повторно.';}
+    finally{limitBusy=false;limitButtons();}
+  }
+  limitSelect.addEventListener('change',limitButtons);
+  limitSave.addEventListener('click',async function(){
+    if(limitSave.disabled || window.schoolbellSessionBlocked)return;
+    var kib=Number(limitSelect.value),shrink=kib<limit;
+    if(shrink && !window.confirm('Уменьшить журнал до '+kib+' КиБ? Самые старые записи, которые не поместятся, будут удалены сразу.'))return;
+    limitBusy=true;limitButtons();
+    try{
+      await limitRequest({action:'resize',token:root.dataset.token,kib:String(kib),expected:String(limit),confirmed:String(shrink)});
+      limitNote.textContent='Размер журнала сохранён.';
+    }catch(_){
+      try{await limitRequest();}catch(_){limit=null;}
+      limitNote.textContent='Изменение не подтверждено. Проверьте текущий размер.';
+    }finally{limitBusy=false;limitButtons();}
+  });
+  var clearJournal=document.getElementById('journal-clear');
+  function clearButton(){clearJournal.disabled=journalBusy || !journalLoaded || !journalEntries.length || !!window.schoolbellSessionBlocked;}
   var actions={device_boot:'Устройство загружено',auto_expired:'Звонок пропущен: истёк срок подачи',auto_audio_unavailable:'Звонок не подан: аудиовыход или проигрыватель недоступен',auto_player_failed:'Звонок не подан: ошибка проигрывателя',system_reset:'Настройки Школьника сброшены; мелодии и журнал сохранены',system_reboot:'Запрошена перезагрузка устройства',system_failed:'Системное действие не подтверждено',clock_set_ok:'Часы установлены из браузера',clock_set_failed:'Установка часов не подтверждена; проверьте фактическое время',clock_confirmed:'Время подтверждено вручную; автозвонки выключены',clock_control_on:'Контроль времени включён; требуется подтверждение часов',clock_control_off:'Контроль времени отключён пользователем',clock_control_failed:'Действие контроля времени не подтверждено',restore_ok:'Резервная копия восстановлена; автозвонки выключены',restore_failed:'Восстановление копии не подтверждено',media_ok:'Мелодия заменена',media_renamed:'Название мелодии изменено',media_failed:'Замена мелодии отклонена',volume_ok:'Громкость устройства сохранена',volume_failed:'Ошибка сохранения громкости',draft_applied:'Применён сохранённый черновик',auto_enabled:'Автозвонки включены',auto_disabled:'Автозвонки отключены',auto_requested:'Автоматический звонок рассмотрен',auto_ok:'Автоматический проигрыватель завершился',auto_skipped:'Автоматический звонок пропущен или остановлен',auto_blocked:'Исполнитель заблокирован: проверьте плашку состояния',mute_on:"Без звука включён",mute_off:"Без звука выключен",mute_failed:"Ошибка изменения Без звука",manual_requested:"Запрошен ручной звонок",timezone_ok:'Часовой пояс применён',timezone_failed:'Не удалось применить часовой пояс',save_ok:'Черновик сохранён',save_failed:'Сохранение отклонено',preview_ok:'Запрошен предпросмотр',preview_failed:'Предпросмотр отклонён',play_requested:'Запрошен звук на устройстве',play_ok:'Проигрыватель завершился успешно',play_failed:'Ошибка проигрывателя',sample_requested:'Передан файл для браузера (не подтверждение звука)',storage_error:'Ошибка хранилища',installed:'Установлен интерфейс schoolbell'};
   function journalTime(e){return e.local_time || new Date(e.time*1000).toISOString().replace('T',' ').replace('.000Z',' UTC');}
   function displayTime(text){return text.replace(/\s+(?:(?:GMT|UTC)[+−-]\d{1,2}(?::?\d{2})?|[+-]\d{2}:?\d{2})$/,'');}
@@ -80,14 +122,14 @@
     });
     var start=journalPage*journalPageSize;
     document.getElementById('journal-page').textContent=selected.length?(start+1)+'–'+Math.min(start+journalPageSize,selected.length)+' из '+selected.length:'0 из 0';
-    document.getElementById('journal-prev').disabled=journalPage===0;
-    document.getElementById('journal-next').disabled=journalPage>=pages-1;
+    document.getElementById('journal-first').disabled=document.getElementById('journal-prev').disabled=journalPage===0;
+    document.getElementById('journal-last').disabled=document.getElementById('journal-next').disabled=journalPage>=pages-1;
     document.getElementById('journal-warnings').setAttribute('aria-pressed',String(journalWarnings));
     document.getElementById('journal-errors').setAttribute('aria-pressed',String(journalErrors));
-    document.getElementById('journal-copy').disabled=!journalEntries.length;
+    document.getElementById('journal-copy').disabled=!journalEntries.length;clearButton();
   }
   async function loadJournal(){
-    if(journalBusy)return;journalBusy=true;
+    if(journalBusy)return;journalBusy=true;clearButton();
     var button=document.getElementById('journal-reload'),status=document.getElementById('journal-status');button.disabled=true;
     var abort=new AbortController(),timer;
     try{
@@ -95,11 +137,25 @@
       timer=setTimeout(function(){abort.abort();},10000);
       var response=await fetch(root.dataset.journal,{credentials:'same-origin',cache:'no-store',redirect:'error',signal:abort.signal});
       if(!response.ok)throw new Error('http');var value=await response.json();if(!value.ok || !Array.isArray(value.entries))throw new Error('journal');
-      journalEntries=value.entries.slice().reverse();journalPage=0;renderJournal();journalLoaded=true;
-      status.textContent=journalEntries.length?'Журнал обновлён. Новые записи сверху.':'Журнал пока пуст.';
+      showCapacity(value.limit_bytes);journalEntries=value.entries.slice().reverse();journalPage=0;renderJournal();journalLoaded=true;
+      status.textContent=journalEntries.length?'':'Журнал пока пуст.';
     }catch(_){if(!journalLoaded)document.getElementById('journal-page').textContent='Журнал не загружен';status.textContent=journalLoaded?'Не удалось обновить журнал. Показанные записи могут быть устаревшими.':'Не удалось загрузить журнал. Нажмите ↻ для повторного чтения.';}
-    finally{clearTimeout(timer);button.disabled=false;journalBusy=false;}
+    finally{clearTimeout(timer);button.disabled=false;journalBusy=false;clearButton();}
   }
+  clearJournal.addEventListener('click',async function(){
+    if(clearJournal.disabled || window.schoolbellSessionBlocked || !window.confirm('Удалить все записи журнала, включая скрытые фильтрами? Восстановить их будет нельзя.'))return;
+    var reload=document.getElementById('journal-reload'),status=document.getElementById('journal-status');
+    journalBusy=true;clearButton();reload.disabled=true;
+    var abort=new AbortController(),timer=setTimeout(function(){abort.abort();},15000);
+    try{
+      var r=await fetch(root.dataset.journal,{method:'POST',credentials:'same-origin',redirect:'error',signal:abort.signal,body:new URLSearchParams({token:root.dataset.token,action:'clear'})});
+      if(!r.ok || !(await r.json()).ok)throw Error('clear');
+      journalEntries=[];journalPage=0;renderJournal();status.textContent='Журнал очищен.';
+    }catch(_){journalLoaded=false;status.textContent='Очистка не подтверждена. Обновите журнал перед повтором.';}
+    finally{clearTimeout(timer);journalBusy=false;reload.disabled=false;clearButton();}
+  });
+  window.addEventListener('schoolbell-session-lost',clearButton);
+  window.addEventListener('schoolbell-session-restored',clearButton);
   document.getElementById('journal-reload').addEventListener('click',loadJournal);
   sourceChoices.forEach(function(source){
     document.getElementById('journal-source-'+source).addEventListener('click',function(){
@@ -110,6 +166,8 @@
   });
   document.getElementById('journal-warnings').addEventListener('click',function(){journalWarnings=!journalWarnings;journalPage=0;renderJournal();});
   document.getElementById('journal-errors').addEventListener('click',function(){journalErrors=!journalErrors;journalPage=0;renderJournal();});
+  document.getElementById('journal-first').addEventListener('click',function(){journalPage=0;renderJournal();});
+  document.getElementById('journal-last').addEventListener('click',function(){journalPage=Infinity;renderJournal();});
   document.getElementById('journal-prev').addEventListener('click',function(){journalPage--;renderJournal();});
   document.getElementById('journal-next').addEventListener('click',function(){journalPage++;renderJournal();});
   document.getElementById('journal-copy').addEventListener('click',async function(){

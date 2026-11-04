@@ -225,6 +225,10 @@
     document.getElementById('plan-apply').disabled=locked || !formPending;document.getElementById('plan-cancel').disabled=locked || !formPending;
     document.getElementById('workflow-draft').textContent='Черновик: '+(formPending?'название и даты ещё не применены':reconcile?'требуется повторная загрузка':!draft?'ещё не загружен':dirty?'есть несохранённые изменения':revision==='empty'?'ещё не сохранён':'сохранён');
     document.getElementById('workflow-save').disabled=locked || !draft || !dirty || reconcile || formPending;
+    ['manual-media','pre-media'].forEach(function(key){
+      document.getElementById(key+'-browser').disabled=locked || !draft;
+      document.getElementById(key+'-device').disabled=locked || !draft || root.dataset.load.indexOf('demo-api')>=0;
+    });
     ['manual-media','pre-media','pre-minutes','work-mode','fixed-schedule','active-plan'].forEach(function(id){document.getElementById(id).disabled=locked || !draft || (id==='fixed-schedule' && draft.mode!=='fixed') || (id==='active-plan' && draft.mode!=='annual');});
 
     document.getElementById('duty-state').textContent=busy?'Обмен с устройством…':reconcile?'Требуется сверка данных':!draft?'Данные недоступны':dirty?'Черновик изменён · не сохранён':revision==='empty'?'План ещё не сохранён':'Черновик сохранён';
@@ -252,8 +256,8 @@
     var total=s?s.rows.length:0,lastPage=Math.max(0,Math.ceil(total/rowsPerPage)-1);
     rowPage=Math.max(0,Math.min(rowPage,lastPage));
     var first=rowPage*rowsPerPage,end=Math.min(first+rowsPerPage,total);
-    document.getElementById('rows-prev').disabled=rowPage===0;
-    document.getElementById('rows-next').disabled=rowPage===lastPage;
+    document.getElementById('rows-first').disabled=document.getElementById('rows-prev').disabled=rowPage===0;
+    document.getElementById('rows-last').disabled=document.getElementById('rows-next').disabled=rowPage===lastPage;
     document.getElementById('rows-range').textContent=total?(first+1)+'–'+end+' из '+total:'0 из 0';
     rows.replaceChildren();
     if(s) {
@@ -296,7 +300,9 @@
   }
   function turnPage(step){if(rowEditAllowed()){rowPage+=step;renderRows(current());}}
   document.getElementById('rows-prev').addEventListener('click',function(){turnPage(-1);});
+  document.getElementById('rows-first').addEventListener('click',function(){turnPage(-Infinity);});
   document.getElementById('rows-next').addEventListener('click',function(){turnPage(1);});
+  document.getElementById('rows-last').addEventListener('click',function(){turnPage(Infinity);});
   function render() {
     // Legacy drafts are only materialized in browser memory; disk changes on explicit save.
     draft.schedules.forEach(function(s,i){if(s.color===undefined)s.color=i%16+1;});
@@ -424,6 +430,13 @@
   document.getElementById('active-plan').addEventListener('change',function(e){
     if(e.target.value)draft.active_plan=e.target.value;else delete draft.active_plan;
     changed();render();
+  });
+  ['manual-media','pre-media'].forEach(function(key){
+    ['browser','device'].forEach(function(route){
+      document.getElementById(key+'-'+route).addEventListener('click',function(){
+        window.schoolbellRowPreview(document.getElementById(key).value,route==='device',document.getElementById('settings-preview-status'));
+      });
+    });
   });
   [['manual-media','manual_media'],['pre-media','pre_media'],['work-mode','mode'],['fixed-schedule','fixed_schedule']].forEach(function(pair){document.getElementById(pair[0]).addEventListener('change',function(e){draft[pair[1]]=e.target.value;changed();render();});});
   document.getElementById('pre-minutes').addEventListener('input',function (e) { draft.pre_minutes=Number(e.target.value); changed(); });

@@ -25,6 +25,7 @@ shutil.copyfile(root/'site/style.css',out/'style.css')
 shutil.copyfile(source/'www/schoolbell-test/theme.js',out/'theme.js')
 (out/'.nojekyll').write_text('')
 demo=out;assets=demo/'assets';assets.mkdir(parents=True,exist_ok=True)
+(assets/'traffic.js').unlink(missing_ok=True)  # Drop the retired chart on incremental builds.
 for p in (source/'www/schoolbell-test').iterdir():
  text=p.read_text()
  if p.suffix=='.js':
@@ -63,7 +64,7 @@ text=text.replace('<nav class="page-tabs"', '<div class="demo-notice-row"><detai
 text=text.replace('Подготовьте расписания и сохраните их на роутере.','Попробуйте расписания и календарь на тестовых данных.')
 text=text.replace('Инженерная установка','Демонстрация интерфейса').replace('На роутере · оценка между опросами','Демо-часы · выбранная зона').replace('Сохраняется на роутере','Сохраняется в браузере').replace('Настройка сохраняется на роутере и действует для всех его приложений.','Настройка меняет только часовой пояс этого демо, не устройства или компьютера.')
 text=text.replace('id="router-play" type="submit"','id="router-play" type="submit" disabled').replace('▶ Позвонить на роутере','Недоступно в демо · нет роутера').replace('<p id="router-result" role="status"></p>','<p id="router-result" role="status">В демо доступен только звук браузера.</p>')
-text=re.sub(r'(?=<script src="\./assets/traffic\.js(?:\?[^"]*)?">)', '<script src="./assets/ranges.js"></script><script src="./assets/demo.js"></script>', text, count=1)
+text=re.sub(r'(?=<script src="\./assets/session\.js(?:\?[^"]*)?">)', '<script src="./assets/ranges.js"></script><script src="./assets/demo.js"></script>', text, count=1)
 marker='<h2>Календарные планы</h2>'
 assert text.count(marker)==1
 text=text.replace(marker,marker+(root/'site/portable-panel.html').read_text(),1)

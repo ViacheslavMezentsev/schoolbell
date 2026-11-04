@@ -28,9 +28,12 @@
   form.addEventListener('submit',async function (event) {
     event.preventDefault(); if(window.schoolbellSessionBlocked)return;button.disabled=true; result.textContent='Звонок на устройстве… ожидаем завершения.';
     try {
-      var response=await fetch(form.action,{method:'POST',credentials:'same-origin',body:new URLSearchParams(new FormData(form)),redirect:'error'});
+      var data=await window.schoolbellSpeakerCommand(async function(ok){
+      var body=new URLSearchParams(new FormData(form));if(ok)body.set("confirmed","true");
+      var response=await fetch(form.action,{method:'POST',credentials:'same-origin',body:body,redirect:'error'});
       if(!response.ok) throw new Error('HTTP '+response.status);
-      var data=await response.json();
+      return response.json();});
+      if(!data){result.textContent="Проверка отменена.";return;}
       result.textContent=messages[data.state] || 'Неизвестный ответ. Проверьте состояние через SSH.';
     } catch (_) {
       result.textContent='Ответ не получен. Звук мог начаться: не повторяйте сразу. Проверьте сеть и обновите страницу.';

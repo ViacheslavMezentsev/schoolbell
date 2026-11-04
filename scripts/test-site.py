@@ -29,7 +29,9 @@ home=(out/'index.html').read_text()
 for required in ['page-tabs','demo-notice','demo-migrate','feedback-build','portable']:
  assert required in home,required
 assert not (out/'schoolbell').exists(),'No nested duplicate demo or project landing page'
-assert home.index('assets/demo.js')<home.index('assets/traffic.js')<home.index('assets/session.js')
+assert home.index('assets/demo.js')<home.index('assets/session.js')
+assert 'id="traffic-panel"' not in home and 'assets/traffic.js' not in home
+assert not (out/'assets/traffic.js').exists()
 assert 'https://github.com/ViacheslavMezentsev/schoolbell' in home
 assert 'openwrt-modbus-core/issues' not in home
 assert 'device-plan-export:start' not in home and 'device-plan-import:start' not in home
