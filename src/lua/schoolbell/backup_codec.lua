@@ -65,7 +65,7 @@ function M.validate(fs,root,timezone,decode)
  local descriptors={}
  for _,v in ipairs(manifest.files)do local p=M.stage..'/'..v.name;local st=assert(fs.stat(p));assert(st.size==v.size_bytes and fs.hash(p)==v.sha256,'staging checksum');descriptors[v.name]=v end
  local S=require('schoolbell.schedule_store');local draft=assert(S.validate(fs.read(M.stage..'/draft.json',16384)))
- local controls=C.decode(fs.read(M.stage..'/controls.json',16384));C.fields(controls,{'muted','volume_db'});assert(type(controls.muted)=='boolean' and C.integer(controls.volume_db,-60,0),'controls')
+ local controls=C.decode(fs.read(M.stage..'/controls.json',16384));if controls.confirm_play~=nil then C.fields(controls,{'muted','volume_db','confirm_play'});assert(type(controls.confirm_play)=='boolean','confirm_play') else C.fields(controls,{'muted','volume_db'}) end;assert(type(controls.muted)=='boolean' and C.integer(controls.volume_db,-60,0),'controls')
  local cat,objects,ids=M.catalog(fs.read(M.stage..'/catalog.json',16384));local count=0
  for hash,v in pairs(objects)do
   local name=hash..'.mp3';assert(descriptors[name] and descriptors[name].size_bytes==v.size_bytes,'missing object')

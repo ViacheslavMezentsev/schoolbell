@@ -94,6 +94,7 @@ check("mute cannot confirm unobserved child exit",function()
  assert(m.run(x).state=='recovery_required' and x.released==0)
 end)
 -- Controller test: neither a rejected method nor CSRF may enter the backend.
+package.loaded["schoolbell.controls"]={snapshot=function()return {ok=true,confirm_play=false}end}
 local allowed=false; local runs=0; local response
 package.loaded["luci.dispatcher"]={test_post_security=function() return allowed end}
 package.loaded["luci.http"]={formvalue=function()return nil end,header=function() end,prepare_content=function() end,write_json=function(v) response=v end}

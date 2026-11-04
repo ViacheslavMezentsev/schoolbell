@@ -153,14 +153,18 @@ function automatic()
  respond(ok and result or {ok=false,state='unavailable'})
 end
 function controls()
- local h=require('luci.http');local method=h.getenv('REQUEST_METHOD');local value,volume
+ local h=require('luci.http');local method=h.getenv('REQUEST_METHOD');local value,volume,confirm
  if method~='GET' then
   if method~='POST' then h.status(405,'Method Not Allowed');return end
   local size=tonumber(h.getenv('CONTENT_LENGTH'))
   if not size or size<1 or size>1024 or not (h.getenv('CONTENT_TYPE') or ''):match('^application/x%-www%-form%-urlencoded')then h.status(413,'Unsupported request');return end
   if not require('luci.dispatcher').test_post_security()then return end
   local v=h.formvalue('muted');local gain=h.formvalue('volume_db')
-  if gain~=nil then
+  local opt=h.formvalue('confirm_play')
+  if opt~=nil then
+   if v~=nil or gain~=nil or (opt~='true' and opt~='false') then respond({ok=false,code='invalid'});return end
+   confirm=opt=='true'
+  elseif gain~=nil then
    if v~=nil or not gain:match('^%-?%d+$') or not tonumber(gain) or tonumber(gain)<-60 or tonumber(gain)>0 then respond({ok=false,code='invalid'});return end
    volume=tonumber(gain)
   else
@@ -168,7 +172,7 @@ function controls()
    value=v=='true'
   end
  end
- editor();local m=require('schoolbell.controls');local result=value==nil and volume==nil and m.snapshot() or m.request(value,nil,volume)
+ editor();local m=require('schoolbell.controls');local result=value==nil and volume==nil and confirm==nil and m.snapshot() or m.request(value,nil,volume,confirm)
  result.audio=require('schoolbell.audio_output').read()
  result.device=require('schoolbell.device_identity').read(h.getenv('SERVER_ADDR'))
  result.playing=require('nixio.fs').lstat(require('schoolbell.sound_test').lock)~=nil
@@ -177,6 +181,11 @@ function controls()
  respond(result)
 end
 local function operator_play(media,action)
+ local controls=require('schoolbell.controls').snapshot()
+ if not controls.ok then return {ok=false,state='unavailable'} end
+ if controls.confirm_play and require('luci.http').formvalue('confirmed')~='true' then
+  return {ok=false,state='confirmation_required'}
+ end
  local player=require('schoolbell.sound_test')
  local requested=false
  local function report()

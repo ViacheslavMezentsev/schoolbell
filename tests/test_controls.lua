@@ -3,6 +3,11 @@ local files={};local writes=0
 local fs={read=function(p)return files[p]end,stat=function(p)return files[p] and {}end,write=function(p,v)files[p]=v;writes=writes+1 end,sync=function()end,rename=function(a,b)files[b]=files[a];files[a]=nil end,unlink=function(p)files[p]=nil end,close=function()end}
 local original=package.loaded['schoolbell.media_fs'];package.loaded['schoolbell.media_fs']={new=function()return fs end}
 assert(M.request().muted==false and writes==0)
+assert(M.request().confirm_play==false)
+assert(M.request(nil,nil,nil,true).confirm_play)
+assert(M.request(nil,nil,-6).confirm_play)
+assert(M.request(nil,nil,nil,false).confirm_play==false)
+writes=0
 local on=M.request(true);assert(on.ok and on.muted and on.generation==1)
 assert(M.request(true).generation==1 and writes==1)
 local off=M.request(false);assert(off.ok and not off.muted and off.generation==2)

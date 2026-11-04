@@ -6,11 +6,16 @@ package.loaded['schoolbell.schedule_store']={};package.loaded['schoolbell.media_
 package.loaded['schoolbell.journal']={request=function()return {ok=true}end}
 package.loaded['schoolbell.sound_test']={system=function(v)calls=calls+1;return {id=v,spawn=function()return 1 end}end,run=function(v)assert(v.spawn()==1);return {ok=true,state='completed',id=v.id}end}
 dofile('packaging/openwrt/root/usr/lib/lua/luci/controller/schoolbell_test.lua')
+package.loaded['schoolbell.controls']={snapshot=function()return {ok=true,confirm_play=false}end}
 local m=luci.controller.schoolbell_test
 m.play();assert(output.id=='test')
 for _,v in ipairs({'0','4','user1','user8','user9','user_deadbeef'})do id=v;m.play();assert(output.id==v)end
 local before=calls
 for _,v in ipairs({'../evil','user_zz','user0','5','',string.rep('a',1000)})do id=v;m.play();assert(output.state=='invalid' and calls==before)end
+package.loaded['schoolbell.controls'].snapshot=function()return {ok=true,confirm_play=true}end
+id='test';m.play();assert(output.state=='confirmation_required' and calls==before)
+local http=package.loaded['luci.http'];http.formvalue=function(k)return k=='confirmed' and 'true' or id end
+m.play();assert(output.ok and calls==before+1);before=calls
 allowed=false;id='test';m.play();assert(calls==before)
 print('PASS row play HTTP: default/selected IDs, rejected invalid IDs, CSRF gate, mocked sound only')
 

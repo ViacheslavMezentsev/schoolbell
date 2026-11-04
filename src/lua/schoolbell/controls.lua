@@ -7,6 +7,7 @@ function M.decode(raw)
  assert(v and type(v.muted)=='boolean' and C.integer(v.generation,0,2147483647),'mute state')
  if v.volume_db==nil then v.volume_db=0 end
  assert(C.integer(v.volume_db,-60,0),'volume')
+ assert(v.confirm_play==nil or type(v.confirm_play)=="boolean","confirm_play")
  return v
 end
 function M.read()
@@ -23,9 +24,9 @@ function M.snapshot()
  -- Reader observes one atomically renamed file; no writer lock or writes.
  local ok,state=pcall(M.read)
  if not ok then return {ok=false,code='control_unreadable'}end
- return {ok=true,muted=state.muted,generation=state.generation,volume_db=state.volume_db}
+ return {ok=true,muted=state.muted,generation=state.generation,volume_db=state.volume_db,confirm_play=state.confirm_play==true}
 end
-function M.request(value,host,volume)
+function M.request(value,host,volume,confirm)
  local fs;local ok,out=pcall(function()
   fs=require('schoolbell.media_fs').new(M.root,host)
   local state=M.decode(fs.read('sound-control.json',512))
@@ -33,14 +34,16 @@ function M.request(value,host,volume)
   if volume~=nil then assert(C.integer(volume,-60,0),'volume value')end
   local change_mute=value~=nil and state.muted~=value
   local change_volume=volume~=nil and state.volume_db~=volume
-  if change_mute or change_volume then
+  assert(confirm==nil or type(confirm)=="boolean","confirm_play")
+  if change_mute or change_volume or (confirm~=nil and confirm~=(state.confirm_play==true)) then
+   if confirm~=nil then state.confirm_play=confirm end
    if change_mute then assert(state.generation<2147483647,'generation exhausted');state.muted=value;state.generation=state.generation+1 end
    if change_volume then state.volume_db=volume end
    if fs.stat('sound-control-next.json')then fs.unlink('sound-control-next.json')end
    fs.write('sound-control-next.json',C.encode(state));fs.sync('sound-control-next.json')
    fs.rename('sound-control-next.json','sound-control.json');fs.sync('')
   end
-  return {ok=true,muted=state.muted,generation=state.generation,volume_db=state.volume_db}
+  return {ok=true,muted=state.muted,generation=state.generation,volume_db=state.volume_db,confirm_play=state.confirm_play==true}
  end)
  local closed=true;if fs then closed=pcall(fs.close)end
  if not ok or not closed then return {ok=false,code='control_uncertain'}end

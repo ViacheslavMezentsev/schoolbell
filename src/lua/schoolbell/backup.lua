@@ -19,7 +19,7 @@ function M.new(editor,media,root,env)
   local cat=lib.catalog();local _,objects,ids=Codec.catalog(C.encode(cat))
   local function ref(id)assert(not L.editable(id) or ids[id],'missing melody reference')end
   ref(draft.data.pre_media);ref(draft.data.manual_media or 'test');for _,s in ipairs(draft.data.schedules)do for _,row in ipairs(s.rows)do ref(row.media)end end
-  local docs={['draft.json']=C.encode(draft.data),['controls.json']=C.encode({muted=controls.muted,volume_db=controls.volume_db}),['catalog.json']=C.encode(cat)}
+  local docs={['draft.json']=C.encode(draft.data),['controls.json']=C.encode({muted=controls.muted,volume_db=controls.volume_db,confirm_play=controls.confirm_play or nil}),['catalog.json']=C.encode(cat)}
   local extended=#cat.melodies>8;for _,m in ipairs(cat.melodies)do if not m.id:match('^user[1-8]$')then extended=true end end
   local manifest={format=extended and 'schoolbell-backup/2' or 'schoolbell-backup/1',timezone=env.timezone,files={}}
   for _,name in ipairs({'draft.json','controls.json','catalog.json'})do local raw=docs[name];assert(#raw<=16384);manifest.files[#manifest.files+1]={name=name,size_bytes=#raw,sha256=C.sha(raw)}end
@@ -47,9 +47,9 @@ function M.new(editor,media,root,env)
    local old=assert(media.read(Codec.stage..'/rollback-draft.json',16384));assert(C.sha(old)==p.olddraft_hash,'old draft checksum');put('previous.json',old)
   end
   local body=C.encode(v.draft);put('current.json',C.encode({data=v.draft,checksum=C.sha(body)}));hook('draft')
-  put('sound-control.json',C.encode({muted=v.controls.muted,volume_db=v.controls.volume_db,generation=p.control_generation}));hook('controls')
+  put('sound-control.json',C.encode({muted=v.controls.muted,volume_db=v.controls.volume_db,generation=p.control_generation,confirm_play=v.controls.confirm_play or nil}));hook('controls')
   assert(S.load(editor).revision==C.sha(body),'draft verify');assert(not A.decode(editor.read(A.name,A.max_bytes)).enabled,'auto verify')
-  local control=Controls.decode(editor.read('sound-control.json',512));assert(control.muted==v.controls.muted and control.volume_db==v.controls.volume_db,'control verify')
+  local control=Controls.decode(editor.read('sound-control.json',512));assert(control.muted==v.controls.muted and control.volume_db==v.controls.volume_db and (control.confirm_play==true)==(v.controls.confirm_play==true),'control verify')
   assert(lib.lookup(p.operation_id).state=='retained','media verify');hook('verified')
   put('restore-last.json',C.encode({operation_id=p.operation_id,draft_revision=C.sha(body),automatic_enabled=false}));editor.unlink('restore.pending');editor.sync('');hook('complete')
   -- Cleanup failure cannot undo a durable, verified restore.
