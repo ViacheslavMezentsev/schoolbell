@@ -5,17 +5,14 @@ In 5.1.27, Media → Add melody creates an entry; selecting an existing entry re
 
 5.1.22 (host): device local time HH:MM is right-aligned above the CPU bar; uptime is below (page age in Pages). Reuses existing clock polling and hides stale time. Default idle logout is 30 minutes; existing choices are preserved. Major section gaps are aligned and the bell-delete cross enlarged. Pages synchronized; this version is not installed on the device.
 
-5.1.14: Journal → Statistics → HTTP requests now includes an API-method table (for example, GET automatic and POST test). Each row shows starts, completions, HTTP/network errors, pending responses and mean/maximum latency to response headers. The same twelve 5-second start-time bins apply; requests pending beyond that window remain visible. URL parameters, tokens and bodies are not retained; different arguments to the same POST method are grouped. HTTP 200 with an operation refusal is not an HTTP error; melody duration and command execution are not separately measured. Collection is passive across module tabs, without additional requests or device writes. Pages shares the code over its local model; no device installation.
 
 5.1.13: compact sound-status/diagnostics row removes the empty header gap. Status and draft notices are grouped above the tabs, both with a Details hint. Only lower CPU tick labels were removed; percentage and colors remain. Feedback credits author Vyacheslav Mezentsev and co-author Codex (OpenAI). Pages shares the layout; no device installation.
 
 5.1.12: automatic status reads no longer revalidate an unchanged plan. After full validation, the worker publishes a private RAM snapshot bound to the exact active-file bytes and current boot. GET compares bytes; a mismatch, age over 40 s, damaged snapshot or installation/restore operation cannot confirm readiness. Validation on changes/application and playback admission remains. No additional HTTP requests or flash writes. Pages keeps the shared interface and does not simulate hardware latency. This stage does not update the installed package.
 
-5.1.11 (host only, not installed): collapsed Statistics switches between executor mailbox and HTTP views. The real single-slot time/enable command mailbox reports waiting depth, running state, wait times and completions in twelve 5-second bins across clients, in /tmp only; telemetry faults cannot block commands. Stop, audio and HTTP reads bypass this mailbox. Pages models its own training commands with zero wait. A thin whole-device CPU line below the title uses existing polls (idle+iowait excluded; green through 75%, yellow above 75%, red above 90%, unknown grey). Resolve problem is above the status panel on the right. No extra HTTP polling.
 
-5.1.9: the collapsed draft panel matches the upper status panel: theme background and a yellow left border. The heading reads “Музыкальный настраиваемый звонок”. The 5.1.8 traffic chart is retained; Pages shares the UI.
+5.1.9: the collapsed draft panel matches the upper status panel: theme background and a yellow left border. The heading reads “Музыкальный настраиваемый звонок”.
 
-5.1.8 (host only): Journal shows passive, tab-local module API traffic in twelve 5-second bins, split into reads/commands, with HTTP/network failures, pending requests and mean/maximum time to HTTP headers. This does not measure internal worker exchanges, bytes or command execution latency. Memory only, no additional requests or device writes; Pages measures its local model. Not installed.
 
 The Draft panel starts collapsed. Click its summary to see the active-plan comparison and save/apply controls. Yellow reminds you that saving does not enable bells. Browser playback uses the viewing computer/phone; Shkolnik speaker playback uses the speakers connected to Shkolnik.
 
@@ -289,3 +286,9 @@ When you change a melody or a date, preview uses the new selection. Reopening th
 In the journal choose all sources, user actions, or module and system events. Warning and error filters apply within that source. A local-date heading appears at the start of each page and at each change of day. Copy includes the whole journal. The preview names the schedule and melody beside each bell time.
 
 Above the bell table, ▲ and ▼ page through ten rows at a time. The range shows each page’s position in the full schedule. Inserting or moving a bell opens its page. Confirming ×× removes all rows in the selected schedule.
+
+Under Bell settings, 🔊 plays the selected manual or pre-bell melody in the browser and 🔔 through the device speakers. Enable speaker confirmation to ask before each operator-triggered playback. It is off by default, saved immediately on the device and applies to all browsers. Scheduled bells run independently. The range precedes four buttons for first, previous, next and last page.
+
+The ×× button after Copy clears all journal entries after confirmation, including entries hidden by filters. The daily automatic bell counts are retained.
+
+Settings → General offers journal sizes of 16, 32 (default), 64 and 128 KiB. Apply with ✓. Reducing the size requires confirmation and immediately retains only the newest records that fit. The local journal and its capacity stay with the device across settings restore. Automatic bell counts are preserved.

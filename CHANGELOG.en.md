@@ -4,6 +4,20 @@
 
 ## Unreleased
 
+- 5.1.108: Journal capacity appears last in General, with Apply aligned to the bottom of the selector.
+
+- 5.1.107: Settings → General offers journal sizes of 16, 32 (default), 64 and 128 KiB. Apply with ✓. Reducing the size requires confirmation and immediately retains only the newest records that fit. The local journal and its capacity stay with the device across settings restore. Automatic bell counts are preserved.
+
+- 5.1.106: The ×× button after Copy clears all journal entries after confirmation, including entries hidden by filters. The daily automatic bell counts are retained.
+
+- 5.1.105: Removed Journal charts and their HTTP and command queue instrumentation.
+
+- 5.1.104: The Journal tab shows its 32 KiB retention limit.
+
+- 5.1.103: First and last page buttons in vertical lists use a triangle with a horizontal bar.
+
+- 5.1.102: Optional device-wide confirmation for manual speaker playback, previews in bell settings, four paging buttons and a more compact journal.
+
 - Added a diagnostic btop build for MR3020 and a Windows 11 first-install wizard for Schoolbell 5.1.100.
 
 - 5.1.101: Daily bell counts use ten-bell bands. Reopening metrics reuses the minute cache; resource readings persist between polls.
