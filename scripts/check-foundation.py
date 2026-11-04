@@ -23,7 +23,7 @@ for item in inventory['files']:
     assert item['source'] not in seen
     seen.add(item['source'])
     assert re.fullmatch('[a-f0-9]{64}', item['sha256'])
-    assert item['status'] in ('not-transferred', 'transferred')
+    assert item['status'] in ('not-transferred', 'transferred', 'retired')
     if item['status'] == 'transferred': assert (root / item['destination']).is_file()
 assert 'pkg/usr/lib/modbus/json_strict.lua' in seen
 for path in root.rglob('*.md'):

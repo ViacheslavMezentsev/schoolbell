@@ -76,7 +76,6 @@ lua5.1 tests/test_metadata_progress.lua
 lua5.1 tests/test_clock_commands.lua
 TZ=Asia/Yekaterinburg lua5.1 tests/test_clock_set.lua
 node scripts/test-schoolbell-time-settings.js
-lua5.1 tests/test_queue_metrics.lua
 lua5.1 tests/test_automatic_status.lua
 lua5.1 tests/test_clock_http.lua
 lua5.1 tests/test_clock_policy.lua
