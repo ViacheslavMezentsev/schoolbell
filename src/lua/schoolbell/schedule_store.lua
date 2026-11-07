@@ -278,7 +278,8 @@ end
 local function checksum(bytes)
     local a,b=1,0
     for i=1,#bytes do a=(a+bytes:byte(i))%65521;b=(b+a)%65521 end
-    return string.format('%08x',b*65536+a)
+    -- Each Adler-32 half fits the signed integer accepted by 32-bit Lua.
+    return string.format('%04x%04x',b,a)
 end
 function M.preview_cached(text,date)
     if type(text)~='string' or #text>M.max_bytes or type(date)~='string' or #date~=10 then
