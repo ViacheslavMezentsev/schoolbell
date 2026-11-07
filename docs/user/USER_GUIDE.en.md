@@ -27,7 +27,7 @@ Calendar months run consecutively across year boundaries. Longer plans use pages
 
 After session loss, sound and automation controls are disabled and the status panel requests login. This does not mean the service stopped. An unconfirmed logout does not prove the server session ended: sign in normally and retry logout after connectivity returns.
 
-The header contains compact Login/Logout controls, with no visible countdown. Idle duration is under Settings → General (1–120 minutes, default 15); it is a running-page timer, not LuCI server policy. Polling does not renew it. Logout does not stop automatic bells. General is the first section in Settings. Header labels are hidden by default. Use General settings to show them. The preference is saved in this browser.
+The header contains compact Login/Logout controls, with no visible countdown. Idle duration is under Settings → Interface (1–120 minutes, default 15); it is a running-page timer, not LuCI server policy. Polling does not renew it. Logout does not stop automatic bells. General is the first section in Settings. Header labels are hidden by default. Use General settings to show them. The preference is saved in this browser.
 Login uses the same tab. Before navigation, the unsaved draft is temporarily stored in this tab’s sessionStorage (32768 characters, up to 8 hours, no password/token); storage failure cancels navigation. The same user gets the edits back automatically, without writing them to the router. A changed server revision requires reconciliation. This is not a backup: closing the tab, clearing browser storage, expiry or another user can lose edits; selected upload files are not transferred.
 
 
@@ -291,4 +291,6 @@ Under Bell settings, 🔊 plays the selected manual or pre-bell melody in the br
 
 The ×× button after Copy clears all journal entries after confirmation, including entries hidden by filters. The daily automatic bell counts are retained.
 
-Settings → General offers journal sizes of 16, 32 (default), 64 and 128 KiB. Apply with ✓. Reducing the size requires confirmation and immediately retains only the newest records that fit. The local journal and its capacity stay with the device across settings restore. Automatic bell counts are preserved.
+Settings → Interface offers journal sizes of 16, 32 (default), 64 and 128 KiB. Apply with ✓. Reducing the size requires confirmation and immediately retains only the newest records that fit. The local journal and its capacity stay with the device across settings restore. Automatic bell counts are preserved.
+
+Collapsed settings sections summarize their main values. Opening a section hides its summary. Labels identify unsaved or unapplied changes.

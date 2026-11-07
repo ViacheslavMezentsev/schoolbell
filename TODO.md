@@ -25,6 +25,8 @@
 
 ## На согласовании / Pending review
 
+- [x] Приняты правки 5.1.109–5.1.118: предпросмотр, сравнение часов, плашка черновика, сводки настроек, медиатека и пояснения. Полная host-проверка пройдена; на стенде сохранены настройки и громкость, автозвонки выключены. / Reviewed 5.1.109–5.1.118: preview, clocks, draft banner, settings summaries, media library and help. Full host checks passed; bench settings and volume preserved, automatic bells off.
+
 - [x] Владелец поручил проверку целостности и фиксацию цикла 5.1.61–5.1.69 в ветке; 64 сочетания ширины/темы/вкладки проверены локально / Owner authorized consistency review and grouped commits for 5.1.61–5.1.69; 64 local viewport/theme/tab combinations checked.
 - [ ] Подтвердить на телефоне исправления 5.1.69: панель сохранения в потоке и отсутствие выхода страницы за экран / Confirm 5.1.69 phone layout: in-flow save toolbar and no page overflow.
 
@@ -162,4 +164,4 @@ hardware acceptance protocol.
 - [x] Стенд обновлён до 5.1.72; бэкап, файлы, HTTP и сохранность настроек/журнала проверены / Bench updated to 5.1.72; backup, files, HTTP and preserved settings/journal verified.
 
 - [x] 5.1.75: постоянный учёт всех успешных автозвонков, «Ресурсы», реальное табло; проверены ротация/перезапуск/повтор, сбои записи и чтение без замка редактора. Стенд обновлён, сохранены два исторических завершения, громкость и auto-off / Persistent automatic completion counters, Resources and live grid; rotation/restart/replay, write failures and lock-free reads tested. Bench updated, two historical completions, gain and auto-off preserved.
-- [ ] 05.11.2026: сверить полный день «Будни» учебного плана 2026–2027 с журналом и картой после 14:35. Ожидается 15 основных и 6 предварительных звонков, первый в 07:55. / Reconcile all 21 weekday bells with the journal and daily count after the last bell.
+- [x] 05.11.2026: «Будни» — журнал подтвердил запуск и завершение всех 15 основных и 6 предварительных звонков. Карта за день — 21. / All 21 weekday events matched the journal and the daily count.

@@ -4,6 +4,26 @@
 
 ## Unreleased
 
+- 5.1.118: Playback help uses consistent symbols: 🔊 in the browser, 🔔 through Schoolbell.
+
+- 5.1.117: Shortened settings help for saving, enabling automatic bells and muting device output.
+
+- 5.1.116: Clock difference now matches the displayed whole seconds; clarified refresh and set-time actions.
+
+- 5.1.115: The media library heading now shares the collapsible section style: font size and weight, disclosure marker and expanded spacing.
+
+- 5.1.114: Added Built-in and User media group headings, repeated on list pages.
+
+- 5.1.113: Renamed the collapsible Melodies area to Media library.
+
+- 5.1.112: Fixed the Interface settings summary by removing its duplicate ID from the cheat sheet. Restored native disclosure arrows and made the Melodies area collapsible.
+
+- 5.1.111: Collapsed settings summaries in the device UI and Pages, reusing existing data without additional requests.
+
+- 5.1.110: Unified clock formatting with highlighted differences, Interface settings, and an actionable draft banner with a three-second completion message.
+
+- 5.1.109: Fixed preview cache checksum formatting on 32-bit routers.
+
 - 5.1.108: Journal capacity appears last in General, with Apply aligned to the bottom of the selector.
 
 - 5.1.107: Settings → General offers journal sizes of 16, 32 (default), 64 and 128 KiB. Apply with ✓. Reducing the size requires confirmation and immediately retains only the newest records that fit. The local journal and its capacity stay with the device across settings restore. Automatic bell counts are preserved.
