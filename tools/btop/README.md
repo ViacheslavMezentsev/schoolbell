@@ -2,7 +2,29 @@
 
 Готовая статическая сборка btop 1.4.8 для OpenWrt 19.07.9, ramips/mt76x8, MIPS32r2 little-endian, soft-float. Каталог содержит архив `.tar.xz` с программой и лицензиями, файл `.sha256` для проверки и скрипт пересборки `build-linux.sh`.
 
-## Запуск через SSH
+## Windows 11 · PowerShell
+
+Откройте PowerShell в каталоге `tools/btop` (или в папке с архивом и его файлом `.sha256`). Используется SSH-псевдоним `openwrt` из конфигурации Windows OpenSSH.
+
+```powershell
+$archive = 'btop-1.4.8-openwrt-19.07.9-mipsel_24kc.tar.xz'
+$expected = ((Get-Content -LiteralPath "$archive.sha256" -Raw).Trim() -split '\s+')[0]
+if ((Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash -ne $expected) { throw 'Ошибка SHA-256 архива' }
+
+tar.exe -xf $archive -C $env:TEMP btop/bin/btop
+if ($LASTEXITCODE -ne 0) { throw 'Ошибка распаковки' }
+scp.exe -O "$env:TEMP/btop/bin/btop" openwrt:/tmp/btop.new
+if ($LASTEXITCODE -ne 0) { throw 'Ошибка копирования' }
+ssh.exe -t openwrt 'chmod 700 /tmp/btop.new && mv -f /tmp/btop.new /tmp/btop && HOME=/tmp XDG_CONFIG_HOME=/tmp/btop-config /tmp/btop --force-utf'
+```
+
+`-O` — заглавная латинская O. Windows OpenSSH 9.5 по умолчанию использует SFTP, а на данном OpenWrt доступен SCP. Ключ `-t` нужен для интерактивного экрана. Выход — клавиша `q`. До перезагрузки роутера монитор можно запускать повторно:
+
+```powershell
+ssh.exe -t openwrt 'HOME=/tmp XDG_CONFIG_HOME=/tmp/btop-config /tmp/btop --force-utf'
+```
+
+## Linux / WSL · запуск через SSH
 
 Выполните команды **на ПК в Linux или WSL** из каталога `tools/btop`. В примере `openwrt` — настроенный SSH-псевдоним вашего роутера. При необходимости замените его на `root@адрес-роутера`.
 
@@ -34,4 +56,4 @@ ssh -t openwrt 'HOME=/tmp XDG_CONFIG_HOME=/tmp/btop-config /tmp/btop --force-utf
 
 ## English
 
-Prebuilt btop 1.4.8 for the TL-MR3020 v3, tested on OpenWrt 19.07.9. Run the checksum and extraction commands above on a Linux or WSL host, then use the SSH command to launch it. Replace `openwrt` with your SSH alias or `root@router-address`. Press `q` to exit. Both the executable and settings reside in RAM. To rebuild the archive and checksum on Ubuntu 22.04 amd64, run `./build-linux.sh`.
+Prebuilt btop 1.4.8 for the TL-MR3020 v3, tested on OpenWrt 19.07.9. Use the PowerShell block on Windows 11 or the shell block on Linux/WSL. On Windows, use legacy SCP mode (capital `-O`) and allocate a terminal with `ssh.exe -t`. Replace `openwrt` with your SSH alias or `root@router-address`. Press `q` to exit. Both the executable and settings reside in RAM. To rebuild the archive and checksum on Ubuntu 22.04 amd64, run `./build-linux.sh`.
