@@ -236,3 +236,47 @@
   document.addEventListener('visibilitychange',function(){if(!document.hidden){sample=null;poll();}});
   draw();poll();setInterval(poll,30000);setInterval(draw,1000);
 }());
+
+(function(){
+ 'use strict';
+ var summary=document.getElementById('summary-interface');
+ if(!summary)return;
+ function text(id){return document.getElementById(id).textContent;}
+ function selected(id){
+  var element=document.getElementById(id);
+  return element.selectedIndex>=0?element.options[element.selectedIndex].textContent:'';
+ }
+ function show(id,parts){
+  var element=document.getElementById(id),value=parts.filter(Boolean).join(' · ');
+  if(element.textContent!==value)element.textContent=value;
+ }
+ function draw(){
+  if(window.schoolbellSessionBlocked){
+   ['summary-interface','summary-time','summary-bells'].forEach(function(id){show(id,['Войдите для просмотра настроек']);});return;
+  }
+  var limit=document.getElementById('journal-kib');
+  show('summary-interface',[
+   document.getElementById('header-labels').checked?'Подписи видны':'Подписи скрыты',
+   'Автовыход '+selected('session-duration'),
+   !limit.disabled?'Журнал '+selected('journal-kib')+(!document.getElementById('journal-limit-save').disabled?' — не применено':''):''
+  ]);
+  var clock=text('device-clock'),zone=text('router-zone').split(' · получено ')[0];
+  show('summary-time',[clock,clock && !clock.includes('—')?zone:'']);
+  var editor=window.schoolbellEditor && window.schoolbellEditor.exportSnapshot && window.schoolbellEditor.exportSnapshot();
+  if(!editor || !editor.draft){show('summary-bells',['Настройки загружаются…']);return;}
+  var draft=editor.draft,annual=draft.mode==='annual';
+  var source=annual?(draft.plans || []).find(function(p){return p.id===draft.active_plan;}):
+   draft.schedules.find(function(s){return s.id===draft.fixed_schedule;});
+  show('summary-bells',[
+   (annual?'План':'Расписание')+' «'+(source?source.name:'не выбран')+'»',
+   'Громкость '+text('audio-volume'),
+   'Предзвонок за '+draft.pre_minutes+' мин',
+   editor.dirty?'Есть несохранённые изменения':''
+  ]);
+ }
+ document.getElementById('panel-sound').addEventListener('input',draw);
+ document.getElementById('panel-sound').addEventListener('change',draw);
+ window.addEventListener('schoolbell-editor-state',draw);
+ window.addEventListener('schoolbell-session-lost',draw);
+ draw();setInterval(draw,1000);
+}());

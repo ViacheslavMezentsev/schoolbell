@@ -4,15 +4,33 @@ var root=document.getElementById('schedule-editor'),button=document.getElementBy
 var busy=false,proposal=null,reading=false;
 function draw(){var blocked=window.schoolbellSessionBlocked;button.disabled=busy || blocked;confirm.disabled=busy || blocked || !proposal;cancel.disabled=busy;reload.disabled=busy || blocked;}
 function explain(e){var names={sound_busy:'Сейчас играет мелодия. Дождитесь окончания или остановите звук.',disable_failed:'Не удалось выключить автозвонки. Часы не изменены.',clock_set_failed:'Системная команда не подтвердила установку часов.',clock_verify_failed:'Показания после установки не совпали с ожидаемыми.',clock_request_expired:'Заявка задержалась; подготовьте новую после сверки.',browser_clock_changed:'Часы браузера изменились; начните сверку заново.',calendar_range:'Поддерживаются даты с 2020 по 2037 год.',clock_cleanup_failed:'Не удалось освободить ресурсы операции. Требуется диагностика.'};for(var code in names)if(e.message.indexOf(code)>=0)return names[code];return e.message;}
-function browserTime(){document.getElementById('time-browser').textContent='В браузере: '+new Date().toLocaleString('ru-RU',{hour12:false})+' · '+Intl.DateTimeFormat().resolvedOptions().timeZone;}
+function clockParts(date,zone){
+ return new Intl.DateTimeFormat('ru-RU',{timeZone:zone,day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'}).formatToParts(date);
+}
+function paintTime(id,parts,other,zone,otherZone){
+ var node=document.getElementById(id);node.textContent='';
+ parts.forEach(function(part){
+  var span=document.createElement('span');span.textContent=part.value;
+  if(other && part.type!=='literal' && part.value!==other.find(function(p){return p.type===part.type;}).value)span.className='clock-difference';
+  node.appendChild(span);
+ });
+ var suffix=document.createElement('span');suffix.textContent=' · '+zone;
+ if(otherZone && zone!==otherZone)suffix.className='clock-difference';
+ node.appendChild(suffix);
+}
+function browserTime(){var zone=Intl.DateTimeFormat().resolvedOptions().timeZone;paintTime('time-browser',clockParts(new Date(),zone),null,zone);}
 async function read(){
  if(reading)return;reading=true;var abort=new AbortController(),timer=setTimeout(function(){abort.abort();},10000),start=performance.now();
  try{var response=await fetch(root.dataset.clock,{credentials:'same-origin',cache:'no-store',redirect:'error',signal:abort.signal});if(!response.ok)throw Error();var v=await response.json(),rtt=performance.now()-start;
  if(!v.ok || !Number.isFinite(v.epoch) || rtt>2000)throw Error();
- document.getElementById('time-device').textContent='На устройстве: '+[v.day,v.month,v.year].join('.')+' '+[v.hour,v.min,v.sec].map(function(n){return String(n).padStart(2,'0');}).join(':')+' · '+(v.zone || 'UTC');
- document.getElementById('time-difference').textContent='Разница с браузером: около '+Math.round((Date.now()-v.epoch*1000-rtt/2)/1000)+' с. Показания на момент чтения.';
- }catch(_){document.getElementById('time-device').textContent='Показания устройства не подтверждены. Повторите чтение.';document.getElementById('time-difference').textContent='';}
- finally{clearTimeout(timer);reading=false;browserTime();}
+ var browserZone=Intl.DateTimeFormat().resolvedOptions().timeZone,deviceZone=v.zone || 'UTC';
+ var browserNow=Date.now(),device=clockParts(new Date(v.epoch*1000),deviceZone),browser=clockParts(new Date(browserNow),browserZone);
+ paintTime('time-device',device,browser,deviceZone,browserZone);
+ paintTime('time-browser',browser,device,browserZone,deviceZone);
+ var difference=Math.floor(browserNow/1000)-Math.floor(v.epoch);
+ document.getElementById('time-difference').textContent=(difference===0?'Показания совпадают с точностью до секунды.':'По показанным значениям часы устройства '+(difference>0?'отстают':'спешат')+' на '+Math.abs(difference)+' с.')+' Показания на момент чтения; для обновления нажмите ↻.';
+ }catch(_){browserTime();document.getElementById('time-device').textContent='Показания устройства не подтверждены. Повторите чтение.';document.getElementById('time-difference').textContent='';}
+ finally{clearTimeout(timer);reading=false;}
 }
 button.addEventListener('click',async function(){
  if(busy || window.schoolbellSessionBlocked)return;busy=true;proposal=null;review.hidden=true;draw();message.textContent='Читаем время для подтверждения…';

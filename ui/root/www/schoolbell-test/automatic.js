@@ -29,9 +29,19 @@ function header(){
  badge.textContent=(demo?'Демо · ':'')+[text,contextLabel(v)].filter(Boolean).join(' · ');badge.dataset.tone=tone;
  quick.disabled=!!(window.schoolbellSessionBlocked || busy || pending || !v || (v.hardware===false && !v.simulated));
 }
+var workflowNeeded=false,workflowUntil=0;
+function workflow(){
+ var e=editor(),v=confirmed(),panel=document.getElementById('draft-workflow');
+ var needed=!!(e && (e.reconcile || e.loaded && (e.dirty || e.revision==='empty' || v && e.revision!==v.revision)));
+ if(needed){workflowNeeded=true;workflowUntil=0;}
+ else if(e && e.loaded && !e.busy && v && workflowNeeded){workflowNeeded=false;workflowUntil=performance.now()+3000;}
+ panel.hidden=!needed && !(workflowNeeded || performance.now()<workflowUntil);
+ if(!needed && !panel.hidden && !workflowNeeded)document.getElementById('workflow-draft').textContent='Черновик: готово';
+ else if(needed && !e.dirty && !e.reconcile && e.revision!=='empty')document.getElementById('workflow-draft').textContent='Черновик: требуется применение';
+}
 function draw(){
  if(pending && performance.now()>=pending.until){pending=null;sample=null;uncertain=true;feedback='Подтверждение не получено. Обновляем состояние, команду не повторяем. ';}
- header();
+ header();workflow();
  window.dispatchEvent(new CustomEvent('schoolbell-diagnostic-state',{detail:{value:confirmed(),pending:!!(busy || pending),uncertain:uncertain,blocked:!!window.schoolbellSessionBlocked}}));
  if(window.schoolbellSessionBlocked){
   on.disabled=true;off.disabled=true;

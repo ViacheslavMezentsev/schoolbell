@@ -34,7 +34,7 @@
 <p id="timezone-hint" hidden>Местное время устройства отличается от браузера. <button type="button" class="inline-button" data-open-settings>Выбрать часовой пояс школы</button></p>
 </details>
 
-<details id="draft-workflow" class="plan-workflow" aria-label="Черновик и активный план">
+<details hidden id="draft-workflow" class="plan-workflow" aria-label="Черновик и активный план">
 <summary><span id="workflow-draft" role="status">Черновик: загружается…</span><span class="collapse-hint">Подробности ▾</span></summary>
 <p class="intro">Подготовьте расписания и сохраните их на устройстве.</p>
 <p>Сохранение записывает черновик. Для автозвонков сохраните изменения и отдельно примените их во вкладке «Настройки».</p>
@@ -71,7 +71,7 @@
 <details class="details"><summary>Интерфейс</summary>
 
 <dl class="quick-guide">
-<div class="guide-route"><dt>Показать подписи кнопок</dt><dd>Откройте «Настройки» → «Общие» и включите «Показывать подписи кнопок в шапке». Выключите переключатель, чтобы оставить только значки. Выбор сохраняется в этом браузере. Наведите указатель на значок, чтобы увидеть подсказку.</dd></div>
+<div class="guide-route"><dt>Показать подписи кнопок</dt><dd>Откройте «Настройки» → «Интерфейс» и включите «Показывать подписи кнопок в шапке». Выключите переключатель, чтобы оставить только значки. Выбор сохраняется в этом браузере. Наведите указатель на значок, чтобы увидеть подсказку.</dd></div>
 <div class="guide-route"><dt>Решить проблему</dt><dd>Кнопка в шапке поясняет последнее состояние и предлагает повторить чтение или перейти к нужным настройкам. «Нет свежих данных» не означает установленную неисправность Wi-Fi. Проверка ничего не включает и не сохраняет; в подробностях видно, совпадает ли сохранённый черновик с рабочей копией.</dd></div>
 <div class="guide-route"><dt>Отменить правки или разобраться после ошибки</dt><dd>В редакторе «Отменить правки» убирает несохранённые изменения. Сначала появится запрос подтверждения. Если отменить запрос, правки останутся в браузере.</dd></div>
 </dl>
@@ -104,7 +104,7 @@
 <dl class="quick-guide">
 <div class="guide-route"><dt>Остановить звук или автоматику</dt><dd>Вверху «Без звука» — остановить и запретить звук устройства; дождитесь подтверждения. Повторное нажатие разрешает звук. «Настройки» → «Отключить автозвонки» — остановить работу по плану, сохранив расписания.</dd></div>
 <div class="guide-route"><dt>Подать ручной звонок</dt><dd>Вверху «Подать звонок» — один звонок через колонки устройства. Его мелодия выбирается в «Настройках». При включённом «Без звука» звонок недоступен.</dd></div>
-<div class="guide-route"><dt>Добавить и послушать мелодию</dt><dd>«Мелодии» → «Добавить мелодию» → название и MP3 → «Загрузить мелодию». Для замены выберите существующую пользовательскую мелодию. «В браузере» воспроизводит звук на вашем устройстве; проверка через устройство — на его колонках. Штатные мелодии защищены.</dd></div>
+<div class="guide-route"><dt>Добавить и послушать мелодию</dt><dd>«Мелодии» → «Добавить мелодию» → название и MP3 → «Загрузить мелодию». Для замены выберите существующую пользовательскую мелодию. 🔊 «В браузере» — звук на компьютере или телефоне; 🔔 «Через Школьник» — на подключённых к нему колонках. Штатные мелодии защищены.</dd></div>
 </dl>
 <ul>
 <li><strong>«Без звука» и выключение автоматики — разные действия.</strong> Первое запрещает звук устройства, второе выключает исполнение плана. Звук браузера регулируется на вашем устройстве.</li>
@@ -182,7 +182,7 @@
 
 </section>
 <section id="panel-media" role="tabpanel" aria-labelledby="tab-media" data-panel="media" hidden>
-<section class="details"><h2>Мелодии</h2>
+<details class="details"><summary>Медиатека</summary>
 <details class="storage-status"><summary>Постоянное хранилище устройства</summary><p id="storage-text" role="status">Обновите список, чтобы узнать свободное место.</p><progress id="storage-bar" max="100" value="0" aria-label="Занятое место в постоянном хранилище" hidden></progress><p id="storage-reserve"></p><p id="storage-policy"></p></details>
 <p>Штатные мелодии нельзя заменить или удалить. Для своих мелодий используйте: формат MP3, размер до 64 КиБ (65 536 байт) и длительность до 60 секунд.</p>
 <p>Как заменить мелодию:</p><ol><li>Отключите автозвонки.</li><li>Нажмите * в строке нужной пользовательской мелодии.</li><li>Выберите новый MP3 и укажите название.</li><li>Нажмите 💾 «Загрузить и заменить». Мелодия изменится во всех расписаниях, где она используется.</li></ol>
@@ -198,7 +198,7 @@
 <div class="editor-toolbar"><button id="media-rename" class="icon-action" type="button" title="Сохранить название" aria-label="Сохранить название" disabled>✓</button><button id="media-upload" class="icon-action" type="button" title="Загрузить мелодию" aria-label="Загрузить мелодию" disabled>💾</button><button id="media-listen" class="icon-action audio-action" type="button" title="Проиграть в браузере" aria-label="Проиграть выбранную мелодию в браузере" disabled>🔊</button></div>
 </details>
 <audio id="media-audio" controls preload="none"></audio><p id="media-status" role="status">Загрузите список мелодий.</p>
-</section>
+</details>
 <details id="manual-sound-check" class="details"><summary>Ручная проверка звука</summary>
 <p>Чтобы услышать тестовую мелодию, нажмите 🔊 для динамиков компьютера или телефона либо 🔔 для колонок Школьника.</p>
 <audio id="browser-audio" preload="none" src="<%=pcdata(sample_url)%>"></audio>
@@ -212,11 +212,11 @@
 </details>
 </section>
 <section id="panel-sound" role="tabpanel" aria-labelledby="tab-sound" data-panel="sound" hidden>
-<details class="details"><summary>Общие</summary>
+<details class="details"><summary class="settings-summary"><span>Интерфейс</span><span id="summary-interface" class="settings-brief"></span></summary>
 <label>Показывать подписи кнопок в шапке<input id="header-labels" type="checkbox" role="switch" class="schedule-switch"></label><label>Автовыход при бездействии<select id="session-duration"><option value="1">1 минута</option><option value="5">5 минут</option><option value="15">15 минут</option><option value="30" selected>30 минут</option><option value="60">1 час</option><option value="120">2 часа</option></select></label><p>Автовыход считает бездействие пользователя, а не фоновые обновления. Настройка действует в этом браузере при работающей странице; сервер LuCI может завершить сеанс раньше.</p>
 <div class="editor-toolbar journal-limit-tools"><label>Размер журнала<select id="journal-kib" disabled><option value="16">16 КиБ</option><option value="32" selected>32 КиБ</option><option value="64">64 КиБ</option><option value="128">128 КиБ</option></select></label><button id="journal-limit-save" class="icon-action" type="button" title="Применить размер журнала" aria-label="Применить размер журнала" disabled>✓</button></div><p id="journal-limit-status" role="status"></p>
 </details>
-<details id="time-settings" class="details time-settings"><summary>Дата и время</summary><h3>Часовой пояс школы</h3>
+<details id="time-settings" class="details time-settings"><summary class="settings-summary"><span>Дата и время</span><span id="summary-time" class="settings-brief"></span></summary><h3>Часовой пояс школы</h3>
 <p>Выберите место, где установлен школьный звонок. Настройка сохраняется на устройстве и действует для всех его приложений. Сами часы и расписания не переводятся.</p>
 <p id="timezone-current" role="status">Настройки ещё не загружены.</p>
 <div class="timezone-editor"><label>Город / часовой пояс<select id="timezone-select" disabled></select></label>
@@ -226,18 +226,18 @@
 
 
 <h3>Часы устройства и браузера</h3>
-<p id="time-device">На устройстве: ожидаем чтение…</p><p id="time-browser"></p>
+<div class="clock-comparison"><span>На устройстве</span><span id="time-device">Ожидаем чтение…</span><span>В браузере</span><span id="time-browser"></span></div>
 <p id="time-difference"></p>
 <div class="editor-toolbar"><button id="time-reload" type="button" class="icon-action" title="Обновить показания" aria-label="Обновить показания">↻</button><button id="time-prepare" type="button">Установить время из браузера</button></div>
-<p>Источник — часы вашего компьютера или телефона, не проверенный сетевой эталон. Перед установкой убедитесь, что они верны. Часовой пояс и NTP не меняются; работающий NTP может позже скорректировать часы.</p>
+<p>↻ обновляет показания, не меняя часы. «Установить время из браузера» после подтверждения перенесёт время вашего компьютера или телефона на Школьник и выключит автозвонки. Сначала убедитесь, что время на компьютере или телефоне верное. Часовой пояс и настройки синхронизации через интернет (NTP) сохранятся; включённая синхронизация может позже уточнить время.</p>
 <div id="time-review" hidden><p id="time-proposal"></p><p>Состояние автозвонков сохранится. Пропущенные звонки не проигрываются.</p><button id="time-confirm" type="button">Подтверждаю — установить время</button><button id="time-cancel" type="button">Отмена</button></div>
 <p id="time-result" role="status"></p>
 </details>
 
-<details class="details"><summary>Звонки и режим работы</summary>
+<details class="details"><summary class="settings-summary"><span>Звонки и режим работы</span><span id="summary-bells" class="settings-brief"></span></summary>
 <label>Запрашивать подтверждение перед ручным воспроизведением через колонки Школьника<input type="checkbox" role="switch" class="schedule-switch" id="confirm-play" disabled></label>
 <div class="volume-editor"><label for="router-volume">Громкость колонок устройства</label><div class="volume-controls"><input id="router-volume" type="range" min="0" max="10" step="1" value="0" aria-describedby="volume-help" disabled><output id="volume-value" for="router-volume">— %</output><button type="button" id="volume-save" class="icon-action" title="Применить громкость" aria-label="Применить громкость" disabled>✓</button></div><p id="volume-help">0 % — округлённый минимальный уровень. Для полного отключения используйте «Без звука».</p><p id="volume-status" role="status"></p></div>
-<p>Громкость применяется к следующему звонку на устройстве: ручному, тестовому и автоматическому. Для немедленной остановки используйте Без звука. Звук браузера регулируется на вашем устройстве.</p>
+<p>Громкость применяется к следующему звонку 🔔 через Школьник: ручному, тестовому и автоматическому. Для немедленной остановки используйте «Без звука». Громкость 🔊 в браузере регулируется на компьютере или телефоне.</p>
 <p>Мелодия ручного звонка применяется после сохранения. Автозвонки работают без открытого браузера по отдельно применённой копии плана.</p>
 <div class="setting-preview"><label for="manual-media">Мелодия ручного звонка</label><select id="manual-media" disabled></select><div class="editor-toolbar"><button type="button" class="icon-action audio-action" id="manual-media-browser" title="Прослушать мелодию ручного звонка в браузере" aria-label="Прослушать мелодию ручного звонка в браузере" disabled>🔊</button><button type="button" class="icon-action audio-action" id="manual-media-device" title="Прослушать мелодию ручного звонка через колонки Школьника" aria-label="Прослушать мелодию ручного звонка через колонки Школьника" disabled>🔔</button></div></div>
 <div class="setting-preview"><label for="pre-media">Мелодия предзвонка</label><select id="pre-media" disabled></select><div class="editor-toolbar"><button type="button" class="icon-action audio-action" id="pre-media-browser" title="Прослушать мелодию предзвонка в браузере" aria-label="Прослушать мелодию предзвонка в браузере" disabled>🔊</button><button type="button" class="icon-action audio-action" id="pre-media-device" title="Прослушать мелодию предзвонка через колонки Школьника" aria-label="Прослушать мелодию предзвонка через колонки Школьника" disabled>🔔</button></div></div>
@@ -247,10 +247,10 @@
 <label id="annual-choice" hidden>Календарный план<select id="active-plan" disabled></select></label>
 <label id="fixed-choice">Ежедневное расписание<select id="fixed-schedule" disabled></select></label>
 <p id="work-mode-hint">Без календарных планов: по расписанию, тихий день по умолчанию.</p>
-<div class="editor-toolbar settings-savebar"><button id="settings-save" type="button" class="primary" aria-describedby="settings-save-hint" disabled>💾 Сохранить настройки</button></div><p id="settings-save-hint">Сохраняются настройки звонков и весь текущий черновик, включая расписания и планы. Автозвонки не включаются.</p><p id="settings-result" role="status" aria-live="polite"></p>
+<div class="editor-toolbar settings-savebar"><button id="settings-save" type="button" class="primary" aria-describedby="settings-save-hint" disabled>💾 Сохранить настройки</button></div><p id="settings-save-hint">Сохраняет настройки, расписания и планы. Автозвонки включаются отдельно.</p><p id="settings-result" role="status" aria-live="polite"></p>
 <div class="automatic-controls"><button id="automatic-enable" type="button" disabled>Применить сохранённый черновик</button> <button id="automatic-disable" type="button"><span aria-hidden="true">■</span> Отключить автозвонки</button><p id="automatic-status" role="status"></p>
-<p>Проверьте дату и время устройства перед включением. После перезагрузки или изменения часового пояса включите снова. Пропущенные звонки не повторяются; при занятом проигрывателе новый звонок пропускается. Совпадающие времена звонков недопустимы.</p></div>
-<p>Без звука действует сразу на звук schoolbell через устройство, включая ручной звонок. Прослушивание в браузере не отключается. После снятия Без звука пропущенные звонки не повторяются.</p></details>
+<p>Перед включением проверьте часы Школьника. После перезагрузки или смены часового пояса включите автозвонки заново. Пропущенные звонки не повторяются.</p></div>
+<p>«Без звука» отключает 🔔 звук через колонки Школьника, включая ручной звонок. 🔊 Прослушивание в браузере работает.</p></details>
 <details class="details" id="backup-panel" data-url="<%=pcdata(backup_url)%>" data-token="<%=pcdata(token)%>"><summary>Резервная копия</summary>
 <p>Сохранённые настройки, расписания, календарные планы и пользовательские мелодии — в одном файле. Несохранённые правки страницы в копию не входят. Сначала отключите автозвонки.</p>
 <p>Восстановление заменяет эти данные и оставляет автозвонки выключенными. Системные часы, NTP, сеть и часовой пояс не меняются. Для переноса выберите на другом устройстве тот же часовой пояс заранее.</p>
@@ -288,6 +288,6 @@
 <p><a href="https://viacheslavmezentsev.github.io/schoolbell/guide.html" target="_blank" rel="noopener">Руководство</a> · <a href="https://viacheslavmezentsev.github.io/schoolbell/guide.en.html" target="_blank" rel="noopener">User guide (English)</a></p>
 </section>
 <footer><a href="<%=url('admin')%>">← Управление устройством LuCI</a> · Расписания сохраняются без активации</footer>
-</main><script src="/schoolbell-test/activity.js?v=51101"></script><script src="/schoolbell-test/system.js?v=5138"></script><script src="/schoolbell-test/session.js?v=5132"></script><script src="/schoolbell-test/backup.js?v=5139"></script><script src="/schoolbell-test/ranges.js?v=5132"></script><script src="/schoolbell-test/schedules.js?v=51102"></script><script src="/schoolbell-test/media.js?v=51102"></script><script src="/schoolbell-test/clock-trust.js?v=5180"></script><script src="/schoolbell-test/diagnostics.js?v=5180"></script><script src="/schoolbell-test/cpu.js?v=51101"></script><script src="/schoolbell-test/automatic.js?v=51105"></script><script src="/schoolbell-test/controls.js?v=51102"></script><script src="/schoolbell-test/app.js?v=51102"></script><script src="/schoolbell-test/dashboard.js?v=51107"></script><script src="/schoolbell-test/plan-import.js?v=5132"></script><script src="/schoolbell-test/plan-export.js?v=5132"></script><script src="/schoolbell-test/row-preview.js?v=51102"></script>
+</main><script src="/schoolbell-test/activity.js?v=51101"></script><script src="/schoolbell-test/system.js?v=5138"></script><script src="/schoolbell-test/session.js?v=5132"></script><script src="/schoolbell-test/backup.js?v=5139"></script><script src="/schoolbell-test/ranges.js?v=5132"></script><script src="/schoolbell-test/schedules.js?v=51102"></script><script src="/schoolbell-test/media.js?v=51102"></script><script src="/schoolbell-test/clock-trust.js?v=5180"></script><script src="/schoolbell-test/diagnostics.js?v=5180"></script><script src="/schoolbell-test/cpu.js?v=51101"></script><script src="/schoolbell-test/automatic.js?v=51105"></script><script src="/schoolbell-test/controls.js?v=51102"></script><script src="/schoolbell-test/app.js?v=51102"></script><script src="/schoolbell-test/dashboard.js?v=51111"></script><script src="/schoolbell-test/plan-import.js?v=5132"></script><script src="/schoolbell-test/plan-export.js?v=5132"></script><script src="/schoolbell-test/row-preview.js?v=51102"></script>
 <script src="/schoolbell-test/time-settings.js?v=5180"></script>
 </body></html>
