@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+- Verified offline boot: boot journal captured clock rollback; after reconnection the clock was corrected while automation stayed off and data/volume were preserved.
+
 - Extended cold-boot acceptance: previously enabled automation is off after boot, plan and volume retained; manual enablement between power cycles confirmed.
 
 - Recorded the 5.1.118 cold-boot check: one boot event, automatic bells staying off and unchanged volume; untested scenarios remain in TODO.
