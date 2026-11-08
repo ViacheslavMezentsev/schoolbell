@@ -26,7 +26,7 @@ function header(){
  else if(v.state==='running' || v.state==='playing'){text=v.state==='playing'?'Звонок':'Работают';tone='success';}
  else if(v.state==='muted'){text='Без звука';}
  else{text=names[v.state] || 'Ошибка исполнителя';tone='danger';}
- badge.textContent=(demo?'Демо · ':'')+[text,contextLabel(v)].filter(Boolean).join(' · ');badge.dataset.tone=tone;
+ badge.textContent=[text,contextLabel(v)].filter(Boolean).join(' · ');badge.dataset.tone=tone;
  quick.disabled=!!(window.schoolbellSessionBlocked || busy || pending || !v || (v.hardware===false && !v.simulated));
 }
 var workflowNeeded=false,workflowUntil=0;
@@ -54,12 +54,12 @@ function draw(){
  var label=v?(names[v.state] || v.state):'Нет свежего ответа исполнителя';
  document.getElementById('duty-compact').textContent=label;
  document.getElementById('automatic-mode').textContent=label+(v && v.mode?' · '+(v.mode==='annual'?'Календарный план':'Ежедневное расписание'):'');
- var remaining=v && v.next?Math.ceil(v.next.utc-v.now-(performance.now()-sample.at)/1000):null;
+ var remaining=v && v.next?Math.ceil(v.next.utc-v.now-(performance.now()-sample.at)/1000*(v.simulated && Number.isFinite(v.rate)?v.rate:1)):null;
  document.getElementById('automatic-next').textContent=remaining!==null && remaining>0?(v.state==='muted'?'Будет пропущен · ':'')+Math.floor(remaining/3600)+' ч '+Math.floor(remaining%3600/60)+' мин '+remaining%60+' с':'—';
  document.getElementById('automatic-detail').textContent=v && v.next?'Сегодня '+v.next.time+' · '+(v.next.kind==='pre'?'предзвонок':'основной звонок'):'Сегодня нет следующего звонка или исполнитель не готов.';
  if(!busy)message.textContent=feedback+[label,contextLabel(confirmed())].filter(Boolean).join(' · ');
  var e=editor(),applied=v && v.enabled!==false && v.revision && v.state!=='disabled';
- document.getElementById('workflow-active').textContent=!v?'Активный план: состояние неизвестно':v.hardware===false && !v.simulated?'Активный план: отсутствует в демо':!applied?'Автозвонки выключены'+(contextLabel(confirmed())?' · '+contextLabel(confirmed()):''):'Автозвонки: '+[label,contextLabel(confirmed())].filter(Boolean).join(' · ');
+ document.getElementById('workflow-active').textContent=!v?'Активный план: состояние неизвестно':v.hardware===false && !v.simulated?'Активный план: отсутствует':!applied?'Автозвонки выключены'+(contextLabel(confirmed())?' · '+contextLabel(confirmed()):''):'Автозвонки: '+[label,contextLabel(confirmed())].filter(Boolean).join(' · ');
  document.getElementById('workflow-difference').textContent=!e || !e.loaded?'Дождитесь загрузки черновика.':e.reconcile?'Сверьте сохранение перед применением.':e.dirty?'Правки в браузере не входят в активный план. Сначала сохраните черновик.':v && v.revision && v.enabled===false && e.revision!==v.revision?'Сохранённый черновик отличается от остановленной копии. Кнопка в шапке возобновит прежнюю копию.':applied && e.revision!==v.revision?'Сохранённый черновик отличается от активного плана. Для изменения звонков примените его отдельно.':applied?'Сохранённый черновик соответствует активной копии.': 'Сохранение само по себе не включает звонки.';
  on.disabled=busy || !!pending || !ready(e) || e.needsPlan || !!(v && v.hardware===false && !v.simulated);off.disabled=busy || !!pending || !!(v && v.hardware===false && !v.simulated);
 }
@@ -104,6 +104,7 @@ window.addEventListener('schoolbell-time-changed',function(){generation++;sample
 window.addEventListener('schoolbell-session-lost' ,function(){generation++;sample=null;pending=null;draw();});
 window.addEventListener('schoolbell-session-restored',refresh);
 window.addEventListener('schoolbell-diagnostic-refresh',refresh);
+window.addEventListener('schoolbell-simulator-update',refresh);
 window.addEventListener('schoolbell-editor-state',draw);
 on.addEventListener('click',function(){return change(true);});off.addEventListener('click',function(){return change(false);});
 refresh();setInterval(refresh,5000);setInterval(draw,1000);document.addEventListener('visibilitychange',refresh);

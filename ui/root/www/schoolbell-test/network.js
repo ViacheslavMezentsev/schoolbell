@@ -6,13 +6,13 @@ function valid(s){return typeof s==='string' && s.length>0 && s.length<=253 && s
 function controls(){var blocked=!current || busy || !!window.schoolbellSessionBlocked;enabled.disabled=blocked;host.disabled=blocked;save.disabled=blocked || !dirty || !valid(host.value);}
 function line(id,prefix,value){
  var el=document.getElementById(id);if(!el)return;value=value || {state:'unknown'};
- var names={available:'доступен',unconfirmed:'не подтверждён',checking:'проверка…',unknown:'нет данных',disabled:'проверка выключена',synced:'синхронизирован',waiting:'ожидание синхронизации',stopped:'служба остановлена',demo:'демо'};
+ var names={available:'доступен',unconfirmed:'не подтверждён',checking:'проверка…',unknown:'нет данных',disabled:'проверка выключена',synced:'синхронизирован',waiting:'ожидание синхронизации',stopped:'служба остановлена',demo:'нет данных'};
  var text=names[value.state] || names.unknown;if(prefix==='NTP' && value.state==='disabled')text='выключен';
  el.textContent=prefix+' · '+text;el.dataset.tone=['unconfirmed','stopped'].includes(value.state)?'warning':'normal';
  var info=prefix==='Интернет'?'Ответ проверяемого адреса; отсутствие ответа не доказывает отсутствие Интернета.':'Состояние синхронизации часов Школьника. Запущенная служба сама по себе не подтверждает синхронизацию.';
  if(value.host)info+=' Адрес: '+value.host+'.';
  if(typeof value.age_seconds==='number')info+=' Давность '+(prefix==='Интернет'?'проверки':'события NTP')+': '+value.age_seconds+' с.';
- el.title=value.state==='demo'?'Демонстрация: состояние оборудования не проверяется.':info;
+ el.title=value.state==='demo'?'Устройство не подключено; состояние сети и NTP неизвестно.':info;
 }
 window.schoolbellNetworkRender=function(snapshot){
  line('network-internet','Интернет',snapshot && snapshot.internet);line('network-ntp','NTP',snapshot && snapshot.ntp);

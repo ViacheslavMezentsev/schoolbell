@@ -26,7 +26,7 @@ for path,page in pages.items():
   assert target.is_file(),(path,link)
   if u.fragment and target.suffix=='.html':assert unquote(u.fragment) in pages[target].ids,(path,link)
 home=(out/'index.html').read_text()
-for required in ['page-tabs','demo-notice','demo-migrate','feedback-build','portable']:
+for required in ['page-tabs','simulator-panel','demo-migrate','feedback-build','portable']:
  assert required in home,required
 assert not (out/'schoolbell').exists(),'No nested duplicate demo or project landing page'
 assert home.index('assets/demo.js')<home.index('assets/session.js')
@@ -95,3 +95,23 @@ for markup in [(out/'index.html').read_text(),(root/'ui/root/usr/lib/lua/luci/vi
     media=markup.split('id="panel-media"',1)[1].split('id="media-rows"',1)[0]
     media_toolbar=media.split('<div class="list-toolbar">',1)[1].split('<div class="table-scroll">',1)[0]
     assert all(f'id="{key}"' in media_toolbar for key in ('media-add','media-refresh','media-prev','media-next'))
+
+# Pages identifies itself once, without fabricated hardware resource readings.
+assert '<strong class="demo-label">Демо</strong>' in home
+assert len(re.findall(r"\bДемо\b",home))==1
+assert "font-weight:700;color:var(--warning-text)" in home
+assert "Демо Flash" not in (out/"assets/cpu.js").read_text()
+
+assert home.index('id="metrics-panel"') < home.index('id="simulator-panel"') < home.index('id="session-status"')
+assert 'id="simulator-panel" class="metrics-panel simulator-panel"' in home
+assert 'id="simulator-panel" class="metrics-panel simulator-panel" open' not in home
+assert (out/"assets/simulator-ui.js").is_file()
+
+# Local-data actions belong to the simulator; guides remain available outside it.
+assert 'id="demo-notice"' not in home
+assert 'id="demo-boot"' not in home
+panel=home[home.index('id="simulator-panel"'):home.index('id="session-status"')]
+for control in ['demo-storage','demo-migration-status','demo-migrate','demo-reset','simulator-reboot']:
+ assert panel.count('id="'+control+'"')==1,control
+assert '<a class="demo-guide" href="./guide.html">Руководство</a>' in home
+assert '<a class="demo-guide" href="./training.html">Обучение</a>' in home

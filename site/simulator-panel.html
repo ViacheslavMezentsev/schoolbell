@@ -1,0 +1,28 @@
+<details id="simulator-panel" class="metrics-panel simulator-panel">
+<summary>Имитатор устройства <small id="simulator-summary"></small></summary>
+<div class="simulator-content">
+<p class="simulator-note">Вместо реального устройства работает имитатор. Звонки выполняются без звука; результаты видны в журнале и карте. Страница должна оставаться открытой.</p>
+<div class="simulator-grid">
+<section aria-labelledby="simulator-clock-title"><strong id="simulator-clock-title">Виртуальные часы</strong>
+<p id="simulator-now"></p>
+<label for="simulator-time">Дата и время <span id="simulator-zone"></span></label>
+<div class="simulator-time-row"><input id="simulator-time" type="datetime-local" step="1" min="2020-01-01T00:00" max="2037-12-31T23:59"><button id="simulator-set-time" class="icon-button" type="button" title="Установить виртуальное время" aria-label="Установить виртуальное время">✓</button></div>
+<label for="simulator-speed">Ход времени</label><select id="simulator-speed"><option value="0">Пауза</option><option value="1">Обычный · ×1</option><option value="60">Ускоренный · ×60</option><option value="600">Ускоренный · ×600</option></select>
+<div class="simulator-actions"><button id="simulator-minute" type="button">+1 мин</button><button id="simulator-next" type="button">Следующий звонок</button></div>
+<small>Установка времени не проигрывает пропущенные звонки. Шаг вперёд выполняет события на пройденном интервале. После закрытия или длительной приостановки страницы время ставится на паузу.</small>
+</section>
+<section aria-labelledby="simulator-hardware-title"><strong id="simulator-hardware-title">Состояния оборудования</strong>
+<label for="simulator-audio">Аудиокарта</label><select id="simulator-audio"><option value="ready">Подключена</option><option value="missing">Отключена</option><option value="error">Ошибка проигрывания</option></select>
+<label for="simulator-internet">Интернет</label><select id="simulator-internet"><option value="available">Доступен</option><option value="unconfirmed">Не подтверждён</option></select>
+<label for="simulator-ntp">NTP</label><select id="simulator-ntp"><option value="synced">Синхронизирован</option><option value="waiting">Ожидание синхронизации</option><option value="disabled">Выключен</option></select>
+<small>Это заданные состояния, а не проверка сети. NTP не переводит виртуальные часы. Ошибка аудио не выключает автозвонки.</small>
+<div class="simulator-actions"><button id="simulator-reboot" type="button">Имитировать перезагрузку</button></div>
+</section></div>
+<section class="simulator-data" aria-labelledby="simulator-data-title">
+<strong id="simulator-data-title">Локальные данные</strong>
+<p id="demo-storage">Планы, настройки и история сохраняются только в этом браузере.</p>
+<p id="demo-migration-status" role="status"></p>
+<div class="simulator-actions"><button id="demo-migrate" type="button" hidden>Перенести прежний черновик</button><button id="demo-reset" type="button">Сбросить локальные данные</button></div>
+</section>
+<p id="simulator-result" role="status">Примените план в Настройках и включите автозвонки кнопкой ▶ в шапке.</p>
+</div></details>

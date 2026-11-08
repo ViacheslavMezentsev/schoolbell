@@ -74,5 +74,44 @@ async function api(name,data){return (await context.window.fetch('./demo-api/'+n
  const afterResize=await api('journal',{action:'resize',kib:16,expected:32,confirmed:'false'});
  assert(!afterResize.ok);assert((await api('journal',{action:'resize',kib:16,expected:32,confirmed:'true'})).ok);
  assert.equal((await api('journal')).limit_bytes,16384);
+ const resources=(await api('automatic')).cpu;assert.equal(resources.available,false);assert.equal(resources.storage,undefined);assert.equal(resources.uptime_seconds,undefined);
+ // Exercise the actual Pages API in both scheduling modes with virtual time.
+ await api('automatic',{enabled:'false'});
+ await api('timezone',{zone:'UTC',revision:(await api('timezone')).revision});
+ const virtual={mode:'fixed',fixed_schedule:'lessons',active_plan:'p',pre_minutes:2,pre_media:'test',schedules:[{id:'lessons',name:'Lessons',color:1,rows:[{id:'bell',time:'08:30',media:'test',enabled:true,pre:true}]}],plans:[{id:'p',name:'Plan',start:'2026-11-09',end:'2026-11-10',schedule_ids:['lessons'],days:'AA'}]};
+ // Keep the currently protected source until applying the new snapshot.
+ let old=(await api('load'));virtual.schedules.push(...old.data.schedules);
+ let sv=await api('save',{revision:old.revision,draft:JSON.stringify(virtual)});assert(sv.ok,JSON.stringify(sv));
+ let av=await api('automatic',{action:'apply',revision:sv.revision});assert(av.ok);
+ await api('simulator',{command:'time',local:'2026-11-09T08:27:00'});
+ await api('simulator',{command:'configure',speed:0,audio:'ready',internet:'unconfirmed',ntp:'synced'});
+ assert((await api('clock-trust',{action:'resume',revision:sv.revision,generation:String(av.generation)})).ok);
+ await api('simulator',{command:'next'});assert.equal((await api('metrics')).days.find(d=>d.date==='2026-11-09').count,1);
+ await api('simulator',{command:'next'});assert.equal((await api('metrics')).days.find(d=>d.date==='2026-11-09').count,2);
+ const paired=(await api('journal')).entries.filter(e=>e.action==='auto_ok');assert.equal(paired.length,2);assert.equal(paired[0].bell.kind,'pre');assert.equal(paired[1].bell.kind,'main');assert.equal(paired[0].time,Date.parse('2026-11-09T08:28:00Z')/1000);
+ // Repeated reads, rollback and replay never count the same event twice.
+ await api('simulator',{command:'time',local:'2026-11-09T08:27:00'});await api('simulator',{command:'step',seconds:3600});
+ assert.equal((await api('metrics')).days[0].count,2);
+ await api('automatic',{enabled:'false'});virtual.mode='annual';old=await api('load');sv=await api('save',{revision:old.revision,draft:JSON.stringify(virtual)});assert(sv.ok,JSON.stringify(sv));av=await api('automatic',{action:'apply',revision:sv.revision});
+ await api('simulator',{command:'time',local:'2026-11-10T08:27:00'});await api('simulator',{command:'configure',speed:0,audio:'missing',internet:'available',ntp:'waiting'});
+ await api('clock-trust',{action:'resume',revision:sv.revision,generation:String(av.generation)});
+ await api('simulator',{command:'next'});assert((await api('automatic')).enabled);assert.equal((await api('metrics')).days.find(d=>d.date==='2026-11-10').count,0);assert((await api('journal')).entries.some(e=>e.action==='auto_audio_unavailable'&&e.level==='error'));
+ await api('simulator',{command:'configure',speed:0,audio:'ready',internet:'available',ntp:'waiting'});await api('simulator',{command:'next'});assert.equal((await api('metrics')).days.find(d=>d.date==='2026-11-10').count,1);
+ const network=(await api('controls')).network;assert.equal(network.internet.state,'available');assert.equal(network.ntp.state,'waiting');
+ await api('journal',{action:'clear'});assert.equal((await api('journal')).entries.length,0);assert.equal((await api('metrics')).days.find(d=>d.date==='2026-11-10').count,1);
+ await api('demo-boot',{});assert(!(await api('automatic')).enabled);assert.equal((await api('simulator')).sim.speed,0);
+ assert(!(await api('simulator',{command:'step',seconds:1e12})).ok);assert(!(await api('simulator',{command:'time',local:'nonsense'})).ok);
+ // Muting and player errors do not add successful bells or stop automation.
+ await api('simulator',{command:'time',local:'2026-11-09T08:27:00'});
+ // Use a fresh future fixed day to avoid the rollback deduplication guard.
+ await api('automatic',{enabled:'false'});let fixedAgain=(await api('load'));fixedAgain.data.mode='fixed';sv=await api('save',{revision:fixedAgain.revision,draft:JSON.stringify(fixedAgain.data)});av=await api('automatic',{action:'apply',revision:sv.revision});
+ await api('simulator',{command:'time',local:'2026-11-11T08:27:00'});await api('clock-trust',{action:'resume',revision:sv.revision,generation:String(av.generation)});
+ await api('controls',{muted:'true'});await api('simulator',{command:'next'});assert.equal((await api('metrics')).days.find(d=>d.date==='2026-11-11').count,0);
+ await api('controls',{muted:'false'});await api('simulator',{command:'configure',speed:0,audio:'error',internet:'available',ntp:'waiting'});await api('simulator',{command:'next'});assert((await api('automatic')).enabled);assert((await api('journal')).entries.some(e=>e.action==='auto_player_failed'));assert.equal((await api('metrics')).days.find(d=>d.date==='2026-11-11').count,0);
+ assert(!(await api('simulator',{command:'time',local:'2026-02-30T08:27:00'})).ok);
+ // Fast time uses monotonic elapsed time and pauses after a suspended browser.
+ await api('simulator',{command:'configure',speed:60,audio:'ready',internet:'available',ntp:'waiting'});let before=(await api('clock')).epoch;demoNow+=1000;assert.equal((await api('clock')).epoch,before+60);demoNow+=11000;assert.equal((await api('simulator')).sim.speed,0);
+ const beforeReload=await api('metrics');vm.runInNewContext(fs.readFileSync('site/demo.js','utf8'),context);assert(!(await api('automatic')).enabled);assert.equal((await api('simulator')).sim.speed,0);assert.deepEqual((await api('metrics')).days,beforeReload.days);
+ console.log('PASS simulator: fixed/annual pre and main bells, journal timestamps, metrics, rollback dedup, hot audio replacement, network independence, reboot, bounds and suspended clock');
  console.log('PASS demo: local persistence, CAS, midnight/quiet-day preview, mock zone, bounded journal, blocked remote API');
 })().catch(e=>{console.error(e);process.exitCode=1;});

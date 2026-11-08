@@ -11,7 +11,7 @@
     value.days.forEach(function(d){parseDate(d.date);if(!Number.isInteger(d.count)||d.count<0||d.count>2147483647||counts[d.date]!==undefined)throw Error('count');counts[d.date]=d.count;});
     var monday=today-((new Date(today).getUTCDay()+6)%7)*86400000,start=monday-32*7*86400000,days=[];
     for(var i=0;i<231;i++){var t=start+i*86400000,k=dateKey(t);days.push({date:k,count:counts[k]===undefined?null:counts[k],future:t>today});}
-    return {days:days,start:dateKey(start),today:value.today,pending:!!value.persistence_pending,demo:!!value.demo};
+    return {days:days,start:dateKey(start),today:value.today,pending:!!value.persistence_pending,demo:!!value.demo,simulated:!!value.simulated};
   }
   function level(n){return n===null?'unknown':n===0?'0':n<=10?'1':n<=20?'2':n<=30?'3':'4';}
   if(typeof module==='object'&&module.exports){module.exports={model:model,level:level};return;}
@@ -21,7 +21,7 @@
   var busy=false,last=null,epoch=0,hasData=false,selected=null,abort;
   function text(d,index){return weekdays[index%7]+' '+d.date.split('-').reverse().join('.')+' · '+(d.count===null?'нет учтённых данных':'учтено автозвонков: '+d.count);}
   function draw(data){
-    grid.replaceChildren();source.textContent=data.demo?'Демо · оборудование не подключено':data.pending?'Сохранение статистики не подтверждено':'Учтённые автозвонки';
+    grid.replaceChildren();source.textContent=data.simulated?'Выполнено имитатором':data.demo?'Оборудование не подключено':data.pending?'Сохранение статистики не подтверждено':'Учтённые автозвонки';
     detail.textContent=data.start.split('-').reverse().join('.')+' — '+data.today.split('-').reverse().join('.')+' · выберите день';
     weekdays.forEach(function(name,i){var e=document.createElement('span');e.className='bell-activity-axis';e.textContent=i%2===0?name:'';e.style.gridColumn='1';e.style.gridRow=String(i+2);grid.appendChild(e);});
     var month=-1;
@@ -45,6 +45,7 @@
     catch(_){if(started===epoch){if(hasData)source.textContent='Последние данные · обновить не удалось';else clear('Не удалось прочитать статистику. Повторим чтение автоматически.');}}
     finally{clearTimeout(timer);busy=false;abort=null;}
   }
+  global.addEventListener('schoolbell-simulator-update',function(){last=null;load();});
   panel.addEventListener('toggle',function(){if(panel.open)load();});
   document.addEventListener('visibilitychange',function(){if(!document.hidden)load();});
   global.addEventListener('schoolbell-session-lost',function(){epoch++;last=null;hasData=false;selected=null;if(abort)abort.abort();clear('Войдите снова, чтобы прочитать статистику.');});

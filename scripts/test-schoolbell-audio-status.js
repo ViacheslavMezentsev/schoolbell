@@ -22,7 +22,7 @@ fail=true;now+=16000;interval();
 assert(get('audio-route').textContent.includes('EHCI'),'keep the reading during normal poll latency');
 await flush();assert(get('audio-route').textContent.includes('EHCI'));assert(get('resource-audio-age').textContent.includes('последние данные'));assert(get('quick-bell').disabled);
 now+=45000;interval();await flush();assert.equal(get('audio-route').textContent,'нет данных');assert.equal(get('audio-volume').textContent,'— %');assert.equal(get('volume-line').attrs['aria-valuenow'],undefined);assert.equal(get('volume-line').attrs['data-tone'],'unknown');assert.equal(get('device-switch').textContent,'Переключатель: не определён');assert.equal(get('device-ip').textContent,'IP: —');
-fail=false;reply={ok:true,volume_db:-60,hardware:false,audio:{state:'demo'}};now+=16000;interval();await flush();assert(get('audio-route').textContent.includes('демо'));assert.equal(get('device-switch').textContent,'Переключатель: демо');
+fail=false;reply={ok:true,volume_db:-60,hardware:false,audio:{state:'demo'}};now+=16000;interval();await flush();assert(get('audio-route').textContent.includes('устройство не подключено'));assert.equal(get('device-switch').textContent,'Переключатель: нет данных');
 reply={...reply,confirm_play:true};now+=16000;interval();await flush();
 let prompts=0,sends=0;win.confirm=()=>{prompts++;return false;};
 assert.equal(await win.schoolbellSpeakerCommand(()=>{sends++;}),null);assert.equal(prompts,1);assert.equal(sends,0);

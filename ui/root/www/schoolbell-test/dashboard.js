@@ -157,6 +157,7 @@
   window.addEventListener('schoolbell-session-lost',clearButton);
   window.addEventListener('schoolbell-session-restored',clearButton);
   document.getElementById('journal-reload').addEventListener('click',loadJournal);
+  window.addEventListener('schoolbell-simulator-update',function(){if(!document.getElementById('panel-journal').hidden)loadJournal();});
   sourceChoices.forEach(function(source){
     document.getElementById('journal-source-'+source).addEventListener('click',function(){
       sourceFilter=source;journalPage=0;
@@ -206,19 +207,20 @@
     var browser=new Date(),elapsed=sample?performance.now()-sample.received:Infinity;
     document.getElementById('browser-clock').textContent=browser.toLocaleString('ru-RU',format);
     document.getElementById('browser-zone').textContent=Intl.DateTimeFormat().resolvedOptions().timeZone+' · '+zone(-browser.getTimezoneOffset());
-    if(window.schoolbellDisplayClock)window.schoolbellDisplayClock(sample&&elapsed<=90000?sample.wall+elapsed:null);
+    if(window.schoolbellDisplayClock)window.schoolbellDisplayClock(sample&&elapsed<=90000?sample.wall+elapsed*sample.rate:null);
     var status=document.getElementById('clock-status'),sync=document.getElementById('clock-sync');sync.hidden=true;document.getElementById('timezone-hint').hidden=true;
     if(!sample || elapsed>90000){document.getElementById('router-clock').textContent='Время недоступно';status.textContent='Нет свежего ответа устройства. Сравнение часов отключено.';return;}
-    document.getElementById('router-clock').textContent=new Date(sample.wall+elapsed).toLocaleString('ru-RU',Object.assign({},format,{timeZone:'UTC'}));
+    document.getElementById('router-clock').textContent=new Date(sample.wall+elapsed*sample.rate).toLocaleString('ru-RU',Object.assign({},format,{timeZone:'UTC'}));
     document.getElementById('router-zone').textContent=(sample.name?sample.name+' · ':'')+zone(sample.offset)+' · получено '+Math.floor(elapsed/1000)+' с назад';
     document.getElementById('timezone-hint').hidden=sample.offset===-browser.getTimezoneOffset();
-    var delta=(browser.getTime()-(sample.epoch+elapsed))/1000;
+    var delta=(browser.getTime()-(sample.epoch+elapsed*sample.rate))/1000;
     if(sample.rtt>2000){status.textContent='Медленный ответ устройства: сравнение неточно. Ожидаем следующий опрос.';return;}
     if(Math.abs(delta)>5){status.textContent='Часы устройства '+(delta>0?'отстают':'спешат')+' примерно на '+Math.round(Math.abs(delta))+' с относительно браузера.';sync.hidden=false;}
     else status.textContent='Часы совпадают в пределах 5 с.';
     if(sample.offset!==-browser.getTimezoneOffset())status.textContent+=' Часовые пояса различаются; синхронизация времени не меняет пояс.';
   }
   window.addEventListener('schoolbell-time-changed',function(){sample=null;poll();});
+  window.addEventListener('schoolbell-simulator-update',poll);
   async function poll() {
     if(inflight || document.hidden)return;
     inflight=true;if(window.schoolbellInitialReady)await window.schoolbellInitialReady;var started=performance.now(),abort=new AbortController(),timer=setTimeout(function(){abort.abort();},10000);
@@ -229,7 +231,7 @@
       if(!v.ok || !Number.isInteger(v.epoch) || !['year','month','day','hour','min','sec'].every(function(k){return Number.isInteger(v[k]);}))throw new Error('clock');
       window.dispatchEvent(new CustomEvent('schoolbell-router-date',{detail:String(v.year).padStart(4,'0')+'-'+String(v.month).padStart(2,'0')+'-'+String(v.day).padStart(2,'0')}));
       var wall=Date.UTC(v.year,v.month-1,v.day,v.hour,v.min,v.sec);
-      sample={name:typeof v.zone==='string'?v.zone:null,received:received,epoch:v.epoch*1000+rtt/2,wall:wall+rtt/2,offset:Math.round((wall-v.epoch*1000)/60000),rtt:rtt};
+      sample={rate:v.simulated && [0,1,60,600].includes(v.rate)?v.rate:1,name:typeof v.zone==='string'?v.zone:null,received:received,epoch:v.epoch*1000+rtt/2,wall:wall+rtt/2,offset:Math.round((wall-v.epoch*1000)/60000),rtt:rtt};
     }catch(_){sample=null;}
     finally{clearTimeout(timer);inflight=false;draw();}
   }

@@ -9,9 +9,9 @@
   var countdown=document.getElementById('session-countdown'),duration=document.getElementById('session-duration');
   var endpoint=new URL(panel.dataset.session,location.href),base=endpoint.pathname.replace(/\/session$/,'');
   if(endpoint.pathname.includes('/demo-api/')){
-    status.textContent='Демо: вход LuCI и выход недоступны. Данные хранятся в этом браузере.';
+    status.textContent='Устройство не подключено: вход и выход недоступны. Данные хранятся в этом браузере.';
     document.getElementById('session-login').hidden=true;check.disabled=true;logout.disabled=true;duration.disabled=true;
-    countdown.textContent='Демо: сеанс устройства не используется.';return;
+    countdown.textContent='Сеанс устройства не используется.';return;
   }
   var rawFetch=window.fetch.bind(window),user=panel.dataset.user,token=root.dataset.token;
   var blocked=false,checking=false,leaving=false,epoch=0,controllers=new Set(),minutes=30;

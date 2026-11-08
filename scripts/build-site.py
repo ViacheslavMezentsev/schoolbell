@@ -29,7 +29,7 @@ demo=out;assets=demo/'assets';assets.mkdir(parents=True,exist_ok=True)
 for p in (source/'www/schoolbell-test').iterdir():
  text=p.read_text()
  if p.suffix=='.js':
-  text=text.replace('на устройстве','в демо').replace('на устройство','в демо').replace('с устройства','из браузера').replace('с устройством','с локальной моделью').replace('на роутере','в демо').replace('на роутер','в демо').replace('с роутера','из браузера').replace('с роутером','с локальной моделью').replace('Проверьте вход в LuCI, сеть','Проверьте файл').replace('вход LuCI','демо')
+  text=text.replace('на устройстве','в браузере').replace('на устройство','в браузер').replace('с устройства','из браузера').replace('с устройством','с локальной моделью').replace('на роутере','в браузере').replace('на роутер','в браузер').replace('с роутера','из браузера').replace('с роутером','с локальной моделью').replace('Проверьте вход в LuCI, сеть','Проверьте файл').replace('вход LuCI','доступность страницы')
  if p.name=='schedules.js':
   marker='window.schoolbellEditor={'
   assert text.count(marker)==1
@@ -56,26 +56,31 @@ text=re.sub(r'<!-- device-plan-export:start -->.*?<!-- device-plan-export:end --
 text=re.sub(r'<script src="/schoolbell-test/plan-export.js[^"]*"></script>','',text)
 text=re.sub(r'<!-- device-plan-import:start -->.*?<!-- device-plan-import:end -->','',text,flags=re.S)
 text=re.sub(r'<script src="/schoolbell-test/plan-import.js[^"]*"></script>','',text)
-values={'network_url':'./demo-api/network','metrics_url':'./demo-api/metrics','system_url':'./demo-api/system','session_url':'./demo-api/session','login_url':'./','auth_user':'Демо без входа','trust_url':'./demo-api/clock-trust','backup_url':'./demo-api/backup','media_url':'./demo-api/media','automatic_url':'./demo-api/automatic','controls_url':'./demo-api/controls','manual_url':'./demo-api/no-router','preview_url':'./demo-api/preview','schedules_url':'./demo-api/load','save_url':'./demo-api/save','clock_url':'./demo-api/clock','journal_url':'./demo-api/journal','timezone_url':'./demo-api/timezone','sample_url':'./assets/test.mp3','play_url':'./demo-api/no-router','module_version':version+' · Демо','core_version':'не подключено','token':'demo'}
+values={'network_url':'./demo-api/network','metrics_url':'./demo-api/metrics','system_url':'./demo-api/system','session_url':'./demo-api/session','login_url':'./','auth_user':'Без входа','trust_url':'./demo-api/clock-trust','backup_url':'./demo-api/backup','media_url':'./demo-api/media','automatic_url':'./demo-api/automatic','controls_url':'./demo-api/controls','manual_url':'./demo-api/no-router','preview_url':'./demo-api/preview','schedules_url':'./demo-api/load','save_url':'./demo-api/save','clock_url':'./demo-api/clock','journal_url':'./demo-api/journal','timezone_url':'./demo-api/timezone','sample_url':'./assets/test.mp3','play_url':'./demo-api/no-router','module_version':version,'core_version':'не подключено','token':'demo'}
 for key,value in values.items():text=text.replace('<%=pcdata('+key+')%>',html.escape(value,quote=True))
 text=text.replace("<%=url('admin')%>",'https://github.com/ViacheslavMezentsev/schoolbell').replace('← Управление устройством LuCI','← Репозиторий проекта').replace('← Управление роутером LuCI','← Репозиторий проекта')
 text=text.replace('/schoolbell-test/','./assets/')
-text=text.replace('<nav class="page-tabs"', '<div class="demo-notice-row"><details id="demo-notice" class="plan-workflow demo-notice"><summary><strong>ДЕМО · оборудование не подключено.</strong><span class="collapse-hint">Подробности ▾</span></summary><p>Календарные планы можно редактировать без устройства. Расписания и часовой пояс изменяются только в этом браузере. Автозвонков нет.</p><p id="demo-storage">Данные демо сохраняются локально.</p><p id="demo-migration-status"></p><button id="demo-migrate" type="button" hidden>Перенести прежний черновик</button><button id="demo-boot" type="button">Имитировать перезагрузку</button><button id="demo-reset" type="button">Сбросить демо</button></details><a class="demo-guide" href="./guide.html">Руководство</a><a class="demo-guide" href="./training.html">Обучение</a></div><nav class="page-tabs"',1)
+text=text.replace('</details><p id="session-status"','</details>'+(root/'site/simulator-panel.html').read_text()+'<p id="session-status"',1)
+for name in ['simulator-ui.js','simulator.css']:shutil.copyfile(root/'site'/name,assets/name)
+text=text.replace('</head>','<link rel="stylesheet" href="./assets/simulator.css"></head>',1)
+text=text.replace('<sup class="header-version">'+version+'</sup>', '<sup class="header-version">'+version+' · <strong class="demo-label">Демо</strong></sup>',1)
+text=text.replace('</head>','<style>.demo-label{font-weight:700;color:var(--warning-text)}</style></head>',1)
+text=text.replace('<nav class="page-tabs"', '<div class="demo-guide-row"><a class="demo-guide" href="./guide.html">Руководство</a><a class="demo-guide" href="./training.html">Обучение</a></div><nav class="page-tabs"',1)
 text=text.replace('Подготовьте расписания и сохраните их на роутере.','Попробуйте расписания и календарь на тестовых данных.')
-text=text.replace('Инженерная установка','Демонстрация интерфейса').replace('На роутере · оценка между опросами','Демо-часы · выбранная зона').replace('Сохраняется на роутере','Сохраняется в браузере').replace('Настройка сохраняется на роутере и действует для всех его приложений.','Настройка меняет только часовой пояс этого демо, не устройства или компьютера.')
-text=text.replace('id="router-play" type="submit"','id="router-play" type="submit" disabled').replace('▶ Позвонить на роутере','Недоступно в демо · нет роутера').replace('<p id="router-result" role="status"></p>','<p id="router-result" role="status">В демо доступен только звук браузера.</p>')
+text=text.replace('Инженерная установка','Демонстрация интерфейса').replace('На устройстве · оценка между опросами','Виртуальные часы · выбранная зона').replace('На устройстве</span>','В выбранной зоне</span>').replace('Сохраняется на роутере','Сохраняется в браузере').replace('Настройка сохраняется на роутере и действует для всех его приложений.','Настройка меняет только часовой пояс этой страницы, не устройства или компьютера.')
+text=text.replace('id="router-play" type="submit"','id="router-play" type="submit" disabled').replace('▶ Позвонить на роутере','Устройство не подключено').replace('<p id="router-result" role="status"></p>','<p id="router-result" role="status">Доступен только звук браузера.</p>')
 text=re.sub(r'(?=<script src="\./assets/session\.js(?:\?[^"]*)?">)', '<script src="./assets/ranges.js"></script><script src="./assets/demo.js"></script>', text, count=1)
 marker='<h2>Календарные планы</h2>'
 assert text.count(marker)==1
 text=text.replace(marker,marker+(root/'site/portable-panel.html').read_text(),1)
 text=text.replace('</head>','<link rel="stylesheet" href="./assets/portable.css"></head>')
 scripts=''.join('<script src="./assets/'+name+'.js"></script>' for name in ['portable-codec','portable-export','portable-preview','portable-config','portable-pages','portable-ui'])
-text=text.replace('</body>',scripts+'</body>')
+text=text.replace('</body>',scripts+'<script src="./assets/simulator-ui.js"></script></body>')
 assert '<%=' not in text,'unresolved template'
 # Embed provenance at build time; never infer it from the current remote branch.
 author_marker='Соавтор: Codex (OpenAI), ИИ-помощник в разработке.</p>'
 assert text.count(author_marker)==1
-build_details='<div id="feedback-build" class="feedback-build"><strong>Сборка демо Pages</strong><p>Дата (UTC): '+html.escape(built)+'</p><p>Git commit: <code>'+html.escape(commit)+'</code></p>'+('<p>Собрано с локальными изменениями.</p>' if dirty else '')+'</div>'
+build_details='<div id="feedback-build" class="feedback-build"><strong>Сборка Pages</strong><p>Дата (UTC): '+html.escape(built)+'</p><p>Git commit: <code>'+html.escape(commit)+'</code></p>'+('<p>Собрано с локальными изменениями.</p>' if dirty else '')+'</div>'
 text=text.replace(author_marker,author_marker+build_details,1)
 text=text.replace('</footer>','<p><a href="./licenses/">Лицензии / Licenses</a></p>'+provenance+'</footer>')
 (demo/'index.html').write_text(text)
