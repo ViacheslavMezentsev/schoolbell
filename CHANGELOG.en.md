@@ -4,6 +4,10 @@
 
 ## Unreleased
 
+- Extended cold-boot acceptance: previously enabled automation is off after boot, plan and volume retained; manual enablement between power cycles confirmed.
+
+- Recorded the 5.1.118 cold-boot check: one boot event, automatic bells staying off and unchanged volume; untested scenarios remain in TODO.
+
 - Reorganized TODO into confirmed results and remaining checks; split mixed acceptance items without claiming unperformed tests passed.
 
 - 5.1.118: Playback help uses consistent symbols: 🔊 in the browser, 🔔 through Schoolbell.

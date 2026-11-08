@@ -4,7 +4,7 @@
 
 ## Осталось: надёжность / Remaining: reliability
 
-- [ ] Проверить холодную загрузку: запись загрузки в журнале, автозвонки остаются выключенными, последующий ручной запуск автоматики (TC-217–TC-220). / Verify boot logging, automatic bells staying off after a cold boot and subsequent manual enablement.
+- [ ] После холодной загрузки проверить следующий автоматический звонок на слух после ручного включения (TC-217–TC-220). Оба исходных состояния автоматики и ручное включение текущего плана уже проверены 08.11.2026; в тихий день звонков не ожидалось. / Verify the next audible scheduled bell after manual enablement following a cold boot; both prior automation states and manual enablement were checked on 2026-11-08, a quiet day.
 - [ ] Проверить отключение и горячую замену USB-аудиокарты: автомат продолжает работу, попытки и ошибки видны в журнале, следующий звонок после восстановления слышен. / Verify continued scheduling, logged failures and the next audible bell after hot replacement.
 - [ ] Локализовать периодические отказы прежнего сочетания хаба/EHCI и проверить исправление на нём. Успешные OHCI-серии и учебный день не доказывают исправление этого сочетания. [RU](docs/PLAYBACK_RELIABILITY.md) · [EN](docs/PLAYBACK_RELIABILITY.en.md). / Diagnose the earlier hub/EHCI failures and verify a fix on that combination; OHCI success does not close this defect.
 - [ ] Установить причину оставшегося пустого замка медиатеки после завершения запросов. Безопасное восстановление выполнено; автоматическое снятие не добавлялось. / Find the cause of the orphan empty media gate; recovery was performed, automatic removal was not added.
@@ -36,6 +36,10 @@
 ## Выполнено и подтверждено / Completed and confirmed
 
 ### Работа звонков / Bell execution
+
+- [x] 08.11.2026, стенд 5.1.118: после первой холодной загрузки текущий учебный план вручную включён штатной командой (№429). После повторного отключения питания автоматика стала выключенной в сохранённых данных и исполнителе; ровно одна новая запись загрузки №430, 10:08:04 по времени устройства, без автоматических запросов звука. План, черновик, журнал и громкость 50 % сохранены. Прежние счётчики карты неизменны; включение добавило текущий день с нулём звонков. / Current plan manually enabled after the first cold boot; the second power cycle disabled automation in persistent/runtime state and logged one boot event, with no automatic playback requests. Plan, draft, journal, volume and prior daily counts preserved; enabling added a zero-count day.
+
+- [x] 08.11.2026, стенд 5.1.118: после подтверждённого владельцем отключения и подачи питания сменился boot ID; в журнале ровно одна новая запись загрузки (№428, 10:03:13 по времени устройства). Автозвонки были и остались выключены, громкость 50 % не изменилась. Старые записи журнала, настройки, планы и карта автозвонков сохранены. / Owner-confirmed power cycle: new boot ID, exactly one boot event, automation stayed off, volume remained 50%; journal history, settings, plans and daily counts preserved.
 
 - [x] 04.11.2026, стенд 5.1.108: предзвонок и основной звонок в обоих режимах подтверждены пользователем на слух. По расписанию — 20:47/20:48; по плану — 20:51/20:52. / Owner heard both pairs in fixed-schedule and calendar-plan modes.
 - [x] Для четырёх звонков сверены источник, тип и назначенное местное время с запросами и успешными завершениями в журнале. Карта дня: 0 → 2 → 4. / Matched all four events against the journal; daily count increased from 0 to 2 to 4.
