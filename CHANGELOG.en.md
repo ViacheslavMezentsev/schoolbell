@@ -4,7 +4,9 @@
 
 ## 5.1.120 — 2026-11-08
 
-- Recorded same-card AB13X/OHCI hot-reconnection acceptance: two audible successes, one missing-card failure, continued scheduling and correct counts. School-year plan restored, automation off and volume unchanged; another card and EHCI remain untested.
+- Verified hot substitution of AB13X with C-Media over OHCI: both bells audible, journal/counts matched, no service restart. School-year plan restored, automation off and volume unchanged. Hub port changed; EHCI was not tested.
+
+- Recorded same-card AB13X/OHCI hot-reconnection acceptance: two audible successes, one missing-card failure, continued scheduling and correct counts. School-year plan restored, automation off and volume unchanged; another card was tested in the subsequent run; EHCI remains untested.
 
 - 2026-11-08: recorded published Pages 5.1.120 (`ce2e3fa28c20`) verification: simulator, browser-time setting, Metrics summary, journal/counts and page reload. Remaining scenarios stay in TODO; no bench access.
 

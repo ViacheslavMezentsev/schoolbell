@@ -186,3 +186,20 @@ A temporary calendar plan contained three main bells using the test melody. Time
 Restored the original draft and applied school-year plan, leaving automation off. Sound settings matched the baseline; .sbb contents matched by hashes. Journal and daily counts retained the test results. Local evidence is in the Git-ignored `tests/manual/115-usb-hotplug-5-1-120` protocol.
 
 **Limits:** substitution with another card model, the former problematic hub/EHCI combination and removal during active playback were not tested. This run does not close those scenarios or full hardware acceptance.
+
+### 2026-11-08 — hot substitution with another audio card 5.1.120
+
+With owner authorization, performed a separate check on the working TL-MR3020 v3, OpenWrt 19.07.9, Shkolnik **5.1.120**. Original card: AB13X USB Audio over OHCI; replacement: C-Media USB PnP Sound Device over OHCI. Both used `/dev/dsp`. Verified the .sbb backup and data snapshot; initially automation was off, sound allowed and volume 50%.
+
+A temporary calendar plan contained two main bells using the test melody. Times are device-local, Asia/Yekaterinburg (UTC+05:00).
+
+| Time | Condition and result | Journal | Daily count |
+| --- | --- | --- | --- |
+| 13:56 | AB13X: attempt at 13:56:01, successful completion at 13:56:04; owner confirmed audible playback. | #447 / `auto_ok` #448 | 2 → 3 |
+| 14:00 | C-Media detected after physical substitution; attempt at 14:00:01, successful completion at 14:00:04; owner confirmed sound through the speakers. | #449 / `auto_ok` #450 | 3 → 4 |
+
+**Result: PASSED for AB13X-to-C-Media substitution over OHCI.** Automation remained enabled without a service restart. Both attempts succeeded; no errors in the run events. The initial count of 2 came from the preceding run and was not counted again.
+
+Restored the original draft and applied school-year plan, leaving automation off. Sound settings, including 50% volume, remained unchanged; .sbb contents matched by hashes. Journal and daily counts retained. No package, clock or network changes. Local protocol and evidence: `tests/manual/116-usb-card-substitution-5-1-120` (Git-ignored).
+
+**Conditions and limits:** the OHCI USB path changed from `1.3` to `1.4` along with the card, so this was not an isolated same-port substitution test. The former problematic hub/EHCI and removal during active playback were not tested. The result does not cover every card model or close full hardware acceptance.
