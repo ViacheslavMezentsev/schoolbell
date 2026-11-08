@@ -1,8 +1,10 @@
 # Задачи проекта / Project tasks
 
-Актуализировано 08.11.2026 по результатам до 5.1.118 включительно. Выполненное отделено от оставшихся проверок. Старые версии в подтверждениях обозначают дату результата, а не версию для следующей проверки. Новые аппаратные проверки выполнять на согласованной текущей версии и отдельно разрешённом устройстве. / Reviewed on 2026-11-08 through 5.1.118. Historical results are not new hardware acceptance; use an agreed current version and authorized target for remaining checks.
+Актуализировано 08.11.2026 по результатам до 5.1.119 включительно. Выполненное отделено от оставшихся проверок. Старые версии в подтверждениях обозначают дату результата, а не версию для следующей проверки. Новые аппаратные проверки выполнять на согласованной текущей версии и отдельно разрешённом устройстве. / Reviewed on 2026-11-08 through 5.1.119. Historical results are not new hardware acceptance; use an agreed current version and authorized target for remaining checks.
 
 ## Осталось: надёжность / Remaining: reliability
+
+- [ ] TC-234: проверить реальные отключение сети и длительную потерю NTP с возвратом связи. В 5.1.119 проверены host-модели кэша/таймаутов и установка без изменения сети; эти модели не заменяют аппаратный разрыв. / Verify physical network loss and prolonged NTP loss/recovery; host models do not replace these hardware scenarios.
 
 - [ ] После холодной загрузки проверить следующий автоматический звонок на слух после ручного включения (TC-217–TC-220). Оба исходных состояния автоматики и ручное включение текущего плана уже проверены 08.11.2026; в тихий день звонков не ожидалось. / Verify the next audible scheduled bell after manual enablement following a cold boot; both prior automation states and manual enablement were checked on 2026-11-08, a quiet day.
 - [ ] Проверить отключение и горячую замену USB-аудиокарты: автомат продолжает работу, попытки и ошибки видны в журнале, следующий звонок после восстановления слышен. / Verify continued scheduling, logged failures and the next audible bell after hot replacement.
@@ -71,3 +73,7 @@
 - [x] Подготовлены btop для MR3020, инструкция PowerShell/SCP/SSH и автономный мастер установки Windows 11. Сквозная проверка мастера на заводском устройстве ещё предстоит. / btop, PowerShell/SCP/SSH instructions and Windows setup wizard prepared; factory-device acceptance is pending.
 
 Подробная история изменений: [RU](CHANGELOG.md) · [EN](CHANGELOG.en.md). Эта ревизия TODO не изменяет требования или состояние стенда. / See changelogs for detailed history; this TODO review changes neither requirements nor bench state.
+
+## Выполнено: наблюдение сети / Completed: network observation
+
+- [x] 5.1.119: добавлена строка Интернет/NTP в Ресурсы, фоновая ограниченная проба, кэш RAM, независимое наблюдение NTP, отключение/адрес проверки в Интерфейсе; общие исходники Pages без настоящих проб. ТЗ 1.119, TC-234. На стенде подтверждены доступность Интернета, сохранение переключателя и штатное событие NTP 08.11.2026: кэш и браузер показывают синхронизацию, служба времени не перезапускалась. / Added independent Internet/NTP resources, a bounded cached background probe, Interface settings and a shared Pages UI without real probes. A native NTP event was observed on 2026-11-08; cache and browser confirm synchronization without restarting the time service.

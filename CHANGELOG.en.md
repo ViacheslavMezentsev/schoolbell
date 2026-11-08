@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+- Verified native NTP confirmation in 5.1.119: the service event appears in the cache and Resources without restarting NTP; automatic bells remain off and volume is unchanged.
+
 - 5.1.119: Resources now show independent Internet and NTP states, with a cached background probe and an editable/disableable target in Interface settings. Pages shares the UI without probing the network.
 
 - Verified offline boot: boot journal captured clock rollback; after reconnection the clock was corrected while automation stayed off and data/volume were preserved.
