@@ -294,3 +294,15 @@ The ×× button after Copy clears all journal entries after confirmation, includ
 Settings → Interface offers journal sizes of 16, 32 (default), 64 and 128 KiB. Apply with ✓. Reducing the size requires confirmation and immediately retains only the newest records that fit. The local journal and its capacity stay with the device across settings restore. Automatic bell counts are preserved.
 
 Collapsed settings sections summarize their main values. Opening a section hides its summary. Labels identify unsaved or unapplied changes.
+
+## Interface and Pages in 5.1.120
+
+Collapsed Metrics shows free flash, saved volume and Internet status on the right; expanding hides the summary. It reuses Resources polling. “Unconfirmed” means no fresh reply from the probe target, not proof of a disconnected network.
+
+In Date and time, select Set time from browser, compare the readings in the confirmation dialog and accept. Acceptance sets the clock and disables automatic bells; cancellation changes nothing. If confirmation expires, start again. ↻ only refreshes readings. In Pages only the virtual clock changes, never your computer’s clock.
+
+In Pages expand Device simulator below Metrics. Apply the saved plan in Settings and enable ▶. Use Next bell, +1 min or ×1/×60/×600 speed; you can also set the date or pause time. Setting a date does not replay missed events; stepping forward evaluates the crossed interval. Main bells and pre-bells execute silently, with outcomes in the journal and successful automatic events on the daily map.
+
+Audio, Internet and NTP are simulated states, not equipment or network checks. NTP status alone does not set virtual time. CPU and flash have no fabricated measurements. The 🔊 preview still plays MP3 audio in the browser.
+
+Keep the page open. Reopening leaves automatic bells off and time paused; settings and history remain local to this browser. A prolonged browser stall also pauses time without catching up the missed interval. Simulate reboot exercises this behavior without accessing a router. Local-data reset and migration of an eligible legacy draft are at the bottom of the simulator. Guide and Training links remain above the tabs.

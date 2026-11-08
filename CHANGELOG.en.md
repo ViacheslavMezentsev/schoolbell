@@ -2,7 +2,16 @@
 
 [Русский](CHANGELOG.md)
 
-## Unreleased
+## 5.1.120 — 2026-11-08
+
+- Pages adds a Device simulator below Metrics: virtual time, audio, Internet and NTP states, silent pre-bell/main-bell execution with journal and daily counts. Opening the page leaves automation off and virtual time paused.
+- Removed repeated demo labels and the disconnected-hardware banner. The header demo badge is highlighted; legacy draft migration and local-data reset are inside the simulator. Guide and Training links remain available.
+- Setting time from the browser now opens an immediate confirmation dialog. Pages changes only virtual time. Expired confirmation, session loss and duplicate-submission protections remain in place.
+- Fixed status flicker while virtual time runs; background updates preserve unfinished time input.
+- Collapsed Metrics shows free flash, saved volume and Internet status on the right using existing data. Expanding the panel hides the summary; unavailable readings are not fabricated.
+- Refreshed changed CSS/JS version tokens. Full `make all` passed; the 5.1.120 bench upgrade and UI were accepted with automation off and unchanged volume. Published Pages requires a separate check.
+
+## Earlier changes
 
 - Verified native NTP confirmation in 5.1.119: the service event appears in the cache and Resources without restarting NTP; automatic bells remain off and volume is unchanged.
 

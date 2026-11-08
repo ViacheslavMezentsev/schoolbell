@@ -1,6 +1,6 @@
 # Задачи проекта / Project tasks
 
-Актуализировано 08.11.2026 по результатам до 5.1.119 включительно. Выполненное отделено от оставшихся проверок. Старые версии в подтверждениях обозначают дату результата, а не версию для следующей проверки. Новые аппаратные проверки выполнять на согласованной текущей версии и отдельно разрешённом устройстве. / Reviewed on 2026-11-08 through 5.1.119. Historical results are not new hardware acceptance; use an agreed current version and authorized target for remaining checks.
+Актуализировано 08.11.2026 по результатам до 5.1.120 включительно. Выполненное отделено от оставшихся проверок. Старые версии в подтверждениях обозначают дату результата, а не версию для следующей проверки. Новые аппаратные проверки выполнять на согласованной текущей версии и отдельно разрешённом устройстве. / Reviewed on 2026-11-08 through 5.1.120. Historical results are not new hardware acceptance; use an agreed current version and authorized target for remaining checks.
 
 ## Осталось: надёжность / Remaining: reliability
 
@@ -22,6 +22,8 @@
 
 ## Осталось: интерфейс и Pages / Remaining: UI and Pages
 
+
+
 - [ ] Подтвердить на реальном телефоне панель сохранения и отсутствие горизонтального выхода страницы за экран. / Confirm the save bar and absence of horizontal overflow on a real phone.
 - [ ] Завершить TC-197 для текущего UI: обе темы, узкий экран, фокус клавиатуры, disabled, размеры и отступы одинаковых элементов. Ранее проверенные 64 сочетания относятся к 5.1.69, а не ко всем последующим изменениям. / Complete current UI consistency checks; the earlier 64 combinations cover 5.1.69 only.
 - [ ] Проверить опубликованные Pages владельцем на актуальной версии. Сборка и тесты общих исходников не заменяют проверку опубликованного сайта. / Review the current published Pages; source checks do not prove the deployed site.
@@ -36,6 +38,13 @@
 - [ ] Проверить оставшееся дублирование с core; удалять только после проверки. Отдельный репозиторий и рабочее пространство уже используются. / Review remaining duplication with core before removal; the standalone repository/workspace is already in use.
 
 ## Выполнено и подтверждено / Completed and confirmed
+
+### 5.1.120: интерфейс и имитатор / UI and simulator
+
+- [x] 08.11.2026: локальный имитатор Pages, оба режима с основным и предварительным звонком, ошибки/возврат аудио, откат виртуальных часов, журнал и карта проверены host-тестами. В браузере проверены сводки, установка времени и отсутствие мигания; результат принят владельцем. Это не аппаратная приёмка. / Local simulator scenarios passed host tests; browser UI, time setting and stable status were checked and accepted, without claiming hardware acceptance.
+- [x] Общий диалог установки времени и сводка «Метрик» (Flash, громкость, Интернет), единая пометка «Демо», перенос локальных действий в имитатор и сохранение ссылок руководства/обучения реализованы. / Implemented the shared time confirmation dialog, resource summary, single demo badge and relocated local actions with guide links preserved.
+- [x] 08.11.2026: полный `make all` для 5.1.120 пройден. При установке проверены резервная копия, пакет отката, все 86 файлов пакета, неизменность содержимого .sbb, громкости 50 %, защищённых настроек сети/времени и выключенное состояние автоматики. Внешний вид принят владельцем. / Full checks and upgrade verification passed; backup contents, volume, protected settings and auto-off state preserved; owner accepted the UI.
+
 
 ### Работа звонков / Bell execution
 

@@ -1993,9 +1993,9 @@
       "source": "docs/packages/schoolbell/TECHNICAL_SPECIFICATION.md",
       "destination": "docs/requirements/TECHNICAL_SPECIFICATION.md",
       "source_sha256": "61b760731a5c4f6c53ed67726cd8667136ee194692aa517aa2b3ded7e9f07aad",
-      "destination_sha256": "d083188c2ffa2f36c038fce32f8a6505f93d058882b77a7d4a176667a7262414",
+      "destination_sha256": "47c371369ba2cd20e3ea7b493c4406cad2404ccc4b8078890ff513658737b1e7",
       "changes": "Markdown link destinations only; original text and requirement/TC IDs preserved; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner clarification of playback action icons (5.1.32, spec 1.78); owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); owner-approved baseline CSS palette and fixed order, spec 1.81 (documentation only); baseline CSS palette implementation, spec 1.81; insert and reorder bell rows (5.1.48); shared UI conventions and large action icons (5.1.50); triangle and bulk action icons (5.1.51); melody table add and replace (5.1.52); metadata-only melody rename (5.1.53); passive switch and IP header (5.1.56); saved volume header bar; UI consistency review and mobile layout; explicit active calendar plan requirements (spec 1.99)",
-      "prose_sha256": "d99de49dae0577dac7567883cef851b1736d1543e2f8f418381739fd48cf038f",
+      "prose_sha256": "b433b3451027945b4920832fd75772da781f1e4a23573b516ca2a928891208cc",
       "migrated_prose_sha256": "7a7b8c5652b4353f90f58c476218ca443a2dbb2be0af2516e6e735ea8fa30be5"
     },
     {
@@ -2018,18 +2018,18 @@
       "source": "docs/packages/schoolbell/USER_GUIDE.en.md",
       "destination": "docs/user/USER_GUIDE.en.md",
       "source_sha256": "45cada2eb0064aa88df66a57a4e80f593cc259497ea41817e66eb42fcf678921",
-      "destination_sha256": "a408094941ecd38dc99ba2e24fcf069a6a58a9a1271bc2f7f9770a164c168061",
+      "destination_sha256": "e695227b5825a8c33ae592a3e4f82be32c31de33b4b1577576d51ebf87589196",
       "changes": "Markdown link destinations only; original text and requirement/TC IDs preserved; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); schoolbell feedback issue forms and RU/EN guide links (5.1.45); insert and reorder bell rows (5.1.48); triangle and bulk action icons (5.1.51); melody table add and replace (5.1.52); metadata-only melody rename (5.1.53); passive switch and IP header (5.1.56); saved volume header bar; UI consistency review and mobile layout",
-      "prose_sha256": "22bb454eb58dc8a1d5409276cdf27b327f749672256bedb05cd8e7dbe4f0daa2",
+      "prose_sha256": "06fba846839f88df2a575ffa95178edda942085a580be2aa72e6611dbdaa2178",
       "migrated_prose_sha256": "ca3efd23e3a9a2c17b796ed94a73f372ad98853e29c32591d2525368a2e9fee8"
     },
     {
       "source": "docs/packages/schoolbell/USER_GUIDE.md",
       "destination": "docs/user/USER_GUIDE.md",
       "source_sha256": "9753511757ffb71652f00145a30dc1421e5e3bc3e775b0b357f9d46a93704807",
-      "destination_sha256": "9c5f15150d3846015f0eab599dc017bdd6e8f9258cefce0383a16f79bf53b8a4",
+      "destination_sha256": "ed0c70210c9b3a98eefe7b1a9482a0ee31cfc540ff7f3c0431425076ecdadb1e",
       "changes": "Markdown link destinations only; original text and requirement/TC IDs preserved; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); schoolbell feedback issue forms and RU/EN guide links (5.1.45); insert and reorder bell rows (5.1.48); triangle and bulk action icons (5.1.51); melody table add and replace (5.1.52); metadata-only melody rename (5.1.53); passive switch and IP header (5.1.56); saved volume header bar; UI consistency review and mobile layout",
-      "prose_sha256": "071e178cff2d18f92d350c5755ba03a831013d9c981889e70b53e88ae88c5f2c",
+      "prose_sha256": "b4b842a37833a06ce783b2de25a89c1133977651784f6efb583b4ef44b7447b3",
       "migrated_prose_sha256": "3d8d69c4d89c627f85c1db40f3e4b2e8e1222460ef7ab761eb50e2bdb05ed600"
     },
     {

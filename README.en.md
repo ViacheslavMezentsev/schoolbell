@@ -11,7 +11,7 @@ Schedules and calendar plans run on the device without an open browser page.
 
 - Named date-range plans, calendar painting and preview.
 - Built-in and user MP3 melodies, pre-bells, manual ringing and muting.
-- Time trust checks, event journal, `.sbb` backups and `.sbp` plan transfer.
+- Clock comparison and setting, event journal, `.sbb` backups and `.sbp` plan transfer.
 
 ## Build and test
 
@@ -26,7 +26,7 @@ The [offline dependency bundle](docs/PACKAGING.en.md) is prepared separately.
 
 ## Status
 
-Package **5.1.119** targets OpenWrt 19.07.9 on the TL-MR3020 v3.
+Package **5.1.120** targets OpenWrt 19.07.9 on the TL-MR3020 v3.
 
 Resources show independent Internet and NTP states. Settings → Interface lets you disable the Internet probe for offline operation or change its target. An unconfirmed result means no reply from that target, not proof of an outage. NTP requires a synchronization event; the first event after installation may take about 11 minutes. These indicators do not control automatic bells. Probe settings are separate from portable .sbb backups.
 
@@ -49,3 +49,7 @@ third-party components are excluded; see [scope](docs/LICENSING.en.md) and [NOTI
 Below Flash, saved volume is on the left and the default `/dev/dsp` controller/card name is on the right, followed by the volume bar. Missing output is explicit; other cards are not selected automatically. Volume steps from 0 to 100 % in increments of 10 map to the nearest supported gain, not measured loudness. Flash uses MiB (1024² bytes), with blue fill up to 75 %.
 
 [btop for MR3020](tools/btop/README.md) · [Offline Windows 11 setup](tools/setup/README.md)
+
+Pages includes a Device simulator below Metrics. Apply a saved plan in Settings, enable ▶, then use Next bell or accelerated time. Silent simulated events appear in the journal and activity map; audio, Internet and NTP are modeled. Reopening the page disables automation. This does not test hardware.
+
+Collapsed Metrics shows free flash, saved volume and Internet status on the right. The summary reuses the expanded panel’s cached readings without extra network probes.
