@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+- Reorganized TODO into confirmed results and remaining checks; split mixed acceptance items without claiming unperformed tests passed.
+
 - 5.1.118: Playback help uses consistent symbols: 🔊 in the browser, 🔔 through Schoolbell.
 
 - 5.1.117: Shortened settings help for saving, enabling automatic bells and muting device output.

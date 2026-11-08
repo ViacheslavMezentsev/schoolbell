@@ -1,167 +1,67 @@
 # Задачи проекта / Project tasks
 
-- [ ] Проверить полный путь Setup.cmd на отдельном заводском TL-MR3020 EU v3.30 с Windows 11 без интернета. / Verify the offline Windows 11 setup end to end on a spare factory TL-MR3020 EU v3.30.
+Актуализировано 08.11.2026 по результатам до 5.1.118 включительно. Выполненное отделено от оставшихся проверок. Старые версии в подтверждениях обозначают дату результата, а не версию для следующей проверки. Новые аппаратные проверки выполнять на согласованной текущей версии и отдельно разрешённом устройстве. / Reviewed on 2026-11-08 through 5.1.118. Historical results are not new hardware acceptance; use an agreed current version and authorized target for remaining checks.
 
-## Приоритет: надёжная подача звонков / Priority: reliable playback
+## Осталось: надёжность / Remaining: reliability
 
-- [ ] При аппаратной приёмке измерить время от нажатия ручной кнопки до слышимого звука; серверный замер до запуска процесса не учитывает браузер и USB. / Measure click-to-audible latency on hardware; handler-to-fork timing excludes the browser and USB output.
+- [ ] Проверить холодную загрузку: запись загрузки в журнале, автозвонки остаются выключенными, последующий ручной запуск автоматики (TC-217–TC-220). / Verify boot logging, automatic bells staying off after a cold boot and subsequent manual enablement.
+- [ ] Проверить отключение и горячую замену USB-аудиокарты: автомат продолжает работу, попытки и ошибки видны в журнале, следующий звонок после восстановления слышен. / Verify continued scheduling, logged failures and the next audible bell after hot replacement.
+- [ ] Локализовать периодические отказы прежнего сочетания хаба/EHCI и проверить исправление на нём. Успешные OHCI-серии и учебный день не доказывают исправление этого сочетания. [RU](docs/PLAYBACK_RELIABILITY.md) · [EN](docs/PLAYBACK_RELIABILITY.en.md). / Diagnose the earlier hub/EHCI failures and verify a fix on that combination; OHCI success does not close this defect.
+- [ ] Установить причину оставшегося пустого замка медиатеки после завершения запросов. Безопасное восстановление выполнено; автоматическое снятие не добавлялось. / Find the cause of the orphan empty media gate; recovery was performed, automatic removal was not added.
+- [ ] Измерить задержку от нажатия ручного звонка до слышимого звука. Замер до запуска процесса не учитывает браузер и USB. / Measure click-to-audible latency, including the browser and USB path.
 
-- [ ] Аппаратная приёмка 5.1.80: проверить холодную загрузку и горячую замену карты с прослушиванием следующего автоматического звонка (TC-217–TC-220). / Hardware acceptance: verify a cold boot and replace the audio card before the next audible automatic bell.
+## Осталось: сценарии и сохранность данных / Remaining: workflows and data
 
-- [x] 04.11.2026, стенд 5.1.108: после отдельного запуска по расписанию (20:47, 20:48) и по плану (20:51, 20:52) предзвонок и основной звонок в обоих режимах подтверждены на слух. / Both pre-bells and main bells were heard after separately starting each applied source.
-- [x] Для этих четырёх звонков сверены источник, тип и назначенное местное время с запросами и успешными завершениями в журнале. Счётчик дня на карте изменился с 0 до 2 и затем до 4. / Verified source, kind and local due time against journal requests and completions. The daily count rose from 0 to 2 to 4.
-- [ ] Явный выбор исполняемого календарного плана, статус применённого снимка и сквозная приёмка TC-207–TC-210 / Explicit calendar plan selection, applied status and end-to-end acceptance.
+- [ ] Сверить полноту TC-207–TC-210 с существующими тестами и аппаратными результатами; актуализировать матрицу приёмки. Выбор плана и штатные звонки уже работают, но это не закрывает все граничные сценарии. / Reconcile TC-207–TC-210 with existing tests and bench evidence; working plan selection and scheduled bells do not cover every boundary case.
+- [ ] Подтвердить недостающие сценарии TC-207–TC-209: выбор среди нескольких планов, границы/полночь, сохранённый и применённый снимки, конкурирующее применение, отсутствующий план, переименование, импорт и восстановление. / Verify any uncovered multi-plan, boundary, applied-snapshot, concurrency and recovery cases.
+- [ ] Для TC-210 отдельно подтвердить ещё не зафиксированные условия: закрытый браузер, пустой праздничный день, отсутствие прироста счётчика от ручного звонка и ошибки. Успешные пары и полный учебный день уже зафиксированы ниже. / Complete unrecorded TC-210 conditions: closed browser, empty holiday, no counter increment for manual playback or failure.
+- [ ] Проверить реальные перезагрузку и сброс из раздела «Система», включая сохранение пользовательских мелодий и журнала при сбросе. Внешний вид раздела уже принят. / Verify actual reboot and reset, including retention of uploaded melodies and journal; UI review is complete.
+- [ ] Завершить TC-195: сохранность встроенных цветов/ID при импорте и восстановлении, темы и остальные шаги полного сценария. Внешний вид и порядок палитры подтверждены. / Complete palette persistence and remaining TC-195 cases; appearance and ordering are approved.
 
-- [ ] Установить причину оставшегося пустого замка медиатеки после завершения запросов; безопасное восстановление выполнено, автоматическое снятие не добавлялось / Identify the cause of the orphan empty media gate; safe recovery performed, no automatic gate removal added.
+## Осталось: интерфейс и Pages / Remaining: UI and Pages
 
-- [x] Прежняя AB13X напрямую/OHCI: 100 успехов подряд, −60 дБ, auto-off; без новых ошибок URB, одна запись cannot get freq / Original AB13X direct/OHCI: 100 consecutive successes, -60 dB, auto off; no new URB errors, one cannot get freq message.
+- [ ] Подтвердить на реальном телефоне панель сохранения и отсутствие горизонтального выхода страницы за экран. / Confirm the save bar and absence of horizontal overflow on a real phone.
+- [ ] Завершить TC-197 для текущего UI: обе темы, узкий экран, фокус клавиатуры, disabled, размеры и отступы одинаковых элементов. Ранее проверенные 64 сочетания относятся к 5.1.69, а не ко всем последующим изменениям. / Complete current UI consistency checks; the earlier 64 combinations cover 5.1.69 only.
+- [ ] Проверить опубликованные Pages владельцем на актуальной версии. Сборка и тесты общих исходников не заменяют проверку опубликованного сайта. / Review the current published Pages; source checks do not prove the deployed site.
 
-- [x] 100 успешных запусков подряд при прямом подключении GeneralPlus/OHCI, −60 дБ, auto-off; без новых ошибок ядра / 100 consecutive successful direct GeneralPlus/OHCI launches at -60 dB, auto off, no new kernel errors.
-- [x] Новый хаб (12 Мбит/с, OHCI) + C-Media: 100 успешных запусков подряд, без новых сообщений ядра; −60 дБ, auto-off / New hub (12 Mbit/s, OHCI) + C-Media: 100 consecutive successes, no new kernel messages; -60 dB, auto off.
-- [ ] Локализовать причину отказов прежнего сочетания хаба/EHCI; успешная OHCI-серия не закрывает её / Isolate the earlier hub/EHCI failures; the successful OHCI series does not resolve them.
+## Осталось: установка, выпуск и завершение миграции / Remaining: installation and release
 
-- [ ] Устранить воспроизведённый периодический отказ USB-аудио; сохранить причины ошибок, проверить повторные запуски и длительное расписание / Fix reproduced intermittent USB-audio failure, retain diagnostic reasons, verify repeated starts and endurance. [RU](docs/PLAYBACK_RELIABILITY.md) · [EN](docs/PLAYBACK_RELIABILITY.en.md).
-- Лицензирование отложено владельцем; зелёные host-тесты не закрывают этот дефект / Owner deferred licensing; passing host tests do not close this defect.
+- [ ] Проверить полный путь Setup.cmd на отдельном заводском TL-MR3020 EU v3.30 с Windows 11 без интернета. / Verify offline setup end to end on a spare factory router.
+- [ ] Проверить новую установку и реальный откат с сохранением данных отдельно. Наличие проверенного пакета отката не является выполненным откатом. / Verify fresh installation and actual data-preserving downgrade; a rollback package alone is not a rollback test.
+- [ ] Актуализировать команды и отдельный протокол аппаратной приёмки под окончательные артефакты. / Update commands and the hardware acceptance protocol for final artifacts.
+- [ ] L2/L4: завершить материалы зависимостей, разобраться с правами на аудио и проверить окончательный релизный набор. Лицензирование ранее отложено владельцем; решение об MIT не распространяется автоматически на штатные записи. [Аудит / Audit](docs/LICENSE_AUDIT.md). / Complete dependency materials, audio rights and final release review; MIT does not automatically cover bundled recordings.
+- [ ] Проверить актуальность ссылок из core и готовность публикации окончательного выпуска. / Verify core redirects and final release publication readiness.
+- [ ] Проверить оставшееся дублирование с core; удалять только после проверки. Отдельный репозиторий и рабочее пространство уже используются. / Review remaining duplication with core before removal; the standalone repository/workspace is already in use.
 
-## На согласовании / Pending review
+## Выполнено и подтверждено / Completed and confirmed
 
-- [x] Приняты правки 5.1.109–5.1.118: предпросмотр, сравнение часов, плашка черновика, сводки настроек, медиатека и пояснения. Полная host-проверка пройдена; на стенде сохранены настройки и громкость, автозвонки выключены. / Reviewed 5.1.109–5.1.118: preview, clocks, draft banner, settings summaries, media library and help. Full host checks passed; bench settings and volume preserved, automatic bells off.
+### Работа звонков / Bell execution
 
-- [x] Владелец поручил проверку целостности и фиксацию цикла 5.1.61–5.1.69 в ветке; 64 сочетания ширины/темы/вкладки проверены локально / Owner authorized consistency review and grouped commits for 5.1.61–5.1.69; 64 local viewport/theme/tab combinations checked.
-- [ ] Подтвердить на телефоне исправления 5.1.69: панель сохранения в потоке и отсутствие выхода страницы за экран / Confirm 5.1.69 phone layout: in-flow save toolbar and no page overflow.
+- [x] 04.11.2026, стенд 5.1.108: предзвонок и основной звонок в обоих режимах подтверждены пользователем на слух. По расписанию — 20:47/20:48; по плану — 20:51/20:52. / Owner heard both pairs in fixed-schedule and calendar-plan modes.
+- [x] Для четырёх звонков сверены источник, тип и назначенное местное время с запросами и успешными завершениями в журнале. Карта дня: 0 → 2 → 4. / Matched all four events against the journal; daily count increased from 0 to 2 to 4.
+- [x] 05.11.2026: полный день «Будни» учебного плана — 15 основных и 6 предварительных звонков. Все 21 запуска и завершения совпали с журналом; карта дня — 21. Это подтверждение журнала и счётчика, а не прослушивание каждого из 21 звонка. / Full weekday: all 21 starts and completions matched the journal and daily count; this is not an audible confirmation of every bell.
+- [x] По 100 успешных запусков: AB13X напрямую/OHCI, GeneralPlus напрямую/OHCI, новый хаб/OHCI + C-Media; −60 дБ, auto-off. Новых URB-ошибок не было; у AB13X отмечено одно cannot get freq. / Three successful 100-run OHCI series; no new URB errors, one cannot get freq observation for AB13X.
+- [x] Реализованы явный выбор активного плана, разделение применения и включения автоматики, статус исполняемого источника. Полная приёмка граничных сценариев остаётся выше. / Explicit active-plan selection, separate apply/enable and execution-source status implemented; remaining boundary acceptance is listed above.
+- [x] С 5.1.75 ведётся постоянный учёт успешных автоматических звонков. Синтетическое табло заменено реальной статистикой, позднее сверенной с журналом. / Persistent successful automatic-bell counts replaced the synthetic heatmap and were reconciled with the journal.
 
-- [x] Принято: панели сохранения черновика/настроек 5.1.68 / Reviewed draft/settings save panels in 5.1.68.
+### Интерфейс / Interface
 
-- [x] Принято: компактный предпросмотр и ручную проверку звука 5.1.67 / Reviewed compact preview and manual sound controls in 5.1.67.
+- [x] Старые ожидания осмотра 5.1.31/5.1.32 закрыты последующим просмотром и принятыми исправлениями иконок. / Historical 5.1.31/5.1.32 visual review requests were superseded by reviewed icon fixes.
+- [x] После осмотра 5.1.44 владелец принял цикл UI, медиатеки, «Системы» и CI; сюда входят лимит 64 КиБ, инструкция и удаление неиспользуемых мелодий. Реальные сброс/перезагрузка остаются отдельной проверкой. / The reviewed 5.1.44 cycle includes media limits/deletion, System UI and CI; actual reset/reboot remain separate checks.
+- [x] Базовая CSS-палитра и её порядок приняты на стенде 5.1.44, закреплены в ТЗ; нейтральное тихое расписание сохранено. / The baseline palette and ordering were approved and specified, with neutral quiet days preserved.
+- [x] Приняты шапка, редактирование строк, группы действий, компактная навигация и формы в цикле до 5.1.69. Проверены 64 сочетания ширины/темы/вкладки; телефонная приёмка остаётся выше. / Header, list editing, actions, navigation and forms reviewed through 5.1.69; 64 combinations checked, phone acceptance still pending.
+- [x] Приняты расширенное табло 5.1.71 и сворачиваемая область «Метрики» 5.1.72; требования согласования синтетического макета больше не являются открытыми задачами. / Expanded heatmap and collapsible Metrics were approved; synthetic mockup review is complete.
+- [x] Приняты 5.1.109–5.1.118: исправление предпросмотра, сравнение часов, плашка черновика, сводки настроек, медиатека и пояснения. `make all` пройден; при установках сохранены данные и громкость, автозвонки оставлены выключенными. / Preview, clocks, draft banner, settings summaries, media library and help reviewed; host checks passed, bench data/volume preserved and automatic bells left off.
+- [x] Настроены Issues и ссылки на руководства; общие исходники UI устройства и Pages проверяются вместе. / Issue forms and guide links configured; device and Pages share UI sources and checks.
+- [x] Эксперименты с новыми тембрами закрыты: штатные мелодии оставлены по решению владельца. / Timbre experiments closed; stock melodies retained by owner decision.
 
-- [x] Принято: группировку действий плана и компактные формы 5.1.66 / Reviewed grouped plan actions and compact forms in 5.1.66.
+### Миграция и инструменты / Migration and tools
 
-- [x] Принято: ✓/× инструментов диапазона 5.1.65 / Reviewed range tool ✓/× buttons in 5.1.65.
+- [x] M0–M1: исторический архив с SHA-256, правила/workflow, инвентарь, перенос runtime/UI/требований/руководств, скриптовый и целевой MIPS IPK, автономный комплект; CI и принятие владельцем зафиксированы. / Archive, workflow, inventory, runtime/UI/docs transfer, script and target MIPS packages and offline bundle completed; M0–M1 accepted.
+- [x] Отдельный репозиторий и рабочее пространство используются; основная ветка main. / Standalone repository/workspace in use; main is the default branch.
+- [x] Исходники Pages: корневой UI, guide/training/devices и явный перенос localStorage. / Pages sources include root UI, guide/training/devices and explicit localStorage migration.
+- [x] Аудит происхождения кода, 33 IPK и аудио; MIT собственного кода/документации с исключениями; закреплены данные LuCI и доставка MIT/NOTICE в артефакты (L1/L3/L5). / Provenance audit and L1/L3/L5 completed; dependency/audio gaps remain above.
+- [x] Обновления разрешённого стенда проверялись с резервной копией и пакетом отката, сверкой файлов и сохранности данных. Это не заменяет новую установку и настоящий downgrade. / Authorized bench upgrades checked with backups, rollback packages, file and data verification; fresh installation and actual downgrade remain separate.
+- [x] Подготовлены btop для MR3020, инструкция PowerShell/SCP/SSH и автономный мастер установки Windows 11. Сквозная проверка мастера на заводском устройстве ещё предстоит. / btop, PowerShell/SCP/SSH instructions and Windows setup wizard prepared; factory-device acceptance is pending.
 
-- [x] Принято: кнопки +/⧉ календарного плана 5.1.64 / Reviewed calendar plan +/⧉ buttons in 5.1.64.
-
-- [x] Принято: компактную навигацию календаря 5.1.63 / Reviewed compact calendar pagination in 5.1.63.
-
-- [x] Принято: слайдер громкости и компактные инструменты расписания/журнала 5.1.62 / Reviewed the volume slider and compact schedule/journal tools in 5.1.62.
-
-- [x] Принято: совместимые значки 5.1.61: * для правки, автозвонки без значка режима / Reviewed 5.1.61 compatible symbols: * for editing, no automatic-mode icon.
-
-- [x] Владелец принял компактную шапку 5.1.60 и разрешил фиксацию текущего цикла в ветке / Owner accepted the compact 5.1.60 header and authorized committing the current cycle on a branch.
-
-- [ ] Принять интерфейс «Система» в 5.1.38; реальную перезагрузку/сброс проверять отдельно по разрешению владельца / Review System UI in 5.1.38; actual reboot/reset requires separate owner authorization.
-
-- [ ] Принять лимит 64 КиБ, инструкцию и удаление неиспользуемых мелодий в 5.1.36 / Review the 64 KiB limit, instructions and unused melody deletion in 5.1.36.
-
-- [x] Владелец разрешил сгруппированные коммиты правок UI, медиатеки, системы и CI после осмотра 5.1.44 / Owner authorized grouped UI, media, system and CI commits after reviewing 5.1.44.
-
-## Миграция / Migration
-
-- [x] Архив старых 20 файлов с SHA-256 / Archive the 20 legacy files with SHA-256.
-- [x] Правила, workflow и инвентарь / Rules, workflow and inventory.
-- [x] Проверка каркаса на хосте / Host foundation verification.
-- [x] M0: CI отправленного HEAD и принятие владельцем / Exact pushed HEAD CI and owner acceptance.
-- [x] Перенести runtime, UI и явные зависимости / Transfer runtime, UI and explicit dependencies.
-- [x] Скриптовый IPK и host-тесты, offline-builder без обязательного core / Script IPK, host tests, optional-core bundle builder.
-- [x] Целевой MIPS IPK и реальный полный комплект / Target MIPS IPK and real complete bundle.
-- [x] M1: CI точного HEAD и принятие владельцем / Exact-HEAD CI and owner acceptance.
-- [x] Перенесены требования, история, руководства и программа приёмки / Requirements, history, guides and acceptance programme transferred.
-- [ ] Актуализировать команды и отдельный протокол под будущие артефакты приёмки / Update commands and create a separate protocol for future acceptance artifacts.
-- [x] Исходники Pages: корневой UI, guide/training/devices, явный перенос localStorage / Pages sources and explicit localStorage transfer.
-- [ ] Приёмка опубликованных Pages владельцем / Owner acceptance of published Pages.
-- [x] Аудит происхождения кода, 33 IPK и аудио / Audit code, 33 IPKs and audio provenance.
-- [x] L1: MIT собственного кода и документации с явными исключениями / MIT for own code/documentation with explicit exclusions.
-- [x] L3: закреплённые данные LuCI; L5: доставка собственного MIT/NOTICE во все артефакты / Pinned LuCI data and own MIT/NOTICE delivery in all artifacts.
-- [ ] L2/L4: полные материалы зависимостей и права на аудио; повторная проверка окончательного релизного набора / Complete dependency materials and audio rights; final release review. См. / See [audit](docs/LICENSE_AUDIT.md).
-- [x] Обновление 5.1.27 → 5.1.28 на разрешённом стенде: бэкап, сохранность данных, native и auto-off / Authorized bench upgrade: backup, data preservation, native and auto-off.
-- [x] Подтверждение интерфейса владельцем после миграции / Owner UI confirmation after migration.
-- [ ] Проверить реальный откат с данными и новую установку отдельно / Separately verify actual data-preserving downgrade and fresh installation.
-- [ ] Публикация владельцем и ссылки из core / Owner publication and core redirects.
-- [ ] Отдельное рабочее пространство; удалить дублирование после проверки / Separate workspace; remove duplication only after verification.
-
-5.1.27: владелец подтвердил отображение Flash/uptime и динамической медиатеки
-на стенде разработки. Это не подтверждение загрузки/замены новой мелодии или
-полной сквозной приёмки. / Owner confirmed the Flash/uptime and dynamic collection
-UI on the development bench, not new upload/replacement or full acceptance.
-
-Pages: корень /schoolbell/ сразу открывает интерфейс звонка; руководство и обучение отдельно. / Pages root opens the bell UI directly; guide and training stay separate.
-
-MIT собственного кода оформлена: [область действия](docs/LICENSING.md). / Own-code MIT is formalized: [scope](docs/LICENSING.en.md).
-
-Штатные мелодии оставлены без изменений по решению владельца; подбор новых тембров закрыт. / Owner retained stock melodies unchanged; timbre exploration is closed.
-
-2026-10-31: по сообщению владельца настройка времени из браузера, похоже, работает.
-На приложенном скриншоте UI сообщает об успешной установке/проверке, разница около
-1 с, автозвонки выключены; достоверность времени ещё не подтверждена. Версия и
-целевое устройство в этом наблюдении не зафиксированы; это не новый протокол
-аппаратной приёмки. / Owner reports browser time setting appears to work. Screenshot
-shows successful setting/verification, about 1 s difference, automatic bells off and
-time trust still unconfirmed. Version/target are not recorded; this is not a new
-hardware acceptance protocol.
-
-- [x] Строка аудио /dev/dsp под Flash, имя карты и сохранённое усиление; синий Flash до 75% — исходники 5.1.29 / Default audio status, card name and saved gain; blue Flash up to 75% — 5.1.29 sources.
-- [x] 5.1.29 установлена на разрешённый стенд: 78 файлов, бэкап, GET-контроллер шапки и форматирование живого ответа проверены; −60 дБ, auto-off / 5.1.29 installed on the authorized bench: 78 files, backup, header GET controller and live-response formatting verified; -60 dB, auto off.
-- [x] Владелец подтвердил внешний вид шапки 5.1.30 / Owner confirmed the 5.1.30 header appearance.
-
-- [x] Расширить линии шапки и обновить ключ кеша CSS (5.1.30) / Widen header bars and update the CSS cache key (5.1.30).
-- [x] Постоянная высота аудиостроки без сдвига интерфейса при переносе / Fixed-height audio status prevents layout shifts when text wraps.
-
-- [x] Установка 5.1.30 на стенд: данные и −12 дБ сохранены, auto-off, новый CSS проверен по HTTP / Bench upgrade to 5.1.30: data and -12 dB preserved, auto off, new CSS verified over HTTP.
-
-- [x] Правки общего UI и журнал только по размеру, кандидат 5.1.31 / Shared UI refinements and size-only journal retention, candidate 5.1.31.
-- [x] Установка 5.1.31 на стенд: файлы, данные, 187 записей журнала и HTTP-ресурсы проверены; громкость сохранена, auto-off / Bench upgrade to 5.1.31: files, data, 187 journal entries and HTTP assets verified; gain preserved, auto off.
-- [ ] Визуальное подтверждение интерфейса 5.1.31 владельцем / Owner visual confirmation of the 5.1.31 interface.
-
-- [x] Уточнение иконок: действия 🔊/🔔, узлы цепочек — окно/устройство (5.1.32) / Correct action icons to 🔊/🔔, keep window/device chain nodes (5.1.32).
-
-- [x] Установка 5.1.32: файлы, данные и 194 записи журнала проверены, громкость сохранена, auto-off / 5.1.32 installed: files, data and 194 journal entries verified, gain preserved, auto off.
-- [ ] Визуальное подтверждение исправленных иконок 5.1.32 владельцем / Owner visual confirmation of corrected 5.1.32 icons.
-
-- [x] 5.1.39: проверка резервной копии только при открытии раздела; исключена конкуренция закрытого блока со списком мелодий после F5. Проверить субъективную задержку в браузере владельца после установки.
-
-- [x] 5.1.41: повторные F5 в реальном Chrome — расписания готовы за 1,36–1,48 с; первая загрузка после обновления 2,66 с. Полный список мелодий остаётся 2,32–2,91 с / Real Chrome repeat reloads: draft ready in 1.36–1.48 s; first after upgrade 2.66 s. Full melody list still takes 2.32–2.91 s.
-
-- [x] 5.1.42: вдвое уменьшен отступ перед удалением в обеих таблицах / Halved the gap before deletion in both tables.
-
-- [x] 5.1.43: увеличены значки прослушивания в обеих таблицах / Enlarged playback icons in both tables.
-
-- [x] 5.1.44: встроенная CSS-палитра по ТЗ 1.81, стабильные номера 1–16 / Built-in CSS palette per specification 1.81, stable IDs 1–16.
-
-- [x] ТЗ 1.81: закрепить согласованные CSS-имена/HEX и встроенный порядок 1–16 / Record approved CSS names/HEX and built-in order 1–16.
-- [x] Внедрить базовую CSS-палитру по ТЗ 4.6.64–4.6.66 в общий UI и иллюстрации / Implement the baseline CSS palette in shared UI and illustrations.
-- [ ] TC-195: подтвердить новую палитру на стенде; полный цикл импорта/восстановления отдельно / Confirm the new palette on the bench; full import/restore cycle separately.
-
-- [x] 5.1.44 установлена на разрешённый стенд; бэкап, файлы/HTTP, журнал и сохранность громкости/auto-off проверены / 5.1.44 installed on the authorized bench; backup, files/HTTP, journal and preserved volume/auto-off verified.
-
-- [x] Владелец подтвердил внешний вид базовой CSS-палитры на стенде 5.1.44 / Owner confirmed the baseline CSS palette appearance on the 5.1.44 bench.
-
-- [x] 5.1.45: общий маршрут обратной связи в Issues schoolbell, собственные формы и ссылки на руководства RU/EN / Shared schoolbell Issues feedback links, tailored forms and RU/EN guide links.
-
-- [x] 5.1.46: местная дата и день недели в часах шапки / Device-local date and weekday in the header clock.
-
-- [x] Единые крестики удаления и центрирование заголовков переключателей/действий / Consistent delete icons and centered switch/action headings.
-- [x] 5.1.48: вставка после строки, фокус времени, перестановка вверх/вниз и явная очистка / Insert after a row, focus time, reorder up/down and explicit clear.
-
-- [x] Общий стандарт UI в ТЗ 1.83 и крупные плюс/стрелки/копирование / Shared UI conventions and larger add/move/copy icons.
-- [ ] TC-197: полный визуальный аудит общего стиля в обеих темах и на узком экране / Full shared-style visual audit in both themes and narrow layouts.
-
-- [x] 5.1.52: добавление/замена мелодий из таблицы без перестановки и массового удаления / Add/replace melodies from the table without reordering or bulk deletion.
-
-- [x] 5.1.53: отдельное сохранение названия пользовательской мелодии, 🖉/✓ и упрощённая таблица / Title-only melody editing, 🖉/✓ and a simplified table.
-
-- [x] 5.1.54: пробелы и настоящие плюсы при переименовании, проверка query-декодера LuCI / Preserve spaces and literal plus signs on rename; LuCI query-decoder regression.
-
-- [x] 💾 для загрузки MP3, динамическая подсказка добавления/замены / MP3 upload icon with add/replace tooltip.
-
-- [x] 5.1.56: переключатель и текущий IP в существующем опросе шапки / Physical switch and current IP through existing header polling.
-
-- [ ] Согласовать синтетическое табло 5.1.70 на стенде; источник и сохранение реальной дневной статистики определить отдельно / Review the synthetic 5.1.70 bench heatmap; define real daily statistics and persistence separately.
-- [x] 5.1.70 установлена на разрешённый стенд: проверены бэкап/откат, 82 файла, 12 HTTP-ресурсов, сохранение журнала, громкости и auto-off / 5.1.70 installed on the authorized bench: backup/rollback, 82 files, 12 HTTP assets, preserved journal, volume and auto-off verified.
-
-- [ ] Согласовать расширенное табло 5.1.71 (33 недели) и поднятые кнопки шапки / Review the expanded 5.1.71 heatmap (33 weeks) and raised header controls.
-- [x] Стенд обновлён до 5.1.71: бэкап, файлы и HTTP проверены, настройки и журнал сохранены / Bench updated to 5.1.71: backup, files and HTTP verified; settings and journal preserved.
-
-- [ ] Согласовать область «Метрики» 5.1.72: показатели и синтетическое табло под шапкой, сворачивание и равные отступы / Review 5.1.72 collapsible Metrics below the header, grouping indicators and the synthetic heatmap with equal padding.
-- [x] Стенд обновлён до 5.1.72; бэкап, файлы, HTTP и сохранность настроек/журнала проверены / Bench updated to 5.1.72; backup, files, HTTP and preserved settings/journal verified.
-
-- [x] 5.1.75: постоянный учёт всех успешных автозвонков, «Ресурсы», реальное табло; проверены ротация/перезапуск/повтор, сбои записи и чтение без замка редактора. Стенд обновлён, сохранены два исторических завершения, громкость и auto-off / Persistent automatic completion counters, Resources and live grid; rotation/restart/replay, write failures and lock-free reads tested. Bench updated, two historical completions, gain and auto-off preserved.
-- [x] 05.11.2026: «Будни» — журнал подтвердил запуск и завершение всех 15 основных и 6 предварительных звонков. Карта за день — 21. / All 21 weekday events matched the journal and the daily count.
+Подробная история изменений: [RU](CHANGELOG.md) · [EN](CHANGELOG.en.md). Эта ревизия TODO не изменяет требования или состояние стенда. / See changelogs for detailed history; this TODO review changes neither requirements nor bench state.
