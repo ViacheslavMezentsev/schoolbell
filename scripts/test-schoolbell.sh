@@ -16,6 +16,7 @@ sh tests/test-media-manager.sh
 
 lua5.1 tests/test_sound_test.lua
 lua5.1 tests/test_audio_output.lua
+lua5.1 tests/test_network_status.lua
 lua5.1 tests/test_session_http.lua
 node scripts/test-schoolbell-session-ui.js
 

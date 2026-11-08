@@ -490,14 +490,14 @@
       "destination": "packaging/openwrt/root/etc/init.d/schoolbell-auto",
       "source_sha256": "33ce0c7a251ed0e5cae6b46e164bb6cb068172b6a47d1d44b549232d0a101f87",
       "changes": "none",
-      "destination_sha256": "33ce0c7a251ed0e5cae6b46e164bb6cb068172b6a47d1d44b549232d0a101f87"
+      "destination_sha256": "9689b198d5c37a1da882d1f73cb7a51b58b7d32e44458fdde25900e446590cc6"
     },
     {
       "source": "packages/schoolbell/router-page/root/usr/lib/lua/luci/controller/schoolbell_test.lua",
       "destination": "packaging/openwrt/root/usr/lib/lua/luci/controller/schoolbell_test.lua",
       "source_sha256": "1963bc18fc4f40ef70dfd7cf809384af0a4da99c565e9acc3ea45c10f6d27f8c",
       "changes": "none; default audio status and blue Flash (5.1.29); owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); metadata-only melody rename (5.1.53); passive switch and IP header (5.1.56)",
-      "destination_sha256": "e76a6b5f9d2a48d81b69e648b8d26b9e30636c903d07231ca0aee9f76059da0e"
+      "destination_sha256": "94847d5996d08d29d968c0ce81f31d33f069ab448af3967ee97a20ac8dc77bb3"
     },
     {
       "source": "packages/schoolbell/router-page/root/usr/lib/lua/luci/view/schoolbell_test.htm",
@@ -1302,7 +1302,7 @@
       "destination": "scripts/test-schoolbell.sh",
       "source_sha256": "5abd8849062bc51e53907344210cb487f9e115458e196f3667753f29553ed282",
       "changes": "adapted; review destination against pinned source; standalone target migration: deterministic native gzip / pinned-input tests; default audio status and blue Flash (5.1.29); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); 5.1.40 initial page-load performance",
-      "destination_sha256": "b5a99184ca73ca4c8d4353ee275d9c30cb5b859c504c0a722f0f75a82d513063"
+      "destination_sha256": "9b3261d77e9dd4e39aa567d96813f4a9665168842edb76d525939e436cfc419e"
     },
     {
       "source": "scripts/test-site-demo.js",
@@ -1358,7 +1358,7 @@
       "destination": "scripts/build-payload.py",
       "source_sha256": "15ee676879b82aeb4a7ee343623ac98cbf9f849c569598eb40ee4eb93c373c45",
       "changes": "adapted; review destination against pinned source; default audio status and blue Flash (5.1.29); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); passive switch and IP header (5.1.56)",
-      "destination_sha256": "3e626f9a87597a38464c50b7a90ccdc1d79fc43fc83238bc54cf79140efd817c"
+      "destination_sha256": "c14b439ac3b406a8d1be9a6ac84d771f24393f26094c4da3541cfdbcb5db10f4"
     },
     {
       "source": "site/portable-zones.json",
@@ -1993,9 +1993,9 @@
       "source": "docs/packages/schoolbell/TECHNICAL_SPECIFICATION.md",
       "destination": "docs/requirements/TECHNICAL_SPECIFICATION.md",
       "source_sha256": "61b760731a5c4f6c53ed67726cd8667136ee194692aa517aa2b3ded7e9f07aad",
-      "destination_sha256": "4f398fd77c948198c244bad9ef16cac0c0c56c342f47c2b6f085aa24ed9e33a7",
+      "destination_sha256": "d083188c2ffa2f36c038fce32f8a6505f93d058882b77a7d4a176667a7262414",
       "changes": "Markdown link destinations only; original text and requirement/TC IDs preserved; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner clarification of playback action icons (5.1.32, spec 1.78); owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); owner-approved baseline CSS palette and fixed order, spec 1.81 (documentation only); baseline CSS palette implementation, spec 1.81; insert and reorder bell rows (5.1.48); shared UI conventions and large action icons (5.1.50); triangle and bulk action icons (5.1.51); melody table add and replace (5.1.52); metadata-only melody rename (5.1.53); passive switch and IP header (5.1.56); saved volume header bar; UI consistency review and mobile layout; explicit active calendar plan requirements (spec 1.99)",
-      "prose_sha256": "e2397916e6436b9635222faf6c13b4caebf408bcaa2e8bf5c9604c530160dd15",
+      "prose_sha256": "d99de49dae0577dac7567883cef851b1736d1543e2f8f418381739fd48cf038f",
       "migrated_prose_sha256": "7a7b8c5652b4353f90f58c476218ca443a2dbb2be0af2516e6e735ea8fa30be5"
     },
     {

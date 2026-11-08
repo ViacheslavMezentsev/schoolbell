@@ -1,0 +1,4 @@
+# Observe existing BusyBox ntpd events; do not modify clocks or NTP configuration.
+case "$ACTION" in
+    stratum|periodic|unsync|step) /usr/sbin/schoolbell-network event ;;
+esac

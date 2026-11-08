@@ -9,6 +9,7 @@ function index()
     entry({"admin","schoolbell","backup"},call("backup")).leaf=true
     entry({"admin","schoolbell","media"},call("media")).leaf=true
     entry({"admin","schoolbell","automatic"},call("automatic")).leaf=true
+    entry({"admin","schoolbell","network"},call("network_settings")).leaf=true
     entry({"admin","schoolbell","controls"},call("controls")).leaf=true
     entry({"admin","schoolbell","manual"},call("manual")).leaf=true
     entry({"admin","schoolbell","metrics"},call("metrics")).leaf=true
@@ -163,6 +164,15 @@ function automatic()
  if ok then local cpu_ok,cpu=pcall(function()return require('schoolbell.system_metrics').read()end);result.cpu=cpu_ok and cpu or {available=false}end
  respond(ok and result or {ok=false,state='unavailable'})
 end
+function network_settings()
+ local h=require('luci.http')
+ if h.getenv('REQUEST_METHOD')~='POST' then h.status(405,'Method Not Allowed');return end
+ local size=tonumber(h.getenv('CONTENT_LENGTH'))
+ if not size or size<1 or size>1024 or not (h.getenv('CONTENT_TYPE') or ''):match('^application/x%-www%-form%-urlencoded') then h.status(413,'Unsupported request');return end
+ if not require('luci.dispatcher').test_post_security() then return end
+ editor();local enabled=h.formvalue('enabled');if enabled~='true' and enabled~='false' then respond({ok=false,code='invalid'});return end
+ local m=require('schoolbell.network_status');local r=m.save(enabled=='true',h.formvalue('host'));r.network=m.snapshot();respond(r)
+end
 function controls()
  local h=require('luci.http');local method=h.getenv('REQUEST_METHOD');local value,volume,confirm
  if method~='GET' then
@@ -184,6 +194,7 @@ function controls()
   end
  end
  editor();local m=require('schoolbell.controls');local result=value==nil and volume==nil and confirm==nil and m.snapshot() or m.request(value,nil,volume,confirm)
+ result.network=require('schoolbell.network_status').snapshot()
  result.audio=require('schoolbell.audio_output').read()
  result.device=require('schoolbell.device_identity').read(h.getenv('SERVER_ADDR'))
  result.playing=require('nixio.fs').lstat(require('schoolbell.sound_test').lock)~=nil
@@ -294,6 +305,7 @@ function page()
         media_url=d.build_url('admin','schoolbell','media'),
         trust_url=d.build_url('admin','schoolbell','clock-trust'),
         automatic_url=d.build_url('admin','schoolbell','automatic'),
+        network_url=d.build_url('admin','schoolbell','network'),
         controls_url=d.build_url('admin','schoolbell','controls'),
         system_url=d.build_url('admin','schoolbell','system'),
         manual_url=d.build_url('admin','schoolbell','manual'),

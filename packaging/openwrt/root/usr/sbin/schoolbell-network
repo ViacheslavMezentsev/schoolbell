@@ -1,0 +1,12 @@
+#!/usr/bin/lua
+package.path='/usr/share/schoolbell-editor/lua/?.lua;'..package.path
+local m=require('schoolbell.network_status')
+if arg[1]=='event' then m.event(os.getenv('ACTION'),os.getenv('stratum'));return end
+local n=require('nixio')
+local previous
+while true do
+ local ok,err=pcall(m.tick)
+ if not ok and tostring(err)~=previous then io.stderr:write('schoolbell network: '..tostring(err)..'\n') end
+ previous=not ok and tostring(err) or nil
+ n.nanosleep(m.interval,0)
+end
