@@ -264,3 +264,9 @@ details[open]>.settings-summary{list-style-type:disclosure-open}
 .settings-brief{float:right;max-width:65%;margin-left:16px;font-size:13px;font-weight:400;letter-spacing:normal;color:var(--muted);text-align:right;overflow-wrap:anywhere}
 details[open]>.settings-summary>.settings-brief{display:none}
 @media(max-width:700px){.settings-brief{float:none;display:block;max-width:none;margin-left:24px;text-align:left}}
+
+.network-labels{display:flex;justify-content:space-between;gap:8px 16px;flex-wrap:wrap;margin-top:10px;color:var(--muted)}
+.network-labels [data-tone="warning"]{color:var(--warning-text)}
+#panel-sound .network-settings{align-items:flex-end;margin:12px 0 0}
+#panel-sound .network-settings label{margin:0;min-width:0}
+#network-result:empty{display:none}

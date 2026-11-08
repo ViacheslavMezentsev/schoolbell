@@ -26,7 +26,9 @@ The [offline dependency bundle](docs/PACKAGING.en.md) is prepared separately.
 
 ## Status
 
-Package **5.1.118** targets OpenWrt 19.07.9 on the TL-MR3020 v3.
+Package **5.1.119** targets OpenWrt 19.07.9 on the TL-MR3020 v3.
+
+Resources show independent Internet and NTP states. Settings → Interface lets you disable the Internet probe for offline operation or change its target. An unconfirmed result means no reply from that target, not proof of an outage. NTP requires a synchronization event; the first event after installation may take about 11 minutes. These indicators do not control automatic bells. Probe settings are separate from portable .sbb backups.
 
 ## Documentation
 

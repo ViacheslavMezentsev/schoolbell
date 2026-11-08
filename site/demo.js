@@ -116,7 +116,8 @@ window.fetch=async function(url,options){
  else out={ok:false,code:'demo_no_hardware'};
  }else out={ok:false,code:'demo_no_pending'};
  }
- else if(name==='controls'){if(options && options.method==='POST'){if(body.has('confirm_play')){s.confirm_play=body.get('confirm_play')==='true';}else if(body.has('volume_db')){s.volume_db=Number(body.get('volume_db'));log(s,'volume_ok');}else{s.muted=body.get('muted')==='true';log(s,s.muted?'mute_on':'mute_off');}}out={ok:true,confirm_play:!!s.confirm_play,muted:!!s.muted,volume_db:s.volume_db || 0,playing:false,hardware:false,audio:{state:"demo"}};}
+ else if(name==='network'){s.networkConfig={enabled:body.get('enabled')==='true',host:body.get('host')};write(s);out={ok:true,network:{config:s.networkConfig,internet:{state:'demo'},ntp:{state:'demo'}}};}
+ else if(name==='controls'){if(options && options.method==='POST'){if(body.has('confirm_play')){s.confirm_play=body.get('confirm_play')==='true';}else if(body.has('volume_db')){s.volume_db=Number(body.get('volume_db'));log(s,'volume_ok');}else{s.muted=body.get('muted')==='true';log(s,s.muted?'mute_on':'mute_off');}}out={ok:true,confirm_play:!!s.confirm_play,muted:!!s.muted,volume_db:s.volume_db || 0,playing:false,hardware:false,audio:{state:"demo"},network:{config:s.networkConfig || {enabled:true,host:'1.1.1.1'},internet:{state:'demo'},ntp:{state:'demo'}}};}
  else if(name==='metrics')out={ok:true,demo:true,today:new Intl.DateTimeFormat('sv-SE',{timeZone:s.zone || 'UTC',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date()),days:[],max_days:400};
  else if(name==='journal' && options && options.method==='POST'){
   if(body.get('action')==='resize'){

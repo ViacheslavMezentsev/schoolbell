@@ -7,6 +7,7 @@ function audioDraw(){
  var age=Date.now()-audioAt;
  var sample=!window.schoolbellSessionBlocked && age<=60000 ? displaySample : null;
  var stale=sample && (!state || age>25000);
+ if(window.schoolbellNetworkRender)window.schoolbellNetworkRender(sample && sample.network);
  var a=sample && sample.audio;
  var note=document.getElementById('resource-audio-age');
  if(note)note.textContent=stale?' · последние данные аудио и устройства':'';

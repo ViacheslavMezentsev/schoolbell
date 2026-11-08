@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+- 5.1.119: Resources now show independent Internet and NTP states, with a cached background probe and an editable/disableable target in Interface settings. Pages shares the UI without probing the network.
+
 - Verified offline boot: boot journal captured clock rollback; after reconnection the clock was corrected while automation stayed off and data/volume were preserved.
 
 - Extended cold-boot acceptance: previously enabled automation is off after boot, plan and volume retained; manual enablement between power cycles confirmed.
