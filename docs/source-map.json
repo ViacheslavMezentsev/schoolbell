@@ -504,7 +504,7 @@
       "destination": "ui/root/usr/lib/lua/luci/view/schoolbell_test.htm",
       "source_sha256": "526214f183ea8526785239074189d00cc03e7251323ee4146f75f0a53a015a54",
       "changes": "none; default audio status and blue Flash (5.1.29); wider header and CSS cache key (5.1.30); owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner clarification of playback action icons (5.1.32, spec 1.78); manual sound check grouped in a collapsed disclosure; collapsed manual sound check, version 5.1.33; concise playback completion and collapsed storage information; separate actual storage use from upload conditions; owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); 5.1.39 lazy backup status check and release notes; 5.1.40 initial page-load performance; 5.1.41 startup priority and shared Actions column; compact 4x4 schedule palette; 5.1.42 reduced action spacing; 5.1.43 playback icon size; 5.1.44 approved contrast palette; schoolbell feedback issue forms and RU/EN guide links (5.1.45); device-local header date (5.1.46); consistent delete icons and centered headings (5.1.47); insert and reorder bell rows (5.1.48); shared UI conventions and large action icons (5.1.50); triangle and bulk action icons (5.1.51); melody table add and replace (5.1.52); metadata-only melody rename (5.1.53); LuCI rename query encoding (5.1.54); MP3 upload save icon (5.1.55); passive switch and IP header (5.1.56); saved volume header bar; UI consistency review and mobile layout",
-      "destination_sha256": "53762cfc2605f46556601233aedbb87a55f3c35785f72b095004b58a5e5d8a6a"
+      "destination_sha256": "2923794226b7420e18b89cbdc9a0dcec257ab3e9c0b35adb38b621a5aadcc25a"
     },
     {
       "source": "packages/schoolbell/router-page/root/usr/lib/lua/schoolbell/backup_web.lua",
@@ -665,7 +665,7 @@
       "destination": "ui/root/www/schoolbell-test/style.css",
       "source_sha256": "046d8f5ba5461e83f8c4412b368b227ae34a98eef741d500af2117eefa4ff0ba",
       "changes": "none; default audio status and blue Flash (5.1.29); wider header and CSS cache key (5.1.30); stable two-line audio layer; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); collapsed manual sound check, version 5.1.33; confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); 5.1.41 startup priority and shared Actions column; compact 4x4 schedule palette; 5.1.42 reduced action spacing; 5.1.43 playback icon size; consistent delete icons and centered headings (5.1.47); insert and reorder bell rows (5.1.48); shared UI conventions and large action icons (5.1.50); triangle and bulk action icons (5.1.51); melody table add and replace (5.1.52); metadata-only melody rename (5.1.53); passive switch and IP header (5.1.56); saved volume header bar; UI consistency review and mobile layout",
-      "destination_sha256": "e3fee8d81b2b4119f665c8c1c814847cf0516232e63e5688bb62be588dee52bb"
+      "destination_sha256": "820694be71346961f643bd5503d40fbf525f984e881e47adf98bf14e4e430911"
     },
     {
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/theme.js",
@@ -679,7 +679,7 @@
       "destination": "ui/root/www/schoolbell-test/time-settings.js",
       "source_sha256": "dfb1234a4d60cd22921ad44753ed43ffc0465467970d471a0e1757d7d5b165f7",
       "changes": "none; 5.1.40 initial page-load performance",
-      "destination_sha256": "147e84111e163a3ba1cafdcead633046ab30461c57a7e999c46cf5dbf45eafb9"
+      "destination_sha256": "2ca23060fcefcfda3d5f33f5f5d480ddcf6fb27d626fc717677ca5de5b385318"
     },
     {
       "source": "packages/schoolbell/tests/check_dates.lua",
@@ -1141,7 +1141,7 @@
       "destination": "packaging/openwrt/package/CONTROL/control",
       "source_sha256": "8183c1fee37c5c6579f32cc2570317640935b5a2598495d8bbb4081e6bb78141",
       "changes": "adapted; review destination against pinned source; default audio status and blue Flash (5.1.29); wider header and CSS cache key (5.1.30); owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner clarification of playback action icons (5.1.32, spec 1.78); collapsed manual sound check, version 5.1.33; version 5.1.34; version 5.1.35; owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); fast advisory media listing, authoritative checks retained for deletion; confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); 5.1.39 lazy backup status check and release notes; 5.1.40 initial page-load performance; 5.1.41 startup priority and shared Actions column; 5.1.42 reduced action spacing; 5.1.43 playback icon size; 5.1.44 approved contrast palette; schoolbell feedback issue forms and RU/EN guide links (5.1.45); device-local header date (5.1.46); consistent delete icons and centered headings (5.1.47); insert and reorder bell rows (5.1.48); shared UI conventions and large action icons (5.1.50); triangle and bulk action icons (5.1.51); melody table add and replace (5.1.52); metadata-only melody rename (5.1.53); LuCI rename query encoding (5.1.54); MP3 upload save icon (5.1.55); passive switch and IP header (5.1.56); saved volume header bar; UI consistency review and mobile layout",
-      "destination_sha256": "3e3efd0dddaa20279fe685ca21ec8c9c3823208db718f6bfe6af5f79f1426371"
+      "destination_sha256": "080a7814d38d18fc42bab0b37895222eaa8c9c6153a26acbbfdb7f834cc81c1b"
     },
     {
       "source": "pkg-schoolbell/CONTROL/postinst",
@@ -1295,7 +1295,7 @@
       "destination": "scripts/test-schoolbell-time-settings.js",
       "source_sha256": "d20cdd0b75520bae05b3b51061244657bcd0402cadd8b1ddcef649d5c4dd625a",
       "changes": "adapted; review destination against pinned source; 5.1.40 initial page-load performance",
-      "destination_sha256": "8b7b37c9dcedcb6df27401d239fac3392d7b8744d1b32c467672ed84494493cb"
+      "destination_sha256": "d87dc04698a318fbd4798320069215e55dee8dc90f2991ed0f1ce82b45ee6400"
     },
     {
       "source": "scripts/test-schoolbell.sh",

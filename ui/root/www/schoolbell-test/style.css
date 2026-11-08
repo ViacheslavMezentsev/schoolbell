@@ -270,3 +270,9 @@ details[open]>.settings-summary>.settings-brief{display:none}
 #panel-sound .network-settings{align-items:flex-end;margin:12px 0 0}
 #panel-sound .network-settings label{margin:0;min-width:0}
 #network-result:empty{display:none}
+
+#metrics-panel>summary{display:list-item}
+#metrics-panel>summary:after{content:"";display:block;clear:both}
+#metrics-summary{float:right;font-size:14px;font-weight:400;color:var(--muted);text-align:right;max-width:65%}
+#metrics-panel[open]>summary #metrics-summary{display:none}
+@media(max-width:700px){#metrics-summary{max-width:65%;font-size:12px;overflow-wrap:anywhere}}
