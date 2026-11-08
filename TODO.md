@@ -26,7 +26,7 @@
 
 - [ ] Подтвердить на реальном телефоне панель сохранения и отсутствие горизонтального выхода страницы за экран. / Confirm the save bar and absence of horizontal overflow on a real phone.
 - [ ] Завершить TC-197 для текущего UI: обе темы, узкий экран, фокус клавиатуры, disabled, размеры и отступы одинаковых элементов. Ранее проверенные 64 сочетания относятся к 5.1.69, а не ко всем последующим изменениям. / Complete current UI consistency checks; the earlier 64 combinations cover 5.1.69 only.
-- [ ] Проверить опубликованные Pages владельцем на актуальной версии. Сборка и тесты общих исходников не заменяют проверку опубликованного сайта. / Review the current published Pages; source checks do not prove the deployed site.
+- [ ] Дополнить проверку опубликованных Pages: режим «По расписанию», остальные скорости имитатора, прямое редактирование даты, отмена диалога времени и реальный телефон. Подтверждённые сценарии 5.1.120 перечислены ниже; это не полное закрытие TC-235/TC-236. / Extend published Pages coverage to fixed-schedule mode, other speeds, direct date editing, time-dialog cancellation and a real phone; the checks below do not fully close TC-235/TC-236.
 
 ## Осталось: установка, выпуск и завершение миграции / Remaining: installation and release
 
@@ -40,6 +40,8 @@
 ## Выполнено и подтверждено / Completed and confirmed
 
 ### 5.1.120: интерфейс и имитатор / UI and simulator
+
+- [x] 08.11.2026: опубликованные Pages **5.1.120**, `ce2e3fa28c20`: сводка Метрик, смена Интернет/NTP, календарный предзвонок/основной, установка времени, отказ/восстановление виртуального аудио и сохранение после обновления страницы проверены в браузере. Карта: 2 успешных события, затем 3 после восстановления; ошибка исключена. Стенд не использовался. [Протокол RU](docs/acceptance/ACCEPTANCE_RUN.md#08112026--опубликованные-pages-51120) · [EN](docs/acceptance/ACCEPTANCE_RUN.en.md#2026-11-08--published-pages-51120). / Published Pages browser check passed for the listed scenarios; see the protocol for untested cases.
 
 - [x] 08.11.2026: локальный имитатор Pages, оба режима с основным и предварительным звонком, ошибки/возврат аудио, откат виртуальных часов, журнал и карта проверены host-тестами. В браузере проверены сводки, установка времени и отсутствие мигания; результат принят владельцем. Это не аппаратная приёмка. / Local simulator scenarios passed host tests; browser UI, time setting and stable status were checked and accepted, without claiming hardware acceptance.
 - [x] Общий диалог установки времени и сводка «Метрик» (Flash, громкость, Интернет), единая пометка «Демо», перенос локальных действий в имитатор и сохранение ссылок руководства/обучения реализованы. / Implemented the shared time confirmation dialog, resource summary, single demo badge and relocated local actions with guide links preserved.

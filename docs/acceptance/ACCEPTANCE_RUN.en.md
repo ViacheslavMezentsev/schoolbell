@@ -152,3 +152,19 @@ bridge, not production LuCI login/routing. This informs S4 but does not pass the
 new device. Large archives, slow clients, peak resources and power loss remain open.
 
 2026-10-31: the owner accepted 5.1.23 on the existing bench: both themes, status border, schedule columns and row playback in the browser/device speakers. Backup and exact rollback were verified before installation; payload hashes and unchanged .sbb afterwards. Quiet playback at -18 dB passed and original volume was restored. Automatic bells remain disabled; clock/NTP unchanged. This does not replace S0–S8 on the new device. Next is S0: dedicated USB–Ethernet, exact firmware/recovery files, profile/Q1–Q5 and artifact passport. Pages publication of 5.1.23 has not been independently verified.
+
+### 2026-11-08 — published Pages 5.1.120
+
+Checked the [published interface](https://viacheslavmezentsev.github.io/schoolbell/) in a separate in-app browser: version **5.1.120**, commit `ce2e3fa28c20dae0b36b50a8598a96e1d134e058`, build time `2026-11-08T07:20:14Z`. This browser started with no applied plan and an empty journal. The owner requested the check; the working router was not accessed.
+
+| Check | Observed result |
+| --- | --- |
+| Metrics summary (TC-236) | Right-aligned while collapsed, hidden when expanded. Unknown flash, saved volume and Internet match Resources. Available → unconfirmed → available updates correctly; NTP independently showed waiting. |
+| Simulator calendar plan (part of TC-235) | Applied the sample plan and enabled automation. Next-event navigation executed a pre-bell at 2026-11-09 08:28 and a main bell at 08:30. Journal attempts/completions matched; daily count was 2. |
+| Set time from browser (§4.7.9) | Two submissions completed successfully, displayed clocks matched to the second and automation switched off. Refreshing with ×1 clock speed also showed matching readings. |
+| Rollback and audio (part of TC-235) | Returning the clock did not duplicate completed events. With the virtual card disconnected, the 09:15 event failed without disabling automation. After reconnection, 09:25 succeeded: daily count 3, excluding the failure. |
+| Page reload (part of TC-235) | Automation off, clock paused, history/counts retained and a boot event added. No JavaScript warnings or errors appeared in the observed browser log. |
+
+**Limits:** this checks the published UI and local model, not hardware. Fixed-schedule mode, every speed, a real phone and cancellation of the time dialog were not exercised on this publication. The short-lived dialog was not exposed to the observation tool; the successful setting was verified, while cancellation is covered by host tests, not this run. The tool could not fill the `datetime-local` input, so direct date editing is also not marked verified. These tooling limitations are not application defects without separate reproduction.
+
+Final simulator state: automation off, time paused, audio ready, Internet available and NTP synchronized, history retained. No real audio, computer clock, network or bench changes. This result does not close full hardware acceptance or the remaining TC-235/TC-236 scenarios.
