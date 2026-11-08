@@ -168,3 +168,21 @@ Checked the [published interface](https://viacheslavmezentsev.github.io/schoolbe
 **Limits:** this checks the published UI and local model, not hardware. Fixed-schedule mode, every speed, a real phone and cancellation of the time dialog were not exercised on this publication. The short-lived dialog was not exposed to the observation tool; the successful setting was verified, while cancellation is covered by host tests, not this run. The tool could not fill the `datetime-local` input, so direct date editing is also not marked verified. These tooling limitations are not application defects without separate reproduction.
 
 Final simulator state: automation off, time paused, audio ready, Internet available and NTP synchronized, history retained. No real audio, computer clock, network or bench changes. This result does not close full hardware acceptance or the remaining TC-235/TC-236 scenarios.
+
+### 2026-11-08 — USB audio hot reconnection 5.1.120
+
+With owner authorization, tested the working TL-MR3020 v3 bench, OpenWrt 19.07.9, Shkolnik **5.1.120**, AB13X USB Audio over OHCI on `/dev/dsp`. Initially automation was off, sound allowed and saved volume 50%. Verified the .sbb backup and data snapshot, preserving the original draft and applied school-year plan. No package, network, clock or volume changes during the run.
+
+A temporary calendar plan contained three main bells using the test melody. Times below are device-local, Asia/Yekaterinburg (UTC+05:00).
+
+| Time | Condition and result | Journal | Daily count |
+| --- | --- | --- | --- |
+| 13:40 | Card connected; successful completion at 13:40:03. Owner confirmed audible playback. | Attempt #437, `auto_ok` #438 | 0 → 1 |
+| 13:43 | Owner disconnected the card; no sound devices were present before the deadline. Attempt recorded, `auto_audio_unavailable` at 13:43:01. Automation remained enabled. | Attempt #439, error #440 | Remained 1 |
+| 13:46 | Reconnecting the same card restored `/dev/dsp` without restarting the service. Successful completion at 13:46:04; owner confirmed audible playback. | Attempt #441, `auto_ok` #442 | 1 → 2 |
+
+**Result: PASSED for removal and reconnection of the same card over OHCI.** Three attempts, two successes; the failure did not increase the count (part of TC-210). The missed bell was not replayed after audio recovery. Missing audio did not disable automation.
+
+Restored the original draft and applied school-year plan, leaving automation off. Sound settings matched the baseline; .sbb contents matched by hashes. Journal and daily counts retained the test results. Local evidence is in the Git-ignored `tests/manual/115-usb-hotplug-5-1-120` protocol.
+
+**Limits:** substitution with another card model, the former problematic hub/EHCI combination and removal during active playback were not tested. This run does not close those scenarios or full hardware acceptance.

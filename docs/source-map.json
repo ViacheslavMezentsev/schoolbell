@@ -1401,17 +1401,17 @@
       "source": "docs/packages/schoolbell/ACCEPTANCE_RUN.en.md",
       "destination": "docs/acceptance/ACCEPTANCE_RUN.en.md",
       "source_sha256": "b897b27c3bb283ca9709a4cc73681939e1831b0bd77c3da2282fcbf24490ddcd",
-      "destination_sha256": "551c2f1d98ce542f3f757d732a6201f57947dea8879c06730019c7444c4c9d6d",
+      "destination_sha256": "3baa281810792b57ee96ab68547dace945da3d97752dee696e02eb6e40edc63c",
       "changes": "Markdown link destinations only; original text and requirement/TC IDs preserved",
-      "prose_sha256": "94a6baa77b57882082b3a4a13d01ff0d89e89ce9eca7dd70148548fddcbc2534"
+      "prose_sha256": "199680e1948ce94fa33f25b6f87dda34c77751361800dd0b5f2b22127da77116"
     },
     {
       "source": "docs/packages/schoolbell/ACCEPTANCE_RUN.md",
       "destination": "docs/acceptance/ACCEPTANCE_RUN.md",
       "source_sha256": "47af9da767957c40bf358d3fa7b4f57f50f08581ef45fd5abe08a677e8d17f93",
-      "destination_sha256": "f9eaeb26b2dd9eb21e0895d5cb17cfc80685ee9633b3f6e296b6fb21dc50ab1c",
+      "destination_sha256": "ff39149a733be027473ebea9df088bf407e8fb6d7f5d672eb875f5f92ed81423",
       "changes": "Markdown link destinations only; original text and requirement/TC IDs preserved",
-      "prose_sha256": "cbc27190fd3a7c6295e865b333664ba5ae7175eac39da4c6cc5f49fc5ad3bc92"
+      "prose_sha256": "41736ac9495bc49471123b5c54eec2af2d2e549ff9f39e832554164225363208"
     },
     {
       "source": "docs/packages/schoolbell/ANNUAL_CALENDAR.en.md",
