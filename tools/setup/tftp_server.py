@@ -1,7 +1,7 @@
 import argparse, hashlib, logging, socket, struct, time
 from pathlib import Path
 
-EXPECTED = 'e621da95d07d25102b1016a28400122f5c92bce9830d5cc061323e306b6204fa'
+from firmware import load_payload, PROFILES
 ROOT = Path(__file__).resolve().parent
 
 def valid_rrq(data):
@@ -74,16 +74,23 @@ def self_test():
     print('PASS: RRQ restrictions, byte identity, terminal empty block, retransmission')
 
 def main():
-    parser=argparse.ArgumentParser(); parser.add_argument('--self-test',action='store_true'); args=parser.parse_args()
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--self-test',action='store_true')
+    parser.add_argument('--profile',choices=PROFILES,default='openwrt')
+    parser.add_argument('--check',action='store_true')
+    args=parser.parse_args()
     if args.self_test: self_test(); return
-    logging.basicConfig(filename=ROOT/'tftp-python-openwrt-19.07.9.log',level=logging.INFO,format='%(asctime)s %(levelname)s %(message)s')
-    payload=(ROOT/'firmware'/'tp_recovery.bin').read_bytes()
+    payload, label = load_payload(ROOT, args.profile)
     digest=hashlib.sha256(payload).hexdigest()
-    if digest!=EXPECTED: raise RuntimeError('Firmware hash mismatch')
-    logging.info('START OpenWrt 19.07.9 size=%s sha256=%s no OACK, read-only, client=192.168.0.2',len(payload),digest)
+    if args.check:
+        print(f'CHECK OK: {label}; {len(payload)} bytes; SHA256 {digest}')
+        return
+    logfile=ROOT/('tftp-'+args.profile+'.log')
+    logging.basicConfig(filename=logfile,level=logging.INFO,format='%(asctime)s %(levelname)s %(message)s')
+    logging.info('START %s size=%s sha256=%s no OACK, read-only, client=192.168.0.2',label,len(payload),digest)
     with socket.socket(socket.AF_INET,socket.SOCK_DGRAM) as listener:
         listener.bind(('192.168.0.225',69)); listener.settimeout(1)
-        print('READY 192.168.0.225:69; OpenWrt 19.07.9 recovery verified. Waiting for router.',flush=True)
+        print(f'READY 192.168.0.225:69; {label}; SHA256 {digest}. Waiting for router.',flush=True)
         expires=time.monotonic()+600
         while time.monotonic()<expires:
             try: request,peer=listener.recvfrom(2048)
@@ -100,7 +107,7 @@ def main():
                 return
             except (OSError,RuntimeError) as exc:
                 logging.exception('TRANSFER FAILED %s',exc)
-                print('TRANSFER FAILED; see tftp-python-openwrt-19.07.9.log',flush=True)
+                print(f'TRANSFER FAILED; see {logfile.name}',flush=True)
                 raise SystemExit(1)  # no queued RRQ replay
         raise TimeoutError('No recovery request within 10 minutes')
 

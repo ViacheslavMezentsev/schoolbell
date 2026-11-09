@@ -1,0 +1,144 @@
+{
+  "artifacts": [
+    {
+      "file": "tp-link-mr3020-v3.30-en.html",
+      "url": "https://www.tp-link.com/en/support/download/tl-mr3020/v3.30/",
+      "resolved_url": "https://www.tp-link.com/en/support/download/tl-mr3020/v3.30/",
+      "retrieved_utc": "2026-11-09T06:54:29.142701+00:00",
+      "content_type": "text/html; charset=UTF-8",
+      "bytes": 253657,
+      "sha256": "293a9522a14c17b789071cd4f9ec55aa0229cd6172680cba738483d4066caf6c"
+    },
+    {
+      "file": "tl-mr3020-eu-v3.30-250625.zip",
+      "url": "https://static.tp-link.com/upload/firmware/2025/202507/20250714/TL-MR3020_3.0_1.7.0%20Build%20250625.zip",
+      "resolved_url": "https://static.tp-link.com/upload/firmware/2025/202507/20250714/TL-MR3020_3.0_1.7.0%20Build%20250625.zip",
+      "retrieved_utc": "2026-11-09T06:54:30.503085+00:00",
+      "content_type": "application/octet-stream",
+      "bytes": 6978284,
+      "sha256": "c01e8ad8c882ee2cc5dbb2899111f111c37aa356d366f0b6098f6c5f139bacea"
+    },
+    {
+      "file": "python-3.11.9-embed-amd64.zip",
+      "url": "https://www.python.org/ftp/python/3.11.9/python-3.11.9-embed-amd64.zip",
+      "resolved_url": "https://www.python.org/ftp/python/3.11.9/python-3.11.9-embed-amd64.zip",
+      "retrieved_utc": "2026-11-09T06:54:31.689959+00:00",
+      "content_type": "application/zip",
+      "bytes": 11249023,
+      "sha256": "009d6bf7e3b2ddca3d784fa09f90fe54336d5b60f0e0f305c37f400bf83cfd3b"
+    },
+    {
+      "file": "tp-link-mr3020-v3.30-ru-kz.html",
+      "url": "https://www.tp-link.com/kz/support/download/tl-mr3020/v3.30/",
+      "resolved_url": "https://www.tp-link.com/kz/support/download/tl-mr3020/v3.30/",
+      "retrieved_utc": "2026-11-09T06:55:13.615568+00:00",
+      "content_type": "text/html; charset=UTF-8",
+      "bytes": 254771,
+      "sha256": "30cc30030125a7a7c0f0b052446a99cbabd59d510215472dcebc9840a3fd28e4"
+    },
+    {
+      "file": "tp-link-mr3020-product-en.html",
+      "url": "https://www.tp-link.com/en/home-networking/5g-4g-router/tl-mr3020/",
+      "resolved_url": "https://www.tp-link.com/en/home-networking/5g-4g-router/tl-mr3020/",
+      "retrieved_utc": "2026-11-09T07:02:33.303964+00:00",
+      "content_type": "text/html; charset=UTF-8",
+      "bytes": 218488,
+      "sha256": "60e9b9abc0c3ed80dd1aed0516f15e76f7f56001521b3d69605f24d527c03a96"
+    },
+    {
+      "file": "tp-link-mr3020-v3.20-product-en.html",
+      "url": "https://www.tp-link.com/en/home-networking/5g-4g-router/tl-mr3020/v3.20/",
+      "resolved_url": "https://www.tp-link.com/en/home-networking/5g-4g-router/tl-mr3020/v3.20/",
+      "retrieved_utc": "2026-11-09T07:03:35.830219+00:00",
+      "content_type": "text/html; charset=UTF-8",
+      "bytes": 217685,
+      "sha256": "093c8222f58a21d13d77dcccc967eb7c24b70ea57c88d114042d11c1b0f797c0"
+    },
+    {
+      "file": "photos/v3.20/tl-mr3020-1.jpg",
+      "url": "https://static.tp-link.com/TL-MR3020_3.0_01_large_1558000790877e.jpg",
+      "resolved_url": "https://static.tp-link.com/TL-MR3020_3.0_01_large_1558000790877e.jpg",
+      "retrieved_utc": "2026-11-09T07:03:36.609182+00:00",
+      "content_type": "image/jpeg",
+      "bytes": 146333,
+      "sha256": "0a676e4386a90e30db52fd99ba1c86dd0bef355376709f0d8281bb30026175c8",
+      "source_page": "https://www.tp-link.com/en/home-networking/5g-4g-router/tl-mr3020/v3.20/"
+    },
+    {
+      "file": "photos/v3.20/tl-mr3020-2.jpg",
+      "url": "https://static.tp-link.com/TL-MR3020_3.20_04_large_1558001044038c.jpg",
+      "resolved_url": "https://static.tp-link.com/TL-MR3020_3.20_04_large_1558001044038c.jpg",
+      "retrieved_utc": "2026-11-09T07:03:37.491635+00:00",
+      "content_type": "image/jpeg",
+      "bytes": 152416,
+      "sha256": "eff6833bf3cba3cde8fe51562a1da9ac268d48db306fc667370dad5865b2acc3",
+      "source_page": "https://www.tp-link.com/en/home-networking/5g-4g-router/tl-mr3020/v3.20/"
+    },
+    {
+      "file": "photos/v3.20/tl-mr3020-3.jpg",
+      "url": "https://static.tp-link.com/TL-MR3020(EU)3.20-110X109X81.5mm-L-7082500049_large_1558001096642o.jpg",
+      "resolved_url": "https://static.tp-link.com/TL-MR3020(EU)3.20-110X109X81.5mm-L-7082500049_large_1558001096642o.jpg",
+      "retrieved_utc": "2026-11-09T07:03:38.367056+00:00",
+      "content_type": "image/jpeg",
+      "bytes": 252809,
+      "sha256": "ddb8de30cb3f19cb4a23206c974642bf2369486046fe488ffa1ba01612a5144d",
+      "source_page": "https://www.tp-link.com/en/home-networking/5g-4g-router/tl-mr3020/v3.20/"
+    },
+    {
+      "file": "tp-link-mr3020-v3.30-product-en.html",
+      "url": "https://www.tp-link.com/en/home-networking/5g-4g-router/tl-mr3020/v3.30/",
+      "resolved_url": "https://www.tp-link.com/en/home-networking/5g-4g-router/tl-mr3020/v3.30/",
+      "retrieved_utc": "2026-11-09T07:03:38.962581+00:00",
+      "content_type": "text/html; charset=UTF-8",
+      "bytes": 218500,
+      "sha256": "87ecd28d89f47133032164a89ddb994561276be8c372d6d89e3ebf8080665b8c"
+    },
+    {
+      "file": "photos/v3.30/tl-mr3020-1.jpg",
+      "url": "https://static.tp-link.com/upload/image-line/TL-MR3020_EU_3.3_overviews_01_large_20250403072552x.jpg",
+      "resolved_url": "https://static.tp-link.com/upload/image-line/TL-MR3020_EU_3.3_overviews_01_large_20250403072552x.jpg",
+      "retrieved_utc": "2026-11-09T07:03:39.660024+00:00",
+      "content_type": "image/jpeg",
+      "bytes": 193667,
+      "sha256": "fe0a46c6bf98e691d9f53050c8ed28253b5e0fbd2bda1be1e64b60a8cc8a9697",
+      "source_page": "https://www.tp-link.com/en/home-networking/5g-4g-router/tl-mr3020/v3.30/"
+    },
+    {
+      "file": "photos/v3.30/tl-mr3020-2.jpg",
+      "url": "https://static.tp-link.com/upload/image-line/TL-MR3020_EU_3.3_overviews_02_large_20250403072756y.jpg",
+      "resolved_url": "https://static.tp-link.com/upload/image-line/TL-MR3020_EU_3.3_overviews_02_large_20250403072756y.jpg",
+      "retrieved_utc": "2026-11-09T07:03:40.456447+00:00",
+      "content_type": "image/jpeg",
+      "bytes": 132694,
+      "sha256": "e19e55949eacdf8c6b52eaa36cf86cc17dcbab3263ed5e515e99cbd912571d19",
+      "source_page": "https://www.tp-link.com/en/home-networking/5g-4g-router/tl-mr3020/v3.30/"
+    },
+    {
+      "file": "photos/v3.30/tl-mr3020-3.jpg",
+      "url": "https://static.tp-link.com/upload/image-line/TL-MR3020_EU_3.3_overviews_03_large_20250403072851d.jpg",
+      "resolved_url": "https://static.tp-link.com/upload/image-line/TL-MR3020_EU_3.3_overviews_03_large_20250403072851d.jpg",
+      "retrieved_utc": "2026-11-09T07:03:41.051785+00:00",
+      "content_type": "image/jpeg",
+      "bytes": 159462,
+      "sha256": "5c48a513128106a965483f3abeb7d24cdfb03febd6780bb708093dff29bc7798",
+      "source_page": "https://www.tp-link.com/en/home-networking/5g-4g-router/tl-mr3020/v3.30/"
+    },
+    {
+      "file": "photos/v3.30/tl-mr3020-4.jpg",
+      "url": "https://static.tp-link.com/upload/image-line/TL-MR3020_EU_3.3_overviews_04_large_20250403072906y.jpg",
+      "resolved_url": "https://static.tp-link.com/upload/image-line/TL-MR3020_EU_3.3_overviews_04_large_20250403072906y.jpg",
+      "retrieved_utc": "2026-11-09T07:03:41.921560+00:00",
+      "content_type": "image/jpeg",
+      "bytes": 428016,
+      "sha256": "6294b38a7d35168718f4352edf8f251d2600bdc5577a28d9b3c07fdb59767a95",
+      "source_page": "https://www.tp-link.com/en/home-networking/5g-4g-router/tl-mr3020/v3.30/"
+    }
+  ],
+  "unavailable": [
+    {
+      "url": "https://www.tp-link.com/ru/support/download/tl-mr3020/v3.30/",
+      "status": 404,
+      "checked_utc": "2026-11-09T06:55:13.615568+00:00"
+    }
+  ]
+}

@@ -20,6 +20,7 @@ lua5.1 tests/test_network_status.lua
 lua5.1 tests/test_session_http.lua
 node scripts/test-schoolbell-session-ui.js
 
+python3 tests/test_setup_firmware.py
 python3 tests/test_offline_bundle.py
 python3 tests/test_target_cache.py
 

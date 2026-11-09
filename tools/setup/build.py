@@ -6,6 +6,7 @@ from pathlib import Path
 import shutil
 import tempfile
 import zipfile
+from firmware import prepare_oem
 
 HERE = Path(__file__).resolve().parent
 IMAGE_SHA = 'e621da95d07d25102b1016a28400122f5c92bce9830d5cc061323e306b6204fa'
@@ -15,7 +16,8 @@ NAME = 'schoolbell-5.1.100-mr3020-eu-v3.30-win11-x64'
 def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
-def build(bundle, image, runtime, dest):
+def build(bundle, image, runtime, dest, oem=None):
+    factory = prepare_oem(oem.read_bytes()) if oem is not None else None
     if digest(image)!=IMAGE_SHA or digest(runtime)!=PYTHON_SHA:
         raise ValueError('Unexpected recovery image or embedded Python')
     rows=json.loads((bundle/'manifest.json').read_bytes())['packages']
@@ -31,9 +33,12 @@ def build(bundle, image, runtime, dest):
         root=Path(temporary)/NAME
         (root/'firmware').mkdir(parents=True)
         shutil.copyfile(image,root/'firmware/tp_recovery.bin')
+        if factory is not None:
+            (root/'firmware/oem-recovery.bin').write_bytes(factory)
         with zipfile.ZipFile(runtime) as z:z.extractall(root/'python')
+        with (root/'python/python311._pth').open('a') as paths: paths.write('\n..\n')
         shutil.copytree(bundle,root/'bundle')
-        for name in ['README.md','Setup.cmd','Setup.ps1','install.py','tftp_server.py']:
+        for name in ['README.md','Setup.cmd','Setup.ps1','install.py','tftp_server.py','firmware.py']:
             shutil.copyfile(HERE/name,root/name)
         files=sorted(p for p in root.rglob('*') if p.is_file())
         sums=''.join(digest(p)+'  '+p.relative_to(root).as_posix()+'\n' for p in files)
@@ -48,5 +53,6 @@ def build(bundle, image, runtime, dest):
 if __name__=='__main__':
     cli=argparse.ArgumentParser(description=__doc__)
     for key in ('bundle','image','runtime'):cli.add_argument('--'+key,required=True,type=Path)
+    cli.add_argument('--oem',type=Path,help='Original pinned TP-Link Build250625 BIN (optional factory recovery)')
     cli.add_argument('--dest',type=Path,default=HERE/'dist')
     build(**vars(cli.parse_args()))

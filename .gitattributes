@@ -1,0 +1,4 @@
+# Preserve upstream response bodies and archives byte-for-byte.
+tools/setup/vendor/*.html -text -diff
+tools/setup/vendor/*.zip -text -diff
+tools/setup/vendor/photos/** -text -diff
