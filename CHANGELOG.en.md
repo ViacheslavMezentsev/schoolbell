@@ -2,6 +2,11 @@
 
 [Русский](CHANGELOG.md)
 
+## 5.1.121 — 2026-11-09
+
+- Recorded audible offline pre/main bells with all browser pages closed; journal and counts matched.
+- Fixed false NTP confirmation renewal from periodic events. Legacy events without a type are not evidence; shared UI/Pages says no fresh confirmation. Stable stratum may produce no new events despite working NTP. Deployed; the 2026-11-09 offline retest produced no false confirmation. Fresh stratum expiry and reconfirmation remain untested.
+
 ## 5.1.120 — 2026-11-08
 
 - Verified hot substitution of AB13X with C-Media over OHCI: both bells audible, journal/counts matched, no service restart. School-year plan restored, automation off and volume unchanged. Hub port changed; EHCI was not tested.

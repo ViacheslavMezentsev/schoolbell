@@ -26,9 +26,9 @@ The [offline dependency bundle](docs/PACKAGING.en.md) is prepared separately.
 
 ## Status
 
-Package **5.1.120** targets OpenWrt 19.07.9 on the TL-MR3020 v3.
+Package **5.1.121** targets OpenWrt 19.07.9 on the TL-MR3020 v3.
 
-Resources show independent Internet and NTP states. Settings → Interface lets you disable the Internet probe for offline operation or change its target. An unconfirmed result means no reply from that target, not proof of an outage. NTP requires a synchronization event; the first event after installation may take about 11 minutes. These indicators do not control automatic bells. Probe settings are separate from portable .sbb backups.
+Resources show independent Internet and NTP states. Settings → Interface lets you disable the Internet probe for offline operation or change its target. An unconfirmed result means no reply from that target, not proof of an outage. NTP requires an explicit stratum event from the current service within 15 minutes. Periodic notifications do not renew confirmation. No fresh confirmation does not imply incorrect time: BusyBox does not report every successful exchange, so a stable stratum can leave synchronization unconfirmed even when it works. These indicators do not control automatic bells. Probe settings are separate from portable .sbb backups.
 
 ## Documentation
 
