@@ -59,7 +59,7 @@ Setup.cmd -RestoreFactory
 
 ## Происхождение и сборка ZIP
 
-Основа сервера — tftp-readonly.py от 31.10.2026, SHA-256 исходника `feca2cb4d6baf91c6462473f53f77dbb9ea58cd24301671e5baca01a10e45675`. В опыте зафиксированы последний ACK 15873, 8 126 464 полученных байта и последующее чтение OpenWrt 19.07.9 на MR3020. Сохранены RRQ только для tp_recovery.bin/octet от 192.168.0.2, порт 69, отдельный порт 1069 для DATA, блок 512, отсутствие OACK и повторы при потере ACK. Аппаратная проверка установки 5.1.123 описана ниже; RestoreFactory требует отдельной приёмки.
+Основа сервера — tftp-readonly.py от 31.10.2026, SHA-256 исходника `feca2cb4d6baf91c6462473f53f77dbb9ea58cd24301671e5baca01a10e45675`. В опыте зафиксированы последний ACK 15873, 8 126 464 полученных байта и последующее чтение OpenWrt 19.07.9 на MR3020. Сохранены RRQ только для tp_recovery.bin/octet от 192.168.0.2, порт 69, отдельный порт 1069 для DATA, блок 512, отсутствие OACK и повторы при потере ACK. Аппаратная проверка установки 5.1.123 описана ниже; RestoreFactory в PowerShell 7 также принят 09.11.2026.
 
 Сборщик принимает готовую папку bundle из scripts/build-schoolbell-bundle.py (пакет 5.1.123, native 1.0.0), [официальный recovery-образ](https://downloads.openwrt.org/releases/19.07.9/targets/ramips/mt76x8/openwrt-19.07.9-ramips-mt76x8-tplink_tl-mr3020-v3-squashfs-tftp-recovery.bin) и [Windows embedded Python x64](https://www.python.org/ftp/python/3.11.9/python-3.11.9-embed-amd64.zip).
 
@@ -83,7 +83,7 @@ Build with optional `--oem /path/to/original-oem-build250625.bin` to include fac
 
 After a successful dry run, run `Setup.cmd -RestoreFactory` as Administrator. Back up OpenWrt, Schoolbell data and required flash partitions first: the wizard does not back them up. Confirm RESTORE FACTORY and the model, then hold Reset at power-on only after READY. Leave power connected during writing/boot. The wizard restores the adapter to DHCP and does not wait for SSH or install Schoolbell. Verify the stock interface/model/Build250625 yourself; the final ACK only proves transfer. The management IP may differ with retained settings/AP mode.
 
-Factory recovery may retain the old TP-Link administrator password/configuration. The Wi-Fi key on the label is separate unless you intentionally chose it as the administrator password. If forgotten, separately hold WPS/Reset for about 10 seconds on the already powered-on, booted router until LEDs react, release, wait for reboot and create a new administrator password. This erases settings. The wizard never performs that reset. Recovery depends on the bootloader; OpenWrt → OEM was verified, OEM → OEM and the RestoreFactory wizard were not hardware-tested. Do not use the recovery image in the stock web-upgrade form.
+Factory recovery may retain the old TP-Link administrator password/configuration. The Wi-Fi key on the label is separate unless you intentionally chose it as the administrator password. If forgotten, separately hold WPS/Reset for about 10 seconds on the already powered-on, booted router until LEDs react, release, wait for reboot and create a new administrator password. This erases settings. The wizard never performs that reset. Recovery depends on the bootloader; OpenWrt → OEM was verified, RestoreFactory passed in PowerShell 7; OEM → OEM remains untested. Do not use the recovery image in the stock web-upgrade form.
 
 [Recovery findings and acceptance](../../docs/SETUP_RECOVERY.en.md).
 
@@ -109,6 +109,6 @@ make all
 
 ## Аппаратная проверка 09.11.2026 / Hardware check
 
-На отдельном EU v3.30 пройдены переход OEM → OpenWrt, установка 5.1.123 из локального ZIP через PowerShell 7 и вход в LuCI с выключенными автозвонками. После отмены INSTALL продолжение InstallOnly не потребовало повторной прошивки. VPN оставался включённым; прямые пути TFTP/SSH проверены. ПК не отключался от Интернета. RestoreFactory остаётся отдельной непроверенной веткой. [Протокол и ограничения](../../docs/acceptance/ACCEPTANCE_RUN.md).
+На отдельном EU v3.30 пройдены переход OEM → OpenWrt, установка 5.1.123 из локального ZIP через PowerShell 7 и вход в LuCI с выключенными автозвонками. После отмены INSTALL продолжение InstallOnly не потребовало повторной прошивки. VPN оставался включённым; прямые пути TFTP/SSH проверены. ПК не отключался от Интернета. Позднее RestoreFactory в PowerShell 7 также прошёл проверку: загрузка OEM, вход без дополнительного сброса, версия и очистка сети подтверждены. [Протокол и ограничения](../../docs/acceptance/ACCEPTANCE_RUN.md).
 
-A spare EU v3.30 passed OEM → OpenWrt, local ZIP installation of 5.1.123 through PowerShell 7 and LuCI login with automation off. InstallOnly resumed after INSTALL cancellation without reflashing. VPN remained enabled and direct TFTP/SSH routes passed. The PC was not physically offline; RestoreFactory remains untested. [Record and limits](../../docs/acceptance/ACCEPTANCE_RUN.en.md).
+A spare EU v3.30 passed OEM → OpenWrt, local ZIP installation of 5.1.123 through PowerShell 7 and LuCI login with automation off. InstallOnly resumed after INSTALL cancellation without reflashing. VPN remained enabled and direct TFTP/SSH routes passed. The PC was not physically offline. A later RestoreFactory run in PowerShell 7 passed OEM boot, login without another reset, version and network cleanup. [Record and limits](../../docs/acceptance/ACCEPTANCE_RUN.en.md).

@@ -4,15 +4,15 @@
 
 | Тип / Model | Регион / Region | Ревизия / Revision | Результат / Target | Проверка / Evidence |
 | --- | --- | --- | --- | --- |
-| TP-Link TL-MR3020 | EU | Ver. 3.30 | Build250625, UI 1.8.0 0.9.1 v0001.0 Rel.56805n | Образ принят на устройстве; полный новый мастер ещё не принят / Image hardware-tested; complete new wizard pending |
+| TP-Link TL-MR3020 | EU | Ver. 3.30 | Build250625, UI 1.8.0 0.9.1 v0001.0 Rel.56805n | Образ и RestoreFactory в PowerShell 7 приняты 09.11.2026 / Image and PowerShell 7 RestoreFactory accepted on 2026-11-09 |
 
 Особенность Ver. 3.30: питание через **USB Type-C**. [Фотографии обеих ревизий](vendor/photos.md) помогают опознать корпус; ревизию для прошивки сверяйте по наклейке.
 
 Ver. 3.30 uses **USB Type-C for power**. [Photographs of both revisions](vendor/photos.md) help identify the housing; confirm the firmware revision from the device label.
 
-Другие модели, регионы, V1/V2/V3.0/V3.20 не поддерживаются этим комплектом. Нужен исправный оригинальный загрузчик. Полный новый мастер проверен локально; аппаратно проверен его образ через Python TFTP. OEM → OEM отдельно не проверялся.
+Другие модели, регионы, V1/V2/V3.0/V3.20 не поддерживаются этим комплектом. Нужен исправный оригинальный загрузчик. Аппаратно проверены образ через Python TFTP и маршрут Setup.ps1 -RestoreFactory в PowerShell 7, включая вход и очистку сети. OEM → OEM отдельно не проверялся.
 
-Other models, regions and V1/V2/V3.0/V3.20 are not supported by this kit. A working original bootloader is required. The new wizard is locally tested; its image was hardware-tested via Python TFTP. OEM → OEM has not been separately tested.
+Other models, regions and V1/V2/V3.0/V3.20 are not supported by this kit. A working original bootloader is required. Both the image and Setup.ps1 -RestoreFactory in PowerShell 7 were hardware-tested, including login and network cleanup. OEM → OEM has not been separately tested.
 
 ## Подготовка из репозитория / Preparation from the repository
 

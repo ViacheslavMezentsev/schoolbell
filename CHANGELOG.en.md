@@ -17,7 +17,7 @@
 - Archived official EN/Russian-language support pages, OEM and Python ZIPs with hashes; added offline stock-kit preparation and an explicit EU Ver. 3.30 support matrix. Russian Markdown summary translates the English summary.
 
 - Added separate OEM Build250625 recovery and installation/recovery DryRun, pinned profiles and retained-password/reset guidance.
-- Recorded successful EU v3.30 recovery-image acceptance. OEM → OpenWrt and installation of 5.1.123 through PowerShell 7 passed hardware acceptance; RestoreFactory remains a separate check. IPK version unchanged.
+- Recorded successful EU v3.30 recovery-image acceptance. OEM → OpenWrt and installation of 5.1.123 through PowerShell 7 passed hardware acceptance; RestoreFactory in PowerShell 7 also passed: OEM Build250625, login without another reset and network cleanup verified. IPK version unchanged.
 
 ## 5.1.121 — 2026-11-09
 

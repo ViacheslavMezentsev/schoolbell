@@ -251,3 +251,15 @@ The old route check incorrectly rejected a gateway fallback route with VPN enabl
 Limits: Setup.ps1 ran in PowerShell 7, not through Setup.cmd. Artifacts were local and the router isolated from the Internet, but the PC remained online; a physically offline PC was not tested. DHCP/firewall cleanup is not assigned a separate PASS without retained final-state evidence. The new RestoreFactory route and OEM → OEM remain hardware-untested.
 
 The new-install screenshot shows no applied plan, an unsaved draft, device date 2022-02-16, unconfirmed Internet, no fresh NTP confirmation and an unidentified switch. This is initial state, not readiness for automatic bells. New-install volume is 100%; sound was not tested there. The working router retained its original 50% volume and automation off and was not accessed during installation.
+
+## 2026-11-09 — RestoreFactory in PowerShell 7
+
+**PASS:** OpenWrt 19.07.9 / Schoolbell 5.1.123 → OEM on a separate TL-MR3020 EU Ver. 3.30. Setup.ps1 -RestoreFactory ran from the complete kit on Windows 11 / PowerShell 7. PC Internet/VPN remained enabled; the working device was not accessed.
+
+Before writing, the configuration archive, inventory and all seven MTD partitions were verified: nine files with matching sizes/SHA256 and unchanged before/after readback hashes. DryRun passed. The wizard verified the direct dedicated Ethernet route; the owner confirmed the profile/model and powered on with Reset after READY.
+
+OEM recovery SHA256: `2b0d85b1c7f5e6c65930e117ada0afe60a29a35882ecac65610191876b6b0665`. At 17:42:51 (UTC+5), all 8,126,464 bytes were acknowledged, ending at ACK15873. Cleanup enabled DHCP and removed temporary addresses, SchoolbellTFTP firewall rules, UDP69/1069 listeners and network.json. The adapter temporarily had a link-local address during router boot; a DHCP lease was obtained by 17:44:10. The stock page returned HTTP200 over the dedicated cable and device identity matched.
+
+The owner confirmed login without another reset and reported Firmware Version **1.8.0 0.9.1 v0001.0 Build 250625 Rel.56805n**, Hardware Version **TL-MR3020 v3 00000003**. The separate router remains on OEM. Retained-password access is confirmed, not byte-for-byte preservation of all settings or protected MTD regions after writing.
+
+This covers RestoreFactory and network cleanup in TC-05. OEM → OEM, Setup.cmd/Recovery.cmd launchers, restoring backup dumps and full OEM functionality remain untested. The owner excluded a physically offline PC from this scenario. Private backups/logs: `tests/manual/127-restorefactory-wizard`.
