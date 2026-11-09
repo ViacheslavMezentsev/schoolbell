@@ -53,3 +53,5 @@ Below Flash, saved volume is on the left and the default `/dev/dsp` controller/c
 Pages includes a Device simulator below Metrics. Apply a saved plan in Settings, enable ▶, then use Next bell or accelerated time. Silent simulated events appear in the journal and activity map; audio, Internet and NTP are modeled. Reopening the page disables automation. This does not test hardware.
 
 Collapsed Metrics shows free flash, saved volume and Internet status on the right. The summary reuses the expanded panel’s cached readings without extra network probes.
+
+[Offline stock recovery and supported revisions](tools/setup/RECOVERY.md) · [archived vendor summary](tools/setup/vendor/support.en.md).

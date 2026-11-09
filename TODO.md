@@ -29,6 +29,8 @@
 
 ## Осталось: установка, выпуск и завершение миграции / Remaining: installation and release
 
+- [ ] Выполнить сквозную аппаратную приёмку нового `Setup.cmd -RestoreFactory` и установки из актуального автономного ZIP; DryRun не доказывает прошивку. OEM → OEM и обратный переход на OpenWrt после этого опыта ещё не проверены. / Hardware-test the new wizard routes from the final ZIP; DryRun is not flashing acceptance. OEM → OEM and a subsequent return to OpenWrt remain untested.
+
 - [ ] Проверить полный путь Setup.cmd на отдельном заводском TL-MR3020 EU v3.30 с Windows 11 без интернета. / Verify offline setup end to end on a spare factory router.
 - [ ] Проверить новую установку и реальный откат с сохранением данных отдельно. Наличие проверенного пакета отката не является выполненным откатом. / Verify fresh installation and actual data-preserving downgrade; a rollback package alone is not a rollback test.
 - [ ] Актуализировать команды и отдельный протокол аппаратной приёмки под окончательные артефакты. / Update commands and the hardware acceptance protocol for final artifacts.
@@ -38,6 +40,9 @@
 
 ## Выполнено и подтверждено / Completed and confirmed
 
+- [x] 09.11.2026: возврат OpenWrt → OEM на отдельном EU v3.30: исправлено смещение 512 байт, передача и загрузка подтверждены; после отдельного сброса проверены вход и Build250625 Rel.56805n. Новый мастер не считается аппаратно принятым. [RU](docs/SETUP_RECOVERY.md) · [EN](docs/SETUP_RECOVERY.en.md). / Accepted the aligned recovery image and stock boot/login/version; the new wizard still needs end-to-end hardware acceptance.
+- [x] 09.11.2026: локальная проверка DryRun установки и возврата OEM — Windows PowerShell 5.1 (оба маршрута и блокирующие условия), 5 Python-тестов профилей/упаковки, TFTP loopback, побайтовое совпадение преобразованного OEM с проверенным кандидатом, валидатор ТЗ и `make all` — PASS. Обращений к стендам и прошивки в этой проверке не было; сквозная аппаратная приёмка нового мастера остаётся выше.
+
 ### 5.1.120: интерфейс и имитатор / UI and simulator
 
 - [x] 08.11.2026: опубликованные Pages **5.1.120**, `ce2e3fa28c20`: сводка Метрик, смена Интернет/NTP, календарный предзвонок/основной, установка времени, отказ/восстановление виртуального аудио и сохранение после обновления страницы проверены в браузере. Карта: 2 успешных события, затем 3 после восстановления; ошибка исключена. Стенд не использовался. [Протокол RU](docs/acceptance/ACCEPTANCE_RUN.md#08112026--опубликованные-pages-51120) · [EN](docs/acceptance/ACCEPTANCE_RUN.en.md#2026-11-08--published-pages-51120). / Published Pages browser check passed for the listed scenarios; see the protocol for untested cases.
@@ -46,6 +51,10 @@
 - [x] Общий диалог установки времени и сводка «Метрик» (Flash, громкость, Интернет), единая пометка «Демо», перенос локальных действий в имитатор и сохранение ссылок руководства/обучения реализованы. / Implemented the shared time confirmation dialog, resource summary, single demo badge and relocated local actions with guide links preserved.
 - [x] 08.11.2026: полный `make all` для 5.1.120 пройден. При установке проверены резервная копия, пакет отката, все 86 файлов пакета, неизменность содержимого .sbb, громкости 50 %, защищённых настроек сети/времени и выключенное состояние автоматики. Внешний вид принят владельцем. / Full checks and upgrade verification passed; backup contents, volume, protected settings and auto-off state preserved; owner accepted the UI.
 
+
+- [x] 09.11.2026: сохранены фотографии TP-Link обеих ревизий (3.30 — 4, включая упаковку; 3.20 — 3), добавлены в каталог Pages. Питание USB Type-C отмечено для 3.30; поддержка восстановления 3.20 не заявляется. / Archived both revision galleries and documented Type-C power on 3.30; 3.20 recovery remains unsupported.
+
+- [x] 09.11.2026: сохранены официальные OEM/Python ZIP, HTML EN и русскоязычный KZ, русская MD-выжимка переведена с EN; URL/хеши и список поддержки EU Ver. 3.30 опубликованы. Автономный OEM ZIP собран в Windows из локальных архивов, штатный CheckOnly пройден без устройств. / Archived vendor sources and offline stock kit verified on Windows; complete hardware wizard acceptance remains pending.
 
 ### Работа звонков / Bell execution
 

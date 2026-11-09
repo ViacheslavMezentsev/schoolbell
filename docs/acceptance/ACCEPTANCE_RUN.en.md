@@ -223,3 +223,7 @@ The owner disconnected the network from 10:08 to 10:26 (Asia/Yekaterinburg). Rec
 **Not tested:** fresh stratum confirmation followed by expiry and a new confirmation after reconnection. The initial record used the legacy format without an event type, and no fresh stratum was observed. Individual periodic callbacks were not instrumented. TC-234 remains partially open; stable stratum can produce no new confirmations even with working exchanges.
 
 Local runtime/player, NTP boundary/regression, UI, Pages, IPK build/payload and documentation checks passed. The first full run stopped on the old expected UI text; after updating it, the full UI and remaining Pages/docs checks passed. Specification validation: no errors, three existing historical revision-marker warnings. Published Pages 5.1.121 was not separately verified.
+
+## 2026-11-09 — OEM EU v3.30 recovery
+
+Prepared recovery transfer, stock boot, Ethernet/Wi-Fi and login after a separate reset confirmed. Version 1.8.0 0.9.1 v0001.0 Build 250625 Rel.56805n. [Evidence and limits](../SETUP_RECOVERY.en.md). The new wizard was not hardware-tested.

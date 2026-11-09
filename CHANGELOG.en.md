@@ -2,6 +2,13 @@
 
 [Русский](CHANGELOG.md)
 
+## Unreleased — setup wizard
+
+- Archived official EN/Russian-language support pages, OEM and Python ZIPs with hashes; added offline stock-kit preparation and an explicit EU Ver. 3.30 support matrix. Russian Markdown summary translates the English summary.
+
+- Added separate OEM Build250625 recovery and installation/recovery DryRun, pinned profiles and retained-password/reset guidance.
+- Recorded successful EU v3.30 recovery-image acceptance. The complete new wizard has only local checks so far; IPK version unchanged.
+
 ## 5.1.121 — 2026-11-09
 
 - Recorded audible offline pre/main bells with all browser pages closed; journal and counts matched.
