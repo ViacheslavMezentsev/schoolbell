@@ -6,6 +6,10 @@
 
 [Инструкция и список поддерживаемых устройств](RECOVERY.md). Исходный OEM ZIP, Python и страницы производителя сохранены в [vendor](vendor/README.md); запустите Prepare-Recovery.ps1, чтобы собрать отдельный ZIP возврата без сети и установленных зависимостей. / Follow RECOVERY.md to build a stock-only kit offline from the archived inputs.
 
+## Почему через Reset, а не веб-форму TP-Link
+
+В заводской Build250625 веб-обновление проверяет RSA-подпись производителя, которой у OpenWrt нет. Поэтому мастер использует проверенный режим восстановления загрузчика через Reset и TFTP-сервер на ПК. Это разные форматы файлов: recovery нельзя загружать в Browse → Upgrade. [Разбор проверок и сохранённые OEM-версии EU V3.30](vendor/oem-firmware.md).
+
 ## Запуск
 
 1. Полностью распакуйте ZIP на локальный диск. В терминале из папки комплекта выполните `Setup.cmd -CheckOnly`. Для установки нужен стандартный компонент Windows «Клиент OpenSSH». Подготовьте его заранее. Образ OpenWrt, 35 IPK и Python входят в ZIP.
@@ -73,7 +77,11 @@ ZIP и SHA-256 создаются в dist/. Для локальной приём
 
 ## English
 
-Offline setup candidate for a factory TL-MR3020 EU v3.30 on Windows 11 x64. Extract the ZIP to a local drive. Use Setup.cmd -CheckOnly for a local check, then run Setup.cmd as Administrator with the router directly attached to a dedicated DHCP Ethernet adapter. Hold Reset at power-on after READY. Leave power connected until OpenWrt boots. Use -InstallOnly to resume package installation or -RestoreNetwork after interruption. The operator sets a root password and automatic bells remain off. End-to-end acceptance on a spare factory router is pending.
+Offline setup candidate for a factory TL-MR3020 EU v3.30 on Windows 11 x64. Extract the ZIP to a local drive. Use Setup.cmd -CheckOnly for a local check, then run Setup.cmd as Administrator with the router directly attached to a dedicated DHCP Ethernet adapter. Hold Reset at power-on after READY. Leave power connected until OpenWrt boots. Use -InstallOnly to resume package installation or -RestoreNetwork after interruption. The operator sets a root password and automatic bells remain off. Installation through Setup.ps1 in PowerShell 7 was verified on a spare EU v3.30 router; the Setup.cmd launcher remains a separate pending check.
+
+## Why Reset instead of the TP-Link web form
+
+The stock Build250625 web updater requires a manufacturer RSA signature that OpenWrt does not have. The installer therefore uses the tested bootloader recovery route via Reset and a PC TFTP server. These file formats differ: do not upload a recovery image through Browse → Upgrade. [Validator analysis and preserved EU V3.30 OEM releases](vendor/oem-firmware.en.md).
 
 ### English: dry run and factory recovery
 

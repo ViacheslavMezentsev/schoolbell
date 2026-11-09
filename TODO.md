@@ -25,6 +25,11 @@
 - [ ] Завершить TC-197 для текущего UI: обе темы, узкий экран, фокус клавиатуры, disabled, размеры и отступы одинаковых элементов. Ранее проверенные 64 сочетания относятся к 5.1.69, а не ко всем последующим изменениям. / Complete current UI consistency checks; the earlier 64 combinations cover 5.1.69 only.
 - [ ] Дополнить проверку опубликованных Pages: режим «По расписанию», остальные скорости имитатора, прямое редактирование даты, отмена диалога времени и реальный телефон. Подтверждённые сценарии 5.1.120 перечислены ниже; это не полное закрытие TC-235/TC-236. / Extend published Pages coverage to fixed-schedule mode, other speeds, direct date editing, time-dialog cancellation and a real phone; the checks below do not fully close TC-235/TC-236.
 
+## OEM: архив и границы / OEM archive and limits
+
+- [x] Локально разобраны проверки веб-обновления Build250625; подпись OEM воспроизведена, изменённая полезная нагрузка отвергается. Сохранены официальные EU V3.30 1.9.0/1.10.0. [RU](tools/setup/vendor/oem-firmware.md) · [EN](tools/setup/vendor/oem-firmware.en.md). / Analyzed Build250625 web validation and reproduced OEM signature verification; preserved official EU V3.30 archives.
+- [ ] До поддержки восстановления исходных 1.9.0/1.10.0 отдельно исследовать контейнеры и загрузчики, подготовить профили и провести разрешённую аппаратную приёмку. Для 1.10.0 учесть запрет понижения производителя. Само наличие архивов эту проверку не закрывает. / Before supporting recovery of 1.9.0/1.10.0, analyze containers/bootloaders and perform authorized hardware acceptance; account for the vendor downgrade restriction.
+
 ## Осталось: установка, выпуск и завершение миграции / Remaining: installation and release
 
 

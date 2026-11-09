@@ -12,6 +12,10 @@
 
 - Resources display the system-provided model or board identifier without guessing a hardware subrevision; Pages identifies its simulator. Existing polling is reused. Deployed as 5.1.122: the status response contains the system model; automatic bells remain off and volume is preserved.
 
+## Unreleased — OEM archive
+
+- Preserved original EU V3.30 OEM 1.9.0/1.10.0 ZIPs with SHA256. Documented Build250625 web-update RSA verification and why installation uses Reset. RestoreFactory remains limited to tested Build250625; new archives are not accepted recovery profiles.
+
 ## Unreleased — setup wizard
 
 - Verified OEM → OEM Build250625 through RestoreFactory in PowerShell 7: retained-password login without reset, version and network cleanup. Support remains limited to the tested EU v3.30.
