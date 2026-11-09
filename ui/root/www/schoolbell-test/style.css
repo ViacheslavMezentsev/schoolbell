@@ -276,3 +276,7 @@ details[open]>.settings-summary>.settings-brief{display:none}
 #metrics-summary{float:right;font-size:14px;font-weight:400;color:var(--muted);text-align:right;max-width:65%}
 #metrics-panel[open]>summary #metrics-summary{display:none}
 @media(max-width:700px){#metrics-summary{max-width:65%;font-size:12px;overflow-wrap:anywhere}}
+
+#device-model{min-width:0;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.device-labels + .cpu-labels{margin-top:8px}
