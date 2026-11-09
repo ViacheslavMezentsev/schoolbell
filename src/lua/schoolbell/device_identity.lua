@@ -8,7 +8,18 @@ end
 function M.read(server_addr,host)
  host=host or {};local get=host.read or read
  local result={switch_state='unknown'}
- local ok,board=pcall(get,'/tmp/sysinfo/board_name',96)
+ -- Report system-provided labels verbatim; never infer a hardware subrevision.
+ local function label(path)
+  local ok,value=pcall(get,path,96)
+  if not ok or type(value)~='string' or #value>96 then return nil end
+  value=value:match('^%s*(.-)%s*$')
+  if value=='' or value:find('%c') then return nil end
+  return value
+ end
+ result.model=label('/tmp/sysinfo/model')
+ local board=label('/tmp/sysinfo/board_name')
+ result.board_name=board
+ local ok=board~=nil
  if ok and (board=='tplink,tl-mr3020-v3' or board=='tplink_tl-mr3020-v3')then
   local known,position=pcall(get,'/tmp/switch_position',16)
   local names={['3g']='3G/4G',wisp='WISP',ap='AP'}
