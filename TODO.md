@@ -6,7 +6,6 @@
 
 - [ ] TC-234: повторно проверить достоверность NTP после исправления обработки periodic. 08.11.2026 отключение сети на 18 минут и возврат Интернета подтверждены; periodic ошибочно продлевал синхронизацию без сети. 09.11.2026 установлена 5.1.121: при отключении 10:08–10:26 ложного подтверждения нет, метка не обновляется; исходный и конечный статус waiting. Переход свежего stratum через истечение к новому подтверждению остаётся непроверенным. / Recheck NTP confidence after the periodic-event fix. Physical 18-minute network loss/recovery passed; periodic falsely renewed synchronization. 5.1.121 deployed and retested on 2026-11-09: no false confirmation during 10:08–10:26 outage; initial/final waiting. Fresh stratum expiry/reconfirmation remains untested.
 
-- [ ] После холодной загрузки проверить следующий автоматический звонок на слух после ручного включения (TC-217–TC-220). Оба исходных состояния автоматики и ручное включение текущего плана уже проверены 08.11.2026; в тихий день звонков не ожидалось. / Verify the next audible scheduled bell after manual enablement following a cold boot; both prior automation states and manual enablement were checked on 2026-11-08, a quiet day.
 - [ ] Локализовать периодические отказы прежнего сочетания хаба/EHCI и проверить исправление на нём. Успешные OHCI-серии и учебный день не доказывают исправление этого сочетания. [RU](docs/PLAYBACK_RELIABILITY.md) · [EN](docs/PLAYBACK_RELIABILITY.en.md). / Diagnose the earlier hub/EHCI failures and verify a fix on that combination; OHCI success does not close this defect.
 - [ ] Установить причину оставшегося пустого замка медиатеки после завершения запросов. Безопасное восстановление выполнено; автоматическое снятие не добавлялось. / Find the cause of the orphan empty media gate; recovery was performed, automatic removal was not added.
 - [ ] Измерить задержку от нажатия ручного звонка до слышимого звука. Замер до запуска процесса не учитывает браузер и USB. / Measure click-to-audible latency, including the browser and USB path.
@@ -28,16 +27,18 @@
 
 ## Осталось: установка, выпуск и завершение миграции / Remaining: installation and release
 
-- [ ] Выполнить сквозную аппаратную приёмку нового `Setup.cmd -RestoreFactory` и установки из актуального автономного ZIP; DryRun не доказывает прошивку. OEM → OEM и обратный переход на OpenWrt после этого опыта ещё не проверены. / Hardware-test the new wizard routes from the final ZIP; DryRun is not flashing acceptance. OEM → OEM and a subsequent return to OpenWrt remain untested.
+- [ ] Выполнить сквозную аппаратную приёмку `Setup.cmd -RestoreFactory`; OEM → OEM остаётся непроверенным. Обратная установка OpenWrt и Школьника 5.1.123 подтверждена ниже. / Hardware-test the RestoreFactory wizard; OEM → OEM remains untested. Return to OpenWrt and Schoolbell 5.1.123 is confirmed below.
 
-- [ ] Проверить полный путь Setup.cmd на отдельном заводском TL-MR3020 EU v3.30 с Windows 11 без интернета. / Verify offline setup end to end on a spare factory router.
-- [ ] Проверить новую установку и реальный откат с сохранением данных отдельно. Наличие проверенного пакета отката не является выполненным откатом. / Verify fresh installation and actual data-preserving downgrade; a rollback package alone is not a rollback test.
+- [ ] Повторить установку через Setup.cmd с полностью отключённым от Интернета ПК Windows 11. Опыт 09.11.2026 использовал локальный ZIP и изолированный роутер, но ПК оставался в сети с VPN; Setup.ps1 запускался из PowerShell 7. / Verify Setup.cmd with the Windows PC physically offline; the accepted PowerShell 7 run used local artifacts and an isolated router, but the PC retained Internet/VPN.
+- [ ] Проверить реальный откат версии пакета с сохранением данных отдельно. Новая установка 5.1.123 подтверждена; наличие пакета отката не является выполненным откатом. / Verify an actual data-preserving package downgrade; fresh installation passed, but a rollback package alone is not a rollback test.
 - [ ] Актуализировать команды и отдельный протокол аппаратной приёмки под окончательные артефакты. / Update commands and the hardware acceptance protocol for final artifacts.
 - [ ] L2/L4: завершить материалы зависимостей, разобраться с правами на аудио и проверить окончательный релизный набор. Лицензирование ранее отложено владельцем; решение об MIT не распространяется автоматически на штатные записи. [Аудит / Audit](docs/LICENSE_AUDIT.md). / Complete dependency materials, audio rights and final release review; MIT does not automatically cover bundled recordings.
 - [ ] Проверить актуальность ссылок из core и готовность публикации окончательного выпуска. / Verify core redirects and final release publication readiness.
 - [ ] Проверить оставшееся дублирование с core; удалять только после проверки. Отдельный репозиторий и рабочее пространство уже используются. / Review remaining duplication with core before removal; the standalone repository/workspace is already in use.
 
 ## Выполнено и подтверждено / Completed and confirmed
+
+- [x] 09.11.2026: отдельный EU v3.30, Windows 11 / PowerShell 7: OEM → OpenWrt 19.07.9 через Reset/TFTP, установка 5.1.123 из локального комплекта, проверка служб и вход в LuCI подтверждены. После отмены первого INSTALL установка продолжена через InstallOnly без повторной прошивки. VPN оставлен включённым; проверены прямые маршруты выделенного кабеля. Владелец подтвердил версию и выключенный автомат. [RU](docs/acceptance/ACCEPTANCE_RUN.md) · [EN](docs/acceptance/ACCEPTANCE_RUN.en.md). / OEM-to-OpenWrt and local package installation passed on a spare EU v3.30 using PowerShell 7; InstallOnly resumed after cancellation, VPN retained, owner confirmed UI version and auto-off.
 
 - [x] Владелец визуально принял строку модели в Ресурсах на стенде 5.1.122. Установка и системное значение в ответе controls проверены 09.11.2026; точная подревизия не предполагается. / Owner visual review accepted; deployment and model reporting verified on 2026-11-09.
 - [x] 09.11.2026: 5.1.122 установлена после `make all`; сверены 86 файлов, содержимое резервной копии и защищённые настройки. Автозвонки выключены, громкость 50 % сохранена; перезагрузки и воспроизведения не выполнялись. / Verified deployment, backup and configuration preservation; automatic bells off, unchanged 50% volume, no reboot or playback.
@@ -59,6 +60,9 @@
 - [x] 09.11.2026: сохранены официальные OEM/Python ZIP, HTML EN и русскоязычный KZ, русская MD-выжимка переведена с EN; URL/хеши и список поддержки EU Ver. 3.30 опубликованы. Автономный OEM ZIP собран в Windows из локальных архивов, штатный CheckOnly пройден без устройств. / Archived vendor sources and offline stock kit verified on Windows; complete hardware wizard acceptance remains pending.
 
 ### Работа звонков / Bell execution
+
+- [x] 09.11.2026, 5.1.123: холодная загрузка, автомат выключен, одна запись загрузки; после явного включения предзвонок 13:25 и основной 13:26 слышны, журнал и карта согласованы (0 → 2). Учебный план восстановлен, автомат выключен, громкость 50 % и данные сохранены. TC-217–TC-220: проверка слышимых звонков после загрузки завершена. / Cold boot followed by explicit enable and two audible successful bells passed; journal/counts match, original plan/data/volume restored, automation off.
+
 
 - [x] 08.11.2026, 5.1.120: сеть отключена 19:41–19:59, все страницы закрыты по подтверждению владельца. Предзвонок 19:42 и основной 19:43 слышны, журнал подтвердил оба успеха, карта 4 → 6. Интернет восстановился, учебный план возвращён, автомат выключен, громкость 50 % и данные сохранены. Индикация NTP имела отдельный дефект, TC-234 полностью не закрыт. / Both automatic bells audible offline with all browser pages closed; journal/counts matched, original plan/data/volume restored, automation off. NTP indication defect remains a separate acceptance item.
 
@@ -97,7 +101,7 @@
 - [x] Исходники Pages: корневой UI, guide/training/devices и явный перенос localStorage. / Pages sources include root UI, guide/training/devices and explicit localStorage migration.
 - [x] Аудит происхождения кода, 33 IPK и аудио; MIT собственного кода/документации с исключениями; закреплены данные LuCI и доставка MIT/NOTICE в артефакты (L1/L3/L5). / Provenance audit and L1/L3/L5 completed; dependency/audio gaps remain above.
 - [x] Обновления разрешённого стенда проверялись с резервной копией и пакетом отката, сверкой файлов и сохранности данных. Это не заменяет новую установку и настоящий downgrade. / Authorized bench upgrades checked with backups, rollback packages, file and data verification; fresh installation and actual downgrade remain separate.
-- [x] Подготовлены btop для MR3020, инструкция PowerShell/SCP/SSH и автономный мастер установки Windows 11. Сквозная проверка мастера на заводском устройстве ещё предстоит. / btop, PowerShell/SCP/SSH instructions and Windows setup wizard prepared; factory-device acceptance is pending.
+- [x] Подготовлены btop для MR3020, инструкция PowerShell/SCP/SSH и автономный мастер установки Windows 11. Установка из OEM проверена на 5.1.123, ограничения перечислены выше. / btop, PowerShell/SCP/SSH instructions and Windows setup wizard prepared; OEM installation accepted on 5.1.123 within the limits above.
 
 Подробная история изменений: [RU](CHANGELOG.md) · [EN](CHANGELOG.en.md). Эта ревизия TODO не изменяет требования или состояние стенда. / See changelogs for detailed history; this TODO review changes neither requirements nor bench state.
 

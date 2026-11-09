@@ -6,6 +6,8 @@
 
 - Grouped resource text rows above the meters: model, Internet/NTP, switch/IP. Model uses a colon and an explicit no-data label.
 
+- Verified cold boot with automation off, then two audible bells after explicit enable; journal/counts matched and the school-year plan and volume were restored.
+
 ## 5.1.122 — 2026-11-09
 
 - Resources display the system-provided model or board identifier without guessing a hardware subrevision; Pages identifies its simulator. Existing polling is reused. Deployed as 5.1.122: the status response contains the system model; automatic bells remain off and volume is preserved.
@@ -15,7 +17,7 @@
 - Archived official EN/Russian-language support pages, OEM and Python ZIPs with hashes; added offline stock-kit preparation and an explicit EU Ver. 3.30 support matrix. Russian Markdown summary translates the English summary.
 
 - Added separate OEM Build250625 recovery and installation/recovery DryRun, pinned profiles and retained-password/reset guidance.
-- Recorded successful EU v3.30 recovery-image acceptance. The complete new wizard has only local checks so far; IPK version unchanged.
+- Recorded successful EU v3.30 recovery-image acceptance. OEM → OpenWrt and installation of 5.1.123 through PowerShell 7 passed hardware acceptance; RestoreFactory remains a separate check. IPK version unchanged.
 
 ## 5.1.121 — 2026-11-09
 

@@ -233,3 +233,21 @@ Prepared recovery transfer, stock boot, Ethernet/Wi-Fi and login after a separat
 The system reports TP-Link TL-MR3020 v3 through the existing controls request, without inferred subrevisions. The owner accepted the model and row order: model, Internet/NTP, switch/IP, CPU, Flash, audio. Shared Pages sources identify the simulator.
 
 Verified backups and rollback packages before deployment; afterwards checked 86 package files, .sbb contents, sound settings, protected network/time settings and unchanged boot identity. Automatic bells remained off and volume stayed at 50%; no playback. Local UI/Pages and package checks passed; published Pages for this version was not separately checked. Full `make all` passed before committing. Local evidence: `tests/manual/121-bench-5-1-122` and `tests/manual/125-bench-5-1-123` (Git-ignored).
+
+## 2026-11-09 — cold boot and audible bells, 5.1.123
+
+After a physical power cycle, automation remained off and exactly one new boot event (#462) was recorded. The first status read preceded creation of the runtime status file; retry after service readiness passed. This was not a missed bell.
+
+Explicit enable of the test calendar plan (#463) was followed by the 13:25 prebell and 13:26 main bell in device local time. Both requests and successful completions appear in events #464–467; the daily count increased from 0 to 2. The owner confirmed both were audible. The school-year plan was restored, automation left off, volume retained at 50%, and .sbb contents matched by hash. This passes the audible-after-boot subcase of TC-217–TC-220, not every boundary case. Private evidence: `tests/manual/126-cold-boot-bells-5-1-123`.
+
+## 2026-11-09 — OEM installation, Windows 11 / PowerShell 7
+
+A separate TL-MR3020 EU v3.30 previously restored to OEM Build250625 completed Reset/TFTP → OpenWrt 19.07.9 → local package installation → root password → LuCI login. Transfer of 8,126,464 bytes ended with ACK15873; SSH then verified board, release, architecture, kernel ABI and libc. The kit contains 35 IPKs; only missing dependencies were installed. Final verification confirmed modbus-schoolbell 5.1.123, native 1.0.0, running services and automation off.
+
+The first run was cancelled at INSTALL after flashing had succeeded. InstallOnly completed without flashing again. The owner set a password and confirmed the Schoolbell 5.1.123 interface with automation off. Initial URL unavailability cleared; its cause was not established separately.
+
+The old route check incorrectly rejected a gateway fallback route with VPN enabled. The corrected wizard permits that fallback and verifies the actual direct path from the dedicated adapter address before TFTP and SSH. Both paths passed with VPN still enabled. PowerShell 7 DryRun checks, seven Python tests and make all passed.
+
+Limits: Setup.ps1 ran in PowerShell 7, not through Setup.cmd. Artifacts were local and the router isolated from the Internet, but the PC remained online; a physically offline PC was not tested. DHCP/firewall cleanup is not assigned a separate PASS without retained final-state evidence. The new RestoreFactory route and OEM → OEM remain hardware-untested.
+
+The new-install screenshot shows no applied plan, an unsaved draft, device date 2022-02-16, unconfirmed Internet, no fresh NTP confirmation and an unidentified switch. This is initial state, not readiness for automatic bells. New-install volume is 100%; sound was not tested there. The working router retained its original 50% volume and automation off and was not accessed during installation.
