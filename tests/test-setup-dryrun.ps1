@@ -32,7 +32,9 @@ try {
     function Get-NetIPAddress { if ($global:setupTestManual) {[pscustomobject]@{PrefixOrigin='Manual'}} }
     function Get-NetRoute {
         [pscustomobject]@{DestinationPrefix='0.0.0.0/0';InterfaceIndex=7}
-        if ($global:setupTestConflict) {[pscustomobject]@{DestinationPrefix='192.168.1.1/32';InterfaceIndex=7}}
+        if ($global:setupTestConflict) {[pscustomobject]@{DestinationPrefix='192.168.1.1/32';InterfaceIndex=7;NextHop='192.0.2.1'}}
+        if ($global:setupTestGateway) {[pscustomobject]@{DestinationPrefix='192.168.1.0/24';InterfaceIndex=7;NextHop='192.0.2.1'}}
+        if ($global:setupTestOnlink) {[pscustomobject]@{DestinationPrefix='192.168.1.0/24';InterfaceIndex=7;NextHop='0.0.0.0'}}
     }
     function Get-NetUDPEndpoint {if ($global:setupTestOccupied) {[pscustomobject]@{LocalPort=69}}}
     function Read-Host {throw 'Unexpected interactive prompt'}
@@ -56,7 +58,24 @@ try {
         if (Test-Path (Join-Path $env:LOCALAPPDATA 'SchoolbellSetup')) {throw 'DryRun created state'}
         Write-Output "PASS DryRun factory=$factory"
     }
-    foreach ($failure in 'manual','conflict','occupied','badImage') {
+    $global:setupTestGateway=$true
+    $text=(& $scriptPath -DryRun -InterfaceIndex 42 6>&1 | Out-String)
+    if ($text -notmatch 'DRY RUN OK') {throw 'Gateway fallback incorrectly blocked'}
+    $global:setupTestGateway=$false
+    Write-Output 'PASS gateway fallback: requires actual cable route validation before transfer'
+    $ast=[Management.Automation.Language.Parser]::ParseFile($source,[ref]$tokens,[ref]$parseErrors)
+    $fn=$ast.Find({param($n) $n -is [Management.Automation.Language.FunctionDefinitionAst] -and $n.Name -eq 'Assert-CableRoute'},$true)
+    . ([scriptblock]::Create($fn.Extent.Text))
+    function Find-NetRoute { $global:setupTestRoute }
+    $global:setupTestRoute=[pscustomobject]@{DestinationPrefix='192.168.1.0/24';InterfaceIndex=42;NextHop='0.0.0.0'}
+    Assert-CableRoute 42 '192.168.1.2' '192.168.1.1'
+    foreach ($bad in @([pscustomobject]@{DestinationPrefix='192.168.1.0/24';InterfaceIndex=7;NextHop='0.0.0.0'},[pscustomobject]@{DestinationPrefix='192.168.1.0/24';InterfaceIndex=42;NextHop='192.0.2.1'})) {
+        $global:setupTestRoute=$bad;$failed=$false
+        try {Assert-CableRoute 42 '192.168.1.2' '192.168.1.1'} catch {$failed=$true}
+        if (!$failed) {throw 'Wrong actual cable route accepted'}
+    }
+    Write-Output 'PASS actual route: direct selected adapter only'
+    foreach ($failure in 'manual','conflict','onlink','occupied','badImage') {
         Set-Variable -Scope Global -Name ('setupTest'+$failure) -Value $true
         $global:setupTestCalls=New-Object 'System.Collections.Generic.List[string]';$failed=$false
         try { & $scriptPath -DryRun -RestoreFactory -InterfaceIndex 42 6>$null } catch {

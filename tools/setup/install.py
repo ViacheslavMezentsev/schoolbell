@@ -20,7 +20,7 @@ test "$DISTRIB_RELEASE:$DISTRIB_TARGET:$DISTRIB_ARCH" = '19.07.9:ramips/mt76x8:m
 test "$(opkg status kernel | sed -n 's/^Version: //p')" = '4.14.267-1-d92769dc5268e102503ae83fe968a56c'
 test "$(opkg status libc | sed -n 's/^Version: //p')" = '1.1.24-2'
 """
-VERIFY = """test "$(opkg status modbus-schoolbell | sed -n 's/^Version: //p')" = '5.1.100'
+VERIFY = """test "$(opkg status modbus-schoolbell | sed -n 's/^Version: //p')" = '5.1.123'
 test "$(opkg status modbus-schoolbell-clock | sed -n 's/^Version: //p')" = '1.0.0'
 test ! -e /etc/schoolbell-editor/package.pending
 lua -e 'package.path="/usr/share/schoolbell-editor/lua/?.lua;"..package.path;local s=require("schoolbell.automatic_store");assert(not s.decode(s.raw()).enabled)'
@@ -71,7 +71,7 @@ def install(ssh):
     # Also identifies the board before any remote write.
     inventory = remote(CHECK + 'opkg list-installed', capture_output=True, text=True).stdout
     installed = dict(line.split(' - ', 1) for line in inventory.splitlines() if ' - ' in line)
-    marker = '/tmp/schoolbell-setup-5.1.100'
+    marker = '/tmp/schoolbell-setup-5.1.123'
     known = 'test -f ' + marker
     if 'modbus-schoolbell' in installed:
         remote(known + ' || { echo "Schoolbell already installed. Fresh installation only."; exit 1; }')
@@ -110,7 +110,7 @@ touch {marker}
 opkg install ./*.ipk
 """, stdin=payload)
     remote(CHECK + VERIFY)
-    print('Schoolbell 5.1.100 verified. Automatic bells off.')
+    print('Schoolbell 5.1.123 verified. Automatic bells off.')
     print('Set the router administrator password (input is hidden).')
     subprocess.run(ssh[:1]+['-t']+ssh[1:]+['passwd'],check=True)
 

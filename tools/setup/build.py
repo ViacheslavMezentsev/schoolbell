@@ -11,7 +11,7 @@ from firmware import prepare_oem
 HERE = Path(__file__).resolve().parent
 IMAGE_SHA = 'e621da95d07d25102b1016a28400122f5c92bce9830d5cc061323e306b6204fa'
 PYTHON_SHA = '009d6bf7e3b2ddca3d784fa09f90fe54336d5b60f0e0f305c37f400bf83cfd3b'
-NAME = 'schoolbell-5.1.100-mr3020-eu-v3.30-win11-x64'
+NAME = 'schoolbell-5.1.123-mr3020-eu-v3.30-win11-x64'
 
 def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -22,8 +22,8 @@ def build(bundle, image, runtime, dest, oem=None):
         raise ValueError('Unexpected recovery image or embedded Python')
     rows=json.loads((bundle/'manifest.json').read_bytes())['packages']
     versions={r['name']:r['version'] for r in rows}
-    if len(versions)!=35 or versions.get('modbus-schoolbell')!='5.1.100' or versions.get('modbus-schoolbell-clock')!='1.0.0':
-        raise ValueError('Expected standalone 5.1.100 bundle')
+    if len(versions)!=35 or versions.get('modbus-schoolbell')!='5.1.123' or versions.get('modbus-schoolbell-clock')!='1.0.0':
+        raise ValueError('Expected standalone 5.1.123 bundle')
     for row in rows:
         file=bundle/row['file']
         if file.parent!=bundle or digest(file)!=row['sha256']:

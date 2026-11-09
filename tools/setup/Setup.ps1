@@ -22,12 +22,27 @@ function Restore-Cable($saved) {
     Set-NetIPInterface -InterfaceIndex $adapter.ifIndex -AddressFamily IPv4 -Dhcp Enabled
     Remove-Item -LiteralPath $state
 }
+function Assert-CableRoute($index,$ip,$target) {
+    $routes=@(Find-NetRoute -RemoteIPAddress $target -LocalIPAddress $ip | Where-Object {$_.DestinationPrefix})
+    if ($routes.Count -ne 1 -or $routes[0].InterfaceIndex -ne $index -or $routes[0].NextHop -ne '0.0.0.0') {
+        throw "Трафик $ip -> $target не направлен напрямую через выбранный адаптер $index."
+    }
+    Write-Host "Маршрут проверен: $ip -> $target, прямой Ethernet $index."
+}
 function Set-CableIP($index,$ip) {
-    $network=$ip.Substring(0,$ip.LastIndexOf('.'))+'.0/24'
-    if (Get-NetRoute -DestinationPrefix $network -ErrorAction SilentlyContinue | Where-Object InterfaceIndex -ne $index) {
-        throw "Конфликт маршрута $network. Отключите пересекающуюся сеть/VPN."
+    if (Get-NetIPAddress -AddressFamily IPv4 -IPAddress $ip -ErrorAction SilentlyContinue | Where-Object InterfaceIndex -ne $index) {
+        throw "Адрес $ip уже назначен другому адаптеру."
     }
     New-NetIPAddress -InterfaceIndex $index -IPAddress $ip -PrefixLength 24 -PolicyStore ActiveStore | Out-Null
+    for ($attempt=0;$attempt -lt 10;$attempt++) {
+        $address=Get-NetIPAddress -InterfaceIndex $index -IPAddress $ip -AddressFamily IPv4
+        if ($address.AddressState -eq 'Preferred') {break}
+        if ($address.AddressState -eq 'Duplicate') {throw "Конфликт адреса $ip."}
+        Start-Sleep -Seconds 1
+    }
+    if ($address.AddressState -ne 'Preferred') {throw "Адрес $ip не готов."}
+    $target=if ($ip -eq '192.168.0.225') {'192.168.0.2'} else {'192.168.1.1'}
+    Assert-CableRoute $index $ip $target
 }
 if (!$RestoreNetwork) {
     if (!(Test-Path 'SHA256SUMS')) {throw 'Распакуйте полный ZIP, включая python, firmware и bundle.'}
@@ -61,7 +76,7 @@ if (Test-Path $state) {$blockers.Add('Осталось состояние пре
 $ipv4=Get-NetIPInterface -AddressFamily IPv4 -InterfaceIndex $index
 if ($ipv4.Dhcp -ne 'Enabled' -or (Get-NetIPAddress -InterfaceIndex $index -AddressFamily IPv4 -ErrorAction SilentlyContinue | Where-Object PrefixOrigin -eq 'Manual')) {$blockers.Add('Нужен отдельный адаптер с DHCP без ручных адресов.')}
 if ($adapter.Status -ne 'Up') {$blockers.Add('Ethernet link не поднят; проверьте кабель/питание перед запуском.')}
-# Include more-specific routes (e.g. VPN /32), not only exact /24 prefixes.
+# Reject competing on-link or more-specific routes. Gateway fallback routes are checked after adding the cable address.
 function Contains-Address([string]$Prefix,[string]$Address) {
     $parts=$Prefix.Split('/'); $bits=[int]$parts[1]
     if ($bits -eq 0) {return $false}
@@ -79,7 +94,12 @@ foreach ($route in Get-NetRoute -AddressFamily IPv4) {
     if ($route.InterfaceIndex -eq $index) {continue}
     foreach ($target in $targets) {
         if (Contains-Address $route.DestinationPrefix $target) {
-            $blockers.Add("Пересекающийся маршрут $($route.DestinationPrefix) на интерфейсе $($route.InterfaceIndex).")
+            $bits=[int]$route.DestinationPrefix.Split('/')[1]
+            if ($bits -gt 24 -or !$route.NextHop -or $route.NextHop -eq '0.0.0.0') {
+                $blockers.Add("Пересекающийся маршрут $($route.DestinationPrefix) на интерфейсе $($route.InterfaceIndex).")
+            } else {
+                Write-Host "Фоновый маршрут $($route.DestinationPrefix) через $($route.NextHop): перед передачей будет проверен прямой маршрут выделенного адаптера."
+            }
             break
         }
     }
@@ -100,13 +120,13 @@ if ($RestoreFactory) {
     Write-Host 'SSH, opkg и установка Школьника в этом маршруте отсутствуют.'
 } else {
     Write-Host 'Следом: временный адрес 192.168.1.2/24, ожидание SSH192.168.1.1, проверка модели/OpenWrt/ABI/libc, места и установленных пакетов.'
-    Write-Host 'Затем: подтверждение списка IPK, установка, проверка Школьника 5.1.100 и выключенной автоматики; ввод root-пароля владельцем.'
+    Write-Host 'Затем: подтверждение списка IPK, установка, проверка Школьника 5.1.123 и выключенной автоматики; ввод root-пароля владельцем.'
     Write-Host 'Состав устанавливаемых IPK определяется на устройстве только при реальном запуске.'
 }
 Write-Host 'Завершение/ошибка: удалить собственное правило firewall и временные адреса, вернуть выбранный адаптер на DHCP.'
 if ($DryRun) {
     Write-Host 'DRY RUN: только локальные чтения и проверки. Ничего не выполнялось; Reset не нажимайте.'
-    Write-Host 'Модель устройства, пароль, доступность, flash/RAM и успешная загрузка здесь не проверяются. Для реального запуска нужны права администратора.'
+    Write-Host 'Фактический маршрут после назначения адреса, модель устройства, пароль, доступность, flash/RAM и успешная загрузка здесь не проверяются. Для реального запуска нужны права администратора.'
     if ($blockers.Count) {foreach ($problem in $blockers) {Write-Host "БЛОКИРУЕТ ЗАПУСК: $problem"}; throw 'DryRun: обнаружены блокирующие условия.'}
     Write-Host 'DRY RUN OK: локальных препятствий не обнаружено.'
     return

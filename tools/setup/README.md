@@ -9,7 +9,7 @@
 ## Запуск
 
 1. Полностью распакуйте ZIP на локальный диск. В терминале из папки комплекта выполните `Setup.cmd -CheckOnly`. Для установки нужен стандартный компонент Windows «Клиент OpenSSH». Подготовьте его заранее. Образ OpenWrt, 35 IPK и Python входят в ZIP.
-2. Отключите роутер от питания и от обычной сети. Соедините его кабелем с выделенным физическим Ethernet-адаптером ПК. Требуется автоматическая настройка IPv4 (DHCP) без ручных адресов. Отключите пересекающиеся сети и VPN.
+2. Отключите роутер от питания и от обычной сети. Соедините его кабелем с выделенным физическим Ethernet-адаптером ПК. Требуется автоматическая настройка IPv4 (DHCP) без ручных адресов. Устраните конфликтующие прямые или более узкие маршруты; VPN без такого конфликта можно оставить включённым.
 3. Запустите **Setup.cmd от имени администратора**, выберите номер Ethernet-адаптера и сверьте регион и ревизию с наклейкой. После **READY** зажмите Reset и подайте питание. После начала передачи отпустите кнопку. Не прерывайте питание при записи и перезагрузке.
 4. После последнего ACK мастер ждёт SSH на 192.168.1.1, отдельно проверяет модель, релиз, архитектуру, ABI ядра и libc. Подтверждайте первый ключ SSH только при прямом кабельном соединении с нужным устройством. Проверьте список недостающих пакетов и подтвердите установку. В конце задайте пароль root через SSH.
 5. После возврата адаптера на DHCP откройте [Школьник](http://192.168.1.1/cgi-bin/luci/admin/schoolbell) и войдите как root. Автомат выключен. Сверьте часы, проверьте звук и затем выберите план.
@@ -24,7 +24,7 @@ Setup.cmd -DryRun -InterfaceIndex 42
 Setup.cmd -RestoreFactory -DryRun -InterfaceIndex 42
 ```
 
-DryRun проверяет SHA256 комплекта и выбранного образа, локальные пакеты для установки, наличие SSH-клиента, физический Ethernet-адаптер, DHCP/ручные адреса, link, пересекающиеся маршруты (включая VPN /32), занятость UDP69/1069 и незавершённый предыдущий сеанс. Показывает профиль, адаптер, образ и SHA256, временные адреса, правило firewall, этапы, пути журнала и состояния, порядок восстановления DHCP. При препятствии завершает работу с ошибкой. Администратор для DryRun не требуется; если Windows запрещает чтение инвентаря, это ошибка проверки, а не разрешение пропустить её.
+DryRun проверяет SHA256 комплекта и выбранного образа, локальные пакеты для установки, наличие SSH-клиента, физический Ethernet-адаптер, DHCP/ручные адреса, link, конкурирующие прямые маршруты и более узкие маршруты (включая VPN /32), занятость UDP69/1069 и незавершённый предыдущий сеанс. Показывает профиль, адаптер, образ и SHA256, временные адреса, правило firewall, этапы, пути журнала и состояния, порядок восстановления DHCP. При препятствии завершает работу с ошибкой. Администратор для DryRun не требуется; если Windows запрещает чтение инвентаря, это ошибка проверки, а не разрешение пропустить её.
 
 DryRun не создаёт network.json, не меняет адреса/firewall/DHCP, не запускает TFTP/SSH, не опрашивает устройство и не пишет во flash. Reset нажимать не нужно. Это не проверка модели, доступности роутера, его памяти или загрузки. Точный список недостающих IPK определяется только при настоящей установке.
 
@@ -59,9 +59,9 @@ Setup.cmd -RestoreFactory
 
 ## Происхождение и сборка ZIP
 
-Основа сервера — tftp-readonly.py от 31.10.2026, SHA-256 исходника `feca2cb4d6baf91c6462473f53f77dbb9ea58cd24301671e5baca01a10e45675`. В опыте зафиксированы последний ACK 15873, 8 126 464 полученных байта и последующее чтение OpenWrt 19.07.9 на MR3020. Сохранены RRQ только для tp_recovery.bin/octet от 192.168.0.2, порт 69, отдельный порт 1069 для DATA, блок 512, отсутствие OACK и повторы при потере ACK. Полный новый мастер требует аппаратной приёмки.
+Основа сервера — tftp-readonly.py от 31.10.2026, SHA-256 исходника `feca2cb4d6baf91c6462473f53f77dbb9ea58cd24301671e5baca01a10e45675`. В опыте зафиксированы последний ACK 15873, 8 126 464 полученных байта и последующее чтение OpenWrt 19.07.9 на MR3020. Сохранены RRQ только для tp_recovery.bin/octet от 192.168.0.2, порт 69, отдельный порт 1069 для DATA, блок 512, отсутствие OACK и повторы при потере ACK. Аппаратная проверка установки 5.1.123 описана ниже; RestoreFactory требует отдельной приёмки.
 
-Сборщик принимает готовую папку bundle из scripts/build-schoolbell-bundle.py (пакет 5.1.100, native 1.0.0), [официальный recovery-образ](https://downloads.openwrt.org/releases/19.07.9/targets/ramips/mt76x8/openwrt-19.07.9-ramips-mt76x8-tplink_tl-mr3020-v3-squashfs-tftp-recovery.bin) и [Windows embedded Python x64](https://www.python.org/ftp/python/3.11.9/python-3.11.9-embed-amd64.zip).
+Сборщик принимает готовую папку bundle из scripts/build-schoolbell-bundle.py (пакет 5.1.123, native 1.0.0), [официальный recovery-образ](https://downloads.openwrt.org/releases/19.07.9/targets/ramips/mt76x8/openwrt-19.07.9-ramips-mt76x8-tplink_tl-mr3020-v3-squashfs-tftp-recovery.bin) и [Windows embedded Python x64](https://www.python.org/ftp/python/3.11.9/python-3.11.9-embed-amd64.zip).
 
 ```sh
 python3 tools/setup/build.py --bundle /path/to/bundle --image /path/to/recovery.bin --runtime /path/to/python-3.11.9-embed-amd64.zip --oem /path/to/original-oem-build250625.bin
@@ -79,19 +79,19 @@ Offline setup candidate for a factory TL-MR3020 EU v3.30 on Windows 11 x64. Extr
 
 Use `Setup.cmd -DryRun` or `Setup.cmd -RestoreFactory -DryRun`; optional `-InterfaceIndex 42` selects an adapter without prompting (42 is only an example). DryRun validates local files/profile, installation packages/SSH client where relevant, Ethernet/DHCP/link, overlapping routes including VPN /32, UDP ports and leftover state. It prints the exact intended stages and cleanup without network probes, TFTP/SSH, state writes or network changes. Blockers return an error. It does not prove device identity, available memory or boot success. `-CheckOnly` checks files and runs a loopback TFTP self-test instead; these two switches cannot be combined.
 
-Build with optional `--oem /path/to/original-oem-build250625.bin` to include factory recovery. Only the pinned EU v3.30 Build250625 source and resulting hashes above are accepted. The old ZIP without this profile cannot restore stock firmware. Existing bundle version remains 5.1.100; no runtime/IPK version bump is implied.
+Build with optional `--oem /path/to/original-oem-build250625.bin` to include factory recovery. Only the pinned EU v3.30 Build250625 source and resulting hashes above are accepted. The old ZIP without this profile cannot restore stock firmware. Existing bundle version remains 5.1.123; no runtime/IPK version bump is implied.
 
 After a successful dry run, run `Setup.cmd -RestoreFactory` as Administrator. Back up OpenWrt, Schoolbell data and required flash partitions first: the wizard does not back them up. Confirm RESTORE FACTORY and the model, then hold Reset at power-on only after READY. Leave power connected during writing/boot. The wizard restores the adapter to DHCP and does not wait for SSH or install Schoolbell. Verify the stock interface/model/Build250625 yourself; the final ACK only proves transfer. The management IP may differ with retained settings/AP mode.
 
-Factory recovery may retain the old TP-Link administrator password/configuration. The Wi-Fi key on the label is separate unless you intentionally chose it as the administrator password. If forgotten, separately hold WPS/Reset for about 10 seconds on the already powered-on, booted router until LEDs react, release, wait for reboot and create a new administrator password. This erases settings. The wizard never performs that reset. Recovery depends on the bootloader; OpenWrt → OEM was verified, OEM → OEM and the complete new wizard were not hardware-tested. Do not use the recovery image in the stock web-upgrade form.
+Factory recovery may retain the old TP-Link administrator password/configuration. The Wi-Fi key on the label is separate unless you intentionally chose it as the administrator password. If forgotten, separately hold WPS/Reset for about 10 seconds on the already powered-on, booted router until LEDs react, release, wait for reboot and create a new administrator password. This erases settings. The wizard never performs that reset. Recovery depends on the bootloader; OpenWrt → OEM was verified, OEM → OEM and the RestoreFactory wizard were not hardware-tested. Do not use the recovery image in the stock web-upgrade form.
 
 [Recovery findings and acceptance](../../docs/SETUP_RECOVERY.en.md).
 
 ## Локальная проверка / Local verification
 
-Проверено 09.11.2026: оба DryRun на Windows PowerShell 5.1 с подменённой сетевой инвентаризацией и запретом изменений; отрицательные случаи ручного IP, VPN /32, занятого UDP и повреждённого образа. Семь Python-тестов проверяют профили, упаковку и отказ до открытия сокета. Преобразование настоящего OEM побайтно совпало с принятым recovery-кандидатом. `make all`, TFTP loopback и строгий валидатор ТЗ прошли. Стенды не использовались. Итоговый дистрибутив с новым мастером не проходил сквозную аппаратную приёмку.
+Проверено 09.11.2026: оба DryRun на Windows PowerShell 5.1 с подменённой сетевой инвентаризацией и запретом изменений; отрицательные случаи ручного IP, VPN /32, занятого UDP и повреждённого образа. Семь Python-тестов проверяют профили, упаковку и отказ до открытия сокета. Преобразование настоящего OEM побайтно совпало с принятым recovery-кандидатом. `make all`, TFTP loopback и строгий валидатор ТЗ прошли. Стенды не использовались. Последующая аппаратная проверка установки описана ниже.
 
-Verified on 2026-11-09: both Windows PowerShell 5.1 DryRun paths with mocked inventory and mutation guards, negative preflight cases, seven Python profile/package/archive tests, real OEM transformation against the accepted candidate, loopback TFTP, strict specification validation and `make all`. No devices were accessed. Full hardware acceptance of the new distribution remains pending.
+Verified on 2026-11-09: both Windows PowerShell 5.1 DryRun paths with mocked inventory and mutation guards, negative preflight cases, seven Python profile/package/archive tests, real OEM transformation against the accepted candidate, loopback TFTP, strict specification validation and `make all`. No devices were accessed. The subsequent installation hardware check is described below.
 
 Из корня репозитория / From the repository root:
 
@@ -104,3 +104,11 @@ python3 tests/test_setup_firmware.py
 python3 tools/setup/tftp_server.py --self-test
 make all
 ```
+
+Фоновый маршрут через шлюз с префиксом /24 или короче не требует отключать VPN. Перед TFTP и SSH мастер проверяет фактический прямой путь от своего временного адреса через выделенный Ethernet; ошибочный путь блокирует передачу. Чужие маршруты не удаляются. / Gateway fallback routes do not require disabling VPN; the actual direct cable route is verified before TFTP/SSH, without deleting other routes.
+
+## Аппаратная проверка 09.11.2026 / Hardware check
+
+На отдельном EU v3.30 пройдены переход OEM → OpenWrt, установка 5.1.123 из локального ZIP через PowerShell 7 и вход в LuCI с выключенными автозвонками. После отмены INSTALL продолжение InstallOnly не потребовало повторной прошивки. VPN оставался включённым; прямые пути TFTP/SSH проверены. ПК не отключался от Интернета. RestoreFactory остаётся отдельной непроверенной веткой. [Протокол и ограничения](../../docs/acceptance/ACCEPTANCE_RUN.md).
+
+A spare EU v3.30 passed OEM → OpenWrt, local ZIP installation of 5.1.123 through PowerShell 7 and LuCI login with automation off. InstallOnly resumed after INSTALL cancellation without reflashing. VPN remained enabled and direct TFTP/SSH routes passed. The PC was not physically offline; RestoreFactory remains untested. [Record and limits](../../docs/acceptance/ACCEPTANCE_RUN.en.md).

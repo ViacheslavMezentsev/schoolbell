@@ -52,7 +52,7 @@ class Recovery(unittest.TestCase):
             rows=[]
             for i in range(35):
                 name=['modbus-schoolbell','modbus-schoolbell-clock'][i] if i<2 else 'dependency-'+str(i)
-                version=['5.1.100','1.0.0'][i] if i<2 else '1'
+                version=['5.1.123','1.0.0'][i] if i<2 else '1'
                 file=name+'.ipk';(bundle/file).write_bytes(name.encode())
                 rows.append({'name':name,'version':version,'file':file,'sha256':build.digest(bundle/file)})
             (bundle/'manifest.json').write_text(json.dumps({'packages':rows}))
