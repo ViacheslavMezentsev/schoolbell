@@ -48,7 +48,7 @@ Setup.cmd -RestoreFactory
 
 **Пароль и сброс:** recovery оставляет config вне области записи. Прежний пароль администратора TP-Link и настройки могут сохраниться. Wi-Fi-ключ с наклейки не является паролем администратора, если вы сами не установили его как такой пароль. При забытом пароле на **уже включённом и загрузившемся** роутере удерживайте WPS/Reset около 10 секунд до реакции индикаторов, отпустите и дождитесь загрузки. Этот отдельный сброс удаляет настройки; после него задайте новый пароль в New Password / Confirm Password. Мастер не выполняет сброс. Reset при подаче питания — другой режим, TFTP-recovery.
 
-Работа recovery определяется загрузчиком, а не текущей ОС. На оборудовании подтверждён OpenWrt → OEM; OEM → OEM отдельно не испытывался. Recovery-файл не предназначен для веб-формы обновления.
+Работа recovery определяется загрузчиком, а не текущей ОС. На EU v3.30 подтверждены OpenWrt → OEM и OEM → OEM Build250625 через RestoreFactory в PowerShell 7. Recovery-файл не предназначен для веб-формы обновления.
 
 ## Если установка прервалась
 
@@ -83,7 +83,7 @@ Build with optional `--oem /path/to/original-oem-build250625.bin` to include fac
 
 After a successful dry run, run `Setup.cmd -RestoreFactory` as Administrator. Back up OpenWrt, Schoolbell data and required flash partitions first: the wizard does not back them up. Confirm RESTORE FACTORY and the model, then hold Reset at power-on only after READY. Leave power connected during writing/boot. The wizard restores the adapter to DHCP and does not wait for SSH or install Schoolbell. Verify the stock interface/model/Build250625 yourself; the final ACK only proves transfer. The management IP may differ with retained settings/AP mode.
 
-Factory recovery may retain the old TP-Link administrator password/configuration. The Wi-Fi key on the label is separate unless you intentionally chose it as the administrator password. If forgotten, separately hold WPS/Reset for about 10 seconds on the already powered-on, booted router until LEDs react, release, wait for reboot and create a new administrator password. This erases settings. The wizard never performs that reset. Recovery depends on the bootloader; OpenWrt → OEM was verified, RestoreFactory passed in PowerShell 7; OEM → OEM remains untested. Do not use the recovery image in the stock web-upgrade form.
+Factory recovery may retain the old TP-Link administrator password/configuration. The Wi-Fi key on the label is separate unless you intentionally chose it as the administrator password. If forgotten, separately hold WPS/Reset for about 10 seconds on the already powered-on, booted router until LEDs react, release, wait for reboot and create a new administrator password. This erases settings. The wizard never performs that reset. Recovery depends on the bootloader; OpenWrt → OEM was verified, RestoreFactory passed in PowerShell 7; OEM → OEM Build250625 also passed, including login without reset and network cleanup. Do not use the recovery image in the stock web-upgrade form.
 
 [Recovery findings and acceptance](../../docs/SETUP_RECOVERY.en.md).
 

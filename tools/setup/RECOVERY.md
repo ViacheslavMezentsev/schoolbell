@@ -10,9 +10,9 @@
 
 Ver. 3.30 uses **USB Type-C for power**. [Photographs of both revisions](vendor/photos.md) help identify the housing; confirm the firmware revision from the device label.
 
-Другие модели, регионы, V1/V2/V3.0/V3.20 не поддерживаются этим комплектом. Нужен исправный оригинальный загрузчик. Аппаратно проверены образ через Python TFTP и маршрут Setup.ps1 -RestoreFactory в PowerShell 7, включая вход и очистку сети. OEM → OEM отдельно не проверялся.
+Другие модели, регионы, V1/V2/V3.0/V3.20 не поддерживаются этим комплектом. Нужен исправный оригинальный загрузчик. Аппаратно проверены образ через Python TFTP и маршрут Setup.ps1 -RestoreFactory в PowerShell 7, включая вход и очистку сети. OEM → OEM Build250625 также проверен 09.11.2026: вход прежним паролем без сброса и очистка сети подтверждены.
 
-Other models, regions and V1/V2/V3.0/V3.20 are not supported by this kit. A working original bootloader is required. Both the image and Setup.ps1 -RestoreFactory in PowerShell 7 were hardware-tested, including login and network cleanup. OEM → OEM has not been separately tested.
+Other models, regions and V1/V2/V3.0/V3.20 are not supported by this kit. A working original bootloader is required. Both the image and Setup.ps1 -RestoreFactory in PowerShell 7 were hardware-tested, including login and network cleanup. OEM → OEM Build250625 also passed on 2026-11-09, including retained-password login without reset and network cleanup.
 
 ## Подготовка из репозитория / Preparation from the repository
 

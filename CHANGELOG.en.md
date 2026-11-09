@@ -14,6 +14,8 @@
 
 ## Unreleased — setup wizard
 
+- Verified OEM → OEM Build250625 through RestoreFactory in PowerShell 7: retained-password login without reset, version and network cleanup. Support remains limited to the tested EU v3.30.
+
 - Archived official EN/Russian-language support pages, OEM and Python ZIPs with hashes; added offline stock-kit preparation and an explicit EU Ver. 3.30 support matrix. Russian Markdown summary translates the English summary.
 
 - Added separate OEM Build250625 recovery and installation/recovery DryRun, pinned profiles and retained-password/reset guidance.

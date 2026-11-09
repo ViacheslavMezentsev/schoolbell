@@ -263,3 +263,11 @@ OEM recovery SHA256: `2b0d85b1c7f5e6c65930e117ada0afe60a29a35882ecac65610191876b
 The owner confirmed login without another reset and reported Firmware Version **1.8.0 0.9.1 v0001.0 Build 250625 Rel.56805n**, Hardware Version **TL-MR3020 v3 00000003**. The separate router remains on OEM. Retained-password access is confirmed, not byte-for-byte preservation of all settings or protected MTD regions after writing.
 
 This covers RestoreFactory and network cleanup in TC-05. OEM → OEM, Setup.cmd/Recovery.cmd launchers, restoring backup dumps and full OEM functionality remain untested. The owner excluded a physically offline PC from this scenario. Private backups/logs: `tests/manual/127-restorefactory-wizard`.
+
+## 2026-11-09 — OEM → OEM through RestoreFactory
+
+**PASS:** writing OEM Build250625 over the same stock firmware on a separate TL-MR3020 EU Ver. 3.30. Setup.ps1 -RestoreFactory ran in Windows 11 / PowerShell 7 over dedicated Ethernet with PC Internet/VPN retained. The starting version and login were confirmed in the previous test. Verified configuration/MTD backups from the preceding OpenWrt stage were retained; no fresh OEM configuration export was made for this run.
+
+DryRun and image SHA256 `2b0d85b1c7f5e6c65930e117ada0afe60a29a35882ecac65610191876b6b0665` passed. The owner powered on with Reset after READY. At 17:55:52 (UTC+5), all 8,126,464 bytes were acknowledged, ending at ACK15873. The wizard restored DHCP and removed temporary addresses, firewall rule, TFTP listeners and state file. After a temporary link-local address, a DHCP lease was obtained; by 17:57:30 stock HTTP200 and matching device identity confirmed boot.
+
+The owner confirmed login with the previous password without resetting and reported **1.8.0 0.9.1 v0001.0 Build 250625 Rel.56805n**, Hardware **TL-MR3020 v3 00000003**. The router remains on OEM; the working device was not accessed. This extends TC-05: the existing OEM does not prevent recovery with the verified image. Other firmware/revisions, full OEM functionality and byte-for-byte settings preservation are not claimed. Private evidence: `tests/manual/128-oem-to-oem`.

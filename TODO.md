@@ -27,7 +27,6 @@
 
 ## Осталось: установка, выпуск и завершение миграции / Remaining: installation and release
 
-- [ ] Проверить OEM → OEM отдельно. Маршрут OpenWrt → OEM через RestoreFactory в PowerShell 7 подтверждён 09.11.2026; оболочка Setup.cmd отдельно не проверялась. / Test OEM → OEM separately; RestoreFactory in PowerShell 7 passed for OpenWrt → OEM, not the Setup.cmd launcher.
 
 - [ ] Проверить запуск через оболочку Setup.cmd отдельно: аппаратные опыты выполнялись через Setup.ps1 в PowerShell 7. Полное отключение ПК от Интернета исключено владельцем из текущей приёмки; автономность такого ПК не заявляется. / Check the Setup.cmd launcher separately; hardware runs used Setup.ps1 in PowerShell 7. A physically offline PC is excluded from current acceptance by the owner, not claimed as verified.
 - [ ] Проверить реальный откат версии пакета с сохранением данных отдельно. Новая установка 5.1.123 подтверждена; наличие пакета отката не является выполненным откатом. / Verify an actual data-preserving package downgrade; fresh installation passed, but a rollback package alone is not a rollback test.
@@ -37,6 +36,8 @@
 - [ ] Проверить оставшееся дублирование с core; удалять только после проверки. Отдельный репозиторий и рабочее пространство уже используются. / Review remaining duplication with core before removal; the standalone repository/workspace is already in use.
 
 ## Выполнено и подтверждено / Completed and confirmed
+
+- [x] 09.11.2026: OEM → OEM Build250625 через RestoreFactory в PowerShell 7 на отдельном EU v3.30 — передача, загрузка, вход прежним паролем без сброса, версия и очистка сети подтверждены. Интернет/VPN ПК сохранены; рабочее устройство не использовалось. [RU](docs/acceptance/ACCEPTANCE_RUN.md) · [EN](docs/acceptance/ACCEPTANCE_RUN.en.md). / OEM-to-OEM passed: transfer, boot, retained-password login without reset, version and network cleanup; PC Internet/VPN retained, working device untouched.
 
 - [x] 09.11.2026: RestoreFactory через Setup.ps1 в PowerShell 7 на отдельном EU v3.30 — OpenWrt → OEM Build250625. Копии конфигурации и семи MTD проверены; передача, загрузка, вход без дополнительного сброса и версия подтверждены. DHCP восстановлен, временные адреса/правило firewall/сервер/файл состояния удалены. Интернет и VPN ПК сохранены. [RU](docs/acceptance/ACCEPTANCE_RUN.md) · [EN](docs/acceptance/ACCEPTANCE_RUN.en.md). / RestoreFactory passed on a spare EU v3.30: verified backups, transfer, OEM boot/login/version and network cleanup; no additional reset, PC Internet/VPN retained.
 

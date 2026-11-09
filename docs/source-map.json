@@ -1401,17 +1401,17 @@
       "source": "docs/packages/schoolbell/ACCEPTANCE_RUN.en.md",
       "destination": "docs/acceptance/ACCEPTANCE_RUN.en.md",
       "source_sha256": "b897b27c3bb283ca9709a4cc73681939e1831b0bd77c3da2282fcbf24490ddcd",
-      "destination_sha256": "d43ca805f432288bdf4e6f8faeafb73e20aca965543d1916ec76cffb94eb5082",
+      "destination_sha256": "0ef85f470fdced4f05d1b9cac8a3033d0967439d41918d315b91d0d825901426",
       "changes": "Adapted acceptance record; includes confirmed OEM recovery and limits of new setup wizard acceptance",
-      "prose_sha256": "d1381a4c247de061b022d886f5e40a0f41c04f6926e1254a15631ee2092521a6"
+      "prose_sha256": "4a07169ea450f1039ae725f78b6f80a080447834cd7a933209739748543d2f4d"
     },
     {
       "source": "docs/packages/schoolbell/ACCEPTANCE_RUN.md",
       "destination": "docs/acceptance/ACCEPTANCE_RUN.md",
       "source_sha256": "47af9da767957c40bf358d3fa7b4f57f50f08581ef45fd5abe08a677e8d17f93",
-      "destination_sha256": "f8e63831525cff15aad86b4acbe1b55658a2270a925b18e09bbaa35f453d8215",
+      "destination_sha256": "6988793ed80ef1c7c83239133d3e4ee90f09892894af4501ee06f0f856df0714",
       "changes": "Adapted acceptance record; includes confirmed OEM recovery and limits of new setup wizard acceptance",
-      "prose_sha256": "4453e170e635dfc76c3fca4341377ccb274d47a516a5cbc0d51b25d5c1db9a7b"
+      "prose_sha256": "a628ef069fb6045a08898564b9844853b6a12ea65902fe62c5ec12e015e1d5d2"
     },
     {
       "source": "docs/packages/schoolbell/ANNUAL_CALENDAR.en.md",
