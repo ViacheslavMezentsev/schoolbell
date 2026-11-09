@@ -203,3 +203,23 @@ A temporary calendar plan contained two main bells using the test melody. Times 
 Restored the original draft and applied school-year plan, leaving automation off. Sound settings, including 50% volume, remained unchanged; .sbb contents matched by hashes. Journal and daily counts retained. No package, clock or network changes. Local protocol and evidence: `tests/manual/116-usb-card-substitution-5-1-120` (Git-ignored).
 
 **Conditions and limits:** the OHCI USB path changed from `1.3` to `1.4` along with the card, so this was not an isolated same-port substitution test. The former problematic hub/EHCI and removal during active playback were not tested. The result does not cover every card model or close full hardware acceptance.
+
+### 2026-11-08 — offline bells with browser closed, 5.1.120
+
+The owner disconnected the working bench network from 19:41 to 19:59 (Asia/Yekaterinburg) and confirmed all Schoolbell pages were closed. The 19:42 pre-bell and 19:43 main bell were audible; journal attempts #453/455 and successes #454/456 matched, daily count increased from 4 to 6. Automation continued. Minute-spaced RAM observations showed Internet unconfirmed from 19:41:33 and available at 20:00:35 after reconnection.
+
+Offline bell execution and operation without a browser PASSED. NTP remained displayed as synchronized throughout; its timestamp renewed at 19:50:28 while offline. Investigation identified periodic callbacks being incorrectly treated as fresh synchronization. This is not evidence of a network exchange; TC-234 remains incomplete. The prepared fix is tested on the host; the 5.1.121 hardware retest is recorded below.
+
+Original school-year plan and draft restored, automation off, volume 50% and .sbb contents preserved. Protected configuration hashes, boot and NTP PID unchanged. Journal/counts retained; temporary observer removed after collecting evidence. Local evidence: `tests/manual/117-offline-bells-5-1-120` (Git-ignored).
+
+### 2026-11-09 — 5.1.121 upgrade and offline NTP retest
+
+Before the authorized upgrade, verified installed 5.1.120 against its rollback package, the .sbb backup and data snapshot. After installation all 86 files matched 5.1.121; .sbb contents and sound settings were preserved. Protected network/time configuration, boot and NTP PID remained unchanged. Automatic bells off, volume 50%; no NTP restart or synthetic confirmation events.
+
+The owner disconnected the network from 10:08 to 10:26 (Asia/Yekaterinburg). Recorded 21 minute-spaced samples: automation always off, NTP always waiting (no fresh confirmation), the original event record unchanged and its age increasing. Internet was unconfirmed from 10:10:18; after reconnection the 10:27:26 cache confirmed reachability. Exact outage-detection latency was not separately measured.
+
+**Passed:** no false NTP confirmation or renewed event timestamp in the observed offline interval, Internet recovery and preservation of the school-year plan, journal, counts and volume. Automation remained off; the temporary observer was removed after collecting evidence. Local evidence: `tests/manual/118-bench-5-1-121` and `tests/manual/119-ntp-offline-retest-5-1-121` (Git-ignored).
+
+**Not tested:** fresh stratum confirmation followed by expiry and a new confirmation after reconnection. The initial record used the legacy format without an event type, and no fresh stratum was observed. Individual periodic callbacks were not instrumented. TC-234 remains partially open; stable stratum can produce no new confirmations even with working exchanges.
+
+Local runtime/player, NTP boundary/regression, UI, Pages, IPK build/payload and documentation checks passed. The first full run stopped on the old expected UI text; after updating it, the full UI and remaining Pages/docs checks passed. Specification validation: no errors, three existing historical revision-marker warnings. Published Pages 5.1.121 was not separately verified.
