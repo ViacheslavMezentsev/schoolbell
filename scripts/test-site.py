@@ -115,3 +115,14 @@ for control in ['demo-storage','demo-migration-status','demo-migrate','demo-rese
  assert panel.count('id="'+control+'"')==1,control
 assert '<a class="demo-guide" href="./guide.html">Руководство</a>' in home
 assert '<a class="demo-guide" href="./training.html">Обучение</a>' in home
+
+# Archived product photos are shipped byte-for-byte; firmware/runtime stay out of Pages.
+for rev,count in [('3.30',4),('3.20',3)]:
+ for n in range(1,count+1):
+  path=Path('photos')/('v'+rev)/('tl-mr3020-'+str(n)+'.jpg')
+  assert (out/'devices'/path).read_bytes()==(root/'tools/setup/vendor'/path).read_bytes()
+for lang in ['', '.en']:
+ page=(out/'devices'/('index'+lang+'.html')).read_text()
+ assert 'USB Type-C' in page and 'V3.20' in page and 'V3.30' in page
+assert not list(out.rglob('*.zip')) and not list(out.rglob('*.bin'))
+print('PASS device gallery: seven original photographs, Type-C distinction, no firmware/runtime in Pages')

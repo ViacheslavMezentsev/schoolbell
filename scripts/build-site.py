@@ -100,6 +100,8 @@ for lang,name in [('ru','guide.html'),('en','guide.en.html')]:
 
 # Device references are static, bilingual, and outside the hardware demo.
 shutil.copytree(root/"site/devices",out/"devices",dirs_exist_ok=True)
+# Only product photographs, not firmware/Python/vendor HTML, are published in Pages.
+shutil.copytree(root/"tools/setup/vendor/photos",out/"devices/photos",dirs_exist_ok=True)
 
 # Pages-only practical training, sharing guide theme and build provenance.
 for lang,name in [('ru','training.html'),('en','training.en.html')]:

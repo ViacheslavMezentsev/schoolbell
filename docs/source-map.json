@@ -2057,43 +2057,43 @@
       "source": "scripts/build-site.py",
       "destination": "scripts/build-site.py",
       "source_sha256": "7b581e66a713901cc092b9afcd5ff99155aaaa2bbf8d292dd251a3680f9247b9",
-      "destination_sha256": "bf2bcc5b83c5f5382645b9e58d71cc5bd84c2f723d68c5806f5251a46387d440",
+      "destination_sha256": "29b6e97acf8c29c8734325798dde115c822da4977697b9769473deda3bba3cb8",
       "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer; 2026-10-31 license delivery: shared artifact notices and verification; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); schoolbell feedback issue forms and RU/EN guide links (5.1.45); UI consistency review and mobile layout"
     },
     {
       "source": "site/devices/index.en.html",
       "destination": "site/devices/index.en.html",
       "source_sha256": "61810fb20c98cbdb9a080174f8f38b6ad67e550fc053a444e21a0aee647d37bb",
-      "destination_sha256": "79b9cddb6ca40a9d40639fccf41fda79343e3e25a5f5be4afe9852e72b97cd6d",
-      "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer"
+      "destination_sha256": "63a452e875cdcf89b34407f3e1d9163c65bf353ac14d40ca1eab4e3f4425d869",
+      "changes": "Updated recovery acceptance and archived vendor galleries; Type-C power on EU Ver. 3.30; other revisions not supported"
     },
     {
       "source": "site/devices/index.html",
       "destination": "site/devices/index.html",
       "source_sha256": "394bb4765dbe3ed1d3e998b36882a3b2f3282cb7ce095ee7c47d90e8463290f4",
-      "destination_sha256": "ae8a66cba8c358ed9f44bcb1666a6017dbfb659994094cd2993047263763568b",
-      "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer"
+      "destination_sha256": "13975f91ba9da10a51514e2005d1a9793ca5bf1d068b1aee03e95341f99c0f57",
+      "changes": "Updated recovery acceptance and archived vendor galleries; Type-C power on EU Ver. 3.30; other revisions not supported"
     },
     {
       "source": "site/devices/tl-mr3020-eu-v3.30-firmware.json",
       "destination": "site/devices/tl-mr3020-eu-v3.30-firmware.json",
       "source_sha256": "85d202dce3d3190fb0d5c61b6cc6b5e1974e6f6ab6d8ce6cef2c536b71315460",
-      "destination_sha256": "85d202dce3d3190fb0d5c61b6cc6b5e1974e6f6ab6d8ce6cef2c536b71315460",
-      "changes": "none"
+      "destination_sha256": "d92a17fd0f2f77baccf1afbe8af79de6668e2cdb750f298992b62ef85954ad42",
+      "changes": "Updated recovery acceptance and archived vendor galleries; Type-C power on EU Ver. 3.30; other revisions not supported"
     },
     {
       "source": "site/devices/tl-mr3020-eu-v3.30.en.html",
       "destination": "site/devices/tl-mr3020-eu-v3.30.en.html",
       "source_sha256": "5d5b12ce4f8dc4268f86a472f9eee25f0a3b5faea8448ddee189e6efe9af9fb5",
-      "destination_sha256": "3982d1322b2b5248e98c47069f3ac86dc04a1d9115f51caa99bac6873a479df4",
-      "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer"
+      "destination_sha256": "a6afd41b4ee5927f037feb189bf78d210d892761ec1e1e747d61de323726e9dd",
+      "changes": "Updated recovery acceptance and archived vendor galleries; Type-C power on EU Ver. 3.30; other revisions not supported"
     },
     {
       "source": "site/devices/tl-mr3020-eu-v3.30.html",
       "destination": "site/devices/tl-mr3020-eu-v3.30.html",
       "source_sha256": "b5e8daca22a6008514029af74ce160be33ffbee38ce0c933d54960d70f42b24c",
-      "destination_sha256": "27112859b178b90ca354cf6e62eb2b52699b40b7f4a46a22ea69134e469e1cc2",
-      "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer"
+      "destination_sha256": "d67d9b5fedd2d2118dbafdff5cfd4bd32e5f37d1b239959365803577987bd413",
+      "changes": "Updated recovery acceptance and archived vendor galleries; Type-C power on EU Ver. 3.30; other revisions not supported"
     },
     {
       "source": "site/diagrams/audio.en.svg",
