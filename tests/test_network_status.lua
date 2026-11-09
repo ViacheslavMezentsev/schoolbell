@@ -2,7 +2,7 @@ package.path="src/lua/?.lua;vendor/?.lua;"..package.path
 local M=require('schoolbell.network_status')
 for _,s in ipairs({'1.1.1.1','time.example.org','ntp-server'})do assert(M.valid_host(s),s)end
 for _,s in ipairs({'','-c','a;reboot','a b','.host','host.','a..b','a/b','a\n','a_'})do assert(not M.valid_host(s),s)end
-local e={boot='b',process='1:10',uptime=100,stratum=2,epoch=42}
+local e={boot='b',process='1:10',uptime=100,stratum=2,epoch=42,action='stratum'}
 assert(M.ntp_state(false,'1:10',e,'b',110).state=='disabled')
 assert(M.ntp_state(true,'',e,'b',110).state=='stopped')
 assert(M.ntp_state(true,'1:10',nil,'b',110).state=='waiting')
@@ -13,7 +13,7 @@ assert(M.ntp_state(true,'1:10',e,'b',1000).state=='synced')
 assert(M.ntp_state(true,'1:10',e,'b',1001).state=='waiting')
 e.stratum=16;assert(M.ntp_state(true,'1:10',e,'b',110).state=='waiting');e.stratum=2
 local cfg={enabled=true,host='1.1.1.1',valid=true}
-local c={boot='b',uptime=100,host=cfg.host,enabled=true,reachable=true,ntp={state='synced',age_seconds=10}}
+local c={boot='b',uptime=100,host=cfg.host,enabled=true,reachable=true,ntp={state='synced',age_seconds=10,confirmation='stratum'}}
 assert(M.cache_state(c,cfg,'b',110).internet.state=='available')
 assert(M.cache_state(c,cfg,'b',251).ntp.state=='unknown')
 assert(M.cache_state(c,cfg,'c',110).internet.state=='checking')
@@ -45,9 +45,28 @@ package.loaded['nixio.fs']={lstat=function()return made and {type='dir'} or nil 
 package.loaded.nixio.getpid=function()return 1 end
 package.loaded.nixio.open=function()return {sync=function()return true end,close=function()end}end
 M.processes=function()return '9:100'end
-M.event('periodic','2')
+M.event('periodic','2');assert(output['/tmp/schoolbell-network/ntp.json']==nil)
+M.event('stratum','2')
 local e=require('modbus.json_strict').decode(output['/tmp/schoolbell-network/ntp.json'])
 assert(e and e.uptime==123 and e.stratum==2 and e.boot=='boot')
+assert(e.action=='stratum')
+-- Repeated timer callbacks while offline must never renew a positive confirmation.
+local confirmed=output['/tmp/schoolbell-network/ntp.json']
+for _,up in ipairs({783,1443,2103})do
+ input['/proc/uptime']=tostring(up)..'.45 0'
+ M.event('periodic','2');assert(output['/tmp/schoolbell-network/ntp.json']==confirmed)
+end
+assert(M.ntp_state(true,'9:100',e,'boot',1023).state=='synced')
+assert(M.ntp_state(true,'9:100',e,'boot',1024).state=='waiting')
+local legacy={boot='boot',process='9:100',uptime=2103,stratum=2,epoch=42}
+assert(M.ntp_state(true,'9:100',legacy,'boot',2103).state=='waiting')
+local oldcache={boot='b',uptime=100,ntp={state='synced',age_seconds=0}}
+assert(M.cache_state(oldcache,cfg,'b',100).ntp.state=='waiting')
+-- A later explicit stratum confirmation restores confidence without restarting ntpd.
+M.event('stratum','2')
+local fresh=require('modbus.json_strict').decode(output['/tmp/schoolbell-network/ntp.json'])
+assert(fresh.uptime==2103 and M.ntp_state(true,'9:100',fresh,'boot',2103).state=='synced')
+
 M.event('unsync','2');assert(require('modbus.json_strict').decode(output['/tmp/schoolbell-network/ntp.json']).stratum==16)
 M.event('step','2');assert(require('modbus.json_strict').decode(output['/tmp/schoolbell-network/ntp.json']).stratum==16)
 assert(M.save(false,'ntp.example.org').ok)

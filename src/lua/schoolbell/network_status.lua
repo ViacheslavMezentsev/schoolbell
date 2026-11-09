@@ -46,18 +46,21 @@ local function write(name,v)
  local f=assert(io.open(tmp,'w'));assert(f:write(C.encode(v)));assert(f:close());assert(os.rename(tmp,root..'/'..name))
 end
 function M.event(action,stratum)
+ -- BusyBox periodic is a timer callback, not a newly accepted NTP sample.
+ -- Never refresh confirmation from it (including legacy periodic-only startup).
+ if action=='periodic' then return end
  -- step runs before stratum settles: do not treat it as proof of synchronization.
  if action~='stratum' and action~='periodic' and action~='unsync' and action~='step' then return end
  local st=(action=='unsync' or action=='step') and 16 or tonumber(stratum);if not st or st%1~=0 or st<0 or st>16 then return end
- write('ntp.json',{boot=M.boot(),uptime=M.uptime(),epoch=os.time(),process=M.processes(),stratum=st})
+ write('ntp.json',{boot=M.boot(),uptime=M.uptime(),epoch=os.time(),process=M.processes(),stratum=st,action=action})
 end
 function M.ntp_state(enabled,process,event,boot,up)
  if not enabled then return {state='disabled'}end
  if process=='' then return {state='stopped'}end
  if type(event)~='table' or event.boot~=boot or event.process~=process or type(event.uptime)~='number' or up<event.uptime then return {state='waiting'}end
  local age=math.floor(up-event.uptime)
- local synced=age<=M.ntp_ttl and type(event.stratum)=='number' and event.stratum>=1 and event.stratum<=15
- return {state=synced and 'synced' or 'waiting',age_seconds=age,confirmed_epoch=event.epoch}
+ local synced=event.action=='stratum' and age<=M.ntp_ttl and type(event.stratum)=='number' and event.stratum>=1 and event.stratum<=15
+ return {state=synced and 'synced' or 'waiting',age_seconds=age,confirmed_epoch=event.action=='stratum' and event.epoch or nil,confirmation=event.action}
 end
 function M.cache_state(cache,cfg,boot,up)
  local out={config=cfg,internet={state=cfg.enabled and 'checking' or 'disabled'},ntp={state='unknown'}}
@@ -65,6 +68,7 @@ function M.cache_state(cache,cfg,boot,up)
  if type(cache)~='table' or cache.boot~=boot or type(cache.uptime)~='number' or up<cache.uptime then return out end
  if up-cache.uptime>M.cache_ttl then if cfg.enabled then out.internet.state='unknown' end;return out end
  local age=math.floor(up-cache.uptime);if type(cache.ntp)=='table' then for k,v in pairs(cache.ntp)do out.ntp[k]=v end end
+ if out.ntp.state=='synced' and out.ntp.confirmation~='stratum' then out.ntp.state='waiting';out.ntp.confirmed_epoch=nil end
  if out.ntp.age_seconds then out.ntp.age_seconds=out.ntp.age_seconds+age;if out.ntp.state=='synced' and out.ntp.age_seconds>M.ntp_ttl then out.ntp.state='waiting'end end
  if cfg.enabled and cfg.valid and cache.host==cfg.host and cache.enabled==true then out.internet={state=cache.reachable and 'available' or 'unconfirmed',age_seconds=age,host=cache.host}end
  return out

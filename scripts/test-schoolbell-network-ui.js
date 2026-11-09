@@ -4,7 +4,7 @@ const events={},window={addEventListener(k,f){events[k]=f;}},calls=[];
 vm.runInNewContext(fs.readFileSync('ui/root/www/schoolbell-test/network.js','utf8'),{window,document:{getElementById:id=>els[id]},setTimeout,clearTimeout,URLSearchParams,AbortController,fetch:async(url,opts)=>{calls.push(opts);return {ok:true,json:async()=>({ok:true,network:{config:{enabled:false,host:'time.local'},internet:{state:'disabled'},ntp:{state:'waiting'}}})};}});
 (async()=>{
  window.schoolbellNetworkRender({config:{enabled:true,host:'1.1.1.1'},internet:{state:'available',age_seconds:2,host:'1.1.1.1'},ntp:{state:'waiting'}});
- assert.equal(calls.length,0);assert(els['network-internet'].textContent.includes('доступен'));assert(els['network-ntp'].textContent.includes('ожидание'));assert(els['network-save'].disabled);
+ assert.equal(calls.length,0);assert(els['network-internet'].textContent.includes('доступен'));assert(els['network-ntp'].textContent.includes('нет свежего подтверждения'));assert(els['network-save'].disabled);
  els['network-host'].value='bad host';els['network-host'].input();assert(els['network-save'].disabled);
  els['network-host'].value='time.local';els['network-enabled'].checked=false;els['network-host'].input();assert(!els['network-save'].disabled);
  window.schoolbellNetworkRender({config:{enabled:true,host:'1.1.1.1'},internet:{state:'unconfirmed'},ntp:{state:'synced'}});assert.equal(els['network-host'].value,'time.local');
