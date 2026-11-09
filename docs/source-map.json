@@ -504,7 +504,7 @@
       "destination": "ui/root/usr/lib/lua/luci/view/schoolbell_test.htm",
       "source_sha256": "526214f183ea8526785239074189d00cc03e7251323ee4146f75f0a53a015a54",
       "changes": "none; default audio status and blue Flash (5.1.29); wider header and CSS cache key (5.1.30); owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner clarification of playback action icons (5.1.32, spec 1.78); manual sound check grouped in a collapsed disclosure; collapsed manual sound check, version 5.1.33; concise playback completion and collapsed storage information; separate actual storage use from upload conditions; owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); 5.1.39 lazy backup status check and release notes; 5.1.40 initial page-load performance; 5.1.41 startup priority and shared Actions column; compact 4x4 schedule palette; 5.1.42 reduced action spacing; 5.1.43 playback icon size; 5.1.44 approved contrast palette; schoolbell feedback issue forms and RU/EN guide links (5.1.45); device-local header date (5.1.46); consistent delete icons and centered headings (5.1.47); insert and reorder bell rows (5.1.48); shared UI conventions and large action icons (5.1.50); triangle and bulk action icons (5.1.51); melody table add and replace (5.1.52); metadata-only melody rename (5.1.53); LuCI rename query encoding (5.1.54); MP3 upload save icon (5.1.55); passive switch and IP header (5.1.56); saved volume header bar; UI consistency review and mobile layout",
-      "destination_sha256": "f71c8c717e665920b65881e6965b1f993564e0a3fac48ee31243e0bb83f3e87a"
+      "destination_sha256": "b8cb1a8a143799a6881baa1f68dee248e9bb7ccb740898757f6eca089b48b3ba"
     },
     {
       "source": "packages/schoolbell/router-page/root/usr/lib/lua/schoolbell/backup_web.lua",
@@ -588,7 +588,7 @@
       "destination": "ui/root/www/schoolbell-test/controls.js",
       "source_sha256": "d54bd395645778dc54f3047973372f1da8237cccda8e20a282cfcf307d1e8ff1",
       "changes": "none; default audio status and blue Flash (5.1.29); owner-requested UI and size-only journal policy (5.1.31, spec 1.77); 5.1.41 startup priority and shared Actions column; passive switch and IP header (5.1.56); saved volume header bar",
-      "destination_sha256": "c69a6bab58a6c0ac180a4c04823c405204ca241ccef8b8d77eeb4a9e366b480b"
+      "destination_sha256": "9740d5394da0967aa49e16981598ce62c816c3cea43640ecf6fb83e247a515cf"
     },
     {
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/cpu.js",
@@ -665,7 +665,7 @@
       "destination": "ui/root/www/schoolbell-test/style.css",
       "source_sha256": "046d8f5ba5461e83f8c4412b368b227ae34a98eef741d500af2117eefa4ff0ba",
       "changes": "none; default audio status and blue Flash (5.1.29); wider header and CSS cache key (5.1.30); stable two-line audio layer; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); collapsed manual sound check, version 5.1.33; confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); 5.1.41 startup priority and shared Actions column; compact 4x4 schedule palette; 5.1.42 reduced action spacing; 5.1.43 playback icon size; consistent delete icons and centered headings (5.1.47); insert and reorder bell rows (5.1.48); shared UI conventions and large action icons (5.1.50); triangle and bulk action icons (5.1.51); melody table add and replace (5.1.52); metadata-only melody rename (5.1.53); passive switch and IP header (5.1.56); saved volume header bar; UI consistency review and mobile layout",
-      "destination_sha256": "820694be71346961f643bd5503d40fbf525f984e881e47adf98bf14e4e430911"
+      "destination_sha256": "e1e251c822a9768de077ee302ed018dcdf63f1d8c159b274d311f6923491d0c5"
     },
     {
       "source": "packages/schoolbell/router-page/root/www/schoolbell-test/theme.js",
@@ -1141,7 +1141,7 @@
       "destination": "packaging/openwrt/package/CONTROL/control",
       "source_sha256": "8183c1fee37c5c6579f32cc2570317640935b5a2598495d8bbb4081e6bb78141",
       "changes": "adapted; review destination against pinned source; default audio status and blue Flash (5.1.29); wider header and CSS cache key (5.1.30); owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner clarification of playback action icons (5.1.32, spec 1.78); collapsed manual sound check, version 5.1.33; version 5.1.34; version 5.1.35; owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); fast advisory media listing, authoritative checks retained for deletion; confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); 5.1.39 lazy backup status check and release notes; 5.1.40 initial page-load performance; 5.1.41 startup priority and shared Actions column; 5.1.42 reduced action spacing; 5.1.43 playback icon size; 5.1.44 approved contrast palette; schoolbell feedback issue forms and RU/EN guide links (5.1.45); device-local header date (5.1.46); consistent delete icons and centered headings (5.1.47); insert and reorder bell rows (5.1.48); shared UI conventions and large action icons (5.1.50); triangle and bulk action icons (5.1.51); melody table add and replace (5.1.52); metadata-only melody rename (5.1.53); LuCI rename query encoding (5.1.54); MP3 upload save icon (5.1.55); passive switch and IP header (5.1.56); saved volume header bar; UI consistency review and mobile layout",
-      "destination_sha256": "8a6bb3810a995729986100672fa9ea4151810ea8299c911904faf2b643955055"
+      "destination_sha256": "3fe187140a67d117c6542d30dc30e5f0fbbcbe3c3230b41c0f66ae494d47c2f4"
     },
     {
       "source": "pkg-schoolbell/CONTROL/postinst",
@@ -1401,17 +1401,17 @@
       "source": "docs/packages/schoolbell/ACCEPTANCE_RUN.en.md",
       "destination": "docs/acceptance/ACCEPTANCE_RUN.en.md",
       "source_sha256": "b897b27c3bb283ca9709a4cc73681939e1831b0bd77c3da2282fcbf24490ddcd",
-      "destination_sha256": "a0063d5045c6e793ad2b7381137f07c3803f5bf1c880679e19888508ce525696",
+      "destination_sha256": "30c87479eb09b3b1dcaee95515778b0f156d0f26945bad944593a95aa0abe972",
       "changes": "Adapted acceptance record; includes confirmed OEM recovery and limits of new setup wizard acceptance",
-      "prose_sha256": "67ced5735fd690bfaaf9ecbac9a815186a49b564b90b37780be780aca067d10e"
+      "prose_sha256": "9075c08d5d04f739bdb7886b8552babcc929e9593609242b21385d22f512143c"
     },
     {
       "source": "docs/packages/schoolbell/ACCEPTANCE_RUN.md",
       "destination": "docs/acceptance/ACCEPTANCE_RUN.md",
       "source_sha256": "47af9da767957c40bf358d3fa7b4f57f50f08581ef45fd5abe08a677e8d17f93",
-      "destination_sha256": "85379543b2623d973c3dac9f814ba77ac838206cfc97071834528db48182251f",
+      "destination_sha256": "0c856dd779ae69e0ec0826db8d39517dcf2b081519d0be315e480f74229adf86",
       "changes": "Adapted acceptance record; includes confirmed OEM recovery and limits of new setup wizard acceptance",
-      "prose_sha256": "ad7e7d9830303dbb0e541a3bbb9e6b0dbcb56c315c8614f03e55cd6a1c6f5c69"
+      "prose_sha256": "4ded1c3eda1f7b25e0080ed3c0b72191adefae34abbdade5f6e2e7dd66a7bc0a"
     },
     {
       "source": "docs/packages/schoolbell/ANNUAL_CALENDAR.en.md",
@@ -1993,9 +1993,9 @@
       "source": "docs/packages/schoolbell/TECHNICAL_SPECIFICATION.md",
       "destination": "docs/requirements/TECHNICAL_SPECIFICATION.md",
       "source_sha256": "61b760731a5c4f6c53ed67726cd8667136ee194692aa517aa2b3ded7e9f07aad",
-      "destination_sha256": "35486d4c021423bcfb8df418887c62335aa1bad3debc6e8efad868e3629a6657",
+      "destination_sha256": "fd30af70c34499f033c9f24812cb15c25793743367f1d14d4a5597d19aba4908",
       "changes": "Markdown link destinations only; original text and requirement/TC IDs preserved; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner clarification of playback action icons (5.1.32, spec 1.78); owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); owner-approved baseline CSS palette and fixed order, spec 1.81 (documentation only); baseline CSS palette implementation, spec 1.81; insert and reorder bell rows (5.1.48); shared UI conventions and large action icons (5.1.50); triangle and bulk action icons (5.1.51); melody table add and replace (5.1.52); metadata-only melody rename (5.1.53); passive switch and IP header (5.1.56); saved volume header bar; UI consistency review and mobile layout; explicit active calendar plan requirements (spec 1.99)",
-      "prose_sha256": "22d1060cc5f6edce701942a7639c101a65ac2fef376e6db73066979a2af7b5b8",
+      "prose_sha256": "6e73c4e3bf64feea0a03e087ed035cde14621fc9cbe4aed32bedd7b9a2695b58",
       "migrated_prose_sha256": "7a7b8c5652b4353f90f58c476218ca443a2dbb2be0af2516e6e735ea8fa30be5"
     },
     {
@@ -2018,18 +2018,18 @@
       "source": "docs/packages/schoolbell/USER_GUIDE.en.md",
       "destination": "docs/user/USER_GUIDE.en.md",
       "source_sha256": "45cada2eb0064aa88df66a57a4e80f593cc259497ea41817e66eb42fcf678921",
-      "destination_sha256": "e695227b5825a8c33ae592a3e4f82be32c31de33b4b1577576d51ebf87589196",
+      "destination_sha256": "165403630c6b99ee003de293b92118ce71f7bdd5e56ec6a5460c02a3b1446d29",
       "changes": "Markdown link destinations only; original text and requirement/TC IDs preserved; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); schoolbell feedback issue forms and RU/EN guide links (5.1.45); insert and reorder bell rows (5.1.48); triangle and bulk action icons (5.1.51); melody table add and replace (5.1.52); metadata-only melody rename (5.1.53); passive switch and IP header (5.1.56); saved volume header bar; UI consistency review and mobile layout",
-      "prose_sha256": "06fba846839f88df2a575ffa95178edda942085a580be2aa72e6611dbdaa2178",
+      "prose_sha256": "3958f719efce09e00f321b3abbed094d9b62efd3b7614d22b3a79bccc9ff20bd",
       "migrated_prose_sha256": "ca3efd23e3a9a2c17b796ed94a73f372ad98853e29c32591d2525368a2e9fee8"
     },
     {
       "source": "docs/packages/schoolbell/USER_GUIDE.md",
       "destination": "docs/user/USER_GUIDE.md",
       "source_sha256": "9753511757ffb71652f00145a30dc1421e5e3bc3e775b0b357f9d46a93704807",
-      "destination_sha256": "ed0c70210c9b3a98eefe7b1a9482a0ee31cfc540ff7f3c0431425076ecdadb1e",
+      "destination_sha256": "7692759f6f381c477f68e57e393852b61a98c96671cb577396b32abc279566ef",
       "changes": "Markdown link destinations only; original text and requirement/TC IDs preserved; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); schoolbell feedback issue forms and RU/EN guide links (5.1.45); insert and reorder bell rows (5.1.48); triangle and bulk action icons (5.1.51); melody table add and replace (5.1.52); metadata-only melody rename (5.1.53); passive switch and IP header (5.1.56); saved volume header bar; UI consistency review and mobile layout",
-      "prose_sha256": "b4b842a37833a06ce783b2de25a89c1133977651784f6efb583b4ef44b7447b3",
+      "prose_sha256": "abcc40aab91980fd90b6d172945de99bb2120ea7a741992df53c3412b02b11bd",
       "migrated_prose_sha256": "3d8d69c4d89c627f85c1db40f3e4b2e8e1222460ef7ab761eb50e2bdb05ed600"
     },
     {

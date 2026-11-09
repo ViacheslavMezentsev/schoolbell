@@ -1,6 +1,6 @@
 # Задачи проекта / Project tasks
 
-Актуализировано 09.11.2026 по результатам до 5.1.121 включительно. Выполненное отделено от оставшихся проверок. Старые версии в подтверждениях обозначают дату результата, а не версию для следующей проверки. Новые аппаратные проверки выполнять на согласованной текущей версии и отдельно разрешённом устройстве. / Reviewed on 2026-11-09 through 5.1.121. Historical results are not new hardware acceptance; use an agreed current version and authorized target for remaining checks.
+Актуализировано 09.11.2026 по результатам до 5.1.123 включительно. Выполненное отделено от оставшихся проверок. Старые версии в подтверждениях обозначают дату результата, а не версию для следующей проверки. Новые аппаратные проверки выполнять на согласованной текущей версии и отдельно разрешённом устройстве. / Reviewed on 2026-11-09 through 5.1.123. Historical results are not new hardware acceptance; use an agreed current version and authorized target for remaining checks.
 
 ## Осталось: надёжность / Remaining: reliability
 
@@ -22,7 +22,6 @@
 ## Осталось: интерфейс и Pages / Remaining: UI and Pages
 
 
-
 - [ ] Подтвердить на реальном телефоне панель сохранения и отсутствие горизонтального выхода страницы за экран. / Confirm the save bar and absence of horizontal overflow on a real phone.
 - [ ] Завершить TC-197 для текущего UI: обе темы, узкий экран, фокус клавиатуры, disabled, размеры и отступы одинаковых элементов. Ранее проверенные 64 сочетания относятся к 5.1.69, а не ко всем последующим изменениям. / Complete current UI consistency checks; the earlier 64 combinations cover 5.1.69 only.
 - [ ] Дополнить проверку опубликованных Pages: режим «По расписанию», остальные скорости имитатора, прямое редактирование даты, отмена диалога времени и реальный телефон. Подтверждённые сценарии 5.1.120 перечислены ниже; это не полное закрытие TC-235/TC-236. / Extend published Pages coverage to fixed-schedule mode, other speeds, direct date editing, time-dialog cancellation and a real phone; the checks below do not fully close TC-235/TC-236.
@@ -40,6 +39,10 @@
 
 ## Выполнено и подтверждено / Completed and confirmed
 
+- [x] Владелец визуально принял строку модели в Ресурсах на стенде 5.1.122. Установка и системное значение в ответе controls проверены 09.11.2026; точная подревизия не предполагается. / Owner visual review accepted; deployment and model reporting verified on 2026-11-09.
+- [x] 09.11.2026: 5.1.122 установлена после `make all`; сверены 86 файлов, содержимое резервной копии и защищённые настройки. Автозвонки выключены, громкость 50 % сохранена; перезагрузки и воспроизведения не выполнялись. / Verified deployment, backup and configuration preservation; automatic bells off, unchanged 50% volume, no reboot or playback.
+- [x] 09.11.2026: установлена 5.1.123 с группировкой текстовых строк Ресурсов; 86 файлов сверены, данные сохранены, автомат выключен, громкость 50 %. UI/Pages и пакет проверены локально; модель и новая компоновка приняты владельцем. / Deployed 5.1.123, verified payload/data preservation and unchanged volume; model and layout accepted by the owner.
+
 - [x] 09.11.2026: возврат OpenWrt → OEM на отдельном EU v3.30: исправлено смещение 512 байт, передача и загрузка подтверждены; после отдельного сброса проверены вход и Build250625 Rel.56805n. Новый мастер не считается аппаратно принятым. [RU](docs/SETUP_RECOVERY.md) · [EN](docs/SETUP_RECOVERY.en.md). / Accepted the aligned recovery image and stock boot/login/version; the new wizard still needs end-to-end hardware acceptance.
 - [x] 09.11.2026: локальная проверка DryRun установки и возврата OEM — Windows PowerShell 5.1 (оба маршрута и блокирующие условия), 5 Python-тестов профилей/упаковки, TFTP loopback, побайтовое совпадение преобразованного OEM с проверенным кандидатом, валидатор ТЗ и `make all` — PASS. Обращений к стендам и прошивки в этой проверке не было; сквозная аппаратная приёмка нового мастера остаётся выше.
 
@@ -50,7 +53,6 @@
 - [x] 08.11.2026: локальный имитатор Pages, оба режима с основным и предварительным звонком, ошибки/возврат аудио, откат виртуальных часов, журнал и карта проверены host-тестами. В браузере проверены сводки, установка времени и отсутствие мигания; результат принят владельцем. Это не аппаратная приёмка. / Local simulator scenarios passed host tests; browser UI, time setting and stable status were checked and accepted, without claiming hardware acceptance.
 - [x] Общий диалог установки времени и сводка «Метрик» (Flash, громкость, Интернет), единая пометка «Демо», перенос локальных действий в имитатор и сохранение ссылок руководства/обучения реализованы. / Implemented the shared time confirmation dialog, resource summary, single demo badge and relocated local actions with guide links preserved.
 - [x] 08.11.2026: полный `make all` для 5.1.120 пройден. При установке проверены резервная копия, пакет отката, все 86 файлов пакета, неизменность содержимого .sbb, громкости 50 %, защищённых настроек сети/времени и выключенное состояние автоматики. Внешний вид принят владельцем. / Full checks and upgrade verification passed; backup contents, volume, protected settings and auto-off state preserved; owner accepted the UI.
-
 
 - [x] 09.11.2026: сохранены фотографии TP-Link обеих ревизий (3.30 — 4, включая упаковку; 3.20 — 3), добавлены в каталог Pages. Питание USB Type-C отмечено для 3.30; поддержка восстановления 3.20 не заявляется. / Archived both revision galleries and documented Type-C power on 3.30; 3.20 recovery remains unsupported.
 

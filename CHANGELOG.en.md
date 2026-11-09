@@ -2,6 +2,14 @@
 
 [Русский](CHANGELOG.md)
 
+## 5.1.123 — 2026-11-09
+
+- Grouped resource text rows above the meters: model, Internet/NTP, switch/IP. Model uses a colon and an explicit no-data label.
+
+## 5.1.122 — 2026-11-09
+
+- Resources display the system-provided model or board identifier without guessing a hardware subrevision; Pages identifies its simulator. Existing polling is reused. Deployed as 5.1.122: the status response contains the system model; automatic bells remain off and volume is preserved.
+
 ## Unreleased — setup wizard
 
 - Archived official EN/Russian-language support pages, OEM and Python ZIPs with hashes; added offline stock-kit preparation and an explicit EU Ver. 3.30 support matrix. Russian Markdown summary translates the English summary.

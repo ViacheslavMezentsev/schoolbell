@@ -227,3 +227,9 @@ Local runtime/player, NTP boundary/regression, UI, Pages, IPK build/payload and 
 ## 2026-11-09 — OEM EU v3.30 recovery
 
 Prepared recovery transfer, stock boot, Ethernet/Wi-Fi and login after a separate reset confirmed. Version 1.8.0 0.9.1 v0001.0 Build 250625 Rel.56805n. [Evidence and limits](../SETUP_RECOVERY.en.md). The new wizard was not hardware-tested.
+
+### 2026-11-09 — device model and Resources layout, 5.1.122–5.1.123
+
+The system reports TP-Link TL-MR3020 v3 through the existing controls request, without inferred subrevisions. The owner accepted the model and row order: model, Internet/NTP, switch/IP, CPU, Flash, audio. Shared Pages sources identify the simulator.
+
+Verified backups and rollback packages before deployment; afterwards checked 86 package files, .sbb contents, sound settings, protected network/time settings and unchanged boot identity. Automatic bells remained off and volume stayed at 50%; no playback. Local UI/Pages and package checks passed; published Pages for this version was not separately checked. Full `make all` passed before committing. Local evidence: `tests/manual/121-bench-5-1-122` and `tests/manual/125-bench-5-1-123` (Git-ignored).

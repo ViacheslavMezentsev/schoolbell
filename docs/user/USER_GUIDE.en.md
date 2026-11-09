@@ -306,3 +306,5 @@ In Pages expand Device simulator below Metrics. Apply the saved plan in Settings
 Audio, Internet and NTP are simulated states, not equipment or network checks. NTP status alone does not set virtual time. CPU and flash have no fabricated measurements. The 🔊 preview still plays MP3 audio in the browser.
 
 Keep the page open. Reopening leaves automatic bells off and time paused; settings and history remain local to this browser. A prolonged browser stall also pauses time without catching up the missed interval. Simulate reboot exercises this behavior without accessing a router. Local-data reset and migration of an eligible legacy draft are at the bottom of the simulator. Guide and Training links remain above the tabs.
+
+Expanded Metrics → Resources groups device model, Internet/NTP and switch/IP above the CPU, Flash and audio meters. The model is reported by the system without guessing a hardware subrevision. If only a board identifier is available, it is labeled as a board; missing information is shown explicitly. Pages identifies the simulator.
