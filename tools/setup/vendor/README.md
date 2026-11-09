@@ -4,6 +4,8 @@
 
 Supported recovery profile: **TP-Link TL-MR3020 (EU) Ver. 3.30**, original bootloader, stock Build250625. Other models, regions and revisions (including V1, V2, V3.0 and V3.20) are not supported by this wizard.
 
+- [Архив OEM-версий и причина установки через Reset — RU](oem-firmware.md) / [OEM release archive and why Reset is used — EN](oem-firmware.en.md). Сохранены 1.8.0, 1.9.0 и 1.10.0; RestoreFactory поддерживает только проверенную 1.8.0 Build250625. / Three releases preserved; only Build250625 is an accepted recovery profile.
+
 - [Страница поддержки — RU, перевод EN](support.md) / [Support summary — EN](support.en.md).
 - [manifest.json](manifest.json): original/resolved URLs, retrieval UTC, sizes and SHA256; also unavailable Russian URL. / URL, дата получения, размер, SHA256 и недоступный российский адрес.
 - Original OEM ZIP is preserved byte-for-byte, including its GPL terms and upgrade instructions. / OEM ZIP сохранён без изменений с условиями GPL и инструкцией производителя.

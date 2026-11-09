@@ -12,3 +12,7 @@ The vendor page describes ordinary firmware updates; it does not document our bo
 The Russian-region URL returned HTTP 404. A supplementary [Russian-language Kazakhstan page](https://www.tp-link.com/kz/support/download/tl-mr3020/v3.30/) was available and was [saved separately](tp-link-mr3020-v3.30-ru-kz.html). It lists the same release. [Russian translation of this summary](support.md).
 
 If the site disappears, use the saved HTML, original ZIP and [provenance/hash manifest](manifest.json). HTML snapshots preserve response bodies, not external styles, scripts or images; offline layout may differ. They are archival evidence, not executable recovery instructions.
+
+## Additional preserved releases
+
+The English page also lists EU V3.30 **1.9.0 Build260303** (2026-05-13) and **1.10.0 Build260303** (2026-05-14). Both original ZIPs are preserved. For 1.10.0 the vendor states that settings are retained and downgrading to a previous release is unavailable. [Archives, limitations and web-update versus recovery](oem-firmware.en.md).

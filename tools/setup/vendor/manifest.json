@@ -132,6 +132,62 @@
       "bytes": 428016,
       "sha256": "6294b38a7d35168718f4352edf8f251d2600bdc5577a28d9b3c07fdb59767a95",
       "source_page": "https://www.tp-link.com/en/home-networking/5g-4g-router/tl-mr3020/v3.30/"
+    },
+    {
+      "file": "tl-mr3020-eu-v3.30-1.9.0-260303.zip",
+      "url": "https://static.tp-link.com/upload/firmware/2026/202605/20260513/TL-MR3020v3_1.9.0_0.9.1_up_boot(260303)_2026-03-03_16.49.19.zip",
+      "resolved_url": "https://static.tp-link.com/upload/firmware/2026/202605/20260513/TL-MR3020v3_1.9.0_0.9.1_up_boot(260303)_2026-03-03_16.49.19.zip",
+      "retrieved_utc": "2026-11-09T13:18:08.888254+00:00",
+      "content_type": "application/octet-stream",
+      "bytes": 7440964,
+      "sha256": "16ac3c56997369a28d1bdf3fcb1c554d49b4d4095f320118cac30cf9d6f45340",
+      "source_page": "https://www.tp-link.com/en/support/download/tl-mr3020/v3.30/",
+      "recovery_status": "Archived official EU V3.30 release; NOT supported by RestoreFactory",
+      "members": [
+        {
+          "file": "GPL License Terms.pdf",
+          "bytes": 201702,
+          "sha256": "7019854dd9304be13952d1adfd49a142d3773b22edce05ed1fcb4f34df385d65"
+        },
+        {
+          "file": "How to upgrade TP-Link Wireless 3G4G Router.pdf",
+          "bytes": 313751,
+          "sha256": "fc834a77500e069db5a85455c2e0679d906f184186775410db34dd0303a77e82"
+        },
+        {
+          "file": "TL-MR3020v3_1.9.0_0.9.1_up_boot(260303)_2026-03-03_16.49.19.bin",
+          "bytes": 8126976,
+          "sha256": "030cfe20d9bbed09d162ecbbe2ef4340300a9001b5d6acfbe9940f4235c06439"
+        }
+      ]
+    },
+    {
+      "file": "tl-mr3020-eu-v3.30-1.10.0-260303.zip",
+      "url": "https://static.tp-link.com/upload/firmware/2026/202605/20260514/TL-MR3020_3.3_1.10.0_Build_260303.zip",
+      "resolved_url": "https://static.tp-link.com/upload/firmware/2026/202605/20260514/TL-MR3020_3.3_1.10.0_Build_260303.zip",
+      "retrieved_utc": "2026-11-09T13:18:10.008772+00:00",
+      "content_type": "application/octet-stream",
+      "bytes": 8610198,
+      "sha256": "2e98f8515952e6b948047ed5c47f2f8c3db5ab67d650b99cbf19894bd265e803",
+      "source_page": "https://www.tp-link.com/en/support/download/tl-mr3020/v3.30/",
+      "recovery_status": "Archived official EU V3.30 release; NOT supported by RestoreFactory",
+      "members": [
+        {
+          "file": "TL-MR3020_3.3_1.10.0_Build_260303/GPL License Terms.pdf",
+          "bytes": 245715,
+          "sha256": "5e1b614ad71d46d0b899976e5836663c62957b17ead1985cd9a3752f4df9201b"
+        },
+        {
+          "file": "TL-MR3020_3.3_1.10.0_Build_260303/How to upgrade TP-Link Wireless 3G4G Router.pdf",
+          "bytes": 313751,
+          "sha256": "fc834a77500e069db5a85455c2e0679d906f184186775410db34dd0303a77e82"
+        },
+        {
+          "file": "TL-MR3020_3.3_1.10.0_Build_260303/TL-MR3020v3.3_1.10.0_0.9.1_up_boot(260303)_2026-03-03_17.07.43.bin",
+          "bytes": 8127280,
+          "sha256": "0952f153ec144cd81521996a086c845fac8d0110f8bb372923cdaab76d6e6e82"
+        }
+      ]
     }
   ],
   "unavailable": [
