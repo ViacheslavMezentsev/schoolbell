@@ -12,6 +12,24 @@ function Run-Python([string[]]$Arguments) {
     & $python @Arguments
     if ($LASTEXITCODE -ne 0) { throw "Ошибка этапа Python ($LASTEXITCODE). Подробности выше." }
 }
+function Renew-CableLease($adapter) {
+    # InterfaceIndex selects one adapter; never renew all interfaces or use alias wildcards.
+    $config=@(Get-CimInstance -ClassName Win32_NetworkAdapterConfiguration -Filter "InterfaceIndex = $($adapter.ifIndex)")
+    if ($config.Count -ne 1) {throw 'Не удалось однозначно найти DHCP-адаптер.'}
+    $result=Invoke-CimMethod -InputObject $config[0] -MethodName RenewDHCPLease -OperationTimeoutSec 30
+    if ($result.ReturnValue -ne 0) {throw "DHCP: обновление аренды не выполнено (код $($result.ReturnValue))."}
+}
+function Wait-CableLease($adapter) {
+    for ($attempt=0;$attempt -lt 30;$attempt++) {
+        $lease=@(Get-NetIPAddress -InterfaceIndex $adapter.ifIndex -AddressFamily IPv4 -ErrorAction SilentlyContinue | Where-Object {
+            $_.PrefixOrigin -eq 'Dhcp' -and $_.AddressState -eq 'Preferred' -and
+            $_.IPAddress -notlike '169.254.*' -and $_.IPAddress -ne '0.0.0.0'
+        })
+        if ($lease.Count) {Write-Host "DHCP восстановлен: $($adapter.Name), $($lease[0].IPAddress)."; return}
+        Start-Sleep -Seconds 1
+    }
+    throw 'DHCP-адрес не получен за 30 секунд.'
+}
 function Restore-Cable($saved) {
     $adapter=Get-NetAdapter | Where-Object { [string]$_.InterfaceGuid -eq $saved.guid }
     if (!$adapter) {throw 'Подключите исходный Ethernet-адаптер и повторите -RestoreNetwork.'}
@@ -20,6 +38,12 @@ function Restore-Cable($saved) {
         Get-NetIPAddress -AddressFamily IPv4 -InterfaceIndex $adapter.ifIndex -IPAddress $ip -ErrorAction SilentlyContinue | Remove-NetIPAddress -Confirm:$false
     }
     Set-NetIPInterface -InterfaceIndex $adapter.ifIndex -AddressFamily IPv4 -Dhcp Enabled
+    try {
+        Renew-CableLease $adapter
+        Wait-CableLease $adapter
+    } catch {
+        throw "Не удалось восстановить DHCP: $($_.Exception.Message) Проверьте кабель и загрузку роутера, затем запустите Setup.cmd -RestoreNetwork от имени администратора. Состояние сохранено."
+    }
     Remove-Item -LiteralPath $state
 }
 function Assert-CableRoute($index,$ip,$target) {
@@ -180,5 +204,5 @@ try {
     }
     if (!$ready) {throw 'SSH не появился. Проверьте загрузку. После загрузки OpenWrt повторите с -InstallOnly, без Reset.'}
     Run-Python @('install.py')
-    Write-Host 'Готово. После восстановления DHCP откройте http://192.168.1.1/cgi-bin/luci/admin/schoolbell'
 } finally {Restore-Cable $saved}
+Write-Host 'Готово. DHCP восстановлен. Откройте http://192.168.1.1/cgi-bin/luci/admin/schoolbell'
