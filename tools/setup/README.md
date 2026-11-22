@@ -12,6 +12,8 @@
 
 ## Запуск
 
+`Setup.cmd` сначала выбирает PowerShell 7 из стандартного каталога установки, затем ищет `pwsh.exe` в PATH. Если PowerShell 7 отсутствует, явно сообщает о запуске Windows PowerShell 5.1. Выбранный путь отображается перед запуском; параметры передаются мастеру, его код завершения сохраняется после паузы.
+
 1. Полностью распакуйте ZIP на локальный диск. В терминале из папки комплекта выполните `Setup.cmd -CheckOnly`. Для установки нужен стандартный компонент Windows «Клиент OpenSSH». Подготовьте его заранее. Образ OpenWrt, 35 IPK и Python входят в ZIP.
 2. Отключите роутер от питания и от обычной сети. Соедините его кабелем с выделенным физическим Ethernet-адаптером ПК. Требуется автоматическая настройка IPv4 (DHCP) без ручных адресов. Устраните конфликтующие прямые или более узкие маршруты; VPN без такого конфликта можно оставить включённым.
 3. Запустите **Setup.cmd от имени администратора**, выберите номер Ethernet-адаптера и сверьте регион и ревизию с наклейкой. После **READY** зажмите Reset и подайте питание. После начала передачи отпустите кнопку. Не прерывайте питание при записи и перезагрузке.
@@ -77,6 +79,8 @@ ZIP и SHA-256 создаются в dist/. Для локальной приём
 
 ## English
 
+`Setup.cmd` prefers PowerShell 7 from its standard installation directory, then looks for `pwsh.exe` in PATH. If unavailable, it explicitly reports fallback to Windows PowerShell 5.1. It displays the selected executable, forwards arguments and preserves the wizard exit code across the final pause.
+
 Offline setup candidate for a factory TL-MR3020 EU v3.30 on Windows 11 x64. Extract the ZIP to a local drive. Use Setup.cmd -CheckOnly for a local check, then run Setup.cmd as Administrator with the router directly attached to a dedicated DHCP Ethernet adapter. Hold Reset at power-on after READY. Leave power connected until OpenWrt boots. Use -InstallOnly to resume package installation or -RestoreNetwork after interruption. The operator sets a root password and automatic bells remain off. Installation through Setup.ps1 in PowerShell 7 was verified on a spare EU v3.30 router; the Setup.cmd launcher remains a separate pending check.
 
 ## Why Reset instead of the TP-Link web form
@@ -105,6 +109,7 @@ Verified on 2026-11-09: both Windows PowerShell 5.1 DryRun paths with mocked inv
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File tests/test-setup-dryrun.ps1
+pwsh.exe -NoProfile -File tests/test-setup-launcher.ps1
 ```
 
 ```sh
@@ -112,6 +117,10 @@ python3 tests/test_setup_firmware.py
 python3 tools/setup/tftp_server.py --self-test
 make all
 ```
+
+09.11.2026: локально проверен именно `Setup.cmd` из заново собранного и распакованного комплекта 5.1.123. В PowerShell 7.6.9 прошли `-CheckOnly`, `-RestoreFactory -CheckOnly`, `-DryRun -InterfaceIndex ...`, `-RestoreFactory -DryRun -InterfaceIndex ...` и `-InstallOnly -DryRun -InterfaceIndex ...`; несовместимые `-DryRun -CheckOnly` вернули код 1. Сетевой инвентарь ПК читался без обращений к роутерам; IP/DHCP, правила firewall мастера и наличие файла состояния остались прежними. CheckOnly использовал только loopback для TFTP-самотеста. Отдельный тест оболочки подтвердил выбор PowerShell 7 через стандартный каталог/PATH, резервный выбор 5.1, параметры, код ошибки 37 и путь с пробелами и `&`. Реальная установка через Setup.cmd остаётся отдельной аппаратной проверкой.
+
+2026-11-09: the actual `Setup.cmd` passed local checks from a rebuilt/extracted 5.1.123 kit under PowerShell 7.6.9: both CheckOnly profiles, install/factory/InstallOnly DryRun with an explicit interface index, and exit 1 for incompatible DryRun/CheckOnly switches. Host IP/DHCP, installer firewall rules and state-file presence were unchanged. No router connections were made; CheckOnly used loopback TFTP only. Separate launcher fixtures verified standard/PATH PowerShell 7 discovery, 5.1 fallback, argument forwarding, exit 37 and paths containing spaces and `&`. Actual installation through Setup.cmd remains pending hardware acceptance.
 
 Фоновый маршрут через шлюз с префиксом /24 или короче не требует отключать VPN. Перед TFTP и SSH мастер проверяет фактический прямой путь от своего временного адреса через выделенный Ethernet; ошибочный путь блокирует передачу. Чужие маршруты не удаляются. / Gateway fallback routes do not require disabling VPN; the actual direct cable route is verified before TFTP/SSH, without deleting other routes.
 
