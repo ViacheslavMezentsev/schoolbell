@@ -65,7 +65,11 @@ for name in ['simulator-ui.js','simulator.css']:shutil.copyfile(root/'site'/name
 text=text.replace('</head>','<link rel="stylesheet" href="./assets/simulator.css"></head>',1)
 text=text.replace('<sup class="header-version">'+version+'</sup>', '<sup class="header-version">'+version+' · <strong class="demo-label">Демо</strong></sup>',1)
 text=text.replace('</head>','<style>.demo-label{font-weight:700;color:var(--warning-text)}</style></head>',1)
-text=text.replace('<nav class="page-tabs"', '<div class="demo-guide-row"><a class="demo-guide" href="./guide.html">Руководство</a><a class="demo-guide" href="./training.html">Обучение</a></div><nav class="page-tabs"',1)
+# Pages-only help actions share a row with diagnostics, before its button.
+marker='<button id="problem-open"'
+assert text.count(marker)==1
+text=text.replace(marker, '<div class="demo-guide-row"><a class="demo-guide" href="./guide.html">Руководство</a><a class="demo-guide" href="./training.html">Обучение</a>'+marker,1)
+text=text.replace('Решить проблему</button></div>', 'Решить проблему</button></div></div>',1)
 text=text.replace('Подготовьте расписания и сохраните их на роутере.','Попробуйте расписания и календарь на тестовых данных.')
 text=text.replace('Инженерная установка','Демонстрация интерфейса').replace('На устройстве · оценка между опросами','Виртуальные часы · выбранная зона').replace('На устройстве</span>','В выбранной зоне</span>').replace('Сохраняется на роутере','Сохраняется в браузере').replace('Настройка сохраняется на роутере и действует для всех его приложений.','Настройка меняет только часовой пояс этой страницы, не устройства или компьютера.')
 text=text.replace('id="router-play" type="submit"','id="router-play" type="submit" disabled').replace('▶ Позвонить на роутере','Устройство не подключено').replace('<p id="router-result" role="status"></p>','<p id="router-result" role="status">Доступен только звук браузера.</p>')

@@ -2057,7 +2057,7 @@
       "source": "scripts/build-site.py",
       "destination": "scripts/build-site.py",
       "source_sha256": "7b581e66a713901cc092b9afcd5ff99155aaaa2bbf8d292dd251a3680f9247b9",
-      "destination_sha256": "29b6e97acf8c29c8734325798dde115c822da4977697b9769473deda3bba3cb8",
+      "destination_sha256": "eeba5ae3d68aa090fcc9eb25ff871a319aba162b8fb2c062a823a8bfb7fd9f4b",
       "changes": "Standalone Pages paths, feedback links, historical notices or explicit storage transfer; 2026-10-31 license delivery: shared artifact notices and verification; owner-requested UI and size-only journal policy (5.1.31, spec 1.77); owner-requested 64 KiB admission, safe unused-media deletion, title correction (1.79); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); schoolbell feedback issue forms and RU/EN guide links (5.1.45); UI consistency review and mobile layout"
     },
     {
@@ -2148,7 +2148,7 @@
       "source": "site/portable.css",
       "destination": "site/portable.css",
       "source_sha256": "7193e28e1c209f633435c8b7728886a92f99a7c27261a8617f4ed94ae228cd2c",
-      "destination_sha256": "c899731e558c9660baef67de0a6072fc0ecf9cf14f146ff42e865f95ee23e3c1",
+      "destination_sha256": "1db020b99e390cc578fffc86e3f4ad79ca095ac3626467ba0238c52746201f65",
       "changes": "none"
     },
     {

@@ -4,6 +4,7 @@
 
 ## Unreleased — DHCP recovery
 
+- Pages: moved Guide and Training links to the left of Troubleshoot in the shared action row.
 - 2026-11-22: actual Setup.cmd installation and authenticated 5.1.123 UI passed. Fixed DHCP recovery with selected-adapter lease renewal, address validation and state retention on failure. Local tests and hardware RestoreNetwork passed without manual lease renewal; the full installation cycle with the fix has not been repeated. IPK version is unchanged.
 
 ## 5.1.123 — 2026-11-09

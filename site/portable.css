@@ -8,8 +8,9 @@
 #portable-result { overflow-wrap: anywhere; }
 @media(max-width:640px) { #portable-names label { grid-template-columns: 1fr; } }
 
-/* Guide is a sibling button, outside the collapsible notice. */
-.demo-guide-row{display:flex;align-items:stretch;gap:12px;margin:12px 0}
+/* Pages help links sit before diagnostics, wrapping on narrow screens. */
+.header-status-row{flex-wrap:wrap}
+.demo-guide-row{display:flex;align-items:stretch;justify-content:flex-end;flex-wrap:wrap;gap:12px;margin-left:auto}
 .demo-guide-row .demo-guide{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;padding:12px 24px;min-height:0;box-sizing:border-box;border:1px solid var(--accent);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;font-weight:700;text-decoration:none}
 .demo-guide:hover{filter:brightness(1.1)}
 .demo-guide:focus-visible{outline:3px solid var(--text);outline-offset:3px}
