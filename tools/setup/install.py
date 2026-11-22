@@ -69,7 +69,8 @@ def install(ssh):
 
     rows = packages()
     # Also identifies the board before any remote write.
-    inventory = remote(CHECK + 'opkg list-installed', capture_output=True, text=True).stdout
+    # Capture inventory only: SSH prompts and errors must remain visible.
+    inventory = remote(CHECK + 'opkg list-installed', stdout=subprocess.PIPE, text=True).stdout
     installed = dict(line.split(' - ', 1) for line in inventory.splitlines() if ' - ' in line)
     marker = '/tmp/schoolbell-setup-5.1.123'
     known = 'test -f ' + marker
@@ -121,6 +122,13 @@ if __name__ == '__main__':
         # Separate host-key database for this installation; bind to the direct cable IP.
         hostfile = Path(os.environ['LOCALAPPDATA'])/'SchoolbellSetup'/'known_hosts'
         hostfile.parent.mkdir(exist_ok=True)
-        install(['ssh.exe','-F','NUL','-b','192.168.1.2','-o','ConnectTimeout=8',
+        try:
+            install(['ssh.exe','-F','NUL','-b','192.168.1.2','-o','ConnectTimeout=8',
                  '-o','HostKeyAlgorithms=+ssh-rsa','-o','StrictHostKeyChecking=ask',
                  '-o','UserKnownHostsFile="'+hostfile.as_posix()+'"','root@192.168.1.1'])
+        except subprocess.CalledProcessError as error:
+            print(f'SSH / remote command failed (exit {error.returncode}). See the diagnostic above.', file=sys.stderr)
+            if error.returncode == 255:
+                print('После перепрошивки ключ SSH может измениться. Сверьте устройство и ключ; '
+                      'повторная прошивка не требуется. Продолжение: Setup.cmd -InstallOnly.', file=sys.stderr)
+            sys.exit(1)

@@ -19,8 +19,8 @@ function Renew-CableLease($adapter) {
     $result=Invoke-CimMethod -InputObject $config[0] -MethodName RenewDHCPLease -OperationTimeoutSec 30
     if ($result.ReturnValue -ne 0) {throw "DHCP: обновление аренды не выполнено (код $($result.ReturnValue))."}
 }
-function Wait-CableLease($adapter) {
-    for ($attempt=0;$attempt -lt 30;$attempt++) {
+function Wait-CableLease($adapter, [int]$Attempts=30) {
+    for ($attempt=0;$attempt -lt $Attempts;$attempt++) {
         $lease=@(Get-NetIPAddress -InterfaceIndex $adapter.ifIndex -AddressFamily IPv4 -ErrorAction SilentlyContinue | Where-Object {
             $_.PrefixOrigin -eq 'Dhcp' -and $_.AddressState -eq 'Preferred' -and
             $_.IPAddress -notlike '169.254.*' -and $_.IPAddress -ne '0.0.0.0'
@@ -28,7 +28,20 @@ function Wait-CableLease($adapter) {
         if ($lease.Count) {Write-Host "DHCP восстановлен: $($adapter.Name), $($lease[0].IPAddress)."; return}
         Start-Sleep -Seconds 1
     }
-    throw 'DHCP-адрес не получен за 30 секунд.'
+    throw "DHCP-адрес не получен за $Attempts секунд."
+}
+function Restore-CableLease($adapter) {
+    # A recovery transfer finishes before the router boots its DHCP server.
+    # Six bounded renewals: at most about four minutes including address polling.
+    $lastError='DHCP пока недоступен.'
+    for ($attempt=1;$attempt -le 6;$attempt++) {
+        Write-Host "Ожидание DHCP после загрузки роутера: попытка $attempt из 6. Питание не отключайте."
+        try {Renew-CableLease $adapter} catch {$lastError=$_.Exception.Message}
+        # A timed-out CIM call may still have triggered DHCP; inspect actual state.
+        try {Wait-CableLease $adapter 5; return} catch {$lastError=$_.Exception.Message}
+        if ($attempt -lt 6) {Start-Sleep -Seconds 5}
+    }
+    throw "Роутер не выдал DHCP-адрес после 6 попыток. $lastError"
 }
 function Restore-Cable($saved) {
     $adapter=Get-NetAdapter | Where-Object { [string]$_.InterfaceGuid -eq $saved.guid }
@@ -39,8 +52,7 @@ function Restore-Cable($saved) {
     }
     Set-NetIPInterface -InterfaceIndex $adapter.ifIndex -AddressFamily IPv4 -Dhcp Enabled
     try {
-        Renew-CableLease $adapter
-        Wait-CableLease $adapter
+        Restore-CableLease $adapter
     } catch {
         throw "Не удалось восстановить DHCP: $($_.Exception.Message) Проверьте кабель и загрузку роутера, затем запустите Setup.cmd -RestoreNetwork от имени администратора. Состояние сохранено."
     }
