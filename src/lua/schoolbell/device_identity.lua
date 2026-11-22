@@ -21,9 +21,21 @@ function M.read(server_addr,host)
  result.board_name=board
  local ok=board~=nil
  if ok and (board=='tplink,tl-mr3020-v3' or board=='tplink_tl-mr3020-v3')then
-  local known,position=pcall(get,'/tmp/switch_position',16)
-  local names={['3g']='3G/4G',wisp='WISP',ap='AP'}
-  if known and names[position]then result.switch_state='ready';result.position=names[position]end
+  -- MR3020 v3: passive GPIO snapshot; no dependency on slide-switch hotplug.
+  local ok_gpio,gpio=pcall(get,'/sys/kernel/debug/gpio',16384)
+  if ok_gpio and type(gpio)=='string' and #gpio<=16384 then
+   local states={};local invalid=false
+   for line in gpio:gmatch('[^\r\n]+')do
+    local pin,name,level=line:match('^%s*gpio%-(%d+)%s+%([^|]*|%s*(sw[12])%s*%)%s+in%s+(%a+)%s*$')
+    if pin=='41' or pin=='42' then
+     if states[pin] or name~=(pin=='41' and 'sw1' or 'sw2') or (level~='hi' and level~='lo')then invalid=true end
+     states[pin]=level
+    end
+   end
+   local names={lo_hi='3G/4G',hi_lo='WISP',hi_hi='AP'}
+   local position=not invalid and states['41'] and states['42'] and names[states['41']..'_'..states['42']]
+   if position then result.switch_state='ready';result.position=position end
+  end
  end
  local net,interfaces=pcall(function()return (host.interfaces or require('nixio').getifaddrs)()end)
  if net and type(interfaces)=='table' then
