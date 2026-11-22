@@ -2,6 +2,10 @@
 
 [Русский](CHANGELOG.md)
 
+## Unreleased — DHCP recovery
+
+- 2026-11-22: actual Setup.cmd installation and authenticated 5.1.123 UI passed. Fixed DHCP recovery with selected-adapter lease renewal, address validation and state retention on failure. Local tests and hardware RestoreNetwork passed without manual lease renewal; the full installation cycle with the fix has not been repeated. IPK version is unchanged.
+
 ## 5.1.123 — 2026-11-09
 
 - Grouped resource text rows above the meters: model, Internet/NTP, switch/IP. Model uses a colon and an explicit no-data label.

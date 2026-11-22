@@ -271,3 +271,19 @@ This covers RestoreFactory and network cleanup in TC-05. OEM → OEM, Setup.cmd/
 DryRun and image SHA256 `2b0d85b1c7f5e6c65930e117ada0afe60a29a35882ecac65610191876b6b0665` passed. The owner powered on with Reset after READY. At 17:55:52 (UTC+5), all 8,126,464 bytes were acknowledged, ending at ACK15873. The wizard restored DHCP and removed temporary addresses, firewall rule, TFTP listeners and state file. After a temporary link-local address, a DHCP lease was obtained; by 17:57:30 stock HTTP200 and matching device identity confirmed boot.
 
 The owner confirmed login with the previous password without resetting and reported **1.8.0 0.9.1 v0001.0 Build 250625 Rel.56805n**, Hardware **TL-MR3020 v3 00000003**. The router remains on OEM; the working device was not accessed. This extends TC-05: the existing OEM does not prevent recovery with the verified image. Other firmware/revisions, full OEM functionality and byte-for-byte settings preservation are not claimed. Private evidence: `tests/manual/128-oem-to-oem`.
+
+## 2026-11-22 — actual installation through Setup.cmd
+
+A separate TL-MR3020 EU Ver. 3.30 passed OEM Build250625 → OpenWrt 19.07.9 → Schoolbell 5.1.123. The kit was built from main `721fbcf`; Setup.cmd selected installed PowerShell 7.6.9. CheckOnly and DryRun passed beforehand. Historical configuration, inventory and seven MTD hashes were verified. The owner confirmed saving a fresh OEM export; its integrity was not independently verified.
+
+After READY the owner performed the Reset/power sequence. All 8,126,464 bytes and final ACK15873 were acknowledged. The installer verified packages and disabled automation; the owner set the root password. Setup.cmd exited 0. Authenticated UI showed version 5.1.123, TL-MR3020 v3, automation off, no applied plan and 2.48 MiB free flash. The working device was untouched; PC Internet/VPN remained enabled.
+
+**Network qualification:** temporary addresses, firewall rule and network.json were removed and DHCP enabled, but Windows retained APIPA. An additional lease renewal on the dedicated Ethernet restored access. Automatic lease acquisition therefore did not pass this run. The 2026-11-22 fix explicitly renews the selected adapter lease, checks DHCP/Preferred IPv4 and rejects APIPA; failures retain state for Setup.cmd -RestoreNetwork. The fix has only been tested locally with mocked network operations and has not been deployed.
+
+Fresh-install clocks showed 2022-02-16 / UTC; Internet/NTP were unconfirmed, audio absent and stored volume 100%. Clocks, sound and automation were unchanged. This confirms installation/login, not bell readiness. Local evidence: tests/manual/131-setup-cmd-hardware (not committed).
+
+## 2026-11-22 — hardware check of fixed DHCP recovery
+
+The shared cleanup ran through actual Setup.cmd -RestoreNetwork / PowerShell 7.6.9 on the dedicated Ethernet of the spare router already running 5.1.123. Adapter addresses were recorded and the installer temporary static address/DHCP-disabled state was reproduced. The wizard renewed the lease automatically, obtained a preferred DHCP IPv4, removed network.json and exited 0. No manual ipconfig /renew was used. Other adapter addresses were unchanged. Bound HTTP returned the LuCI login form (403, expected authentication); a browser confirmed the page opened.
+
+PASS for shared recovery on a running device. The full flash/install cycle was not repeated; OEM boot delays and end-to-end installation with the fix remain outside this check. No reboot, package, clock, sound or automation changes; the working bench was untouched. Local evidence: tests/manual/132-dhcp-recovery (not committed).
