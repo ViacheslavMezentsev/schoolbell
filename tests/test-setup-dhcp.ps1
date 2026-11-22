@@ -56,4 +56,3 @@ foreach($case in 'success','return-error','timeout','apipa','no-lease','manual',
     }
     Write-Output "PASS DHCP $case"
 }
-
