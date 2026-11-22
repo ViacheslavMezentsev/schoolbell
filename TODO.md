@@ -1,6 +1,6 @@
 # Задачи проекта / Project tasks
 
-Актуализировано 22.11.2026 по результатам до 5.1.123 включительно. Выполненное отделено от оставшихся проверок. Старые версии в подтверждениях обозначают дату результата, а не версию для следующей проверки. Новые аппаратные проверки выполнять на согласованной текущей версии и отдельно разрешённом устройстве. / Reviewed on 2026-11-22 through 5.1.123. Historical results are not new hardware acceptance; use an agreed current version and authorized target for remaining checks.
+Актуализировано 23.11.2026 по результатам до 5.1.123 включительно. Выполненное отделено от оставшихся проверок. Старые версии в подтверждениях обозначают дату результата, а не версию для следующей проверки. Новые аппаратные проверки выполнять на согласованной текущей версии и отдельно разрешённом устройстве. / Reviewed on 2026-11-23 through 5.1.123. Historical results are not new hardware acceptance; use an agreed current version and authorized target for remaining checks.
 
 ## Осталось: надёжность / Remaining: reliability
 
@@ -27,6 +27,9 @@
 
 ## Выполнено: Setup.cmd / Completed: Setup.cmd
 
+- [x] 23.11.2026: цикл RestoreFactory → OpenWrt → 5.1.123 доведён до входа в UI с выключенными автозвонками. После OEM понадобился RestoreNetwork; после смены SSH-ключа — сверка устройства, сохранение старой базы и InstallOnly. Последний запуск завершился кодом 0, DHCP восстановился автоматически с первой попытки. Это успех конечного состояния, а не непрерывного цикла. [RU](docs/acceptance/ACCEPTANCE_RUN.md) · [EN](docs/acceptance/ACCEPTANCE_RUN.en.md). / Final state and login passed, with automation off and automatic DHCP after InstallOnly; OEM cleanup and changed-key recovery required intervention.
+- [x] Добавлены ограниченные повторные попытки DHCP и видимая диагностика SSH; 11 локальных DHCP-сценариев на PowerShell 5.1/7, DryRun, семь Python-тестов и CheckOnly пройдены. / Added bounded DHCP retries and visible SSH diagnostics; local checks passed.
+
 - [x] 22.11.2026: исправленный Setup.cmd -RestoreNetwork восстановил DHCP после временного адреса установщика без ручного обновления аренды; код 0, файл состояния удалён, страница LuCI открылась, адреса остальных адаптеров не изменились. / Fixed RestoreNetwork acquired DHCP automatically, exited 0, removed state and restored LuCI access without changing other adapters.
 
 - [x] 22.11.2026: реальная установка OEM → OpenWrt 19.07.9 → Школьник 5.1.123 через Setup.cmd / PowerShell 7.6.9 на отдельном EU v3.30. Код завершения 0, вход в LuCI и выключенные автозвонки подтверждены. DHCP включился, но адрес получен только после дополнительного обновления аренды; этот дефект отделён от успешной установки. ПК не отключался от Интернета. [RU](docs/acceptance/ACCEPTANCE_RUN.md) · [EN](docs/acceptance/ACCEPTANCE_RUN.en.md). / Actual Setup.cmd installation and authenticated UI access passed, with automation off. DHCP was enabled but required an extra renewal; network recovery remains a separate follow-up.
@@ -38,8 +41,10 @@
 
 ## Осталось: установка, выпуск и завершение миграции / Remaining: installation and release
 
+- [ ] Проверить UI и свежую установку комплекта 5.1.124: зависимость от slide-switch и /tmp/switch_position устранена в исходниках, все три физических положения подтверждены кандидатом из RAM на отдельном EU v3.30 23.11.2026. На отдельном стенде пакет обновлён до 5.1.124: AP, выключенный автомат и неизменный звук подтверждены; Владелец подтвердил AP → WISP → 3G/4G → AP в UI без обновления страницы; остаётся свежая установка полного комплекта. / Verify fresh installation of kit 5.1.124: the independent reader passed all three positions in RAM; the separate bench was upgraded with automation off and sound settings unchanged; the owner confirmed all UI transitions without refreshing.
 
-- [ ] При следующей полной установке подтвердить исправленный DHCP после прошивки/пакетов. 22.11.2026 общий этап Setup.cmd -RestoreNetwork аппаратно прошёл на уже работающем отдельном роутере: адрес получен автоматически, страница входа доступна. Полный цикл с исправлением повторно не выполнялся. / Confirm fixed DHCP during the next full flash/install cycle. Shared RestoreNetwork cleanup passed on a running spare router with automatic lease and login-page access; the complete cycle has not been repeated.
+
+- [ ] Повторить непрерывный цикл RestoreFactory → установка через Setup.cmd после исправлений: отдельно подтвердить позднюю готовность DHCP в OEM и понятное восстановление после смены SSH-ключа. 23.11.2026 установка завершена через InstallOnly, DHCP после OpenWrt и InstallOnly получен автоматически; исходный тайм-аут OEM и ручная замена записи ключа не закрыты как бесшовный сценарий. / Repeat the uninterrupted cycle, including late OEM DHCP readiness and clear changed-key recovery; final installation passed with interventions on 2026-11-23.
 - [ ] Проверить реальный откат версии пакета с сохранением данных отдельно. Новая установка 5.1.123 подтверждена; наличие пакета отката не является выполненным откатом. / Verify an actual data-preserving package downgrade; fresh installation passed, but a rollback package alone is not a rollback test.
 - [ ] Актуализировать команды и отдельный протокол аппаратной приёмки под окончательные артефакты. / Update commands and the hardware acceptance protocol for final artifacts.
 - [ ] L2/L4: завершить материалы зависимостей, разобраться с правами на аудио и проверить окончательный релизный набор. Лицензирование ранее отложено владельцем; решение об MIT не распространяется автоматически на штатные записи. [Аудит / Audit](docs/LICENSE_AUDIT.md). / Complete dependency materials, audio rights and final release review; MIT does not automatically cover bundled recordings.

@@ -2,7 +2,13 @@
 
 [Русский](CHANGELOG.md)
 
+## 5.1.124 — 2026-11-23
+
+- MR3020 v3 switch position is read directly from kernel GPIO inputs, without slide-switch or /tmp/switch_position on fresh installation. No network or GPIO writes. The RAM-only candidate on a separate EU v3.30 correctly detected AP, WISP, 3G/4G and return to AP; 5.1.124 was installed on the separate bench: AP detected, automation off and sound settings retained; the owner confirmed all UI transitions without refreshing the page.
+
 ## Unreleased — DHCP recovery
+
+- 2026-11-23: added bounded DHCP retries during router boot and visible SSH errors. RestoreFactory → OpenWrt → 5.1.123 completed with separate RestoreNetwork and InstallOnly recovery; automatic DHCP, login and automation off were confirmed at completion. An uninterrupted cycle remains open; the IPK version is unchanged.
 
 - Removed the extra EOF blank line in the DHCP test that caused changes to reject the push range into main; CI and DHCP behavior is unchanged.
 - Pages: moved Guide and Training links to the left of Troubleshoot in the shared action row.
