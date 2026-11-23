@@ -2,6 +2,19 @@
 
 [Русский](CHANGELOG.md)
 
+## 5.1.127 — 2026-11-23
+
+- Unified 48 px action grid spacing; narrow list navigation keeps all four arrows together.
+- Shared keyboard focus outlines and selected journal filter contrast in both themes.
+
+## 5.1.126 — 2026-11-23
+
+- Hide save actions for a clean draft; pending input and reconciliation retain actions, and initial read failure retains retry. Compact draft/preview headings and collapsible media replacement/deletion help, shared by device and Pages.
+
+## 5.1.125 — 2026-11-23
+
+- Clarified timezone, reset and backup scope. Updated shared device/Pages help for Internet/NTP, model and physical switch, journal filters/copy/clear and manual audio confirmation. Removed repetition and the future RTC note; behavior is unchanged.
+
 ## 5.1.124 — 2026-11-23
 
 - MR3020 v3 switch position is read directly from kernel GPIO inputs, without slide-switch or /tmp/switch_position on fresh installation. No network or GPIO writes. The RAM-only candidate on a separate EU v3.30 correctly detected AP, WISP, 3G/4G and return to AP; 5.1.124 was installed on the separate bench: AP detected, automation off and sound settings retained; the owner confirmed all UI transitions without refreshing the page.

@@ -1,6 +1,6 @@
 # Задачи проекта / Project tasks
 
-Актуализировано 23.11.2026 по результатам до 5.1.123 включительно. Выполненное отделено от оставшихся проверок. Старые версии в подтверждениях обозначают дату результата, а не версию для следующей проверки. Новые аппаратные проверки выполнять на согласованной текущей версии и отдельно разрешённом устройстве. / Reviewed on 2026-11-23 through 5.1.123. Historical results are not new hardware acceptance; use an agreed current version and authorized target for remaining checks.
+Актуализировано 23.11.2026 по результатам до 5.1.127 включительно. Выполненное отделено от оставшихся проверок. Старые версии в подтверждениях обозначают дату результата, а не версию для следующей проверки. Новые аппаратные проверки выполнять на согласованной текущей версии и отдельно разрешённом устройстве. / Reviewed on 2026-11-23 through 5.1.127. Historical results are not new hardware acceptance; use an agreed current version and authorized target for remaining checks.
 
 ## Осталось: надёжность / Remaining: reliability
 
@@ -19,6 +19,11 @@
 - [ ] Завершить TC-195: сохранность встроенных цветов/ID при импорте и восстановлении, темы и остальные шаги полного сценария. Внешний вид и порядок палитры подтверждены. / Complete palette persistence and remaining TC-195 cases; appearance and ordering are approved.
 
 ## Осталось: интерфейс и Pages / Remaining: UI and Pages
+
+- [x] 5.1.126: условная панель сохранения с сохранением отмены/сверки и повтора чтения, компактные заголовки, сворачиваемая справка медиатеки. make all пройден; на стенде проверены переходы вкладок, появление панели при временной правке и скрытие после отмены без сохранения. Автозвонки выключены, громкость сохранена. / Conditional save actions with cancellation/reconciliation/read recovery, compact headings and collapsible media help.
+
+- [x] 5.1.125: обновлены общие пояснения и Шпаргалка устройства/Pages без изменения поведения. make all пройден; 5.1.125 установлена на рабочий стенд, тексты проверены в браузере, автозвонки выключены и громкость сохранена. Pages собраны локально, публикация не выполнялась. / Updated shared UI explanations and help without behavior changes. make all passed; working bench upgraded and browser text checked with automation off and volume retained. Pages built locally, not published.
+- [x] Третий этап ревью 5.1.127: сетка кнопок, листание, обе темы и узкий экран проверены в Pages и на устройстве. / Third review stage: button grid, pagination, both themes and narrow viewport checked in Pages and on device.
 
 
 - [ ] Подтвердить на реальном телефоне панель сохранения и отсутствие горизонтального выхода страницы за экран. / Confirm the save bar and absence of horizontal overflow on a real phone.
@@ -129,3 +134,8 @@
 - [x] 09.11.2026: установлена 5.1.121, проверены 86 файлов, резервная копия и сохранность настроек. Повторный обрыв 10:08–10:26: 21 снимок без ложного synced, метка NTP неизменна; Интернет восстановился. Автомат выключен, громкость 50 %, планы/журнал/карта сохранены. Свежий stratum и восстановление подтверждения не наблюдались — TC-234 остаётся частичным. / Verified upgrade and offline regression without false confirmation; full fresh-confirmation recovery remains untested.
 
 - [x] 5.1.119: добавлена строка Интернет/NTP в Ресурсы, фоновая ограниченная проба, кэш RAM, независимое наблюдение NTP, отключение/адрес проверки в Интерфейсе; общие исходники Pages без настоящих проб. ТЗ 1.119, TC-234. На стенде подтверждены доступность Интернета, сохранение переключателя и штатное событие NTP 08.11.2026: кэш и браузер показывают синхронизацию, служба времени не перезапускалась. / Added independent Internet/NTP resources, a bounded cached background probe, Interface settings and a shared Pages UI without real probes. A native NTP event was observed on 2026-11-08; cache and browser confirm synchronization without restarting the time service.
+
+### UI 5.1.127
+
+- [x] Согласовать сетку действий с кнопками 48 × 48, сохранить группу листания на узком экране и единый фокус в обеих темах.
+- [x] Проверка 5.1.127: `make all`; Pages и устройство, обе темы, вкладки при ширине 320/390/1280 CSS px. Переполнения страницы нет; листание и кнопки 48 × 48 проверены на устройстве. Автозвонки выключены, громкость сохранена. Это проверка браузерной компоновки, не испытание на физических телефонах.
