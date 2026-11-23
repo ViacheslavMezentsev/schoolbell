@@ -4,6 +4,7 @@
 
 ## Unreleased — setup GUI prototype
 
+- GUI: added an initial existing-installation upgrade mode with device/backup checks, SSH askpass and separate result verification. The 5.1.124 → 5.1.127 upgrade passed on a separate device with automation off and settings preserved; password entry is inline and the log scrolls to the result. Firmware routes remain simulated.
 - Shared prototype state machine: cancel/close confirmation, retry without restart, stale-event protection and explicit result verification.
 - Added guided/expert modes, equipment-first preparation with USB–Ethernet, combined Schoolbell installation and stepwise Reset guidance.
 - Setup wizard: separate OpenWrt, package and OEM routes, EU v3.30 WPS/RESET photo, task-specific hints, failures and results.

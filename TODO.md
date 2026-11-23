@@ -144,7 +144,7 @@
 
 - [x] Первый QML/C++-макет и статический Windows EXE; исправлена внешняя зависимость HarfBuzz, запуск с очищенным PATH подтверждён. / Initial prototype and static EXE; HarfBuzz dependency fixed, clean-PATH launch verified.
 - [x] Раздельные маршруты OpenWrt / пакеты / OEM, собственные подсказки и фото EU v3.30 с указателем Reset; модель проверена локально. / Separate routes and hints, EU v3.30 Reset photo; local model tests.
-- [ ] Чистая VM, автоматизация нативных GUI-взаимодействий и аудит лицензий перед распространением. Реальная установка не подключена. / Clean VM, native GUI interaction automation and distribution license audit. No real backend.
+- [ ] Чистая VM, автоматизация нативных GUI-взаимодействий и аудит лицензий перед распространением. Первый реальный режим обновления проверен ниже; остальные сценарии ещё не подключены. / Clean VM, native GUI interaction automation and distribution license audit. The initial real upgrade is verified below; other backends remain pending.
 - [x] Макет GUI: перенесены цвета Школьника, обе темы и системный режим; выбор сохраняется через Qt Settings. Статический EXE собран, сторонних DLL в импортах нет. / Shared colors and persistent system/light/dark themes; static EXE built without third-party DLL imports.
 
 - [x] 23.11.2026: устранена отсутствующая зависимость Lua 5.1 в WSL; полный `make all` для текущих изменений пройден (runtime, UI, IPK, Pages). Lua требуется тестам Школьника, не GUI мастера. Стенды не использовались. / Installed missing WSL Lua 5.1 dependencies; full make all passed for the current changes. Lua is a Schoolbell test dependency, not a GUI runtime dependency. No devices accessed.
@@ -153,3 +153,6 @@
 - [ ] Проверить понятность простого режима с пользователем без опыта прошивки, без устных подсказок. / Usability-test guided mode with a first-time user without verbal coaching.
 
 - [x] Общая модель переходов GUI и тестов: подтверждения, отмена/закрытие, повтор без новой записи, защита от старых событий и отдельная итоговая проверка. Тесты модели включены в make all. / Shared UI/test state machine covers confirmations, cancel/close, retry without restart, stale events and a separate verification gate; included in make all.
+
+- [x] 24.11.2026: через GUI на отдельном MR3020 v3 выполнено обновление 5.1.124 → 5.1.127 поверх OpenWrt 19.07.9. BACKUP VERIFIED и UPGRADE VERIFIED получены; SHA256 копии/отката сверены, автомат выключен, звук/черновик/ревизия активного плана сохранены, службы работают. Пароль введён в форме без всплывающих окон; результат виден после автопрокрутки. / GUI upgrade passed on a separate device with verified backup, automation off and sound/plan preserved; inline password and visible result verified.
+- [ ] GUI: новая установка с зависимостями, firmware backend, автоматический выбор адаптера, восстановление после реального обрыва записи и последующие независимые сеансы обновления. Первый пилот ограничен переходом 5.1.124 → 5.1.127 и известным SSH-ключом; это не приёмка всего установщика. / Fresh dependencies, firmware, adapter discovery, actual interrupted-write recovery and subsequent independent upgrade sessions remain pending.
