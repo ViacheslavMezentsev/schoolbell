@@ -6,7 +6,7 @@ import "Flow.js" as Flow
 ApplicationWindow {
  id: app
  visible: true; width: 1060; height: 740; minimumWidth: 900; minimumHeight: 680
- title: "Мастер установки — макет"; color: theme.bg
+ title: realMode ? "Мастер установки — реальные пакеты" : "Мастер установки — макет"; color: theme.bg
  font.family: "Segoe UI"; font.pixelSize: 15
  Settings { id: preferences; category: "Appearance"; property string themeMode: "system" }
  Theme { id: theme; mode: preferences.themeMode }
@@ -45,6 +45,7 @@ ApplicationWindow {
    background: Rectangle { color: theme.panel; border.color: theme.border; radius: 7 }
   }
  }
+ property bool realMode: false
  property var state: Flow.initial(false, 0)
  readonly property bool expert: state.expert
  readonly property int task: state.task
@@ -66,6 +67,7 @@ ApplicationWindow {
   if(state.closed) Qt.quit();
  }
  onClosing: function(close) {
+  if(realBackend.busy) {close.accepted=false;return;}
   close.accepted=state.closed;
   if(!state.closed) dispatch({type:"request",action:"close"});
  }
@@ -80,7 +82,8 @@ ApplicationWindow {
     Label { text: "OpenWrt · пакеты · заводская прошивка"; color: theme.muted }
    }
    Item {Layout.fillWidth:true}
-   ChoiceBox {implicitWidth:180; model:["Простой режим","Режим эксперта"]; currentIndex:app.expert?1:0; enabled:app.step===-2
+   ActionButton {text:app.realMode ? "К макету" : "Реальная установка";enabled:!realBackend.busy;onClicked:app.realMode=!app.realMode}
+   ChoiceBox {visible:!app.realMode;implicitWidth:180; model:["Простой режим","Режим эксперта"]; currentIndex:app.expert?1:0; enabled:app.step===-2
     onActivated:app.dispatch({type:"mode",value:currentIndex===1})
    }
    ActionButton {
@@ -90,15 +93,16 @@ ApplicationWindow {
     ToolTip.visible:hovered; ToolTip.text:"Тема: " + app.themeLabel
     onClicked: preferences.themeMode=preferences.themeMode==="system"?"dark":preferences.themeMode==="dark"?"light":"system"
    }
-   Label {text:"МАКЕТ"; color:theme.warning; font.bold:true; padding:12; background:Rectangle{color:theme.soft;radius:8}}
+   Label {text:app.realMode?"УСТРОЙСТВО":"МАКЕТ"; color:theme.warning; font.bold:true; padding:12; background:Rectangle{color:theme.soft;radius:8}}
   }
-  Label {text:"Все действия ниже — имитация. Роутер подключать и нажимать его кнопки не нужно."; color:theme.muted}
-  RowLayout {
+  Label {visible:!app.realMode;text:"Все действия ниже — имитация. Роутер подключать и нажимать его кнопки не нужно."; color:theme.muted}
+  RowLayout {visible:!app.realMode
    Label {text:app.step===-2 ? "Начните с подготовки" : app.step<0 ? "Что вы хотите сделать?" : app.route.name; color:theme.accent; font.bold:true}
    Item {Layout.fillWidth:true}
    Label {text:app.step===-2 ? "Оборудование · первый шаг" : app.step<0 ? "" : "Шаг "+(app.step+1)+" из "+app.route.steps.length; color:theme.muted}
   }
-  Rectangle {
+  RealPane {visible:app.realMode;Layout.fillWidth:true;Layout.fillHeight:true;colors:theme}
+  Rectangle {visible:!app.realMode
    Layout.fillWidth:true; Layout.fillHeight:true; color:theme.panel; border.color:theme.border; radius:14
    ColumnLayout {anchors.fill:parent; anchors.margins:20; spacing:12
     Label {text:app.page.title; font.pixelSize:25; font.bold:true}
@@ -141,7 +145,7 @@ ApplicationWindow {
     }
    }
   }
-  RowLayout {
+  RowLayout {visible:!app.realMode
    Label {text:"Проверка макета";color:theme.muted}
    ChoiceBox {id:scenario; Layout.fillWidth:true; currentIndex:app.state.scenario; onActivated:app.dispatch({type:"scenario",value:currentIndex}); enabled:!app.executing && app.page.id!=="result"; model:app.task===1 ? ["Успешная установка","Нет кабеля","Ошибка SSH","Ошибка установки пакетов","Не пройдена итоговая проверка"] : app.task===2 ? ["Успешный возврат","Нет кабеля","Тайм-аут загрузки","Не восстановлен DHCP","Не пройдена итоговая проверка"] : ["Успешная установка","Кабель не подключён","Роутер долго включается","Нет адреса компьютера","Не пройдена итоговая проверка"]}
    ActionButton {text:"Подробности";onClicked:log.open()}
@@ -149,15 +153,15 @@ ApplicationWindow {
   }
  }
  Dialog {
-  id:interruption; anchors.centerIn:parent; width:620; modal:true; title:app.state.pending==="close" ? "Закрытие макета" : "Отмена сценария"
+  id:interruption; anchors.centerIn:parent; width:620; modal:true; title:app.state.pending==="close" ? (app.realMode ? "Закрытие мастера" : "Закрытие макета") : "Отмена сценария"
   closePolicy:Popup.NoAutoClose
   onRejected:app.dispatch({type:"dismiss"})
-  contentItem:Label {text:Flow.interruptionText(app.state); wrapMode:Text.WordWrap; color:theme.text}
+  contentItem:Label {text:app.realMode ? "Закрыть мастер? Резервная копия и журнал этапа останутся на ПК. Если результат установки не подтверждён, при следующем запуске сначала выполните проверку." : Flow.interruptionText(app.state); wrapMode:Text.WordWrap; color:theme.text}
   background:Rectangle {color:theme.panel; border.color:theme.border; radius:10}
   footer:RowLayout {
    ActionButton {text:"Продолжить сценарий"; onClicked:{app.dispatch({type:"dismiss"});interruption.close()}}
    Item {Layout.fillWidth:true}
-   ActionButton {text:app.state.pending==="close" ? "Закрыть макет" : "Начать заново"; onClicked:{app.dispatch({type:"accept"});interruption.close()}}
+   ActionButton {text:app.state.pending==="close" ? (app.realMode ? "Закрыть мастер" : "Закрыть макет") : "Начать заново"; onClicked:{app.dispatch({type:"accept"});interruption.close()}}
   }
  }
  Dialog {id:log; anchors.centerIn:parent; width:650; title:"Журнал имитации"; standardButtons:Dialog.Close; TextArea{width:600;text:app.report;readOnly:true;wrapMode:Text.Wrap}}

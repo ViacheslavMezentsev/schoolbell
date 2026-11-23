@@ -1,0 +1,150 @@
+"""Windows GUI package-upgrade worker. No firmware/network configuration operations."""
+import argparse, hashlib, json, os, re, subprocess, sys, tarfile, time
+from pathlib import Path
+
+CHECK = """set -eu
+. /etc/openwrt_release
+test "$(id -u)" = 0
+test "$(cat /tmp/sysinfo/board_name)" = 'tplink,tl-mr3020-v3'
+test "$DISTRIB_RELEASE:$DISTRIB_TARGET:$DISTRIB_ARCH" = '19.07.9:ramips/mt76x8:mipsel_24kc'
+test "$(opkg status kernel | sed -n 's/^Version: //p')" = '4.14.267-1-d92769dc5268e102503ae83fe968a56c'
+test "$(opkg status modbus-schoolbell-clock | sed -n 's/^Version: //p')" = '1.0.0'
+test ! -e /etc/schoolbell-editor/package.pending
+"""
+SNAPSHOT = """lua - <<'LUA'
+package.path='/usr/share/schoolbell-editor/lua/?.lua;'..package.path
+local a=require('schoolbell.automatic_store');local active=a.decode(a.raw());assert(not active.enabled,'Automatic bells must be off')
+local c=require('schoolbell.controls').read()
+print(c.volume_db);print(tostring(c.muted));print(tostring(c.confirm_play==true))
+local codec=require('schoolbell.media_codec');print(active.revision or 'no-active-plan')
+local f=io.open('/etc/schoolbell-editor/current.json','rb');local draft=f and f:read('*a') or '';if f then f:close() end
+print(codec.sha(draft))
+LUA
+"""
+
+def digest(path):
+    h=hashlib.sha256()
+    with open(path,'rb') as f:
+        for chunk in iter(lambda:f.read(65536),b''): h.update(chunk)
+    return h.hexdigest()
+
+def emit(message):
+    print(message, flush=True)
+
+def route(source,index):
+    import ipaddress
+    ipaddress.IPv4Address(source)
+    if index < 1: raise ValueError('Select a dedicated Ethernet adapter')
+    code = "$r=@(Find-NetRoute -RemoteIPAddress 192.168.1.1 -LocalIPAddress '%s' | Where-Object DestinationPrefix); if ($r.Count -ne 1 -or $r[0].InterfaceIndex -ne %d -or $r[0].NextHop -ne '0.0.0.0') {exit 1}" % (source,index)
+    subprocess.run(['powershell.exe','-NoProfile','-NonInteractive','-Command',code],check=True,timeout=30,stdout=subprocess.DEVNULL)
+
+def validate(root):
+    manifest=json.loads((root/'payload.json').read_text(encoding='utf-8-sig'))
+    for name in ('package','rollback'):
+        row=manifest[name]
+        if not re.fullmatch(r'modbus-schoolbell_[0-9]+\.[0-9]+\.[0-9]+_all\.ipk',row['file']): raise ValueError('Invalid package name')
+        if digest(root/row['file'])!=row['sha256']: raise ValueError('Package checksum mismatch')
+    return manifest
+
+def run_core(args):
+    import io, shlex, shutil
+    root=Path(__file__).resolve().parent
+    manifest=validate(root)
+    state=Path(args.session);state.mkdir(parents=True,exist_ok=True)
+    receipt=state/'prepared.json'
+    ssh=['ssh.exe','-F','NUL','-b',args.source,'-o','ConnectTimeout=8','-o','ServerAliveInterval=5','-o','ServerAliveCountMax=3','-o','HostKeyAlgorithms=+ssh-rsa','-o','StrictHostKeyChecking=yes','-o','NumberOfPasswordPrompts=1','-o','UserKnownHostsFile="'+str(Path(os.environ['LOCALAPPDATA'])/'SchoolbellSetup/known_hosts')+'"','root@192.168.1.1']
+    def remote(command, **kw):
+        route(args.source,args.index)
+        return subprocess.run(ssh+[command],check=True,timeout=240,**kw)
+    identity_command="cat /sys/class/net/br-lan/address; cat /proc/sys/kernel/random/boot_id; opkg status modbus-schoolbell | sed -n 's/^Version: //p'"
+    space='test "$(df -k /overlay | awk \'END {print $4}\')" -ge 1024; test "$(df -k /tmp | awk \'END {print $4}\')" -ge 6144\n'
+    if args.action=='prepare':
+        if (state/'write-started').exists(): raise ValueError('Previous write requires verification; preparation cannot replace its evidence')
+        if receipt.exists(): receipt.unlink()
+        emit('Checking device and saving overlay backup in one SSH session...')
+        command=CHECK+space+"""umask 077
+d=$(mktemp -d /tmp/schoolbell-gui.XXXXXX)
+trap 'rm -rf "$d"' EXIT
+"""+'test "$(opkg status modbus-schoolbell | sed -n \'s/^Version: //p\')" = '+shlex.quote(manifest['rollback']['version'])+'\n'+"{ "+identity_command+"; } > \"$d/identity.txt\"\n"+"{ "+SNAPSHOT+"} > \"$d/sound.txt\"\n"+"""tar -C /overlay -cf "$d/overlay.tar" .
+"""+"{ "+SNAPSHOT+"} > \"$d/sound-after.txt\"\n"+"""cmp "$d/sound.txt" "$d/sound-after.txt"
+tar -C "$d" -cf "$d/backup.tar" overlay.tar identity.txt sound.txt
+sha256sum "$d/backup.tar"
+cat "$d/backup.tar"
+"""
+        raw=remote(command,stdout=subprocess.PIPE).stdout
+        header,separator,archive=raw.partition(b'\n')
+        checksum=header.split()[0].decode() if separator else ''
+        if not re.fullmatch('[0-9a-f]{64}',checksum) or hashlib.sha256(archive).hexdigest()!=checksum: raise ValueError('Backup transfer checksum mismatch')
+        with tarfile.open(fileobj=io.BytesIO(archive)) as tar:
+            if sorted(tar.getnames())!=['identity.txt','overlay.tar','sound.txt']: raise ValueError('Unexpected backup contents')
+            identity=tar.extractfile('identity.txt').read().decode().strip()
+            sound=tar.extractfile('sound.txt').read().decode().strip()
+            overlay=tar.extractfile('overlay.tar').read()
+        lines=identity.splitlines()
+        if len(lines)!=3 or lines[2]!=manifest['rollback']['version']: raise ValueError('No matching rollback version')
+        with tarfile.open(fileobj=io.BytesIO(overlay)) as tar:
+            members=tar.getmembers()
+            if not any(m.isdir() and m.name.rstrip('/').endswith('/etc/schoolbell-editor') for m in members): raise ValueError('Settings directory missing from backup')
+            for member in members:
+                if member.isfile():
+                    f=tar.extractfile(member)
+                    while f.read(65536): pass
+        (state/'backup.tar').write_bytes(archive)
+        (state/'overlay.tar').write_bytes(overlay)
+        shutil.copy2(root/manifest['rollback']['file'],state/manifest['rollback']['file'])
+        data={'identity':identity,'sound':sound,'backup_sha256':checksum,'overlay_sha256':digest(state/'overlay.tar'),'source':args.source,'index':args.index,'created':time.time(),'manifest':manifest}
+        receipt.write_text(json.dumps(data))
+        emit('BACKUP VERIFIED. Ready to update '+lines[2]+' -> '+manifest['package']['version'])
+    else:
+        data=json.loads(receipt.read_text())
+        if data['source']!=args.source or data['index']!=args.index or data['manifest']!=manifest: raise ValueError('Preparation differs; prepare again')
+        if digest(state/'backup.tar')!=data['backup_sha256'] or digest(state/'overlay.tar')!=data['overlay_sha256']: raise ValueError('Backup checksum mismatch')
+        if digest(state/manifest['rollback']['file'])!=manifest['rollback']['sha256']: raise ValueError('Rollback checksum mismatch')
+        expected=data['identity'].splitlines()
+        binding='test "$(cat /sys/class/net/br-lan/address)" = '+shlex.quote(expected[0])+'; test "$(cat /proc/sys/kernel/random/boot_id)" = '+shlex.quote(expected[1])+'\n'
+        sound_check='{ '+SNAPSHOT+'} > "$d/sound.txt"\nprintf \'%s\\n\' '+shlex.quote(data['sound'])+' > "$d/expected.txt"\ncmp "$d/sound.txt" "$d/expected.txt"\n'
+        command=CHECK+binding+"""umask 077
+d=$(mktemp -d /tmp/schoolbell-gui.XXXXXX)
+trap 'rm -rf "$d"' EXIT
+"""+sound_check
+        if args.action=='install':
+            if time.time()-data['created']>1800: raise ValueError('Preparation expired; prepare again')
+            marker=state/'write-started'
+            if marker.exists(): raise ValueError('Previous write outcome unknown. Verify first; do not repeat installation')
+            # Marker precedes the connection: unknown authentication/transfer outcomes fail closed.
+            marker.write_text('Installation may have started. Verify device before any retry.')
+            row=manifest['package']
+            emit('Installing and verifying in one SSH session. Keep power and cable connected.')
+            command+=space+'test "$(opkg status modbus-schoolbell | sed -n \'s/^Version: //p\')" = '+shlex.quote(expected[2])+'\n'+"""cat > "$d/package.ipk"
+echo '%s  '"$d/package.ipk" | sha256sum -c -
+opkg install "$d/package.ipk"
+""" % row['sha256']
+        command+=CHECK+'test "$(opkg status modbus-schoolbell | sed -n \'s/^Version: //p\')" = '+shlex.quote(manifest['package']['version'])+'\n'+sound_check+'/etc/init.d/schoolbell-auto running\n/etc/init.d/uhttpd running\necho GUI_RESULT_VERIFIED\n'
+        if args.action=='install':
+            with (root/manifest['package']['file']).open('rb') as f: result=remote(command,stdin=f,stdout=subprocess.PIPE)
+        else: result=remote(command,stdout=subprocess.PIPE)
+        if not result.stdout.rstrip().endswith(b'GUI_RESULT_VERIFIED'): raise ValueError('Result proof missing')
+        (state/'verified.json').write_text(json.dumps({'version':manifest['package']['version'],'time':time.time()}))
+        emit('UPGRADE VERIFIED. Automatic bells off; volume and plan unchanged.')
+
+def run(args):
+    folder=Path(args.session);folder.mkdir(parents=True,exist_ok=True)
+    lock=folder/'operation.lock'
+    # Fail closed after a crash; never assume another installer has finished.
+    fd=os.open(lock,os.O_CREAT|os.O_EXCL|os.O_WRONLY,0o600)
+    try:
+        os.write(fd,str(os.getpid()).encode());os.close(fd)
+        run_core(args)
+    finally:
+        lock.unlink()
+
+if __name__=='__main__':
+    p=argparse.ArgumentParser()
+    p.add_argument('action',choices=['prepare','install','verify']);p.add_argument('--source',required=True);p.add_argument('--index',required=True,type=int);p.add_argument('--session',required=True)
+    try: run(p.parse_args())
+    except subprocess.CalledProcessError as exc:
+        emit('Остановлено: SSH или проверка устройства завершились с кодом '+str(exc.returncode)+'. Подробности выше. Пакет не повторяется автоматически.');sys.exit(1)
+    except subprocess.TimeoutExpired:
+        emit('Остановлено: истекло время ожидания. Если запись началась, сначала проверьте результат.');sys.exit(1)
+    except Exception as exc:
+        emit('STOP: '+str(exc));sys.exit(1)
