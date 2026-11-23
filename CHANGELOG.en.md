@@ -4,6 +4,7 @@
 
 ## Unreleased — setup GUI prototype
 
+- Shared prototype state machine: cancel/close confirmation, retry without restart, stale-event protection and explicit result verification.
 - Added guided/expert modes, equipment-first preparation with USB–Ethernet, combined Schoolbell installation and stepwise Reset guidance.
 - Setup wizard: separate OpenWrt, package and OEM routes, EU v3.30 WPS/RESET photo, task-specific hints, failures and results.
 - GUI prototype: Schoolbell palette, system/light/dark themes, persistent local selection and shared button/dropdown styling.

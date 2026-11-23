@@ -144,10 +144,12 @@
 
 - [x] Первый QML/C++-макет и статический Windows EXE; исправлена внешняя зависимость HarfBuzz, запуск с очищенным PATH подтверждён. / Initial prototype and static EXE; HarfBuzz dependency fixed, clean-PATH launch verified.
 - [x] Раздельные маршруты OpenWrt / пакеты / OEM, собственные подсказки и фото EU v3.30 с указателем Reset; модель проверена локально. / Separate routes and hints, EU v3.30 Reset photo; local model tests.
-- [ ] Полная автоматизация тестов переходов/повтора, чистая VM и аудит лицензий перед распространением. Реальная установка не подключена. / Full transition/retry automation, clean VM and distribution license audit. No real backend.
+- [ ] Чистая VM, автоматизация нативных GUI-взаимодействий и аудит лицензий перед распространением. Реальная установка не подключена. / Clean VM, native GUI interaction automation and distribution license audit. No real backend.
 - [x] Макет GUI: перенесены цвета Школьника, обе темы и системный режим; выбор сохраняется через Qt Settings. Статический EXE собран, сторонних DLL в импортах нет. / Shared colors and persistent system/light/dark themes; static EXE built without third-party DLL imports.
 
 - [x] 23.11.2026: устранена отсутствующая зависимость Lua 5.1 в WSL; полный `make all` для текущих изменений пройден (runtime, UI, IPK, Pages). Lua требуется тестам Школьника, не GUI мастера. Стенды не использовались. / Installed missing WSL Lua 5.1 dependencies; full make all passed for the current changes. Lua is a Schoolbell test dependency, not a GUI runtime dependency. No devices accessed.
 
 - [x] Макет: простой и экспертный режимы, обязательный первый шаг оборудования с USB–Ethernet, основной объединённый маршрут «Установить Школьник», отдельные действия Reset и понятные ошибки. / Guided/expert modes, shared equipment-first screen, mandatory USB–Ethernet, combined Schoolbell route and stepwise recovery hints.
 - [ ] Проверить понятность простого режима с пользователем без опыта прошивки, без устных подсказок. / Usability-test guided mode with a first-time user without verbal coaching.
+
+- [x] Общая модель переходов GUI и тестов: подтверждения, отмена/закрытие, повтор без новой записи, защита от старых событий и отдельная итоговая проверка. Тесты модели включены в make all. / Shared UI/test state machine covers confirmations, cancel/close, retry without restart, stale events and a separate verification gate; included in make all.
