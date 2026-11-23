@@ -4,6 +4,7 @@
 
 ## Unreleased — setup GUI prototype
 
+- Added guided/expert modes, equipment-first preparation with USB–Ethernet, combined Schoolbell installation and stepwise Reset guidance.
 - Setup wizard: separate OpenWrt, package and OEM routes, EU v3.30 WPS/RESET photo, task-specific hints, failures and results.
 - GUI prototype: Schoolbell palette, system/light/dark themes, persistent local selection and shared button/dropdown styling.
 - Added a local QML/C++ wizard prototype and a Windows static build with DLL dependency checks. All device operations are simulated.

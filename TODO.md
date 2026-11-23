@@ -148,3 +148,6 @@
 - [x] Макет GUI: перенесены цвета Школьника, обе темы и системный режим; выбор сохраняется через Qt Settings. Статический EXE собран, сторонних DLL в импортах нет. / Shared colors and persistent system/light/dark themes; static EXE built without third-party DLL imports.
 
 - [x] 23.11.2026: устранена отсутствующая зависимость Lua 5.1 в WSL; полный `make all` для текущих изменений пройден (runtime, UI, IPK, Pages). Lua требуется тестам Школьника, не GUI мастера. Стенды не использовались. / Installed missing WSL Lua 5.1 dependencies; full make all passed for the current changes. Lua is a Schoolbell test dependency, not a GUI runtime dependency. No devices accessed.
+
+- [x] Макет: простой и экспертный режимы, обязательный первый шаг оборудования с USB–Ethernet, основной объединённый маршрут «Установить Школьник», отдельные действия Reset и понятные ошибки. / Guided/expert modes, shared equipment-first screen, mandatory USB–Ethernet, combined Schoolbell route and stepwise recovery hints.
+- [ ] Проверить понятность простого режима с пользователем без опыта прошивки, без устных подсказок. / Usability-test guided mode with a first-time user without verbal coaching.
