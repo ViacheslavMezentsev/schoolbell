@@ -139,3 +139,12 @@
 
 - [x] Согласовать сетку действий с кнопками 48 × 48, сохранить группу листания на узком экране и единый фокус в обеих темах.
 - [x] Проверка 5.1.127: `make all`; Pages и устройство, обе темы, вкладки при ширине 320/390/1280 CSS px. Переполнения страницы нет; листание и кнопки 48 × 48 проверены на устройстве. Автозвонки выключены, громкость сохранена. Это проверка браузерной компоновки, не испытание на физических телефонах.
+
+## GUI установщика / Setup GUI
+
+- [x] Первый QML/C++-макет и статический Windows EXE; исправлена внешняя зависимость HarfBuzz, запуск с очищенным PATH подтверждён. / Initial prototype and static EXE; HarfBuzz dependency fixed, clean-PATH launch verified.
+- [x] Раздельные маршруты OpenWrt / пакеты / OEM, собственные подсказки и фото EU v3.30 с указателем Reset; модель проверена локально. / Separate routes and hints, EU v3.30 Reset photo; local model tests.
+- [ ] Полная автоматизация тестов переходов/повтора, чистая VM и аудит лицензий перед распространением. Реальная установка не подключена. / Full transition/retry automation, clean VM and distribution license audit. No real backend.
+- [x] Макет GUI: перенесены цвета Школьника, обе темы и системный режим; выбор сохраняется через Qt Settings. Статический EXE собран, сторонних DLL в импортах нет. / Shared colors and persistent system/light/dark themes; static EXE built without third-party DLL imports.
+
+- [x] 23.11.2026: устранена отсутствующая зависимость Lua 5.1 в WSL; полный `make all` для текущих изменений пройден (runtime, UI, IPK, Pages). Lua требуется тестам Школьника, не GUI мастера. Стенды не использовались. / Installed missing WSL Lua 5.1 dependencies; full make all passed for the current changes. Lua is a Schoolbell test dependency, not a GUI runtime dependency. No devices accessed.

@@ -2,6 +2,12 @@
 
 [Русский](CHANGELOG.md)
 
+## Unreleased — setup GUI prototype
+
+- Setup wizard: separate OpenWrt, package and OEM routes, EU v3.30 WPS/RESET photo, task-specific hints, failures and results.
+- GUI prototype: Schoolbell palette, system/light/dark themes, persistent local selection and shared button/dropdown styling.
+- Added a local QML/C++ wizard prototype and a Windows static build with DLL dependency checks. All device operations are simulated.
+
 ## 5.1.127 — 2026-11-23
 
 - Unified 48 px action grid spacing; narrow list navigation keeps all four arrows together.
