@@ -12,13 +12,16 @@ let selected='',copied='',fail=false,calls=0,copyDenied=false;
 const ids=new Map(),get=k=>{if(!ids.has(k))ids.set(k,new E());return ids.get(k);};
 const entries=Array.from({length:45},(_,i)=>({seq:i+1,time:1700000000+i,local_time:(i===43?'02':'03')+'.11.2026 10:00:'+String(i).padStart(2,'0')+' +0500',source:['user','module','system','module'][i%4],level:['error','warning','info'][i%3],action:i%3===0?'save_failed':'save_ok'}));
 get('schedule-editor').dataset={journal:'journal',token:'token'};
-const doc={hidden:true,addEventListener(){},getElementById:get,querySelectorAll:()=>[],querySelector:()=>new E(),createElement:()=>new E(),body:new E(),execCommand:()=>{copied=selected;return !copyDenied;}};
+const tabs=['calendar','schedules','preview'].map(name=>{const e=new E();e.dataset.tab=name;return e;});
+get('draft-actions').hidden=true;
+const doc={hidden:true,addEventListener(){},getElementById:get,querySelectorAll:s=>s==='[data-tab]'?tabs:[],querySelector:s=>s==='.savebar'?get('draft-actions'):new E(),createElement:()=>new E(),body:new E(),execCommand:()=>{copied=selected;return !copyDenied;}};
 const win={addEventListener(){},isSecureContext:false};
 const context={document:doc,window:win,navigator:{},sessionStorage:{getItem(){},setItem(){}},Date,Array,Math,Intl,URLSearchParams,AbortController,setInterval(){},setTimeout:()=>1,clearTimeout(){},fetch:async(url,options)=>{calls++;if(options.method==='POST'){assert.equal(options.body.get('action'),'clear');assert.equal(options.body.get('token'),'token');entries.length=0;}if(fail)throw Error('network');return {ok:true,json:async()=>({ok:true,entries})};}};
 entries[44].bell={kind:'pre',due:'03.11.2026 10:53 +0500',plan:'Учебный план',schedule:'Будни'};
 vm.runInNewContext(fs.readFileSync(path.join(root,'ui/root/www/schoolbell-test/dashboard.js'),'utf8'),context);
 const eventRows=()=>get('journal-rows').children.filter(r=>r.className!=='journal-day');
 (async()=>{
+ for(const hidden of [true,false]){get('draft-actions').hidden=hidden;for(const tab of tabs){await tab.click();assert.equal(get('draft-actions').hidden,hidden,'tab navigation must preserve editor-owned action visibility');}}
  let ready;win.schoolbellInitialReady=new Promise(resolve=>{ready=resolve;});
  const initial=get('journal-reload').click();assert.equal(calls,0);ready();await initial;assert.equal(calls,1);
  assert.equal(eventRows().length,20);

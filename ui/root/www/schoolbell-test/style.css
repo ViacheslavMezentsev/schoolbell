@@ -280,3 +280,5 @@ details[open]>.settings-summary>.settings-brief{display:none}
 #device-model{min-width:0;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 .device-labels + .cpu-labels{margin-top:8px}
+
+.editor-heading{font-size:13px;color:var(--muted);margin-bottom:12px}.editor-heading .badge{font-size:inherit}.media-help{margin:12px 0}.media-help summary{cursor:pointer;font-size:14px;font-weight:600}

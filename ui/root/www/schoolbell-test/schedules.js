@@ -236,6 +236,9 @@
     root.setAttribute('aria-busy',String(locked));
     var blocked=protectedEdit();
     save.textContent=busy?'Обмен с устройством…':formPending?'Сначала примените название и даты':reconcile?'Загрузите сохранённую копию':dirty?'💾 Сохранить черновик':'Нет изменений для сохранения';
+    document.getElementById('draft-actions').hidden=!(dirty || formPending || reconcile || (!draft && !busy));
+    document.getElementById('draft-actions').className='editor-toolbar'+(draft?' savebar':'');
+    save.hidden=!draft;
     fields.disabled=locked || !draft;
     save.disabled=locked || !draft || !dirty || reconcile || formPending;
     reload.disabled=locked;reload.title=draft?"Отменить несохранённые правки и загрузить сохранённый черновик":"Повторить чтение сохранённых данных";
@@ -403,7 +406,7 @@
       if(guard!==readGuard()){reconcile=true;result.textContent="Во время чтения появились правки. Они остались в браузере.";return;}
       if(!value.ok) { result.textContent=(errors[value.code] || 'Ошибка чтения.')+(draft?' Правки в браузере не изменены.':' Черновик ещё не загружен.')+(draft?' Чтобы загрузить сохранённую копию, нажмите «Отменить правки».':' Нажмите «Повторить чтение».'); reconcile=!!draft; return; }
       document.getElementById('preview-events').replaceChildren(); document.getElementById('preview-status').textContent='Предпросмотр использует текущий черновик.'; draft=normalize(value.data);savedDraft=JSON.parse(JSON.stringify(draft));if(!draft.plans.some(function(p){return p.id===planId;}))planId=draft.plans[0]?.id || null;fillPlan(); revision=value.revision; dirty=false; reconcile=false;  brush='view'; render();
-      result.textContent=revision==='empty'?'Сохранённых расписаний ещё нет. Создайте первое.':'Черновик прочитан с устройства. Состояние автозвонков указано в верхней плашке.';
+      result.textContent=revision==='empty'?'Сохранённых расписаний ещё нет. Создайте первое.':'';
       if(restoreNavigation()){render();result.textContent=reconcile?'Правки восстановлены. Сохранённый план изменился: загрузите сохранённую копию кнопкой «Отменить правки».':'Несохранённые правки восстановлены после входа. Автозвонки не включались.';}
     } catch (_) { result.textContent='Не удалось загрузить данные. Проверьте вход и повторите чтение.'+(draft?' Правки в браузере не изменены.':' Черновик ещё не загружен.'); }
     finally { busy=false; state(); }

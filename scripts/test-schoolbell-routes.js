@@ -259,4 +259,13 @@ function fixture(storage={},initialRevision="r1",loadCodes=[]){
  assert(!x.posts.length);
  console.log('PASS real editor allows adding beyond 32/128, count has no quota and no activation');
 
+ x=fixture();await x.tick();assert(x.get('draft-actions').hidden);
+ x.get('schedule-name').value='Edited';await x.get('schedule-name').fire('input');assert(!x.get('draft-actions').hidden);
+ x.confirm=false;await x.get('schedule-reload').click();assert(!x.get('draft-actions').hidden);assert.equal(x.get('schedule-name').value,'Edited');
+ x.confirm=true;await x.get('schedule-save').click();assert(x.get('draft-actions').hidden);assert(!x.posts.length);
+ await x.get('plan-new').click();assert(!x.get('draft-actions').hidden);assert(x.get('schedule-save').disabled);
+ await x.get('plan-cancel').click();assert(x.get('draft-actions').hidden);
+ x=fixture({},'r1',['invalid']);await x.tick();assert(!x.get('draft-actions').hidden);assert(x.get('schedule-save').hidden);assert(!x.get('schedule-reload').disabled);
+ await x.get('schedule-reload').click();assert(x.get('draft-actions').hidden);
+ console.log('PASS save actions: clean/dirty/save/cancel/pending form/read failure and retry, no activation');
 })().catch(e=>{console.error(e);process.exitCode=1;});

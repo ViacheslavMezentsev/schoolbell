@@ -8,7 +8,6 @@
     root.hidden=name==='help' || name==='sound' || name==='media' || name==='journal' || name==='feedback';
     if(name==='journal')loadJournal();
     if(name==='sound'){if(!zoneState)loadZones();readLimit();}
-    document.querySelector('.savebar').hidden=false;
     try{sessionStorage.setItem('schoolbell-tab',name);}catch(_){}
   }
   window.addEventListener('schoolbell-open-tab',function(e){if(tabs.some(function(b){return b.dataset.tab===e.detail;}))selectTab(e.detail);});
