@@ -7,3 +7,5 @@ node scripts/test-site-portable.js
 # Pure model shared with the setup QML prototype; no Qt or device required.
 node tools/setup/gui/test-flow.cjs
 node tools/setup/gui/test-state.cjs
+
+python3 tools/setup/gui/test-package-worker.py
