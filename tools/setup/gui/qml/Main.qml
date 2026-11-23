@@ -45,37 +45,32 @@ ApplicationWindow {
    background: Rectangle { color: theme.panel; border.color: theme.border; radius: 7 }
   }
  }
- property bool expert: false
- property int task: 3
- property string selectedBundle: ""
+ property var state: Flow.initial(false, 0)
+ readonly property bool expert: state.expert
+ readonly property int task: state.task
+ readonly property int step: state.step
+ readonly property int progress: state.progress
+ readonly property bool running: state.running
+ readonly property bool failed: state.failed
+ readonly property bool confirmed: state.confirmed
+ readonly property string selectedBundle: state.selectedBundle
+ readonly property string report: state.report
  readonly property string themeLabel: preferences.themeMode === "system" ? "системная" : preferences.themeMode === "dark" ? "тёмная" : "светлая"
- property int step: -2
- property int progress: 0
- property bool running: false
- property bool failed: false
- property bool recovered: false
- property bool confirmed: false
- property string report: "Только имитация. Сетевых операций нет."
  readonly property var route: Flow.routeFor(task,expert)
- readonly property var page: step === -2 ? Flow.equipment : step < 0 ? ({id:"task", title:"Выберите задачу", text:""}) : route.steps[step]
+ readonly property var page: Flow.pageOf(state)
  readonly property bool executing: page.id === "execute"
- function reset() { timer.stop(); step=-2; progress=0; running=false; failed=false; recovered=false; confirmed=false; selectedBundle=""; report="Новый сценарий макета." }
- function advance() {
-  if (page.id === "result") { reset(); return }
-  if (page.id === "bundle") selectedBundle=bundle.currentText
-  if (step === -1) selectedBundle=route.bundles[0]
-  step++; confirmed=false
-  if (page.id === "execute") { progress=0; running=true; timer.start() }
+ function dispatch(event) {
+  event.revision=state.revision;
+  state=Flow.transition(state,event);
+  if(state.pending && !interruption.visible) interruption.open();
+  if(state.closed) Qt.quit();
  }
- Timer { id: timer; interval: 120; repeat: true
-  onTriggered: {
-   app.progress=Math.min(100, app.progress+2)
-   if (!app.recovered && Flow.shouldFail(app.task, scenario.currentIndex, app.progress)) {
-    stop(); app.running=false; app.failed=true; app.report+="\n"+scenario.currentText
-   } else if(app.progress>=100) {
-    stop(); app.running=false; app.step++; app.report+="\n"+app.route.name+": имитация завершена."
-   }
-  }
+ onClosing: function(close) {
+  close.accepted=state.closed;
+  if(!state.closed) dispatch({type:"request",action:"close"});
+ }
+ Timer { interval:120; repeat:true; running:app.state.running && !app.state.pending
+  onTriggered:app.dispatch({type:"tick",generation:app.state.generation})
  }
  ColumnLayout {
   anchors.fill: parent; anchors.margins: 24; spacing: 12
@@ -86,7 +81,7 @@ ApplicationWindow {
    }
    Item {Layout.fillWidth:true}
    ChoiceBox {implicitWidth:180; model:["Простой режим","Режим эксперта"]; currentIndex:app.expert?1:0; enabled:app.step===-2
-    onActivated:{app.expert=currentIndex===1;app.task=3;app.reset();scenario.currentIndex=0}
+    onActivated:app.dispatch({type:"mode",value:currentIndex===1})
    }
    ActionButton {
     text: preferences.themeMode === "system" ? "◐" : preferences.themeMode === "dark" ? "☾" : "☀"
@@ -111,18 +106,18 @@ ApplicationWindow {
      ScrollView {Layout.fillWidth:true; Layout.fillHeight:true; clip:true; contentWidth:availableWidth
       ColumnLayout {width:parent.width; spacing:16
        Repeater {model:app.step===-1 ? Flow.choices(app.expert) : []
-        RadioButton {required property int index; required property var modelData; text:Flow.routeFor(modelData,app.expert).name; checked:app.task===modelData; onClicked:{app.task=modelData;scenario.currentIndex=0} font.pixelSize:18}
+        RadioButton {required property int index; required property var modelData; text:Flow.routeFor(modelData,app.expert).name; checked:app.task===modelData; onClicked:app.dispatch({type:"task",value:modelData}); font.pixelSize:18}
        }
        Label {visible:app.step!==-1; Layout.fillWidth:true; text:app.page.text; wrapMode:Text.WordWrap; lineHeight:1.35}
-       ChoiceBox {id:bundle; visible:app.page.id==="bundle"; Layout.fillWidth:true; model:app.route.bundles}
-       CheckBox {visible:!!app.page.confirm; text:app.page.confirm || ""; checked:app.confirmed; onToggled:app.confirmed=checked}
+       ChoiceBox {id:bundle; visible:app.page.id==="bundle"; Layout.fillWidth:true; model:app.route.bundles; currentIndex:Math.max(0,app.route.bundles.indexOf(app.selectedBundle)); onActivated:app.dispatch({type:"bundle",value:currentText})}
+       CheckBox {visible:!!app.page.confirm; text:app.page.confirm || ""; checked:app.confirmed; onToggled:app.dispatch({type:"confirm",value:checked})}
        Label {visible:app.page.id==="check"; Layout.fillWidth:true; wrapMode:Text.WordWrap; text:scenario.currentIndex===1 ? Flow.errorText(app.task,1,app.expert) : app.expert ? "✓ Комплект и контрольные суммы\n✓ Совместимость устройства\n✓ Выделенный адаптер и маршрут" : "✓ Роутер подходит\n✓ Подключение готово\n✓ Комплект проверен (имитация)"; color:scenario.currentIndex===1?theme.danger:theme.success; lineHeight:1.5}
-       ActionButton {visible:app.page.id==="check" && scenario.currentIndex===1; text:"Повторить проверку — имитация"; onClicked:scenario.currentIndex=0}
-       Label {visible:app.executing; Layout.fillWidth:true; wrapMode:Text.WordWrap; text:app.failed ? Flow.errorText(app.task,scenario.currentIndex,app.expert) : Flow.phase(app.task, app.progress); font.bold:true; color:app.failed?theme.danger:theme.text}
+       ActionButton {visible:app.page.id==="check" && scenario.currentIndex===1; text:"Повторить проверку — имитация"; onClicked:app.dispatch({type:"recheck"})}
+       Label {visible:app.executing; Layout.fillWidth:true; wrapMode:Text.WordWrap; text:app.failed ? (app.state.scenario===4 ? "Результат не подтверждён. Повторите проверку; прошивка заново не записывается." : Flow.errorText(app.task,app.state.scenario,app.expert)) : app.state.verifying ? "Проверяем результат — успех ещё не подтверждён" : Flow.phase(app.task, app.progress); font.bold:true; color:app.failed?theme.danger:theme.text}
        ProgressBar {visible:app.executing; Layout.fillWidth:true; from:0; to:100; value:app.progress}
        Label {visible:app.executing; text:"Ход имитации: "+app.progress+" %"; color:theme.muted}
-       ActionButton {visible:app.failed; text:app.expert ? "Повторить этап" : "Повторить проверку"; onClicked:{app.failed=false;app.recovered=true;app.running=true;timer.start()}}
-       Label {visible:app.page.id==="result"; text:"✓ Имитация завершена. Устройство не изменялось.\nВыбранный комплект: "+app.selectedBundle; color:theme.success; Layout.fillWidth:true; wrapMode:Text.WordWrap}
+       ActionButton {visible:app.failed; text:app.expert ? "Повторить этап" : "Повторить проверку"; onClicked:app.dispatch({type:"retry"})}
+       Label {visible:app.page.id==="result" && app.state.verified; text:"✓ Имитация завершена. Устройство не изменялось.\nВыбранный комплект: "+app.selectedBundle; color:theme.success; Layout.fillWidth:true; wrapMode:Text.WordWrap}
       }
      }
      ColumnLayout {visible:!!app.page.resetPhoto; Layout.preferredWidth:300; Layout.alignment:Qt.AlignTop; spacing:8
@@ -137,20 +132,32 @@ ApplicationWindow {
      }
     }
     RowLayout {Layout.fillWidth:true
-     ActionButton {text:"Назад"; visible:app.step>=-1 && !app.executing && app.page.id!=="result"; onClicked:{app.step--;app.confirmed=false}}
+     ActionButton {text:"Назад"; visible:app.step>=-1 && !app.executing && app.page.id!=="result"; onClicked:app.dispatch({type:"back"})}
      Item {Layout.fillWidth:true}
      ActionButton {visible:!app.executing; highlighted:true; text:app.page.next ? app.page.next : app.page.id==="result" ? "Начать заново" : app.page.id==="reset" ? "Имитировать подачу питания" : app.page.id==="check" && app.task===1 ? "Имитировать установку" : "Далее"
-      enabled:(!app.page.confirm || app.confirmed) && !(app.page.id==="check" && scenario.currentIndex===1)
-      onClicked:app.advance()
+      enabled:app.page.id==="result" || Flow.canNext(app.state)
+      onClicked:app.dispatch(app.page.id==="result" ? {type:"request",action:"reset"} : {type:"next"})
      }
     }
    }
   }
   RowLayout {
    Label {text:"Проверка макета";color:theme.muted}
-   ChoiceBox {id:scenario; Layout.fillWidth:true; enabled:!app.executing && app.page.id!=="result"; model:app.task===1 ? ["Успешная установка","Нет кабеля","Ошибка SSH","Ошибка установки пакетов"] : app.task===2 ? ["Успешный возврат","Нет кабеля","Тайм-аут загрузки","Не восстановлен DHCP"] : ["Успешная установка","Кабель не подключён","Роутер долго включается","Нет адреса компьютера"]}
+   ChoiceBox {id:scenario; Layout.fillWidth:true; currentIndex:app.state.scenario; onActivated:app.dispatch({type:"scenario",value:currentIndex}); enabled:!app.executing && app.page.id!=="result"; model:app.task===1 ? ["Успешная установка","Нет кабеля","Ошибка SSH","Ошибка установки пакетов","Не пройдена итоговая проверка"] : app.task===2 ? ["Успешный возврат","Нет кабеля","Тайм-аут загрузки","Не восстановлен DHCP","Не пройдена итоговая проверка"] : ["Успешная установка","Кабель не подключён","Роутер долго включается","Нет адреса компьютера","Не пройдена итоговая проверка"]}
    ActionButton {text:"Подробности";onClicked:log.open()}
-   ActionButton {text:"Сброс макета";onClicked:app.reset()}
+   ActionButton {text:"Отменить сценарий";onClicked:app.dispatch({type:"request",action:"reset"})}
+  }
+ }
+ Dialog {
+  id:interruption; anchors.centerIn:parent; width:620; modal:true; title:app.state.pending==="close" ? "Закрытие макета" : "Отмена сценария"
+  closePolicy:Popup.NoAutoClose
+  onRejected:app.dispatch({type:"dismiss"})
+  contentItem:Label {text:Flow.interruptionText(app.state); wrapMode:Text.WordWrap; color:theme.text}
+  background:Rectangle {color:theme.panel; border.color:theme.border; radius:10}
+  footer:RowLayout {
+   ActionButton {text:"Продолжить сценарий"; onClicked:{app.dispatch({type:"dismiss"});interruption.close()}}
+   Item {Layout.fillWidth:true}
+   ActionButton {text:app.state.pending==="close" ? "Закрыть макет" : "Начать заново"; onClicked:{app.dispatch({type:"accept"});interruption.close()}}
   }
  }
  Dialog {id:log; anchors.centerIn:parent; width:650; title:"Журнал имитации"; standardButtons:Dialog.Close; TextArea{width:600;text:app.report;readOnly:true;wrapMode:Text.Wrap}}

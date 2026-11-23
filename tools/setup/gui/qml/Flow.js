@@ -68,4 +68,71 @@ function phase(task, progress) {
 function shouldFail(task, scenario, progress) {
  return scenario>=2 && progress >= (scenario===2 ? (task===1?20:50) : (task===1?65:90));
 }
-if (typeof module !== "undefined") module.exports={routes:routes,phase:phase,shouldFail:shouldFail,equipment:equipment,choices:choices,errorText:errorText,routeFor:routeFor};
+// Shared state machine used by QML and host tests. All events are simulated.
+function initial(expert, generation) {
+ return {expert:!!expert, task:3, step:-2, confirmed:false, selectedBundle:"", scenario:0,
+ progress:0, running:false, failed:false, recovered:false, verifying:false, verified:false,
+ pending:"", closed:false, generation:generation || 0, revision:0, starts:0,
+ report:"Только имитация. Сетевых операций нет."};
+}
+function pageOf(s) {
+ return s.step===-2 ? equipment : s.step===-1 ? {id:"task",title:"Выберите задачу",text:""} : routeFor(s.task,s.expert).steps[s.step];
+}
+function canNext(s) {
+ var p=pageOf(s);
+ return !s.closed && !s.pending && p.id!=="execute" && p.id!=="result" &&
+ (!p.confirm || s.confirmed) && !(p.id==="check" && s.scenario===1);
+}
+function transition(before, event) {
+ if(before.closed) return before;
+ if(event.revision!==undefined && event.revision!==before.revision) return before;
+ var s=JSON.parse(JSON.stringify(before)), p=pageOf(s), route=routeFor(s.task,s.expert);
+ if(s.pending) {
+  if(event.type==="dismiss") {s.pending=""; s.generation++;}
+  else if(event.type==="accept") {
+   if(s.pending==="close") {s.closed=true;s.running=false;s.generation++;}
+   else {s=initial(s.expert,s.generation+1);s.report="Сценарий отменён. Устройство не изменялось.";}
+  } else return before;
+ } else if(event.type==="request") {
+  if(event.action!=="reset" && event.action!=="close") return before;
+  s.pending=event.action;s.generation++;
+ } else if(event.type==="mode" && s.step===-2) {
+  s=initial(!!event.value,s.generation+1);
+ } else if(event.type==="task" && s.step===-1 && choices(s.expert).indexOf(event.value)>=0) {
+  s.task=event.value;s.scenario=0;s.selectedBundle="";s.confirmed=false;
+ } else if(event.type==="confirm" && p.confirm) {s.confirmed=!!event.value;}
+ else if(event.type==="bundle" && p.id==="bundle" && route.bundles.indexOf(event.value)>=0) {s.selectedBundle=event.value;}
+ else if(event.type==="scenario" && p.id!=="execute" && p.id!=="result" && event.value>=0 && event.value<=4) {s.scenario=event.value;}
+ else if(event.type==="recheck" && p.id==="check" && s.scenario===1) {s.scenario=0;}
+ else if(event.type==="back" && s.step>-2 && p.id!=="execute" && p.id!=="result") {
+  s.step--;s.confirmed=false;s.selectedBundle="";s.verified=false;s.generation++;
+ } else if(event.type==="next" && canNext(s)) {
+  if(!s.selectedBundle) s.selectedBundle=route.bundles[0];
+  s.step++;s.confirmed=false;
+  if(pageOf(s).id==="execute") {
+   s.progress=0;s.running=true;s.failed=false;s.recovered=false;s.verifying=false;s.verified=false;s.starts++;s.generation++;
+   s.report+="\nНачата имитация: "+route.name;
+  }
+ } else if(event.type==="retry" && p.id==="execute" && s.failed) {
+  s.failed=false;s.running=true;s.recovered=true;s.generation++;
+  s.report+="\nПовтор проверки с "+s.progress+" %, без новой записи прошивки.";
+ } else if(event.type==="tick" && event.generation===s.generation && s.running && p.id==="execute") {
+  if(s.verifying) {
+   if(s.scenario===4 && !s.recovered) {s.running=false;s.failed=true;s.report+="\nПроверка результата не пройдена.";}
+   else {s.running=false;s.verified=true;s.verifying=false;s.step++;s.report+="\nРезультат имитации проверен.";}
+  } else {
+   s.progress=Math.min(100,s.progress+2);
+   if(!s.recovered && s.scenario>=2 && s.scenario<=3 && shouldFail(s.task,s.scenario,s.progress)) {
+    s.running=false;s.failed=true;s.report+="\n"+errorText(s.task,s.scenario,s.expert);
+   } else if(s.progress===100) {s.verifying=true;s.report+="\nПередача и выполнение завершены; результат ещё проверяется.";}
+  }
+ } else return before;
+ s.revision=before.revision+1;
+ return s;
+}
+function interruptionText(s) {
+ return (s.running || s.failed ? "Сценарий ещё не завершён. " : "")+
+ (s.pending==="close" ? "Закрыть макет? Текущий сценарий не сохранится." : "Отменить сценарий и начать заново? Подтверждения и результат будут сброшены.")+
+ "\n\nЭто только имитация: устройства не изменяются. В настоящей установке закрытие окна не означает, что питание роутера можно отключить.";
+}
+if (typeof module !== "undefined") module.exports={routes:routes,phase:phase,shouldFail:shouldFail,equipment:equipment,choices:choices,errorText:errorText,routeFor:routeFor,initial:initial,pageOf:pageOf,canNext:canNext,transition:transition};
