@@ -45,23 +45,25 @@ ApplicationWindow {
    background: Rectangle { color: theme.panel; border.color: theme.border; radius: 7 }
   }
  }
- property int task: 0
+ property bool expert: false
+ property int task: 3
  property string selectedBundle: ""
  readonly property string themeLabel: preferences.themeMode === "system" ? "системная" : preferences.themeMode === "dark" ? "тёмная" : "светлая"
- property int step: -1
+ property int step: -2
  property int progress: 0
  property bool running: false
  property bool failed: false
  property bool recovered: false
  property bool confirmed: false
  property string report: "Только имитация. Сетевых операций нет."
- readonly property var route: Flow.routes[task]
- readonly property var page: step < 0 ? ({id:"task", title:"Выберите задачу", text:""}) : route.steps[step]
+ readonly property var route: Flow.routeFor(task,expert)
+ readonly property var page: step === -2 ? Flow.equipment : step < 0 ? ({id:"task", title:"Выберите задачу", text:""}) : route.steps[step]
  readonly property bool executing: page.id === "execute"
- function reset() { timer.stop(); step=-1; progress=0; running=false; failed=false; recovered=false; confirmed=false; selectedBundle=""; report="Новый сценарий макета." }
+ function reset() { timer.stop(); step=-2; progress=0; running=false; failed=false; recovered=false; confirmed=false; selectedBundle=""; report="Новый сценарий макета." }
  function advance() {
   if (page.id === "result") { reset(); return }
   if (page.id === "bundle") selectedBundle=bundle.currentText
+  if (step === -1) selectedBundle=route.bundles[0]
   step++; confirmed=false
   if (page.id === "execute") { progress=0; running=true; timer.start() }
  }
@@ -83,6 +85,9 @@ ApplicationWindow {
     Label { text: "OpenWrt · пакеты · заводская прошивка"; color: theme.muted }
    }
    Item {Layout.fillWidth:true}
+   ChoiceBox {implicitWidth:180; model:["Простой режим","Режим эксперта"]; currentIndex:app.expert?1:0; enabled:app.step===-2
+    onActivated:{app.expert=currentIndex===1;app.task=3;app.reset();scenario.currentIndex=0}
+   }
    ActionButton {
     text: preferences.themeMode === "system" ? "◐" : preferences.themeMode === "dark" ? "☾" : "☀"
     implicitWidth:48; leftPadding:0; rightPadding:0; font.pixelSize:24
@@ -94,9 +99,9 @@ ApplicationWindow {
   }
   Label {text:"Все действия ниже — имитация. Роутер подключать и нажимать его кнопки не нужно."; color:theme.muted}
   RowLayout {
-   Label {text:app.step<0 ? "Три независимых сценария" : app.route.name; color:theme.accent; font.bold:true}
+   Label {text:app.step===-2 ? "Начните с подготовки" : app.step<0 ? "Что вы хотите сделать?" : app.route.name; color:theme.accent; font.bold:true}
    Item {Layout.fillWidth:true}
-   Label {text:app.step<0 ? "" : "Шаг "+(app.step+1)+" из "+app.route.steps.length; color:theme.muted}
+   Label {text:app.step===-2 ? "Оборудование · первый шаг" : app.step<0 ? "" : "Шаг "+(app.step+1)+" из "+app.route.steps.length; color:theme.muted}
   }
   Rectangle {
    Layout.fillWidth:true; Layout.fillHeight:true; color:theme.panel; border.color:theme.border; radius:14
@@ -105,17 +110,18 @@ ApplicationWindow {
     RowLayout {Layout.fillWidth:true; Layout.fillHeight:true; spacing:24
      ScrollView {Layout.fillWidth:true; Layout.fillHeight:true; clip:true; contentWidth:availableWidth
       ColumnLayout {width:parent.width; spacing:16
-       Repeater {model:app.step<0 ? Flow.routes : []
-        RadioButton {required property int index; required property var modelData; text:modelData.name; checked:app.task===index; onClicked:{app.task=index;scenario.currentIndex=0} font.pixelSize:18}
+       Repeater {model:app.step===-1 ? Flow.choices(app.expert) : []
+        RadioButton {required property int index; required property var modelData; text:Flow.routeFor(modelData,app.expert).name; checked:app.task===modelData; onClicked:{app.task=modelData;scenario.currentIndex=0} font.pixelSize:18}
        }
-       Label {visible:app.step>=0; Layout.fillWidth:true; text:app.page.text; wrapMode:Text.WordWrap; lineHeight:1.35}
+       Label {visible:app.step!==-1; Layout.fillWidth:true; text:app.page.text; wrapMode:Text.WordWrap; lineHeight:1.35}
        ChoiceBox {id:bundle; visible:app.page.id==="bundle"; Layout.fillWidth:true; model:app.route.bundles}
        CheckBox {visible:!!app.page.confirm; text:app.page.confirm || ""; checked:app.confirmed; onToggled:app.confirmed=checked}
-       Label {visible:app.page.id==="check"; Layout.fillWidth:true; wrapMode:Text.WordWrap; text:scenario.currentIndex===1 ? "Кабель не обнаружен — проверка остановлена. Выберите другой сценарий макета для продолжения." : "✓ Комплект и контрольные суммы\n✓ Совместимость устройства\n✓ Выделенный адаптер и маршрут"; color:scenario.currentIndex===1?theme.danger:theme.success; lineHeight:1.5}
-       Label {visible:app.executing; Layout.fillWidth:true; wrapMode:Text.WordWrap; text:app.failed ? scenario.currentText : Flow.phase(app.task, app.progress); font.bold:true; color:app.failed?theme.danger:theme.text}
+       Label {visible:app.page.id==="check"; Layout.fillWidth:true; wrapMode:Text.WordWrap; text:scenario.currentIndex===1 ? Flow.errorText(app.task,1,app.expert) : app.expert ? "✓ Комплект и контрольные суммы\n✓ Совместимость устройства\n✓ Выделенный адаптер и маршрут" : "✓ Роутер подходит\n✓ Подключение готово\n✓ Комплект проверен (имитация)"; color:scenario.currentIndex===1?theme.danger:theme.success; lineHeight:1.5}
+       ActionButton {visible:app.page.id==="check" && scenario.currentIndex===1; text:"Повторить проверку — имитация"; onClicked:scenario.currentIndex=0}
+       Label {visible:app.executing; Layout.fillWidth:true; wrapMode:Text.WordWrap; text:app.failed ? Flow.errorText(app.task,scenario.currentIndex,app.expert) : Flow.phase(app.task, app.progress); font.bold:true; color:app.failed?theme.danger:theme.text}
        ProgressBar {visible:app.executing; Layout.fillWidth:true; from:0; to:100; value:app.progress}
        Label {visible:app.executing; text:"Ход имитации: "+app.progress+" %"; color:theme.muted}
-       ActionButton {visible:app.failed; text:"Повторить этап"; onClicked:{app.failed=false;app.recovered=true;app.running=true;timer.start()}}
+       ActionButton {visible:app.failed; text:app.expert ? "Повторить этап" : "Повторить проверку"; onClicked:{app.failed=false;app.recovered=true;app.running=true;timer.start()}}
        Label {visible:app.page.id==="result"; text:"✓ Имитация завершена. Устройство не изменялось.\nВыбранный комплект: "+app.selectedBundle; color:theme.success; Layout.fillWidth:true; wrapMode:Text.WordWrap}
       }
      }
@@ -131,9 +137,9 @@ ApplicationWindow {
      }
     }
     RowLayout {Layout.fillWidth:true
-     ActionButton {text:"Назад"; visible:app.step>=0 && !app.executing && app.page.id!=="result"; onClicked:{app.step--;app.confirmed=false}}
+     ActionButton {text:"Назад"; visible:app.step>=-1 && !app.executing && app.page.id!=="result"; onClicked:{app.step--;app.confirmed=false}}
      Item {Layout.fillWidth:true}
-     ActionButton {visible:!app.executing; highlighted:true; text:app.page.id==="result" ? "К выбору задачи" : app.page.id==="reset" ? "Имитировать подачу питания" : app.page.id==="check" && app.task===1 ? "Имитировать установку" : "Далее"
+     ActionButton {visible:!app.executing; highlighted:true; text:app.page.next ? app.page.next : app.page.id==="result" ? "Начать заново" : app.page.id==="reset" ? "Имитировать подачу питания" : app.page.id==="check" && app.task===1 ? "Имитировать установку" : "Далее"
       enabled:(!app.page.confirm || app.confirmed) && !(app.page.id==="check" && scenario.currentIndex===1)
       onClicked:app.advance()
      }
@@ -141,8 +147,8 @@ ApplicationWindow {
    }
   }
   RowLayout {
-   Label {text:"Сценарий макета";color:theme.muted}
-   ChoiceBox {id:scenario; Layout.fillWidth:true; enabled:!app.executing && app.page.id!=="result"; model:app.task===1 ? ["Успешная установка","Нет кабеля","Ошибка SSH","Ошибка установки пакетов"] : app.task===2 ? ["Успешный возврат","Нет кабеля","Тайм-аут загрузки","Не восстановлен DHCP"] : ["Успешная установка","Нет кабеля","Тайм-аут загрузки","Не восстановлен DHCP"]}
+   Label {text:"Проверка макета";color:theme.muted}
+   ChoiceBox {id:scenario; Layout.fillWidth:true; enabled:!app.executing && app.page.id!=="result"; model:app.task===1 ? ["Успешная установка","Нет кабеля","Ошибка SSH","Ошибка установки пакетов"] : app.task===2 ? ["Успешный возврат","Нет кабеля","Тайм-аут загрузки","Не восстановлен DHCP"] : ["Успешная установка","Кабель не подключён","Роутер долго включается","Нет адреса компьютера"]}
    ActionButton {text:"Подробности";onClicked:log.open()}
    ActionButton {text:"Сброс макета";onClicked:app.reset()}
   }
