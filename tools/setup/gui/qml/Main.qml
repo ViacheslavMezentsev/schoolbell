@@ -67,7 +67,7 @@ ApplicationWindow {
  Dialog {
   id:interruption;objectName:"close-confirmation";anchors.centerIn:parent;width:620;modal:true;title:"Закрытие мастера"
   closePolicy:Popup.NoAutoClose
-  contentItem:Label {text:"Закрыть мастер? Резервные копии и журнал останутся на ПК. Если результат установки не подтверждён, при следующем запуске сначала выполните проверку.";wrapMode:Text.WordWrap;color:theme.text}
+  contentItem:Label {text:"Закрыть мастер? Резервные копии и журнал останутся на ПК. Если результат установки не подтверждён, при следующем запуске сначала выполните проверку. Если вы подготавливали сеть, сначала вернитесь и нажмите «Восстановить сеть».";wrapMode:Text.WordWrap;color:theme.text}
   background:Rectangle {color:theme.panel;border.color:theme.border;radius:10}
   footer:Item {
    implicitHeight:76

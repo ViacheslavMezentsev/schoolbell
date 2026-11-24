@@ -22,3 +22,5 @@ python3 tools/setup/gui/test-session-recovery.py
 python3 tools/setup/test-network-plan.py
 
 python3 tools/setup/gui/test-network-worker.py
+
+python3 tools/setup/gui/test-network-elevate.py

@@ -42,6 +42,10 @@ Rectangle {
    Button {objectName:"firmware-check";text:"Проверить без изменения сети";padding:14;enabled:!firmwareBackend.busy && pane.selectedGuid.length>0 && modelConfirmed.checked
     onClicked:firmwareBackend.inspect(pane.selectedGuid,pane.recovery?"factory":"openwrt",modelConfirmed.checked)
    }
+   RowLayout {
+    Button {objectName:"network-prepare";text:"Подготовить сеть…";padding:14;enabled:firmwareBackend.canPrepare && !firmwareBackend.busy;onClicked:networkConfirm.open()}
+    Button {objectName:"network-restore";text:"Восстановить сеть…";padding:14;enabled:!firmwareBackend.busy;onClicked:restoreConfirm.open()}
+   }
    Label {objectName:"firmware-result";text:firmwareBackend.message;visible:text.length>0;Layout.fillWidth:true;wrapMode:Text.WordWrap;color:pane.colors.muted}
    Label {text:"Порядок действий";font.pixelSize:21;font.bold:true;color:pane.colors.text}
    Label {text:pane.recovery?"1. Сохраните резервную копию. Возврат заводской системы удалит OpenWrt и Школьник.\n2. В консольном комплекте запустите Setup.cmd -RestoreFactory от имени администратора и выберите выделенный адаптер.\n3. Только после READY зажмите Reset и подайте питание. Отпустите кнопку после начала передачи.\n4. Не отключайте питание. Дождитесь записи, загрузки и восстановления DHCP.\n5. Откройте заводской интерфейс, проверьте версию и вход с прежним паролем.":"1. Проверьте ревизию и регион на корпусе, сохраните нужные настройки.\n2. Подключите роутер к отдельному USB–Ethernet-адаптеру.\n3. Запустите полный консольный комплект по его руководству. Только после READY зажмите Reset и подайте питание.\n4. Отпустите Reset после начала передачи; питание больше не отключайте до загрузки.\n5. Проверьте доступ к OpenWrt. Текущий консольный комплект также предлагает установку пакетов: отдельный маршрут только прошивки ещё предстоит подключить к GUI.";color:pane.colors.text;Layout.fillWidth:true;wrapMode:Text.WordWrap}
@@ -56,4 +60,13 @@ Rectangle {
    }
   }
  }
+ Dialog {id:networkConfirm;objectName:"network-confirm";anchors.centerIn:parent;width:560;modal:true;title:"Подготовить выделенный адаптер?";standardButtons:Dialog.Ok|Dialog.Cancel
+  Label {width:510;wrapMode:Text.WordWrap;text:"После подтверждения Windows мастер временно добавит адрес 192.168.0.225 к выбранному USB–Ethernet и проверит прямой маршрут. Подключение этого адаптера изменится. Сервер не запускается; Reset не нажимайте. После проверки нажмите «Восстановить сеть»."}
+  onAccepted:firmwareBackend.changeNetwork(false)
+ }
+ Dialog {id:restoreConfirm;anchors.centerIn:parent;width:560;modal:true;title:"Восстановить сеть?";standardButtons:Dialog.Ok|Dialog.Cancel
+  Label {width:510;wrapMode:Text.WordWrap;text:"После подтверждения Windows мастер удалит собственный временный адрес и вернёт DHCP на адаптере из сохранённого состояния. Подключите тот же USB–Ethernet. Получение нового адреса зависит от DHCP-сервера."}
+  onAccepted:firmwareBackend.changeNetwork(true)
+ }
+
 }

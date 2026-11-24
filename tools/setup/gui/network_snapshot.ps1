@@ -28,6 +28,6 @@ foreach($index in @($addresses.InterfaceIndex | Sort-Object -Unique)) {
  if (@($addresses | Where-Object { $_.InterfaceIndex -eq $index -and $_.IPAddress -in @('192.168.0.225','192.168.0.2','192.168.1.1','192.168.1.2') }).Count) {throw 'Reserved address on an unenumerated interface'}
 }
 $state=Join-Path $env:LOCALAPPDATA 'SchoolbellSetup/network.json'
-@{schema=1;pending_restore=[bool](Test-Path -LiteralPath $state);adapters=$rows;
+@{schema=1;pending_restore=[bool]((Test-Path -LiteralPath $state) -or (Test-Path -LiteralPath (Join-Path $env:ProgramData 'SchoolbellNetworkHelper-v1/network.json')));adapters=$rows;
  routes=@($routes | ForEach-Object {@{prefix=[string]$_.DestinationPrefix;next_hop=[string]$_.NextHop;index=[int]$_.InterfaceIndex}});
  udp_ports=@($ports.LocalPort | Sort-Object -Unique)} | ConvertTo-Json -Depth 8 -Compress

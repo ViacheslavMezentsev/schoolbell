@@ -37,11 +37,14 @@ Item {
  }
  QtObject {
   id:firmwareBackend
+  property bool canPrepare:false
+  property string helperAction:""
+  function changeNetwork(restore) {helperAction=restore?"restore":"prepare"}
   property bool busy:false
   property var choices:[]
   property string message:""
   property string selectedProfile:""
-  function clearResult(){message=""}
+  function clearResult(){message="";canPrepare=false}
   function inspect(guid,profile,confirmed){selectedProfile=profile||"openwrt";message="Сеть не изменена"}
  }
  Component {id:windowFactory; Main {}}
@@ -83,6 +86,16 @@ Item {
    firmwareBackend.busy=false;window.navigate("recovery");verify(!check.enabled);compare(firmwareBackend.message,"")
    picker.currentIndex=0;picker.activated(0);confirm.checked=true;check.clicked();compare(firmwareBackend.selectedProfile,"factory")
    window.destroy();firmwareBackend.choices=[];firmwareBackend.message=""
+  }
+  function test_network_helper_requires_confirmation() {
+   let window=windowFactory.createObject(null);window.navigate("openwrt")
+   let route=findChild(window,"firmware-route"),button=findChild(route,"network-prepare")
+   firmwareBackend.helperAction="";firmwareBackend.canPrepare=false;verify(!button.enabled)
+   firmwareBackend.canPrepare=true;button.clicked();compare(firmwareBackend.helperAction,"")
+   let dialog=findChild(route,"network-confirm");verify(dialog.visible);dialog.accepted();dialog.close()
+   compare(firmwareBackend.helperAction,"prepare")
+   firmwareBackend.busy=true;verify(!button.enabled);verify(!findChild(route,"network-restore").enabled)
+   firmwareBackend.busy=false;firmwareBackend.canPrepare=false;window.destroy()
   }
   function test_main_routes_and_close_is_guarded() {
    let window=windowFactory.createObject(null)
