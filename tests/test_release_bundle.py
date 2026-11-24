@@ -26,6 +26,8 @@ class ReleaseTests(unittest.TestCase):
         self.root=Path(self.tmp.name);self.bundle=self.root/'bundle';self.bundle.mkdir()
         self.repo=self.root/'repo';(self.repo/'packaging/offline').mkdir(parents=True)
         shutil.copytree(ROOT/'packaging/release',self.repo/'packaging/release')
+        (self.repo/'scripts').mkdir()
+        shutil.copy2(ROOT/'scripts/schoolbell_ipk.py',self.repo/'scripts/schoolbell_ipk.py')
         (self.repo/'docs/releases').mkdir(parents=True)
         (self.repo/'docs/releases/v5.1.127.md').write_text('Candidate notes')
         self.rows=[];pins=[]

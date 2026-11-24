@@ -90,3 +90,34 @@ A real local 35-IPK bundle was packaged as a candidate; synthetic fixtures cover
 reproducibility and failure atomicity. Static wizard 0.1.0 built; Windows metadata/window
 title confirmed the version and 7 Qt checks passed. Final layout inspection of the longer
 name remains pending after a viewing-tool failure. No device access occurred.
+
+## Предварительное планирование / Preliminary planning
+
+24.11.2026: добавлен отдельный host-планировщик `scripts/plan.py` и читающий
+`scripts/snapshot.sh`; Python не требуется на роутере. В ZIP включён общий
+ограниченный читатель IPK `scripts/schoolbell_ipk.py`. Планировщик сверяет все
+SHA256, фактические control/payload IPK, lock, ABI, инвентарь, выключенный автомат,
+отсутствие pending и остаточных данных перед новой установкой. Размер payload
+вычисляется из IPK, а не принимается из manifest. Совместимые штатные зависимости
+сохраняются, замыкание проверяется также с их фактическими версиями.
+
+Это только предварительный план по файлу. Нет SSH, записи, копии или утверждения
+об исправности служб; текущая версия с отсутствующими зависимостями отклоняется.
+Переход со старой версии требует отдельного проверенного IPK отката и пока
+не поддерживается этим планировщиком. Установка и аппаратная приёмка остаются открыты.
+
+The ZIP now includes a read-only device snapshot script and an offline Python host
+planner with the shared bounded IPK reader. Exact file integrity, real IPK metadata,
+pins, ABI, inventory, automation-off/pending/data guards and estimated incremental
+space are checked. Retained stock versions participate in dependency validation.
+This is a file-based preliminary plan, not SSH, backup, installation or service
+verification. Upgrades and repairs are refused; actual manual installation and
+hardware acceptance remain pending.
+
+Проверки этого этапа: `make all`, 13 тестов планировщика, 15 тестов упаковки,
+валидатор ТЗ без предупреждений и `git diff --check` — PASS. Реальный ZIP из
+35 IPK дважды проверен CLI на искусственном снимке; стенды не читались и не менялись.
+
+Stage checks: full `make all`, 13 planner tests, 15 packaging tests, specification
+validation without warnings and whitespace checks passed. The actual 35-IPK ZIP
+passed two CLI runs with a synthetic snapshot; no device was accessed.

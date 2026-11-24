@@ -121,9 +121,10 @@ def build(bundle, out, candidate=False):
     entries['dependencies.lock.json'] = files['dependencies.lock.json'].read_bytes()
     entries['input-manifest.json'] = files['manifest.json'].read_bytes()
     entries['RELEASE_NOTES.md'] = notes.read_bytes()
-    for name in ('README.md','README.en.md','check.sh','verify.sh'):
-        target = 'scripts/'+name if name.endswith('.sh') else name
+    for name in ('README.md','README.en.md','check.sh','verify.sh','snapshot.sh','plan.py'):
+        target = 'scripts/'+name if name.endswith(('.sh','.py')) else name
         entries[target] = (ROOT/'packaging/release'/name).read_bytes()
+    entries['scripts/schoolbell_ipk.py'] = (ROOT/'scripts/schoolbell_ipk.py').read_bytes()
     entries['packages.tsv'] = ''.join(r['name']+'\t'+r['version']+'\t'+r['file']+'\n' for r in manifest['packages']).encode()
     entries['manifest.json'] = (json.dumps(manifest,ensure_ascii=False,indent=2)+'\n').encode()
     entries['SHA256SUMS'] = ''.join(hashlib.sha256(data).hexdigest()+'  '+name+'\n' for name,data in sorted(entries.items())).encode()
