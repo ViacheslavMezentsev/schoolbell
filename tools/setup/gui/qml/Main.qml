@@ -30,21 +30,7 @@ ApplicationWindow {
   background: Rectangle { radius: 8; color: control.highlighted ? theme.accent : control.down || control.hovered ? theme.soft : theme.panel; border.color: control.visualFocus ? theme.accent : theme.border; border.width: control.visualFocus ? 3 : 1 }
  }
 
- component ChoiceBox: ComboBox {
-  id: choice; implicitHeight: 44; leftPadding: 12; rightPadding: 32
-  opacity: enabled ? 1 : 0.6
-  contentItem: Text { text: choice.displayText; color: theme.text; font: choice.font; verticalAlignment: Text.AlignVCenter; elide: Text.ElideRight }
-  background: Rectangle { color: theme.bg; radius: 7; border.color: choice.visualFocus ? theme.accent : theme.border; border.width: choice.visualFocus ? 3 : 1 }
-  indicator: Text { x: choice.width-25; y: (choice.height-height)/2; text: "⌄"; color: theme.text }
-  delegate: ItemDelegate { required property int index; required property var modelData; width: choice.width; text: modelData; highlighted: choice.highlightedIndex === index
-   contentItem: Text { text: modelData; color: parent.highlighted ? theme.accentText : theme.text; font: choice.font }
-   background: Rectangle { color: parent.highlighted ? theme.accent : theme.panel }
-  }
-  popup: Popup { y: choice.height+4; width: choice.width; padding: 1; implicitHeight: contentItem.implicitHeight+2
-   contentItem: ListView { implicitHeight: contentHeight; model: choice.popup.visible ? choice.delegateModel : null; currentIndex: choice.highlightedIndex; clip: true }
-   background: Rectangle { color: theme.panel; border.color: theme.border; radius: 7 }
-  }
- }
+ component ChoiceBox: StyledComboBox { colors:theme }
  property bool realMode: false
  property var state: Flow.initial(false, 0)
  readonly property bool expert: state.expert
@@ -84,7 +70,7 @@ ApplicationWindow {
    }
    Item {Layout.fillWidth:true}
    ActionButton {text:app.realMode ? "К макету" : "Реальная установка";enabled:!realBackend.busy;onClicked:app.realMode=!app.realMode}
-   ChoiceBox {visible:!app.realMode;implicitWidth:180; model:["Простой режим","Режим эксперта"]; currentIndex:app.expert?1:0; enabled:app.step===-2
+   ChoiceBox {visible:!app.realMode;implicitWidth:230; model:["Простой режим","Режим эксперта"]; currentIndex:app.expert?1:0; enabled:app.step===-2
     onActivated:app.dispatch({type:"mode",value:currentIndex===1})
    }
    ActionButton {

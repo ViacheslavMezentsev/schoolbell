@@ -50,6 +50,9 @@ def validate(root):
 def run_core(args):
     import io, shlex, shutil
     root=Path(__file__).resolve().parent
+    if args.action=='inspect-zip' or getattr(args,'zip','') or (Path(args.session)/'zip-binding.json').exists() or (Path(args.session)/'zip-session').exists():
+        import zip_worker
+        return zip_worker.run_core(args,root)
     if args.action in ("verify","install"):
         (Path(args.session)/"verified.json").unlink(missing_ok=True)
     state=Path(args.session);state.mkdir(parents=True,exist_ok=True)
@@ -160,6 +163,9 @@ opkg install "$d/package.ipk"
 
 def archive_allowed(folder):
     """Local evidence check only: never converts an uncertain write to success."""
+    if (folder/'zip-session').exists():
+        import zip_worker
+        zip_worker.archive_allowed(folder)
     marker=folder/'write-started'
     if not marker.exists(): return
     data=json.loads((folder/'prepared.json').read_text())
@@ -210,7 +216,7 @@ def run(args):
 
 if __name__=='__main__':
     p=argparse.ArgumentParser()
-    p.add_argument('action',choices=['prepare','install','verify','new-session','backup']);p.add_argument('--source',required=True);p.add_argument('--index',required=True,type=int);p.add_argument('--session',required=True)
+    p.add_argument('action',choices=['prepare','install','verify','new-session','backup','inspect-zip']);p.add_argument('--source',required=True);p.add_argument('--index',required=True,type=int);p.add_argument('--session',required=True);p.add_argument('--zip',default='')
     try: run(p.parse_args())
     except subprocess.CalledProcessError as exc:
         emit('Остановлено: SSH или проверка устройства завершились с кодом '+str(exc.returncode)+'. Подробности выше. Пакет не повторяется автоматически.');sys.exit(1)

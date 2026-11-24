@@ -36,6 +36,13 @@ try {
  Copy-Item (Join-Path $PSScriptRoot 'package_worker.py') $out -Force
  Copy-Item (Join-Path $PSScriptRoot 'fresh_install.py') $out -Force
  Copy-Item (Join-Path $PSScriptRoot 'device_backup.py') $out -Force
+ Copy-Item (Join-Path $PSScriptRoot 'zip_worker.py') $out -Force
+ Copy-Item (Join-Path $PSScriptRoot 'wizard-version.txt') $out -Force
+ $zipRuntime=Join-Path $out 'zip-runtime'
+ New-Item -ItemType Directory -Force $zipRuntime | Out-Null
+ foreach ($file in @('install.py','plan.py')) {Copy-Item (Join-Path $repo "packaging/release/$file") $zipRuntime -Force}
+ Copy-Item (Join-Path $repo 'scripts/schoolbell_ipk.py') $zipRuntime -Force
+
  Add-Content (Join-Path $out 'python/python311._pth') '..'
  $fresh = if ($FreshBundle) {$FreshBundle} else {Join-Path $repo 'out/setup-gui-fresh-bundle'}
  if (!(Test-Path (Join-Path $fresh 'manifest.json'))) {throw 'Build out/setup-gui-fresh-bundle first; see GUI README'}

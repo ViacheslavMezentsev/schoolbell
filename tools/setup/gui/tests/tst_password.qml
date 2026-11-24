@@ -13,6 +13,15 @@ Item {
   property string stage: "idle"
   property string report: ""
   property var connections: []
+  property var bundleChoices: [{label:"Built in",path:""},{label:"Local ZIP",path:"fixture.zip"}]
+  property string bundlePath:""
+  property string bundleVersion:"5.1.127"
+  property bool zipMode:false
+  property bool bundleReady:true
+  property bool bundleLocked:false
+  function refreshBundles() {}
+  function selectBundle(path){bundlePath=path;zipMode=path.length>0;bundleReady=!zipMode}
+
   signal sessionReset()
   function refreshConnections() {}
   function connectionLabel(ip,index) {return ip}
@@ -25,6 +34,23 @@ Item {
  RealPane {id:pane;anchors.fill:parent;colors:theme}
  TestCase {
   name: "PasswordLifecycle"; when: windowShown
+  function test_zip_selection_and_locking() {
+   realBackend.stage="idle";realBackend.bundleLocked=false;realBackend.bundleReady=true
+   pane.visible=true;pane.helpVisible=false
+   let field=findChild(pane,"router-password"), picker=findChild(pane,"bundle-picker")
+   field.text="test-secret";picker.currentIndex=1;picker.activated(1)
+   compare(field.text,"");compare(realBackend.bundlePath,"fixture.zip")
+   verify(!findChild(pane,"prepare-button").enabled)
+   realBackend.bundleVersion="5.2.3";realBackend.bundleReady=true
+   compare(findChild(pane,"install-button").text,"2. Установить 5.2.3")
+   realBackend.bundleLocked=true;realBackend.stage="ready";field.text="retained"
+   verify(!picker.enabled);verify(!findChild(pane,"prepare-button").enabled)
+   verify(findChild(pane,"install-button").enabled)
+   realBackend.stage="uncertain";verify(!findChild(pane,"install-button").enabled)
+   verify(!findChild(pane,"new-session").enabled)
+   realBackend.bundleLocked=false;realBackend.stage="idle";realBackend.selectBundle("")
+   realBackend.bundleVersion="5.1.127";field.clear()
+  }
   function test_help_and_small_window() {
    pane.visible=true;pane.helpVisible=false;realBackend.stage="current"
    let field=findChild(pane,"router-password"), scroll=findChild(pane,"work-scroll")
