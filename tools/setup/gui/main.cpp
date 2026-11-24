@@ -34,7 +34,10 @@ int main(int argc,char **argv){
   bytes.fill(0);return 0;
  }
  QCoreApplication::setOrganizationName("Schoolbell");
+ // Preserve the existing settings, backups and pending-write state during renaming.
  QCoreApplication::setApplicationName("RouterSetupPrototype");
+ QCoreApplication::setApplicationVersion(SCHOOLBELL_WIZARD_VERSION);
+ QGuiApplication::setApplicationDisplayName("Schoolbell Setup Wizard");
  QQuickStyle::setStyle("Basic");
  Backend backend;
  QQmlApplicationEngine engine;engine.rootContext()->setContextProperty("realBackend",&backend);

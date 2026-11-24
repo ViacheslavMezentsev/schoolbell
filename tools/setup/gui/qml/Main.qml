@@ -6,7 +6,7 @@ import "Flow.js" as Flow
 ApplicationWindow {
  id: app
  visible: true; width: 1060; height: 740; minimumWidth: 900; minimumHeight: 680
- title: realMode ? "Мастер установки — реальные пакеты" : "Мастер установки — макет"; color: theme.bg
+ title: "Мастер установки Школьника " + Qt.application.version + (realMode ? " — реальные пакеты" : " — макет"); color: theme.bg
  font.family: "Segoe UI"; font.pixelSize: 15
  Settings { id: preferences; category: "Appearance"; property string themeMode: "system" }
  Theme { id: theme; mode: preferences.themeMode }
@@ -78,8 +78,9 @@ ApplicationWindow {
   anchors.fill: parent; anchors.margins: 24; spacing: 12
   RowLayout {
    ColumnLayout {
-    Label { text: "Мастер установки"; font.pixelSize: 30; font.bold: true }
-    Label { text: "OpenWrt · пакеты · заводская прошивка"; color: theme.muted }
+    Layout.fillWidth:true
+    Label { text: "Мастер установки Школьника"; Layout.fillWidth:true; wrapMode:Text.WordWrap; font.pixelSize: 28; font.bold: true }
+    Label { text: "v" + Qt.application.version + " · OpenWrt · пакеты · заводская прошивка"; color: theme.muted }
    }
    Item {Layout.fillWidth:true}
    ActionButton {text:app.realMode ? "К макету" : "Реальная установка";enabled:!realBackend.busy;onClicked:app.realMode=!app.realMode}

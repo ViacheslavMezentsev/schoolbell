@@ -17,7 +17,7 @@ try {
  if ($LASTEXITCODE) { throw 'CMake configuration failed' }
  & "$bin\cmake.exe" --build $build -j 4
  if ($LASTEXITCODE) { throw 'Build failed' }
- $exe = Join-Path $build 'router-setup.exe'
+ $exe = Join-Path $build 'schoolbell-setup-wizard.exe'
  & "$bin\strip.exe" $exe
  if ($LASTEXITCODE) { throw 'Strip failed' }
  $imports = & "$bin\objdump.exe" -p $exe
@@ -28,7 +28,7 @@ try {
  $repo = (Resolve-Path "$PSScriptRoot\..\..\..").Path
  $out = Join-Path $repo 'out\setup-gui'
  New-Item -ItemType Directory -Path $out -Force | Out-Null
- Copy-Item $exe (Join-Path $out 'router-setup.exe') -Force
+ Copy-Item $exe (Join-Path $out 'schoolbell-setup-wizard.exe') -Force
  # Real package pilot: interpreter and immutable local payload travel beside the EXE.
  $runtime = Join-Path $PSScriptRoot '..\vendor\python-3.11.9-embed-amd64.zip'
  if ((Get-FileHash $runtime -Algorithm SHA256).Hash.ToLower() -ne '009d6bf7e3b2ddca3d784fa09f90fe54336d5b60f0e0f305c37f400bf83cfd3b') {throw 'Python archive checksum mismatch'}
@@ -62,6 +62,6 @@ try {
   if ($LASTEXITCODE) {throw 'Fresh bundle verification failed'}
  } finally {Pop-Location}
  $dlls | Set-Content (Join-Path $out 'imports.txt')
- Get-FileHash (Join-Path $out 'router-setup.exe') -Algorithm SHA256
- Write-Host "Built: $out\router-setup.exe"
+ Get-FileHash (Join-Path $out 'schoolbell-setup-wizard.exe') -Algorithm SHA256
+ Write-Host "Built: $out\schoolbell-setup-wizard.exe"
 } finally { $env:PATH = $oldPath }
