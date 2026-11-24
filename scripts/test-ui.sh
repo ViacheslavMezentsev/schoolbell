@@ -11,3 +11,5 @@ node tools/setup/gui/test-state.cjs
 python3 tools/setup/gui/test-package-worker.py
 python3 tools/setup/gui/test-fresh-install.py
 python3 tools/setup/gui/test-device-backup.py
+
+python3 tests/test_release_bundle.py

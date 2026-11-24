@@ -4,6 +4,8 @@
 
 ## Unreleased — setup GUI prototype
 
+- Release preparation: independently versioned Schoolbell Setup Wizard 0.1.0, ZIP contract, deterministic candidate builder and release-note draft. Public distribution and manual installation remain gated.
+
 - GUI: Installation and Help controls share a row to the right of the section heading.
 
 - GUI: detailed guidance moved to Help; scrolling forms and wrapping action groups keep bottom actions reachable. Reading help retains the password.

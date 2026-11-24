@@ -177,3 +177,14 @@
 - [x] 24.11.2026: GUI сохранил проверенную копию семи MTD и overlay отдельного устройства перед прошивкой; все SHA256 повторно совпали на ПК. / GUI pre-flash backup verified for seven MTD partitions and overlay; all local hashes independently matched.
 
 - [x] GUI: справка отделена от рабочей формы; локальный Qt-тест проверяет доступность нижних действий прокруткой при 800 × 450 в обеих темах и сохранение пароля между вкладками. / Help separated; local Qt test verifies scroll access to bottom actions at 800 × 450 in both themes and password retention.
+
+## Выпуск комплектов / Release bundles
+
+- [x] Имена Schoolbell Setup Wizard 0.1.0, отдельная версия EXE; контракт ZIP формата 1 и docs/releases/v5.1.127.md. / Independent wizard naming/version, ZIP v1 contract and release-note draft.
+- [x] Локальный детерминированный ZIP-кандидат из закреплённого офлайн-комплекта; проверки ABI, состава, метаданных и SHA256. Публичный выпуск заблокирован. / Deterministic local candidate builder with identity/integrity checks; public release blocked.
+- [ ] Завершить ручной install.sh и испытать свежую установку/обновление/неизвестный исход с внешней копией и откатом; check.sh и verify.sh — только проверки. / Complete and accept the manual installer; existing scripts only check.
+- [ ] Обнаружение локальных ZIP, безопасная распаковка и фиксация выбранного комплекта на сеанс мастера. / Local ZIP discovery, bounded extraction and session pinning.
+- [ ] GitHub Releases, кэш, подписи артефактов и обработка недоступности сети. / Release download, cache, signatures and offline handling.
+- [ ] Подготовить переносимый ZIP мастера с runtime/лицензиями; проверить без среды разработки. Закрыть лицензии/исходники зависимостей и права аудио до публикации. / Portable wizard/runtime/license delivery and clean-host checks; clear dependency/source/audio distribution gates.
+
+- [ ] Визуально проверить длинное название мастера 0.1.0 в обеих темах и при масштабировании: сборка/метаданные/Qt-тесты прошли, инструмент финального осмотра завершился ошибкой. / Inspect renamed header layout; build/metadata/Qt passed, final viewing tool failed.
