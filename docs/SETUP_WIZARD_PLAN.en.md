@@ -97,6 +97,7 @@ packaging and hardware acceptance; Qt or WSL availability does not prove support
 
 Stage 0 is complete; the stage 1 core passed local checks, with hardware acceptance
 still pending. Stage 2 now has a [pure DryRun planner](../tools/setup/NETWORK_PREFLIGHT.md).
-Windows snapshot collection and GUI preflight are connected. Next: a privileged
-helper with network restoration. Embedded OEM is not connected yet. Then continue with OpenWrt/OEM
+Windows snapshot collection and GUI preflight are connected. A privileged
+helper with network restoration is connected and mock-tested. Actual UAC/address
+assignment/DHCP remain unaccepted; next are image embedding, scoped firewall and TFTP. Embedded OEM is not connected yet. Then continue with OpenWrt/OEM
 (3–4), bundles/restoration (5–6), and release sources/delivery (7–8).

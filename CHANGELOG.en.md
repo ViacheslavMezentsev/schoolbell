@@ -4,6 +4,8 @@
 
 ## Unreleased — setup GUI
 
+- GUI: explicit confirmation and UAC helper for network preparation/restoration; write-ahead state, adapter GUID, concurrency guard and retry. No firewall/TFTP; hardware validation pending.
+
 - Setup: pure network DryRun planner for both profiles; validates adapter/route/port snapshots without device access. GUI reads local Windows inventory; network mutation is not connected.
 
 - GUI: explicit crash-session recovery under an OS lease; markers are archived, and interrupted writes require result verification.

@@ -156,3 +156,12 @@ to preserve old sessions and backups. Source [requirements](../../../docs/requir
 Сетевой этап: [предварительный план RU/EN](../NETWORK_PREFLIGHT.md). Кнопка ↻ в маршрутах прошивки читает адаптеры; после выбора и подтверждения модели выполняется предварительная проверка. Сеть не меняется, Reset пока не нужен.
 
 Network stage: [preflight plan RU/EN](../NETWORK_PREFLIGHT.md). Firmware routes now collect local Windows inventory and check a fresh snapshot after adapter/model selection. No network mutation, probes or TFTP; do not press Reset yet.
+
+Сетевой помощник: после предварительной проверки можно подтвердить подготовку
+временного адреса через UAC; отдельная кнопка восстанавливает DHCP по сохранённому
+GUID. Это не запуск TFTP. Реальные операции с адаптером ещё не приняты; выполнены
+только тесты с подменой команд. См. границы и восстановление в NETWORK_PREFLIGHT.
+
+Network helper: explicit UAC-confirmed temporary addressing and GUID-bound DHCP
+restoration are connected. This is not TFTP. Actual adapter operations remain
+unaccepted; mocked-command tests only. See NETWORK_PREFLIGHT for recovery limits.

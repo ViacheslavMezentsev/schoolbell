@@ -52,7 +52,7 @@ helper обязан заново собрать состояние, провер
 сохранить конфигурацию до изменений и обеспечить восстановление после сбоя.
 Сборщик Windows-снимка и GUI-проверка подключены. Используются только локальные
 Get-Net*/Get-CimInstance и чтение признака SchoolbellSetup/network.json. Снимок
-не сохраняется мастером на диск. UAC/helper, встроенный OEM и аппаратная приёмка впереди.
+не сохраняется мастером на диск. UAC/helper подключён отдельным действием ниже; встроенный OEM и аппаратная приёмка впереди.
 
 ## English
 
@@ -76,5 +76,53 @@ image bytes and direct routing, save the original configuration and restore only
 its own changes. Windows collection and GUI preflight are connected: refresh adapters, select one,
 confirm the exact label, then check a fresh snapshot. Local Get-Net*/CIM queries
 and the existing restoration-state file are read without network probes or writes.
-The wizard does not persist the inventory. UAC, embedded OEM and hardware
+The wizard does not persist the inventory. The UAC helper is connected as a separate action below; embedded OEM and hardware
 acceptance remain pending.
+
+## Подготовка и восстановление сети / Network helper
+
+В GUI после успешной проверки доступно «Подготовить сеть…». Диалог показывает
+изменение выбранного USB–Ethernet; затем Windows запрашивает UAC. Используется
+PowerShell 7 из стандартного каталога Program Files. Пароли не передаются.
+Помощник заново проверяет адаптер/маршруты и сохраняет журнал в защищённом
+`ProgramData/SchoolbellNetworkHelper-v1/network.json` до изменения адреса.
+Добавляется только `192.168.0.225/24`; прямой путь к `192.168.0.2` проверяется
+через таблицу маршрутов, без сетевой пробы. Firewall и TFTP пока не запускаются.
+
+«Восстановить сеть…» работает и после перезапуска мастера: использует GUID из
+журнала, удаляет собственный временный адрес, возвращает DHCP и проверяет
+конфигурацию. Это не подтверждение получения аренды или доступности страницы.
+Если адаптер отключён или восстановление не завершилось, журнал сохраняется.
+Глобальная блокировка исключает одновременных помощников. Старый журнал
+консольного Setup не удаляется и продолжает блокировать новую подготовку.
+
+При неопределённой принадлежности адреса после аварии автоматическое удаление
+запрещено: нужна отдельная диагностика. Настройки DNS, основной адаптер, VPN,
+часы и роутер помощник не меняет. При штатной ошибке подготовки он пытается
+восстановить DHCP; после аварийного закрытия/отключения питания используется
+отдельная кнопка восстановления. Не закрывайте мастер во время операции.
+
+Проверены локальные сценарии с подменёнными сетевыми командами и GUI.
+Настоящие UAC, назначение адреса и возврат DHCP на отдельном кабеле ещё не приняты.
+Подготовка адреса не является READY: образ, firewall, передача и проверка ОС —
+следующие этапы. Пока это отдельное действие проверки сетевого помощника.
+
+### English
+
+After preflight, “Prepare network…” requires an in-app confirmation and Windows
+UAC. The fixed helper uses PowerShell 7 from Program Files; no passwords are passed.
+It revalidates the selected adapter, journals state in an administrator-protected
+ProgramData directory, adds only `192.168.0.225/24` and checks the direct routing
+table entry. No firewall rule, TFTP server, device probe or flash operation runs.
+
+“Restore network…” uses the saved adapter GUID even after restart, removes only
+the owned temporary address and verifies DHCP configuration. It does not claim a
+DHCP lease or UI availability. Missing adapters and failed restoration retain the
+journal. Concurrent helpers are excluded by a global mutex. Legacy console state
+is not removed. Uncertain address ownership after a crash requires diagnosis.
+DNS, other adapters and VPN are unchanged. Normal preparation failures attempt
+restoration; process/power failure requires the explicit restore action.
+
+Mocked command tests and GUI tests passed. Actual UAC, address assignment and DHCP
+restoration on the dedicated cable remain unaccepted. This network-helper action
+is not READY; image verification, firewall, transfer and OS verification follow.
