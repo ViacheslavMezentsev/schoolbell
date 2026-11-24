@@ -38,7 +38,7 @@ def archive_allowed(folder):
     state=folder/'zip-session'
     if not (state/'write-started').exists(): return
     doc,data=transaction.receipt(state)
-    proof=json.loads((state/'verified.json').read_bytes())
+    proof=json.loads((state/('verified.json' if (state/'verified.json').exists() else 'unchanged.json')).read_bytes())
     if (proof.get('prepared_sha256')!=transaction.plan.sha(state/'prepared.json') or
         proof.get('marker_sha256')!=transaction.plan.sha(state/'write-started') or
         proof.get('version')!=doc['version']):
@@ -56,7 +56,8 @@ def run_core(args,root=None,route_check=None,transport=None,emit=print):
         temp.write_text(json.dumps(selected),encoding='utf8');temp.replace(state/'zip-selection.json')
         emit('ZIP VERIFIED. Школьник '+selected['version']+' · новая установка · '+selected['status'])
         return
-    if args.action=='verify': (state/'zip-session/verified.json').unlink(missing_ok=True)
+    if args.action=='verify':
+        for name in ('verified.json','unchanged.json'):(state/'zip-session'/name).unlink(missing_ok=True)
     if (state/'prepared.json').exists(): raise ValueError('Legacy session cannot become a ZIP session')
     if args.action=='prepare':
         if (state/'zip-session').exists() or (state/'zip-binding.json').exists():
@@ -85,5 +86,36 @@ def run_core(args,root=None,route_check=None,transport=None,emit=print):
             route_check(args.source,args.index)
             return remote(command,**kw)
         return checked
-    transaction.resume(state/'zip-session',args.action,factory,
-                       'INSTALL '+TARGET if args.action=='install' else None,emit)
+    try:
+        transaction.resume(state/'zip-session',args.action,factory,
+                           'INSTALL '+TARGET if args.action=='install' else None,emit)
+    except Exception:
+        if args.action=='verify':
+            try:
+                doc,data=transaction.receipt(state/'zip-session')
+                transaction.fresh.unchanged(data,factory(doc['connection']),transaction.BASE)
+                transaction.write_json(state/'zip-session/unchanged.json',dict(
+                    version=doc['version'],prepared_sha256=transaction.plan.sha(state/'zip-session/prepared.json'),
+                    marker_sha256=transaction.plan.sha(state/'zip-session/write-started')))
+                emit('UNCHANGED VERIFIED. Установка не выполнена; исходный состав пакетов и настройки сохранены. Начните новый сеанс.')
+                return
+            except Exception:
+                pass
+            try:
+                conn=transaction.connection(TARGET,args.source,Path(os.environ['LOCALAPPDATA'])/'SchoolbellSetup/known_hosts')
+                result=factory(conn)("""echo ZIP_DIAGNOSTICS
+cat /tmp/sysinfo/board_name
+opkg status modbus-schoolbell | sed -n '/^Package:/p;/^Version:/p;/^Status:/p'
+for f in /etc/schoolbell-editor/package.pending /tmp/schoolbell-sound-test.lock/package-owner; do
+ if test -f "$f"; then echo "$f:"; cat "$f"; fi
+done
+for svc in schoolbell-auto uhttpd; do /etc/init.d/$svc running; echo "$svc running=$?"; done
+df -k /overlay /tmp
+free
+dmesg | tail -60 | sed -n '/Out of memory/p;/Killed process/p;/oom-killer/p'
+echo ZIP_DIAGNOSTICS_END
+""",stdout=-1)
+                emit(result.stdout.decode('utf8',errors='replace'))
+            except Exception as diagnostic_error:
+                emit('Read-only diagnostics unavailable: '+str(diagnostic_error))
+        raise

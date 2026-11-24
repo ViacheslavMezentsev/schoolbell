@@ -139,7 +139,7 @@ def resume(args,root,data,remote,base,snapshot,emit):
         if load_bundle(root,data['manifest']['package'])!=data['rows']: raise ValueError('Bundle changed')
         command+=FRESH+space(data['missing'])
         old=''.join(n+' - '+v+'\n' for n,v in sorted(data['inventory'].items()))
-        command+='opkg list-installed | sort > "$d/inventory.txt"\nprintf \'%s\' '+shlex.quote(old)+' > "$d/expected-inventory.txt"\ncmp "$d/inventory.txt" "$d/expected-inventory.txt"\n'
+        command+="LC_ALL=C opkg list-installed | LC_ALL=C sort > \"$d/inventory.txt\"\nprintf '%s  %s\\n' "+shlex.quote(hashlib.sha256(old.encode()).hexdigest())+" \"$d/inventory.txt\" | sha256sum -c -\n"
         payload=io.BytesIO()
         with tarfile.open(fileobj=payload,mode='w',format=tarfile.USTAR_FORMAT) as t:
             for r in data['missing']: t.add(root/'bundle'/r['file'],arcname=r['file'],recursive=False)
@@ -148,12 +148,30 @@ def resume(args,root,data,remote,base,snapshot,emit):
         payload.seek(0)
         command+='cd "$d"\ntar xf -\nsha256sum -c SHA256SUMS\nopkg install '+ ' '.join(shlex.quote('./'+r['file']) for r in data['missing'])+'\n'
         (state/'write-started').write_text('Fresh installation attempt '+uuid.uuid4().hex)
+    command+="while read name version; do test \"$(opkg status \"$name\" | sed -n 's/^Version: //p')\" = \"$version\" || exit 1; done <<'SCHOOLBELL_VERSIONS'\n"
     for r in data['rows']:
         expected=data['inventory'].get(r['name'],r['version'])
-        command+='test "$(opkg status '+shlex.quote(r['name'])+' | sed -n \'s/^Version: //p\')" = '+shlex.quote(expected)+'\n'
+        command+=r['name']+' '+expected+'\n'
+    command+='SCHOOLBELL_VERSIONS\n'
     command+='test ! -e /etc/schoolbell-editor/package.pending\n'+snapshot+protected+'/etc/init.d/schoolbell-auto running\n/etc/init.d/uhttpd running\necho GUI_FRESH_VERIFIED\n'
     result=remote(command,input=payload.getvalue(),stdout=-1) if payload else remote(command,stdout=-1)
     if not result.stdout.rstrip().endswith(b'GUI_FRESH_VERIFIED'): raise ValueError('Fresh result proof missing')
     (state/'verified.json').write_text(json.dumps({'version':data['manifest']['package']['version'],
         'time':time.time(),'prepared_sha256':digest(state/'prepared.json'),'marker_sha256':digest(state/'write-started')}))
     emit('FRESH VERIFIED. Школьник установлен, службы работают, автозвонки выключены. Сеть и часы не изменялись.')
+
+
+def unchanged(data,remote,base):
+    """Prove the exact pre-install state; absence of the application alone is insufficient."""
+    inventory_text=''.join(n+' - '+v+'\n' for n,v in sorted(data['inventory'].items()))
+    command=base+FRESH+TEMP
+    command+='test "$(cat /sys/class/net/br-lan/address)" = '+shlex.quote(data['identity'][0])+'\n'
+    command+='test "$(cat /proc/sys/kernel/random/boot_id)" = '+shlex.quote(data['identity'][1])+'\n'
+    command+='LC_ALL=C opkg list-installed | LC_ALL=C sort > "$d/inventory.txt"\n'
+    command+="printf '%s  %s\\n' "+shlex.quote(hashlib.sha256(inventory_text.encode()).hexdigest())+' "$d/inventory.txt" | sha256sum -c -\n'
+    command+='{ '+PROTECTED+'} > "$d/protected.txt"\n'
+    command+="printf '%s' "+shlex.quote(data['protected'])+' > "$d/expected.txt"\ncmp "$d/protected.txt" "$d/expected.txt"\n'
+    command+='echo GUI_UNCHANGED_VERIFIED\n'
+    result=remote(command,stdout=-1)
+    if not result.stdout.rstrip().endswith(b'GUI_UNCHANGED_VERIFIED'):
+        raise ValueError('Unchanged-state proof missing')

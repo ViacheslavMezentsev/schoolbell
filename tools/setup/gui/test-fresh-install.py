@@ -45,6 +45,22 @@ class FreshTests(unittest.TestCase):
   f.prepare(self.args,self.root,self.manifest,self.remote,'set -eu\n',lambda s:None)
   return json.loads((self.root/'session/prepared.json').read_text())
  def resume(self,data):f.resume(self.args,self.root,data,self.remote,'set -eu\n','true\n',lambda s:None)
+ def test_large_inventory_stays_below_dropbear_command_limit(self):
+  data=self.prepare();data['inventory'].update({'installed-'+str(i):'1.2.3' for i in range(1000)})
+  self.args.action='install';self.resume(data)
+  command=self.commands[-1]
+  import shlex
+  self.assertLess(len(shlex.quote(command).encode())+200,8000)
+ def test_unchanged_requires_explicit_proof(self):
+  data=self.prepare()
+  with self.assertRaises(ValueError):f.unchanged(data,self.remote,'set -eu\n')
+  def checked(cmd,**kw):
+   subprocess.run(['bash','-n'],input=cmd.encode(),check=True)
+   self.assertIn('cmp "$d/protected.txt"',cmd)
+   self.assertIn('sha256sum -c -',cmd)
+   self.assertNotIn('opkg install',cmd)
+   return SimpleNamespace(stdout=b'GUI_UNCHANGED_VERIFIED\n')
+  f.unchanged(data,checked,'set -eu\n')
  def test_complete_fresh_transaction(self):
   data=self.prepare();self.assertEqual(self.writes,0);self.args.action='install';self.resume(data)
   self.assertEqual(self.writes,1);self.assertTrue((self.root/'session/verified.json').exists())

@@ -15,7 +15,7 @@ class GuiZipTests(unittest.TestCase):
     def setUp(self):
         self.tx=transactions.TransactionTests();self.tx.setUp();self.addCleanup(self.tx.doCleanups)
         self.root=self.tx.root/'runtime';self.root.mkdir()
-        (self.root/'wizard-version.txt').write_text('0.2.0')
+        (self.root/'wizard-version.txt').write_text('0.2.1')
         (self.root/'firmware').mkdir();(self.root/'firmware/tp_recovery.bin').write_bytes(self.tx.image.read_bytes())
         known=self.tx.root/'appdata/SchoolbellSetup/known_hosts';known.parent.mkdir(parents=True);known.write_text('test trust')
         env=patch.dict(os.environ,{'LOCALAPPDATA':str(known.parent.parent)});env.start();self.addCleanup(env.stop)
@@ -53,6 +53,19 @@ class GuiZipTests(unittest.TestCase):
         with self.assertRaises(ValueError):self.run_action('verify')
         self.assertFalse((self.folder/'zip-session/verified.json').exists())
         with self.assertRaises(FileNotFoundError):gui.archive_allowed(self.folder)
+    def test_unchanged_proof_allows_archive_not_install_retry(self):
+        self.prepare();state=self.folder/'zip-session';(state/'write-started').write_text('lost before write')
+        def remote(command,**kw):
+            if 'GUI_UNCHANGED_VERIFIED' in command:return SimpleNamespace(stdout=b'GUI_UNCHANGED_VERIFIED\n')
+            raise ValueError('not installed')
+        self.args.action='verify'
+        gui.run_core(self.args,self.root,lambda *_:None,lambda _:remote,lambda _:None)
+        gui.archive_allowed(self.folder)
+        self.assertTrue((state/'unchanged.json').is_file())
+        self.assertFalse((state/'verified.json').exists())
+        with self.assertRaises(ValueError):self.run_action('install')
+        (state/'write-started').write_text('different attempt')
+        with self.assertRaises(ValueError):gui.archive_allowed(self.folder)
     def test_legacy_session_not_reused(self):
         (self.folder/'prepared.json').write_text('{}')
         with self.assertRaises(ValueError):self.run_action('inspect-zip')

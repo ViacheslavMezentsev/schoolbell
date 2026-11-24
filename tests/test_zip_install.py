@@ -21,6 +21,12 @@ sys.path.insert(0,str(ROOT/'packaging/release'))
 import install as installer
 
 class TransactionTests(unittest.TestCase):
+    def test_ssh_rejects_overlong_command_before_connection(self):
+        known=self.root/'known-limit';known.write_text('test key')
+        ssh=installer.SSH(installer.connection('192.0.2.1','192.0.2.2',known))
+        with patch.object(installer.subprocess,'run') as runner:
+            with self.assertRaisesRegex(ValueError,'Dropbear limit'):ssh('x'*8001,stdout=-1)
+            runner.assert_not_called()
     def setUp(self):
         self.base=plans.PlanTests();self.base.setUp();self.addCleanup(self.base.doCleanups)
         self.root=self.base.fixture.root;self.session=self.root/'session'

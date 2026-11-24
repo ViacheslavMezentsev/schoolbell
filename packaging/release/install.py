@@ -120,6 +120,7 @@ class SSH:
     def __call__(self, command, **kwargs):
         # Lock spans one remote command; a stale lock is never removed automatically.
         wrapped="umask 077; mkdir /tmp/schoolbell-release.lock || exit 1; trap 'rmdir /tmp/schoolbell-release.lock' EXIT; sh -c "+shlex.quote(command)
+        if len(wrapped.encode("utf8"))>8000: raise ValueError("Remote command exceeds safe Dropbear limit; no connection attempted")
         result=subprocess.run(self.command+[wrapped],check=True,timeout=240,**kwargs)
         if isinstance(result.stdout,bytes) and len(result.stdout)>32*1024*1024: raise ValueError('Remote response too large')
         return result
