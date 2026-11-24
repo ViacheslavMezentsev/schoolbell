@@ -55,6 +55,23 @@ UNCHANGED VERIFIED — отдельный результат: пакет не у
 системная, светлая и тёмная темы с сохранением выбора. Закрытие во время операции
 блокируется; в покое требуется подтверждение с сохранением копий/журнала.
 
+### Операции и отмена
+
+Результаты GUI передаются отдельным локальным JSON-каналом, не распознаются по
+тексту SSH/журнала. Каждая операция имеет новый идентификатор и привязку к каталогу
+сеанса; GUI проверяет схему, этап, последовательность и результат для данного
+действия. Успех требует подтверждения worker и штатного exit 0. Отсутствие или
+повреждение подтверждения не разрешает повторную запись.
+
+«Отменить операцию» доступна для проверки архива, подготовки, копии и проверки
+результата. Запрос обрабатывается между чтениями; текущий SSH-запрос не убивается.
+Установка и архивирование сеанса не прерываются. Частичные копии сохраняются,
+отмена не означает откат; после возможной записи остаётся отдельная проверка.
+Аварийные lock/guard по-прежнему блокируют запуск: автоматическое снятие блокировок
+не реализовано. JSON-файлы операций хранятся рядом с сеансами в operations;
+они не содержат пароль или текст удалённого вывода. Это локальный протокол,
+не защита от вредоносной программы с правами того же пользователя.
+
 ### Сборка и проверки
 
 В PowerShell: `./build-windows.ps1`. Требуются MSYS2 MinGW64, CMake, Ninja, GCC и
@@ -104,6 +121,14 @@ Restart restores the previous result only from a receipt bound to the version an
 Backups contain private settings and must not be published. Logs can be copied;
 the scrollable form and shared dropdowns support light/dark/system themes.
 Closing is blocked while busy and confirmed otherwise.
+
+GUI results now use a separate local JSON channel, bound to operation/session IDs
+and action-specific outcomes. Log text cannot signal success. Exit 0 and a valid
+completed record are both required. Read-only operations support cooperative
+cancellation between requests; SSH is not killed. Installation and archival cannot
+be cancelled. Partial evidence stays on disk, cancellation is not rollback, and
+crash lock/guard files still block continuation. Local operations records contain
+no passwords or remote output; this is not a security boundary against the same OS user.
 
 Build with `./build-windows.ps1` using MSYS2 static Qt6/MinGW64. Output directory:
 `out/setup-gui-external`. Real operations require the adjacent Python/runtime

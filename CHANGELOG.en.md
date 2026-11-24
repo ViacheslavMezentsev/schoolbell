@@ -4,6 +4,8 @@
 
 ## Unreleased — setup GUI
 
+- GUI: separate JSON phases/results replace log-string parsing; operation IDs, outcome codes and exit status are checked; cooperative read cancellation never kills SSH.
+
 - Documentation: three-route implementation plan, including embedded verified OEM for offline recovery and separate settings reset.
 
 - GUI: OpenWrt / bundle / recovery entry routes with preparation guidance and explicit firmware limitations; real ZIP installation remains available.

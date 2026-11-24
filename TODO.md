@@ -208,3 +208,6 @@
 
 - [ ] Выполнить этапы 0–8 [плана мастера](docs/SETUP_WIZARD_PLAN.md): общие операции → сеть/профили → OpenWrt → встроенный OEM → комплекты/копии → релизы и поставка. / Follow [stages 0–8](docs/SETUP_WIZARD_PLAN.en.md).
 - [ ] Встроить проверенный OEM EU v3.30 Build250625 и обеспечить автономный возврат без Интернета; заводской сброс настроек остаётся отдельным действием. / Embed verified OEM for offline recovery; keep settings reset separate.
+
+- [x] Общий локальный канал операций: типизированные итоги, ID/последовательность, этапы, кооперативная отмена чтений; host-проверки без устройств. / Structured local operation results, IDs, phases and cooperative read cancellation.
+- [ ] Принять новый протокол и отмену в GUI на отдельном устройстве; определить восстановление аварийных lock/guard без автоматического удаления. / Hardware acceptance and explicit crash-lock recovery remain pending.
