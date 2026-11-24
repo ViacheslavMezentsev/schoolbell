@@ -67,8 +67,10 @@ UNCHANGED VERIFIED — отдельный результат: пакет не у
 результата. Запрос обрабатывается между чтениями; текущий SSH-запрос не убивается.
 Установка и архивирование сеанса не прерываются. Частичные копии сохраняются,
 отмена не означает откат; после возможной записи остаётся отдельная проверка.
-Аварийные lock/guard по-прежнему блокируют запуск: автоматическое снятие блокировок
-не реализовано. JSON-файлы операций хранятся рядом с сеансами в operations;
+После сбоя нажмите «Восстановить незавершённый сеанс». Блокировка ОС не позволит
+вмешаться в работающий worker. Маркеры новой версии сохранятся в recovery-history;
+копии и признаки записи не меняются. После записи сначала проверьте результат.
+Блокировки старой версии и повреждённые маркеры требуют ручной диагностики. JSON-файлы операций хранятся рядом с сеансами в operations;
 они не содержат пароль или текст удалённого вывода. Это локальный протокол,
 не защита от вредоносной программы с правами того же пользователя.
 
@@ -127,7 +129,8 @@ and action-specific outcomes. Log text cannot signal success. Exit 0 and a valid
 completed record are both required. Read-only operations support cooperative
 cancellation between requests; SSH is not killed. Installation and archival cannot
 be cancelled. Partial evidence stays on disk, cancellation is not rollback, and
-crash lock/guard files still block continuation. Local operations records contain
+the explicit recovery action archives new-format crash markers only while holding an OS lease.
+Backups and write evidence remain intact; legacy or corrupt markers require manual diagnosis. Local operations records contain
 no passwords or remote output; this is not a security boundary against the same OS user.
 
 Build with `./build-windows.ps1` using MSYS2 static Qt6/MinGW64. Output directory:

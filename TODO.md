@@ -210,4 +210,6 @@
 - [ ] Встроить проверенный OEM EU v3.30 Build250625 и обеспечить автономный возврат без Интернета; заводской сброс настроек остаётся отдельным действием. / Embed verified OEM for offline recovery; keep settings reset separate.
 
 - [x] Общий локальный канал операций: типизированные итоги, ID/последовательность, этапы, кооперативная отмена чтений; host-проверки без устройств. / Structured local operation results, IDs, phases and cooperative read cancellation.
-- [ ] Принять новый протокол и отмену в GUI на отдельном устройстве; определить восстановление аварийных lock/guard без автоматического удаления. / Hardware acceptance and explicit crash-lock recovery remain pending.
+- [ ] Принять новый протокол и отмену в GUI на отдельном устройстве; проверить восстановление аварийных lock/guard на устройстве. / Hardware acceptance and device crash-lock recovery acceptance remain pending.
+
+- [x] GUI: локальные тесты блокировки ОС, гибели worker, восстановления маркеров, сохранности копий и отказа для legacy/corrupt lock. / Local OS lease, worker crash, recovery and evidence preservation tests. Проверено в WSL и упакованном Python Windows: 5 тестов; Qt: 15 PASS; make all и статическая сборка PASS. Аппаратная проверка не выполнялась. / WSL and packaged Windows Python: 5 tests; Qt: 15 PASS; make all and static build PASS; no hardware test.

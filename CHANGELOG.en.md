@@ -4,6 +4,8 @@
 
 ## Unreleased — setup GUI
 
+- GUI: explicit crash-session recovery under an OS lease; markers are archived, and interrupted writes require result verification.
+
 - GUI: separate JSON phases/results replace log-string parsing; operation IDs, outcome codes and exit status are checked; cooperative read cancellation never kills SSH.
 
 - Documentation: three-route implementation plan, including embedded verified OEM for offline recovery and separate settings reset.
