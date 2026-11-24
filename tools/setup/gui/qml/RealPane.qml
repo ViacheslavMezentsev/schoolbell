@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 Rectangle {
  id: pane
+ Component.onCompleted:{realBackend.refreshConnections();realBackend.refreshBundles()}
  function run(action) {
   let secret=password.text;
   password.revealed=false;
@@ -26,7 +27,7 @@ Rectangle {
  ColumnLayout {anchors.fill:parent; anchors.margins:20; spacing:12
   RowLayout {
    Layout.fillWidth:true
-   Label {objectName:"section-title";text:"Школьник поверх OpenWrt";font.pixelSize:25;font.bold:true;Layout.fillWidth:true;wrapMode:Text.WordWrap}
+   Label {objectName:"section-title";text:"OpenWrt · Комплект";font.pixelSize:25;font.bold:true;Layout.fillWidth:true;wrapMode:Text.WordWrap}
    RealButton {objectName:"work-tab";text:"Установка";checkable:true;checked:!pane.helpVisible;onClicked:pane.helpVisible=false}
    RealButton {objectName:"help-tab";text:"Справка";checkable:true;checked:pane.helpVisible;onClicked:pane.helpVisible=true}
   }
@@ -41,7 +42,7 @@ Rectangle {
    Label {text:"Комплект:"}
    StyledComboBox {colors:pane.colors;id:bundlePicker;objectName:"bundle-picker";Layout.fillWidth:true;implicitHeight:48;font.pixelSize:18
     model:realBackend.bundleChoices;textRole:"label"
-    displayText:realBackend.zipMode ? realBackend.bundlePath.split(/[\\/]/).pop() : "Встроенный комплект 5.1.127"
+    displayText:realBackend.zipMode ? realBackend.bundlePath.split(/[\\/]/).pop() : "Выберите ZIP-комплект"
     enabled:!realBackend.busy && !realBackend.bundleLocked
     onActivated:{password.clear();realBackend.selectBundle(realBackend.bundleChoices[currentIndex].path)}
    }
@@ -51,7 +52,7 @@ Rectangle {
   }
   Label {objectName:"bundle-status";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:colors.muted
    text:realBackend.zipMode ? realBackend.bundleLocked ? "ZIP закреплён за сеансом. Для другого комплекта начните новый сеанс." : realBackend.bundleReady ? "ZIP проверен локально · Школьник "+realBackend.bundleVersion+" · только чистая OpenWrt. Кандидат: аппаратная приёмка не выполнена." : "Выберите ZIP для локальной проверки. Установка пока недоступна."
-    : "Для установки из ZIP положите архив рядом с EXE и нажмите ↻. Встроенный комплект также поддерживает обновление с 5.1.124."}
+    : "Положите ZIP-комплект рядом с EXE и нажмите ↻. Без проверенного архива установка недоступна."}
   RowLayout {
    Layout.fillWidth:true
    Label {text:"Подключение к роутеру:"}
@@ -75,12 +76,12 @@ Rectangle {
    PasswordField {id:password;clearOnHide:false;objectName:"router-password";colors:pane.colors;Layout.fillWidth:true;enabled:!realBackend.busy;placeholderText:"Пароль администратора OpenWrt (root)"}
   }
   Flow {Layout.fillWidth:true;spacing:6
-   RealButton {objectName:"prepare-button";text:"1. Проверить устройство";implicitHeight:48;enabled:!realBackend.busy && realBackend.bundleReady && (!realBackend.zipMode || !realBackend.bundleLocked) && ["idle","error","ready"].indexOf(realBackend.stage)>=0 && (pane.connectionSelected || realBackend.stage==="ready") && pane.selectedSource.length>0 && password.text.length>0;onClicked:run("prepare")}
+   RealButton {objectName:"prepare-button";text:"1. Проверить устройство";implicitHeight:48;enabled:!realBackend.busy && realBackend.bundleReady && (!realBackend.zipMode || !realBackend.bundleLocked) && ["idle","error","ready","backedup"].indexOf(realBackend.stage)>=0 && (pane.connectionSelected || realBackend.stage==="ready") && pane.selectedSource.length>0 && password.text.length>0;onClicked:run("prepare")}
    RealButton {objectName:"install-button";text:"2. Установить "+realBackend.bundleVersion;implicitHeight:48;enabled:!realBackend.busy && realBackend.stage==="ready" && password.text.length>0;onClicked:confirm.open()}
    RealButton {text:"Проверить результат";implicitHeight:48;enabled:!realBackend.busy && ["uncertain","done"].indexOf(realBackend.stage)>=0 && password.text.length>0;onClicked:run("verify")}
   }
-  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;font.bold:true;color:["done","current"].indexOf(realBackend.stage)>=0?colors.success:colors.warning;text:realBackend.stage==="inspect-zip"?"Проверяется ZIP на компьютере. Подключение к роутеру не выполняется.":realBackend.busy?"Выполняется операция. Не отключайте питание и кабель.":realBackend.stage==="backedup"?"Копия перед прошивкой проверена и сохранена на ПК.":realBackend.stage==="current"?"Школьник уже установлен. Службы проверены, автозвонки выключены.":realBackend.stage==="done"?(realBackend.fresh?"Новая установка проверена. Автозвонки выключены.":"Установка проверена. Автозвонки выключены, громкость сохранена."):realBackend.stage==="ready"?"Резервная копия проверена. Можно подтвердить установку.":realBackend.stage==="uncertain"?"Исход записи требует проверки. Повторная установка заблокирована.":realBackend.stage==="error"?(realBackend.zipMode && realBackend.bundleLocked?"Подготовка остановлена. Сохраните материалы через «Новый сеанс» перед новой попыткой.":"Операция остановлена. Подробности ниже."):"Начните с проверки устройства и резервной копии."}
-  RealButton {objectName:"firmware-backup";text:"Сохранить копию перед прошивкой";visible:realBackend.stage==="current";enabled:!realBackend.busy && password.text.length>0;onClicked:run("backup")}
+  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;font.bold:true;color:["done","current"].indexOf(realBackend.stage)>=0?colors.success:colors.warning;text:realBackend.stage==="not-applied"?"Установка не выполнена. Исходное состояние подтверждено. Начните новый сеанс.":realBackend.stage==="inspect-zip"?"Проверяется ZIP на компьютере. Подключение к роутеру не выполняется.":realBackend.busy?"Выполняется операция. Не отключайте питание и кабель.":realBackend.stage==="backedup"?"Копия перед прошивкой проверена и сохранена на ПК.":realBackend.stage==="current"?"Школьник уже установлен. Службы проверены, автозвонки выключены.":realBackend.stage==="done"?(realBackend.fresh?"Новая установка проверена. Автозвонки выключены.":"Установка проверена. Автозвонки выключены, громкость сохранена."):realBackend.stage==="ready"?"Резервная копия проверена. Можно подтвердить установку.":realBackend.stage==="uncertain"?"Исход записи требует проверки. Повторная установка заблокирована.":realBackend.stage==="error"?(realBackend.zipMode && realBackend.bundleLocked?"Подготовка остановлена. Сохраните материалы через «Новый сеанс» перед новой попыткой.":"Операция остановлена. Подробности ниже."):"Начните с проверки устройства и резервной копии."}
+  RealButton {objectName:"firmware-backup";text:"Сохранить полную копию";enabled:!realBackend.busy && !realBackend.bundleLocked && ["idle","error","current","backedup"].indexOf(realBackend.stage)>=0 && pane.connectionSelected && password.text.length>0;onClicked:run("backup")}
   ProgressBar {Layout.fillWidth:true;indeterminate:true;visible:realBackend.busy}
   Rectangle {
    Layout.fillWidth:true;Layout.preferredHeight:140;Layout.minimumHeight:140
@@ -113,10 +114,10 @@ Rectangle {
      model:[
       {title:"Что понадобится",body:"Отдельный MR3020 v3 с OpenWrt 19.07.9, его блок питания, USB–Ethernet-адаптер и кабель RJ45. Подключите роутер к отдельному адаптеру. Нужно знать пароль администратора OpenWrt (root); на чистой OpenWrt сначала задайте его через LuCI. Этот режим устанавливает пакеты, а не прошивает OpenWrt или заводскую ОС."},
       {title:"ZIP рядом с мастером",body:"Положите schoolbell-v…-openwrt-….zip рядом с EXE, нажмите ↻ у комплекта и выберите файл. Проверка ZIP локальная и не требует пароля. Версия берётся из manifest; несовместимый или повреждённый архив блокирует подготовку. Пока ZIP поддерживает только чистую OpenWrt. После подготовки используется проверенная копия ZIP из сеанса, даже если исходный файл удалён или заменён. Смена комплекта требует нового сеанса. GitHub-загрузка пока не подключена."},
-      {title:"1. Подключение и пароль",body:"Выберите имя подключения, описание карты и IP. Если список пуст, проверьте кабель и наличие IPv4 в сети роутера, затем нажмите ↻. Список не доказывает, что выбран нужный роутер: мастер отдельно проверяет прямой маршрут и устройство. Подключение закрепляется после подготовки; сменить его можно через «Новый сеанс». Пароль хранится только в памяти между операциями. «Справка» не очищает его; выход к макету, закрытие окна, смена подключения или новый сеанс очищают пароль. Глазок показывает и скрывает ввод."},
-      {title:"2. Проверить устройство",body:"Перед подготовкой выключите автозвонки. Мастер проверит модель, версию OpenWrt, службы и свободное место. Для установки или обновления он сохранит и проверит резервную копию. BACKUP VERIFIED означает, что можно перейти к установке. ALREADY CURRENT означает, что Школьник 5.1.127 уже установлен и службы проверены: повторная установка не нужна."},
-      {title:"3. Установить и проверить",body:"ZIP поддерживает чистую OpenWrt; встроенный комплект — чистую OpenWrt и обновление Школьника с 5.1.124 до 5.1.127. Установка начинается после подтверждения; не отключайте питание и кабель. На чистой системе устанавливаются необходимые зависимости. UPGRADE VERIFIED означает успешную проверку обновления. Мастер не регулирует громкость и не меняет сеть или часы; автозвонки остаются выключенными. При неизвестном исходе записи не повторяйте установку: используйте «Проверить результат». Подробности ошибки находятся в результатах."},
-      {title:"Результаты и резервные копии",body:"⧉ копирует весь текст результатов, включая скрытые прокруткой строки. «Открыть резервную копию» открывает каталог на ПК. После проверки актуальной версии доступна отдельная копия всех разделов MTD и overlay перед прошивкой. DEVICE BACKUP VERIFIED подтверждает проверку файлов, но не прошивку. Копии содержат частные настройки; не публикуйте их. «Новый сеанс» архивирует предыдущие материалы и очищает пароль. Неизвестный исход записи сначала требует проверки."},
+      {title:"1. Подключение и пароль",body:"Выберите имя подключения, описание карты и IP. Если список пуст, проверьте кабель и наличие IPv4 в сети роутера, затем нажмите ↻. Список не доказывает, что выбран нужный роутер: мастер отдельно проверяет прямой маршрут и устройство. Подключение закрепляется после подготовки; сменить его можно через «Новый сеанс». Пароль хранится только в памяти между операциями. «Справка» не очищает его; закрытие окна, смена подключения или новый сеанс очищают пароль. Глазок показывает и скрывает ввод."},
+      {title:"2. Проверить устройство",body:"Перед подготовкой выключите автозвонки. Мастер проверит модель, версию OpenWrt, службы и свободное место. Для установки он сохранит и проверит резервную копию. BACKUP VERIFIED означает, что можно перейти к установке. Если Школьник уже установлен, свежая ZIP-установка будет отклонена без записи."},
+      {title:"3. Установить и проверить",body:"Внешний ZIP пока поддерживает только чистую OpenWrt. Установка начинается после подтверждения; не отключайте питание и кабель. На чистой системе устанавливаются необходимые зависимости. FRESH VERIFIED означает успешную проверку установки. Мастер не регулирует громкость и не меняет сеть или часы; автозвонки остаются выключенными. При неизвестном исходе записи не повторяйте установку: используйте «Проверить результат». Подробности ошибки находятся в результатах."},
+      {title:"Результаты и резервные копии",body:"⧉ копирует весь текст результатов, включая скрытые прокруткой строки. «Открыть резервную копию» открывает каталог на ПК. Отдельная кнопка сохраняет все разделы MTD и overlay, даже без выбранного ZIP. DEVICE BACKUP VERIFIED подтверждает проверку файлов, но не прошивку. Копии содержат частные настройки; не публикуйте их. «Новый сеанс» архивирует предыдущие материалы и очищает пароль. Неизвестный исход записи сначала требует проверки."},
       {title:"Если окно небольшое",body:"Рабочая форма и справка прокручиваются независимо. Если нижние действия не видны, прокрутите форму вниз. Во время операции можно читать справку: операция продолжится. Для свежей установки восстановление выполняется отдельно: та же OpenWrt через Reset и сохранённый overlay; автоматического отката нет."}
      ]
      delegate:ColumnLayout {required property var modelData;Layout.fillWidth:true;spacing:6

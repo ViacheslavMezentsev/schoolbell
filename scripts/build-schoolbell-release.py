@@ -106,7 +106,7 @@ def build(bundle, out, candidate=False):
     manifest.update(format=1, kind='schoolbell-package-bundle', version=version, tag='v'+version,
                     status='candidate', distribution_cleared=False,
                     assembly_commit=commit, assembly_dirty=dirty,
-                    wizard={'minimum_version':'0.2.0','bundle_format':1,'integration':'fresh-pilot'},
+                    wizard={'minimum_version':'0.2.1','bundle_format':1,'integration':'fresh-pilot'},
                     supported_boards=['tplink,tl-mr3020-v3'],
                     tested_hardware_revisions=['TL-MR3020 EU v3.30'],
                     manual_installation='pending-acceptance',

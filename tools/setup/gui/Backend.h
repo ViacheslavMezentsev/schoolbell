@@ -1,5 +1,6 @@
 #pragma once
 #include <QObject>
+#include "SessionProof.h"
 #include <QProcess>
 #include <QDir>
 #include <QStandardPaths>
@@ -43,7 +44,7 @@ class Backend : public QObject {
  Q_PROPERTY(bool bundleReady READ bundleReady NOTIFY changed)
  Q_PROPERTY(bool bundleLocked READ bundleLocked NOTIFY changed)
  QVariantList bundles;
- QString zipFile,zipVersion="5.1.127";
+ QString zipFile,zipVersion;
  bool zipReady=false;
  QVariantList choices;
  QProcess process;
@@ -66,10 +67,14 @@ public:
   folder=QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation)+"/package-session";
   QDir().mkpath(folder);
   auto selection=readObject(folder+"/zip-selection.json");
-  zipFile=selection.value("path").toString();zipVersion=selection.value("version").toString("5.1.127");
+  zipFile=selection.value("path").toString();zipVersion=selection.value("version").toString();
   auto binding=readObject(folder+"/zip-binding.json");
   if(!binding.isEmpty()){source=binding.value("source").toString();index=binding.value("index").toInt();}
-  if(writeStarted()) state="uncertain";
+  if(writeStarted()) {
+   state=QFile::exists(folder+"/write-started")?"uncertain":SessionProof::restored(folder+"/zip-session");
+   if(state=="done")output="Сохранённый результат: установка проверена в предыдущем сеансе. Текущее состояние роутера не запрашивалось.\n";
+   else if(state=="not-applied")output="Сохранённый результат: установка не выполнена, исходное состояние подтверждено.\n";
+  }
   else if(QFile::exists(folder+"/zip-session/session.json") || QFile::exists(folder+"/prepared.json")) state="ready";
   else if(bundleLocked())state="error";
   zipReady=bundleLocked();
@@ -80,8 +85,9 @@ public:
   connect(&process,qOverload<int,QProcess::ExitStatus>(&QProcess::finished),this,[this](int code,QProcess::ExitStatus status){
    password.fill(QChar(0));password.clear();passwordServer.close();
    if(code==0 && status==QProcess::NormalExit) {
-    if(state=="new-session") {state="idle";source.clear();index=0;zipFile.clear();zipVersion="5.1.127";zipReady=false;refreshBundles();emit sessionReset();}
+    if(state=="new-session") {state="idle";source.clear();index=0;zipFile.clear();zipVersion.clear();zipReady=false;refreshBundles();emit sessionReset();}
     else if(state=="inspect-zip") {auto selected=readObject(folder+"/zip-selection.json");zipVersion=selected.value("version").toString();zipReady=!zipVersion.isEmpty() && sameFile(selected.value("path").toString(),zipFile);state=zipReady?"idle":"error";if(!zipReady)output+="\nZIP receipt does not match the selected file. Select the archive again.";}
+    else if(operationOutput.contains("UNCHANGED VERIFIED."))state="not-applied";
     else if(state=="backup")state="backedup";
     else state=state=="prepare"?(operationOutput.contains("ALREADY CURRENT.")?"current":"ready"):"done";
    }
@@ -105,10 +111,10 @@ public:
  QString bundlePath() const {return zipFile;}
  QString bundleVersion() const {return zipVersion;}
  bool zipMode() const {return !zipFile.isEmpty() || QDir(folder+"/zip-session").exists();}
- bool bundleReady() const {return !zipMode() || zipReady;}
+ bool bundleReady() const {return zipMode() && zipReady;}
  Q_INVOKABLE void refreshBundles() {
   if(busy())return;
-  bundles.clear();QVariantMap builtin;builtin["label"]="Встроенный комплект 5.1.127";builtin["path"]="";bundles.append(builtin);
+  bundles.clear();
   QDir base(QCoreApplication::applicationDirPath());
   for(const auto &file:base.entryList({"schoolbell-v*-openwrt-*.zip"},QDir::Files,QDir::Name)){
    QVariantMap row;row["label"]=file;row["path"]=QFileInfo(base.filePath(file)).canonicalFilePath();bundles.append(row);
@@ -117,7 +123,7 @@ public:
  }
  Q_INVOKABLE void selectBundle(QString path) {
   if(busy() || bundleLocked())return;
-  zipFile=path;zipReady=false;zipVersion=path.isEmpty()?"5.1.127":"";
+  zipFile=path;zipReady=false;zipVersion.clear();
   if(path.isEmpty()){QFile::remove(folder+"/zip-selection.json");state="idle";emit changed();return;}
   auto base=QCoreApplication::applicationDirPath();
   auto env=QProcessEnvironment::systemEnvironment();env.insert("PYTHONIOENCODING","utf-8");
@@ -179,9 +185,9 @@ public:
  QString session() const {return folder;}
  Q_INVOKABLE void start(QString action,QString ip,int adapter,QString secret) {
   if(busy() || (action!="prepare" && action!="install" && action!="verify" && action!="backup")) return;
-  if(action=="backup" && (state!="current" || zipMode()))return;
+  if(action=="backup" && (writeStarted() || bundleLocked()))return;
   if(action=="prepare" && (!bundleReady() || (zipMode() && bundleLocked())))return;
-  if(action=="install" && state!="ready") return;
+  if(action=="install" && (state!="ready" || !zipMode())) return;
   if(action=="prepare" && writeStarted()) return;
   if(action=="install" && (source!=ip || index!=adapter)) return;
   if(secret.isEmpty() || secret.contains('\n') || secret.contains('\r')) return;
@@ -199,7 +205,7 @@ public:
   process.setWorkingDirectory(base);
   operationOutput.clear();output+="\n--- "+action+" ---\n";state=action;
   QStringList workerArgs={base+"/package_worker.py",action,"--source",ip,"--index",QString::number(adapter),"--session",folder};
-  if(zipMode())workerArgs << "--zip" << zipFile;
+  if(zipMode() && action!="backup")workerArgs << "--zip" << zipFile;
   process.start(base+"/python/python.exe",workerArgs);
   emit changed();
  }

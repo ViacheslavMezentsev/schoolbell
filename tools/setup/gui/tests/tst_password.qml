@@ -13,14 +13,14 @@ Item {
   property string stage: "idle"
   property string report: ""
   property var connections: []
-  property var bundleChoices: [{label:"Built in",path:""},{label:"Local ZIP",path:"fixture.zip"}]
+  property var bundleChoices: [{label:"Local ZIP",path:"fixture.zip"}]
   property string bundlePath:""
   property string bundleVersion:"5.1.127"
   property bool zipMode:false
-  property bool bundleReady:true
+  property bool bundleReady:false
   property bool bundleLocked:false
   function refreshBundles() {}
-  function selectBundle(path){bundlePath=path;zipMode=path.length>0;bundleReady=!zipMode}
+  function selectBundle(path){bundlePath=path;zipMode=path.length>0;bundleReady=false}
 
   signal sessionReset()
   function refreshConnections() {}
@@ -30,15 +30,44 @@ Item {
   property string received: ""
   function start(action, source, adapter, secret) { received=secret; stage=action==="prepare"?"ready":"done" }
  }
+ Component {id:windowFactory; Main {}}
  Theme {id: theme}
  RealPane {id:pane;anchors.fill:parent;colors:theme}
  TestCase {
   name: "PasswordLifecycle"; when: windowShown
+  function test_main_routes_and_close_is_guarded() {
+   let window=windowFactory.createObject(null)
+   verify(window!==null);verify(window.title.indexOf("макет")<0)
+   compare(window.route,"home")
+   window.navigate("openwrt");compare(window.route,"openwrt")
+   compare(findChild(window,"firmware-route").recovery,false)
+   window.navigate("recovery");compare(findChild(window,"firmware-route").recovery,true)
+   window.navigate("packages");verify(findChild(window,"package-route").visible)
+   let routePassword=findChild(findChild(window,"package-route"),"router-password")
+   routePassword.text="local-test-only"
+   window.navigate("home");compare(routePassword.text,"")
+   window.navigate("packages")
+   realBackend.busy=true;window.navigate("home");compare(window.route,"packages")
+   realBackend.busy=false;window.navigate("home");compare(window.route,"home")
+   window.navigate("invalid");compare(window.route,"home")
+   realBackend.busy=true;window.close();verify(window.visible)
+   realBackend.busy=false;window.close()
+   let dialog=findChild(window,"close-confirmation");verify(dialog.visible)
+   dialog.close();window.destroy()
+  }
+  function test_without_bundle_backup_remains_available() {
+   realBackend.stage="idle";realBackend.bundleLocked=false;realBackend.bundleReady=false
+   realBackend.bundlePath="";realBackend.zipMode=false;pane.connectionSelected=true
+   let field=findChild(pane,"router-password");field.text="test-only"
+   verify(!findChild(pane,"prepare-button").enabled)
+   verify(findChild(pane,"firmware-backup").enabled)
+   field.clear();pane.connectionSelected=false
+  }
   function test_zip_selection_and_locking() {
    realBackend.stage="idle";realBackend.bundleLocked=false;realBackend.bundleReady=true
    pane.visible=true;pane.helpVisible=false
    let field=findChild(pane,"router-password"), picker=findChild(pane,"bundle-picker")
-   field.text="test-secret";picker.currentIndex=1;picker.activated(1)
+   field.text="test-secret";picker.currentIndex=0;picker.activated(0)
    compare(field.text,"");compare(realBackend.bundlePath,"fixture.zip")
    verify(!findChild(pane,"prepare-button").enabled)
    realBackend.bundleVersion="5.2.3";realBackend.bundleReady=true

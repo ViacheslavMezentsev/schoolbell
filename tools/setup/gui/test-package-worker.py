@@ -47,6 +47,12 @@ class WorkerTests(unittest.TestCase):
    if self.version!='5.1.127':raise subprocess.CalledProcessError(1,argv)
    result=b'GUI_RESULT_VERIFIED\n'
   return SimpleNamespace(stdout=result)
+ def test_dispatch_refuses_embedded_installation_without_access(self):
+  for action in ('prepare','install'):
+   self.args.action=action
+   with self.assertRaisesRegex(ValueError,'external ZIP'):w.dispatch(self.args)
+  self.assertEqual(self.writes,0)
+  self.assertFalse(Path(self.args.session).exists())
  def test_prepare_install_verify_and_no_repeat(self):
   w.run(self.args);self.assertEqual(self.writes,0)
   self.args.action='install';w.run(self.args);self.assertEqual(self.writes,1)

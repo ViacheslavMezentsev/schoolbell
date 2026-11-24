@@ -50,7 +50,7 @@ def validate(root):
 def run_core(args):
     import io, shlex, shutil
     root=Path(__file__).resolve().parent
-    if args.action=='inspect-zip' or getattr(args,'zip','') or (Path(args.session)/'zip-binding.json').exists() or (Path(args.session)/'zip-session').exists():
+    if args.action!='backup' and (args.action=='inspect-zip' or getattr(args,'zip','') or (Path(args.session)/'zip-binding.json').exists() or (Path(args.session)/'zip-session').exists()):
         import zip_worker
         return zip_worker.run_core(args,root)
     if args.action in ("verify","install"):
@@ -63,16 +63,17 @@ def run_core(args):
         for row in manifest.values():
             if not re.fullmatch(r'modbus-schoolbell_[0-9]+\.[0-9]+\.[0-9]+_all\.ipk',row['file']):
                 raise ValueError('Invalid saved package name')
-    else:
+    elif args.action!='backup':
         manifest=validate(root)
     ssh=['ssh.exe','-F','NUL','-b',args.source,'-o','ConnectTimeout=8','-o','ServerAliveInterval=5','-o','ServerAliveCountMax=3','-o','HostKeyAlgorithms=+ssh-rsa','-o','StrictHostKeyChecking=yes','-o','NumberOfPasswordPrompts=1','-o','UserKnownHostsFile="'+str(Path(os.environ['LOCALAPPDATA'])/'SchoolbellSetup/known_hosts')+'"','root@192.168.1.1']
     def remote(command, **kw):
         route(args.source,args.index)
         return subprocess.run(ssh+[command],check=True,timeout=240,**kw)
     if args.action=='backup':
-        if (state/'write-started').exists(): raise ValueError('Verify and archive the earlier write first')
+        if (state/'write-started').exists() or (state/'zip-session/write-started').exists(): raise ValueError('Verify and archive the earlier write first')
         import device_backup
-        return device_backup.backup(args,remote,BASE_CHECK,SNAPSHOT,emit)
+        snapshot="if test -f /usr/share/schoolbell-editor/lua/schoolbell/automatic_store.lua; then\n"+SNAPSHOT+"else echo no-schoolbell; fi\n"
+        return device_backup.backup(args,remote,BASE_CHECK,snapshot,emit)
     if args.action in ('install','verify'):
         saved=json.loads(receipt.read_text())
         if saved.get('mode')=='fresh':
@@ -214,11 +215,18 @@ def run(args):
         if lock is not None: lock.unlink()
         guard.unlink()
 
+def dispatch(args):
+    folder=Path(args.session)
+    if args.action in ('prepare','install') and not (getattr(args,'zip','') or (folder/'zip-binding.json').exists()):
+        raise ValueError('Select an external ZIP; embedded package installation is no longer supported')
+    return run(args)
+
 if __name__=='__main__':
     p=argparse.ArgumentParser()
     p.add_argument('action',choices=['prepare','install','verify','new-session','backup','inspect-zip']);p.add_argument('--source',required=True);p.add_argument('--index',required=True,type=int);p.add_argument('--session',required=True);p.add_argument('--zip',default='')
-    try: run(p.parse_args())
+    try: dispatch(p.parse_args())
     except subprocess.CalledProcessError as exc:
+        if isinstance(exc.stdout,bytes): emit(exc.stdout[-32768:].decode("utf8",errors="replace"))
         emit('Остановлено: SSH или проверка устройства завершились с кодом '+str(exc.returncode)+'. Подробности выше. Пакет не повторяется автоматически.');sys.exit(1)
     except subprocess.TimeoutExpired:
         emit('Остановлено: истекло время ожидания. Если запись началась, сначала проверьте результат.');sys.exit(1)
