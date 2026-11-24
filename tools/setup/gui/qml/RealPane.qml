@@ -2,9 +2,10 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 Rectangle {
+ id: pane
  function run(action) {
   let secret=password.text;
-  password.clear();
+  password.revealed=false;
   realBackend.start(action,source.text,adapter.value,secret);
   secret="";
  }
@@ -18,19 +19,19 @@ Rectangle {
  color:colors.panel; border.color:colors.border; radius:14
  ColumnLayout {anchors.fill:parent; anchors.margins:24; spacing:14
   Label {text:"Школьник поверх OpenWrt";font.pixelSize:25;font.bold:true}
-  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;text:"Первый реальный режим: обновление существующего Школьника 5.1.124 → 5.1.127. Нужны питание роутера, отдельный USB–Ethernet и кабель RJ45. Reset не нужен. Сеть, часы и громкость не изменяются."}
+  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;text:"Первый реальный режим: обновление существующего Школьника 5.1.124 → 5.1.127. Нужны питание роутера, отдельный USB–Ethernet и кабель RJ45. Также нужно знать пароль администратора OpenWrt (root). Reset не нужен. Сеть, часы и громкость не изменяются."}
   Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;color:colors.warning;text:"Только отдельный MR3020 v3 с OpenWrt 19.07.9 по адресу 192.168.1.1. Автозвонки должны быть выключены до подготовки. Прошивка OpenWrt и возврат OEM здесь не выполняются."}
   RowLayout {
    Label {text:"IP компьютера на выделенном кабеле:"}
-   TextField {id:source;text:realBackend.sourceIP;placeholderText:"Например, 192.168.1.165";enabled:!realBackend.busy && realBackend.stage!=="ready";implicitWidth:215}
+   TextField {id:source;text:realBackend.sourceIP;placeholderText:"Например, 192.168.1.165";onTextEdited:password.clear();enabled:!realBackend.busy && realBackend.stage!=="ready";implicitWidth:215}
    Label {text:"Индекс адаптера:"}
-   SpinBox {id:adapter;value:realBackend.adapterIndex;from:1;to:999;editable:true;enabled:!realBackend.busy && realBackend.stage!=="ready"}
+   SpinBox {id:adapter;value:realBackend.adapterIndex;from:1;to:999;editable:true;onValueModified:password.clear();enabled:!realBackend.busy && realBackend.stage!=="ready"}
   }
   RowLayout {
    Label {text:"Пароль root:"}
-   TextField {id:password;Layout.fillWidth:true;echoMode:TextInput.Password;enabled:!realBackend.busy;placeholderText:"Пароль отдельного роутера — только для этого этапа";selectByMouse:true}
+   PasswordField {id:password;objectName:"router-password";colors:pane.colors;Layout.fillWidth:true;enabled:!realBackend.busy;placeholderText:"Пароль администратора OpenWrt (root)"}
   }
-  Label {text:"Пароль не сохраняется. Введите его перед подготовкой, затем перед установкой.";color:colors.muted}
+  Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;text:"Пароль остаётся в этой вкладке между операциями и не записывается на диск. При выходе из вкладки он очищается.";color:colors.muted}
   RowLayout {
    RealButton {text:"1. Проверить и сохранить копию";implicitHeight:48;enabled:!realBackend.busy && ["idle","error","ready"].indexOf(realBackend.stage)>=0 && source.text.length>0 && password.text.length>0;onClicked:run("prepare")}
    RealButton {text:"2. Установить 5.1.127";implicitHeight:48;enabled:!realBackend.busy && realBackend.stage==="ready" && password.text.length>0;onClicked:confirm.open()}
