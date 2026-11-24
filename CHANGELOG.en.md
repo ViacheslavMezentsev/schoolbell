@@ -4,6 +4,16 @@
 
 ## Unreleased — setup GUI prototype
 
+- GUI: Installation and Help controls share a row to the right of the section heading.
+
+- GUI: detailed guidance moved to Help; scrolling forms and wrapping action groups keep bottom actions reachable. Reading help retains the password.
+
+- GUI: bordered results, complete report copying with ⧉, connection refresh with ↻ and short Windows adapter descriptions.
+
+- GUI: fresh offline installation with overlay/image recovery evidence and separate pre-flash MTD backup; hardware acceptance remains pending.
+
+- GUI: an already-current installation is verified without reinstalling; service-check failures are not reported as success.
+
 - GUI: network picker uses Schoolbell colors, 18 px text, a larger chevron and 48 px options.
 - GUI: group close/cancel dialog actions on the right with inset edge spacing.
 - GUI: named Ethernet selection and new sessions with archived backups; uncertain writes and corrupt backups block rotation.

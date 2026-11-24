@@ -8,8 +8,9 @@ RowLayout {
  property alias placeholderText: input.placeholderText
  property var colors
  property bool revealed: false
+ property bool clearOnHide: true
  function clear() { input.clear(); revealed = false }
- onVisibleChanged: if (!visible) clear()
+ onVisibleChanged: if (!visible) { if (clearOnHide) clear(); else revealed=false }
  TextField {
   id: input
   Layout.fillWidth: true

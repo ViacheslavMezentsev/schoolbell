@@ -168,3 +168,12 @@
 - [x] GUI: исправлены отступы кнопок диалога закрытия/отмены; статическая сборка и визуальная проверка обоих режимов. / Inset close/cancel actions verified in the static build in both modes.
 
 - [x] 24.11.2026: на отдельном устройстве повторная проверка GUI подтвердила установленную 5.1.127, выключенные автозвонки и сохранённые звук/план. После проверки пароль остался скрытым в форме; «Новый сеанс» сохранил архив и очистил пароль/выбор подключения. Повторная установка не выполнялась. / On a separate device, GUI re-verification confirmed 5.1.127, automation off and unchanged sound/plan. The masked password remained in the form; New session archived evidence and cleared password/connection. No reinstallation occurred.
+
+- [ ] GUI, третий этап: интеграция Reset/TFTP с возвратом сети и отдельной проверкой загрузки. / GUI stage three: Reset/TFTP, network restoration and boot verification.
+
+- [x] 24.11.2026: владелец подтвердил GUI ALREADY CURRENT на отдельном устройстве; службы/выключенный автомат проверены без записи. / Owner confirmed already-current verification without writing.
+- [ ] GUI: аппаратно проверить свежую установку из полного bundle; локальные тесты реализованы. Копия MTD/overlay подтверждена отдельно ниже. / Fresh-install hardware acceptance remains pending; pre-flash backup passed separately below.
+
+- [x] 24.11.2026: GUI сохранил проверенную копию семи MTD и overlay отдельного устройства перед прошивкой; все SHA256 повторно совпали на ПК. / GUI pre-flash backup verified for seven MTD partitions and overlay; all local hashes independently matched.
+
+- [x] GUI: справка отделена от рабочей формы; локальный Qt-тест проверяет доступность нижних действий прокруткой при 800 × 450 в обеих темах и сохранение пароля между вкладками. / Help separated; local Qt test verifies scroll access to bottom actions at 800 × 450 in both themes and password retention.
