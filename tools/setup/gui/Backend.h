@@ -1,6 +1,8 @@
 #pragma once
 #include <QObject>
 #include "SessionProof.h"
+#include "OperationStatus.h"
+#include <QTimer>
 #include <QProcess>
 #include <QDir>
 #include <QStandardPaths>
@@ -29,6 +31,8 @@
 #endif
 class Backend : public QObject {
  Q_OBJECT
+ Q_PROPERTY(bool canCancel READ canCancel NOTIFY changed)
+ Q_PROPERTY(QString operationMessage READ operationMessage NOTIFY changed)
  Q_PROPERTY(QString sourceIP READ sourceIP NOTIFY changed)
  Q_PROPERTY(int adapterIndex READ adapterIndex NOTIFY changed)
  Q_PROPERTY(bool busy READ busy NOTIFY changed)
@@ -51,7 +55,11 @@ class Backend : public QObject {
  QLocalServer passwordServer;
  QString password;
  QString state="idle", output, folder;
- QString operationOutput;
+ QString activeOperation,activeAction,sessionToken,eventFile,eventPhase;
+ QJsonObject lastEvent;
+ QTimer eventTimer;
+ bool cancelRequested=false,protocolInvalid=false;
+
  QString source; int index=0;
 public:
  Backend(QObject *parent=nullptr):QObject(parent) {
@@ -79,21 +87,59 @@ public:
   else if(bundleLocked())state="error";
   zipReady=bundleLocked();
   refreshBundles();
+  eventTimer.setInterval(200);
+  connect(&eventTimer,&QTimer::timeout,this,[this]{readEvent();emit changed();});
   process.setProcessChannelMode(QProcess::MergedChannels);
-  connect(&process,&QProcess::readyReadStandardOutput,this,[this]{ auto bytes=process.readAllStandardOutput();output+=QString::fromUtf8(bytes);operationOutput+=QString::fromUtf8(bytes);QFile log(folder+"/operation.log");if(log.open(QIODevice::Append))log.write(bytes);emit changed(); });
-  connect(&process,&QProcess::errorOccurred,this,[this](QProcess::ProcessError error){ if(error==QProcess::FailedToStart){password.fill(QChar(0));password.clear();passwordServer.close();state=writeStarted()?"uncertain":"error";zipReady=false;output+="\nCannot start packaged worker: "+process.errorString();emit changed();} });
+  connect(&process,&QProcess::readyReadStandardOutput,this,[this]{ auto bytes=process.readAllStandardOutput();output+=QString::fromUtf8(bytes);QFile log(folder+"/operation.log");if(log.open(QIODevice::Append))log.write(bytes);emit changed(); });
+  connect(&process,&QProcess::errorOccurred,this,[this](QProcess::ProcessError error){ if(error==QProcess::FailedToStart){eventTimer.stop();password.fill(QChar(0));password.clear();passwordServer.close();state=writeStarted()?"uncertain":"error";zipReady=false;output+="\nCannot start packaged worker: "+process.errorString();emit changed();} });
   connect(&process,qOverload<int,QProcess::ExitStatus>(&QProcess::finished),this,[this](int code,QProcess::ExitStatus status){
+   eventTimer.stop();readEvent(true);
    password.fill(QChar(0));password.clear();passwordServer.close();
-   if(code==0 && status==QProcess::NormalExit) {
-    if(state=="new-session") {state="idle";source.clear();index=0;zipFile.clear();zipVersion.clear();zipReady=false;refreshBundles();emit sessionReset();}
-    else if(state=="inspect-zip") {auto selected=readObject(folder+"/zip-selection.json");zipVersion=selected.value("version").toString();zipReady=!zipVersion.isEmpty() && sameFile(selected.value("path").toString(),zipFile);state=zipReady?"idle":"error";if(!zipReady)output+="\nZIP receipt does not match the selected file. Select the archive again.";}
-    else if(operationOutput.contains("UNCHANGED VERIFIED."))state="not-applied";
-    else if(state=="backup")state="backedup";
-    else state=state=="prepare"?(operationOutput.contains("ALREADY CURRENT.")?"current":"ready"):"done";
+   auto result=lastEvent.value("value").toString();
+   if(!protocolInvalid && code==0 && status==QProcess::NormalExit && lastEvent.value("kind").toString()=="completed") {
+    if(activeAction=="new-session") {state="idle";source.clear();index=0;zipFile.clear();zipVersion.clear();zipReady=false;refreshBundles();emit sessionReset();}
+    else if(activeAction=="inspect-zip") {auto selected=readObject(folder+"/zip-selection.json");zipVersion=selected.value("version").toString();zipReady=!zipVersion.isEmpty() && sameFile(selected.value("path").toString(),zipFile);state=zipReady?"idle":"error";if(!zipReady)output+="\nZIP receipt does not match the selected file. Select the archive again.";}
+    else state=result;
+   } else {
+    if(activeAction=="inspect-zip")zipReady=false;
+    state=writeStarted()?"uncertain":"error";
+    if(!protocolInvalid && code==2 && lastEvent.value("kind").toString()=="cancelled")output+="\nОтмена завершена. Сохранённые материалы остаются на ПК.\n";
+    else if(code==0)output+="\nРезультат worker не подтверждён протоколом. Автоматическое повторение запрещено.\n";
    }
-   else {if(state=="inspect-zip")zipReady=false;state=writeStarted()?"uncertain":"error";}
    emit changed();
   });
+ }
+ void readEvent(bool final=false) {
+  auto record=OperationStatus::read(eventFile,activeOperation,sessionToken,activeAction);
+  if(record.isEmpty()){if(final)protocolInvalid=true;return;}
+  if(!lastEvent.isEmpty()) {
+   const auto before=lastEvent.value("sequence").toInt(),after=record.value("sequence").toInt();
+   if(after<before || (after==before && record!=lastEvent) || (after>before && lastEvent.value("kind").toString()!="phase")){protocolInvalid=true;return;}
+  }
+  lastEvent=record;
+  if(record.value("kind").toString()=="phase")eventPhase=record.value("value").toString();
+ }
+ bool canCancel() const {return busy() && activeAction!="install" && activeAction!="new-session" && !cancelRequested;}
+ QString operationMessage() const {
+  if(cancelRequested && busy())return "Отмена запрошена. Ожидаем завершения текущего запроса; питание и кабель оставьте подключёнными.";
+  const QMap<QString,QString> labels={{"starting","Запускается операция…"},{"validating-zip","Проверяется архив на компьютере…"},{"preparing","Проверяется устройство и сохраняется копия…"},{"backup","Читается и проверяется полная копия…"},{"installing","Устанавливаются и проверяются пакеты. Не отключайте питание и кабель."},{"verifying","Проверяется результат без повторной установки…"},{"archiving","Сохраняются материалы предыдущего сеанса…"}};
+  return labels.value(eventPhase,"Выполняется операция…");
+ }
+ Q_INVOKABLE void requestCancel() {
+  if(!canCancel())return;
+  QFile file(QFileInfo(eventFile).path()+"/"+activeOperation+".cancel");
+  if(!file.open(QIODevice::WriteOnly|QIODevice::NewOnly)){output+="\nНе удалось передать запрос отмены.\n";emit changed();return;}
+  file.write("cancel\n");file.close();cancelRequested=true;emit changed();
+ }
+ void launch(QStringList args) {
+  activeAction=state;activeOperation=QUuid::createUuid().toString(QUuid::Id128);
+  sessionToken=QString::fromLatin1(QCryptographicHash::hash(QDir(folder).canonicalPath().toUtf8(),QCryptographicHash::Sha256).toHex());
+  eventFile=QFileInfo(folder).absolutePath()+"/operations/"+activeOperation+".json";
+  QDir().mkpath(QFileInfo(eventFile).path());
+  lastEvent={};eventPhase="starting";cancelRequested=false;protocolInvalid=false;
+  args << "--operation-id" << activeOperation << "--session-id" << sessionToken;
+  process.start(QCoreApplication::applicationDirPath()+"/python/python.exe",args);
+  eventTimer.start();
  }
  bool sameFile(const QString &a,const QString &b) const {
   const auto left=QFileInfo(QDir::fromNativeSeparators(a)).canonicalFilePath();
@@ -128,8 +174,8 @@ public:
   auto base=QCoreApplication::applicationDirPath();
   auto env=QProcessEnvironment::systemEnvironment();env.insert("PYTHONIOENCODING","utf-8");
   process.setProcessEnvironment(env);process.setWorkingDirectory(base);
-  operationOutput.clear();output+="\n--- inspect-zip (local) ---\n";state="inspect-zip";
-  process.start(base+"/python/python.exe",{base+"/package_worker.py","inspect-zip","--zip",path,"--source",source,"--index",QString::number(index),"--session",folder});
+  output+="\n--- inspect-zip (local) ---\n";state="inspect-zip";
+  launch({base+"/package_worker.py","inspect-zip","--zip",path,"--source",source,"--index",QString::number(index),"--session",folder});
   emit changed();
  }
  QVariantList connections() const {return choices;}
@@ -173,7 +219,7 @@ public:
   auto env=QProcessEnvironment::systemEnvironment();env.insert("PYTHONIOENCODING","utf-8");
   process.setProcessEnvironment(env);process.setWorkingDirectory(base);
   output.clear();state="new-session";
-  process.start(base+"/python/python.exe",{base+"/package_worker.py","new-session","--source",source,"--index",QString::number(index),"--session",folder});
+  launch({base+"/package_worker.py","new-session","--source",source,"--index",QString::number(index),"--session",folder});
   emit changed();
  }
  bool fresh() const {QFile f(folder+(zipMode()?"/zip-session/prepared.json":"/prepared.json"));if(!f.open(QIODevice::ReadOnly))return false;return QJsonDocument::fromJson(f.readAll()).object().value("mode").toString()=="fresh";}
@@ -203,10 +249,10 @@ public:
   env.insert("SCHOOLBELL_ASKPASS","1");env.insert("PYTHONIOENCODING","utf-8");
   process.setProcessEnvironment(env);
   process.setWorkingDirectory(base);
-  operationOutput.clear();output+="\n--- "+action+" ---\n";state=action;
+  output+="\n--- "+action+" ---\n";state=action;
   QStringList workerArgs={base+"/package_worker.py",action,"--source",ip,"--index",QString::number(adapter),"--session",folder};
   if(zipMode() && action!="backup")workerArgs << "--zip" << zipFile;
-  process.start(base+"/python/python.exe",workerArgs);
+  launch(workerArgs);
   emit changed();
  }
  Q_INVOKABLE void openHistory(){ QDesktopServices::openUrl(QUrl::fromLocalFile(QFileInfo(folder).absolutePath()+"/session-history")); }

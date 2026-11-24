@@ -1,6 +1,7 @@
 """Windows GUI package-upgrade worker. No firmware/network configuration operations."""
 import argparse, hashlib, json, os, re, subprocess, sys, tarfile, time, uuid
 from pathlib import Path
+from operation_protocol import Operation, Cancelled, checkpoint, phase
 
 CHECK = """set -eu
 . /etc/openwrt_release
@@ -67,18 +68,25 @@ def run_core(args):
         manifest=validate(root)
     ssh=['ssh.exe','-F','NUL','-b',args.source,'-o','ConnectTimeout=8','-o','ServerAliveInterval=5','-o','ServerAliveCountMax=3','-o','HostKeyAlgorithms=+ssh-rsa','-o','StrictHostKeyChecking=yes','-o','NumberOfPasswordPrompts=1','-o','UserKnownHostsFile="'+str(Path(os.environ['LOCALAPPDATA'])/'SchoolbellSetup/known_hosts')+'"','root@192.168.1.1']
     def remote(command, **kw):
+        checkpoint(args)
         route(args.source,args.index)
-        return subprocess.run(ssh+[command],check=True,timeout=240,**kw)
+        result=subprocess.run(ssh+[command],check=True,timeout=240,**kw)
+        checkpoint(args)
+        return result
     if args.action=='backup':
         if (state/'write-started').exists() or (state/'zip-session/write-started').exists(): raise ValueError('Verify and archive the earlier write first')
         import device_backup
         snapshot="if test -f /usr/share/schoolbell-editor/lua/schoolbell/automatic_store.lua; then\n"+SNAPSHOT+"else echo no-schoolbell; fi\n"
-        return device_backup.backup(args,remote,BASE_CHECK,snapshot,emit)
+        phase(args,"backup")
+        device_backup.backup(args,remote,BASE_CHECK,snapshot,emit)
+        return "backedup"
     if args.action in ('install','verify'):
         saved=json.loads(receipt.read_text())
         if saved.get('mode')=='fresh':
             import fresh_install
-            return fresh_install.resume(args,root,saved,remote,BASE_CHECK,SNAPSHOT,emit)
+            phase(args,"verifying")
+            fresh_install.resume(args,root,saved,remote,BASE_CHECK,SNAPSHOT,emit)
+            return "done"
     identity_command="cat /sys/class/net/br-lan/address; cat /proc/sys/kernel/random/boot_id; opkg status modbus-schoolbell | sed -n 's/^Version: //p'"
     space='test "$(df -k /overlay | awk \'END {print $4}\')" -ge 1024; test "$(df -k /tmp | awk \'END {print $4}\')" -ge 6144\n'
     if args.action=='prepare':
@@ -90,7 +98,7 @@ def run_core(args):
             if not result.stdout.rstrip().endswith(b'GUI_CURRENT_VERIFIED'):
                 raise ValueError('Current installation proof missing')
             emit('ALREADY CURRENT. Школьник '+version+' уже установлен. Службы работают, автозвонки выключены. Запись не выполнялась.')
-            return
+            return 'current'
         if not version:
             import fresh_install
             return fresh_install.prepare(args,root,manifest,remote,BASE_CHECK,emit)
@@ -161,6 +169,7 @@ opkg install "$d/package.ipk"
         if not result.stdout.rstrip().endswith(b'GUI_RESULT_VERIFIED'): raise ValueError('Result proof missing')
         (state/'verified.json').write_text(json.dumps({'version':manifest['package']['version'],'time':time.time(),'prepared_sha256':digest(receipt),'marker_sha256':digest(state/'write-started') if (state/'write-started').exists() else None}))
         emit('UPGRADE VERIFIED. Automatic bells off; volume and plan unchanged.')
+        return 'done'
 
 def archive_allowed(folder):
     """Local evidence check only: never converts an uncertain write to success."""
@@ -200,6 +209,7 @@ def run(args):
         lock=candidate
         os.write(fd,str(os.getpid()).encode());os.close(fd)
         if args.action=='new-session':
+            phase(args,'archiving')
             archive_allowed(folder)
             archive=folder.parent/'session-history'
             archive.mkdir(exist_ok=True)
@@ -209,8 +219,10 @@ def run(args):
             folder.mkdir()
             emit('Предыдущий сеанс сохранён: '+str(destination))
             emit('Новый сеанс готов. Выберите подключение и сохраните новую копию.')
+            return 'idle'
         else:
-            run_core(args)
+            checkpoint(args)
+            return run_core(args)
     finally:
         if lock is not None: lock.unlink()
         guard.unlink()
@@ -224,7 +236,15 @@ def dispatch(args):
 if __name__=='__main__':
     p=argparse.ArgumentParser()
     p.add_argument('action',choices=['prepare','install','verify','new-session','backup','inspect-zip']);p.add_argument('--source',required=True);p.add_argument('--index',required=True,type=int);p.add_argument('--session',required=True);p.add_argument('--zip',default='')
-    try: dispatch(p.parse_args())
+    p.add_argument('--operation-id',default='');p.add_argument('--session-id',default='')
+    try:
+        args=p.parse_args()
+        if args.operation_id or args.session_id:
+            Operation(args).execute(args,dispatch)
+        else:
+            dispatch(args)
+    except Cancelled as exc:
+        emit(str(exc));sys.exit(2)
     except subprocess.CalledProcessError as exc:
         if isinstance(exc.stdout,bytes): emit(exc.stdout[-32768:].decode("utf8",errors="replace"))
         emit('Остановлено: SSH или проверка устройства завершились с кодом '+str(exc.returncode)+'. Подробности выше. Пакет не повторяется автоматически.');sys.exit(1)

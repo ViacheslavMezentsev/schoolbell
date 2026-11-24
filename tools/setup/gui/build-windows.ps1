@@ -16,6 +16,8 @@ try {
  if ($LASTEXITCODE) { throw 'Build failed' }
  & (Join-Path $build 'test-session-proof.exe')
  if ($LASTEXITCODE) { throw 'Session proof tests failed' }
+ & (Join-Path $build 'test-operation-status.exe')
+ if ($LASTEXITCODE) { throw 'Operation status tests failed' }
  $exe = Join-Path $build 'schoolbell-setup-wizard.exe'
  & "$bin\strip.exe" $exe
  if ($LASTEXITCODE) { throw 'Strip failed' }
@@ -33,6 +35,7 @@ try {
  if ((Get-FileHash $runtime -Algorithm SHA256).Hash.ToLower() -ne '009d6bf7e3b2ddca3d784fa09f90fe54336d5b60f0e0f305c37f400bf83cfd3b') {throw 'Python archive checksum mismatch'}
  Expand-Archive -LiteralPath $runtime -DestinationPath (Join-Path $out 'python') -Force
  Copy-Item (Join-Path $PSScriptRoot 'package_worker.py') $out -Force
+ Copy-Item (Join-Path $PSScriptRoot 'operation_protocol.py') $out -Force
  Copy-Item (Join-Path $PSScriptRoot 'fresh_install.py') $out -Force
  Copy-Item (Join-Path $PSScriptRoot 'device_backup.py') $out -Force
  Copy-Item (Join-Path $PSScriptRoot 'zip_worker.py') $out -Force

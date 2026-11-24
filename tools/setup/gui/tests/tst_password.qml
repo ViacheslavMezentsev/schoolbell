@@ -9,6 +9,9 @@ Item {
   property string sourceIP: "192.0.2.2"
   property int adapterIndex: 1
   property bool busy: false
+  property bool canCancel:false
+  property string operationMessage:"Выполняется проверка"
+  function requestCancel(){canCancel=false}
   property bool fresh: false
   property string stage: "idle"
   property string report: ""
@@ -35,6 +38,16 @@ Item {
  RealPane {id:pane;anchors.fill:parent;colors:theme}
  TestCase {
   name: "PasswordLifecycle"; when: windowShown
+  function test_cancel_button_tracks_operation() {
+   pane.visible=true;pane.helpVisible=false
+   let button=findChild(pane,"cancel-operation")
+   verify(button!==null)
+   realBackend.busy=false;verify(!button.visible)
+   realBackend.busy=true;realBackend.canCancel=true
+   verify(button.visible);verify(button.enabled)
+   button.clicked();compare(realBackend.canCancel,false);verify(!button.enabled)
+   realBackend.busy=false;verify(!button.visible)
+  }
   function test_main_routes_and_close_is_guarded() {
    let window=windowFactory.createObject(null)
    verify(window!==null);verify(window.title.indexOf("макет")<0)

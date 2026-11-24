@@ -15,6 +15,7 @@ if not RUNTIME.is_dir():
 sys.path.insert(0,str(RUNTIME))
 import install as transaction
 import package_worker as legacy
+from operation_protocol import Cancelled, checkpoint, phase
 
 TARGET='192.168.1.1'
 
@@ -51,17 +52,22 @@ def run_core(args,root=None,route_check=None,transport=None,emit=print):
     if args.action=='inspect-zip':
         if (state/'prepared.json').exists() or (state/'zip-session').exists() or (state/'zip-binding.json').exists():
             raise ValueError('Start a new session before choosing another bundle')
+        phase(args,'validating-zip')
+        checkpoint(args)
         selected=inspect(args.zip,(root/'wizard-version.txt').read_text().strip())
+        checkpoint(args)
         temp=state/'zip-selection.tmp'
         temp.write_text(json.dumps(selected),encoding='utf8');temp.replace(state/'zip-selection.json')
         emit('ZIP VERIFIED. Школьник '+selected['version']+' · новая установка · '+selected['status'])
-        return
+        return 'idle'
     if args.action=='verify':
         for name in ('verified.json','unchanged.json'):(state/'zip-session'/name).unlink(missing_ok=True)
     if (state/'prepared.json').exists(): raise ValueError('Legacy session cannot become a ZIP session')
     if args.action=='prepare':
         if (state/'zip-session').exists() or (state/'zip-binding.json').exists():
             raise ValueError('Preparation already exists; install or start a new session')
+        phase(args,'preparing')
+        checkpoint(args)
         selected=json.loads((state/'zip-selection.json').read_bytes())
         if str(Path(args.zip).resolve())!=selected['path']: raise ValueError('Selected ZIP changed')
         raw=transaction.zip_bytes(selected['path'])
@@ -73,22 +79,33 @@ def run_core(args,root=None,route_check=None,transport=None,emit=print):
         transaction.write_json(state/'zip-binding.json',dict(source=args.source,index=args.index,selection=selected))
         remote=transport(conn)
         def checked(command,**kw):
+            checkpoint(args)
             route_check(args.source,args.index)
-            return remote(command,**kw)
+            result=remote(command,**kw)
+            checkpoint(args)
+            return result
         transaction.prepare(state/'zip-session',state/'selected.zip',root/'firmware/tp_recovery.bin',conn,checked,emit)
-        return
+        return 'ready'
     if args.action not in ('install','verify'): raise ValueError('Unsupported ZIP operation')
     binding=json.loads((state/'zip-binding.json').read_bytes())
     if (args.source,args.index)!=(binding['source'],binding['index']): raise ValueError('Prepared connection changed')
     def factory(conn):
         remote=transport(conn)
         def checked(command,**kw):
+            checkpoint(args)
             route_check(args.source,args.index)
-            return remote(command,**kw)
+            result=remote(command,**kw)
+            checkpoint(args)
+            return result
         return checked
+    phase(args,'installing' if args.action=='install' else 'verifying')
+    checkpoint(args)
     try:
         transaction.resume(state/'zip-session',args.action,factory,
                            'INSTALL '+TARGET if args.action=='install' else None,emit)
+        return 'done'
+    except Cancelled:
+        raise
     except Exception:
         if args.action=='verify':
             try:
@@ -98,7 +115,9 @@ def run_core(args,root=None,route_check=None,transport=None,emit=print):
                     version=doc['version'],prepared_sha256=transaction.plan.sha(state/'zip-session/prepared.json'),
                     marker_sha256=transaction.plan.sha(state/'zip-session/write-started')))
                 emit('UNCHANGED VERIFIED. Установка не выполнена; исходный состав пакетов и настройки сохранены. Начните новый сеанс.')
-                return
+                return 'not-applied'
+            except Cancelled:
+                raise
             except Exception:
                 pass
             try:
