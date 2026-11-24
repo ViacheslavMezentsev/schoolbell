@@ -213,3 +213,10 @@
 - [ ] Принять новый протокол и отмену в GUI на отдельном устройстве; проверить восстановление аварийных lock/guard на устройстве. / Hardware acceptance and device crash-lock recovery acceptance remain pending.
 
 - [x] GUI: локальные тесты блокировки ОС, гибели worker, восстановления маркеров, сохранности копий и отказа для legacy/corrupt lock. / Local OS lease, worker crash, recovery and evidence preservation tests. Проверено в WSL и упакованном Python Windows: 5 тестов; Qt: 15 PASS; make all и статическая сборка PASS. Аппаратная проверка не выполнялась. / WSL and packaged Windows Python: 5 tests; Qt: 15 PASS; make all and static build PASS; no hardware test.
+
+- [x] Сеть мастера: чистый планировщик по снимку; 10 локальных тестов обоих профилей, DHCP/линка, конфликтов/VPN, портов и идентичности адаптера. / Pure snapshot planner: 10 local tests for both profiles and network blockers.
+- [ ] Подключить отдельный UAC-helper, сохранение/восстановление сети и встроенный OEM. DryRun-план не заменяет аппаратную проверку. / Connect privileged helper, network restoration and embedded OEM; planner tests are not hardware acceptance.
+
+- [x] Windows-снимок и GUI предварительной проверки: адаптер без IP, подтверждение модели, новый снимок на каждую проверку, сброс старого итога. / Windows inventory and GUI preflight: no-IP adapter selection, model confirmation, fresh snapshot and stale-result clearing.
+
+- Локальная проверка сетевого GUI: make all PASS; 16 Qt-тестов PASS; 10 тестов планировщика в WSL/Windows и 3 теста адаптера worker PASS. Упакованный worker прочитал настройки Windows и построил планы обоих профилей; сеть и стенды не изменялись. Статический EXE пересобран. / Network GUI validation: make all, 16 Qt tests, 10 planner tests on WSL/Windows and 3 worker tests passed; packaged inventory and both profiles passed without network mutation or device access; static EXE rebuilt.

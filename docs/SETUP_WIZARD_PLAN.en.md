@@ -95,5 +95,8 @@ portable, with separate platform adapters for network discovery/configuration,
 elevation and firewall. Linux follows, then macOS, each requiring its own build,
 packaging and hardware acceptance; Qt or WSL availability does not prove support.
 
-Next: finish stage 0, then shared operations/network (1–2), OpenWrt and embedded
-OEM (3–4), complete bundles/restoration (5–6), release sources/delivery (7–8).
+Stage 0 is complete; the stage 1 core passed local checks, with hardware acceptance
+still pending. Stage 2 now has a [pure DryRun planner](../tools/setup/NETWORK_PREFLIGHT.md).
+Windows snapshot collection and GUI preflight are connected. Next: a privileged
+helper with network restoration. Embedded OEM is not connected yet. Then continue with OpenWrt/OEM
+(3–4), bundles/restoration (5–6), and release sources/delivery (7–8).

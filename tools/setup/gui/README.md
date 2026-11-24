@@ -152,3 +152,7 @@ proof; a new attempt passed. Owner confirmed UI 5.1.127, automation off, volume
 The executable/artifact name remains `schoolbell-setup-wizard`; display name is
 «Мастер установки». The internal RouterSetupPrototype data directory is retained
 to preserve old sessions and backups. Source [requirements](../../../docs/requirements/TECHNICAL_SPECIFICATION_SETUP_GUI.md).
+
+Сетевой этап: [предварительный план RU/EN](../NETWORK_PREFLIGHT.md). Кнопка ↻ в маршрутах прошивки читает адаптеры; после выбора и подтверждения модели выполняется предварительная проверка. Сеть не меняется, Reset пока не нужен.
+
+Network stage: [preflight plan RU/EN](../NETWORK_PREFLIGHT.md). Firmware routes now collect local Windows inventory and check a fresh snapshot after adapter/model selection. No network mutation, probes or TFTP; do not press Reset yet.

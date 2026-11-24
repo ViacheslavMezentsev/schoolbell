@@ -4,6 +4,8 @@
 
 ## Unreleased — setup GUI
 
+- Setup: pure network DryRun planner for both profiles; validates adapter/route/port snapshots without device access. GUI reads local Windows inventory; network mutation is not connected.
+
 - GUI: explicit crash-session recovery under an OS lease; markers are archived, and interrupted writes require result verification.
 
 - GUI: separate JSON phases/results replace log-string parsing; operation IDs, outcome codes and exit status are checked; cooperative read cancellation never kills SSH.
