@@ -11,6 +11,7 @@ test "$(opkg status kernel | sed -n 's/^Version: //p')" = '4.14.267-1-d92769dc52
 test "$(opkg status modbus-schoolbell-clock | sed -n 's/^Version: //p')" = '1.0.0'
 test ! -e /etc/schoolbell-editor/package.pending
 """
+BASE_CHECK = CHECK.replace("test \"$(opkg status modbus-schoolbell-clock | sed -n 's/^Version: //p')\" = '1.0.0'\n", "") + "test \"$(opkg status libc | sed -n 's/^Version: //p')\" = '1.1.24-2'\n"
 SNAPSHOT = """lua - <<'LUA'
 package.path='/usr/share/schoolbell-editor/lua/?.lua;'..package.path
 local a=require('schoolbell.automatic_store');local active=a.decode(a.raw());assert(not active.enabled,'Automatic bells must be off')
@@ -65,11 +66,32 @@ def run_core(args):
     def remote(command, **kw):
         route(args.source,args.index)
         return subprocess.run(ssh+[command],check=True,timeout=240,**kw)
+    if args.action=='backup':
+        if (state/'write-started').exists(): raise ValueError('Verify and archive the earlier write first')
+        import device_backup
+        return device_backup.backup(args,remote,BASE_CHECK,SNAPSHOT,emit)
+    if args.action in ('install','verify'):
+        saved=json.loads(receipt.read_text())
+        if saved.get('mode')=='fresh':
+            import fresh_install
+            return fresh_install.resume(args,root,saved,remote,BASE_CHECK,SNAPSHOT,emit)
     identity_command="cat /sys/class/net/br-lan/address; cat /proc/sys/kernel/random/boot_id; opkg status modbus-schoolbell | sed -n 's/^Version: //p'"
     space='test "$(df -k /overlay | awk \'END {print $4}\')" -ge 1024; test "$(df -k /tmp | awk \'END {print $4}\')" -ge 6144\n'
     if args.action=='prepare':
         if (state/'write-started').exists(): raise ValueError('Previous write requires verification; preparation cannot replace its evidence')
         if receipt.exists(): receipt.unlink()
+        version=remote(BASE_CHECK+"opkg status modbus-schoolbell | sed -n 's/^Version: //p'\n# GUI_VERSION_PROBE\n",stdout=subprocess.PIPE).stdout.decode().strip()
+        if version==manifest['package']['version']:
+            result=remote(CHECK+"test \"$(opkg status modbus-schoolbell | sed -n 's/^Version: //p')\" = "+shlex.quote(version)+'\n'+SNAPSHOT+'/etc/init.d/schoolbell-auto running\n/etc/init.d/uhttpd running\necho GUI_CURRENT_VERIFIED\n',stdout=subprocess.PIPE)
+            if not result.stdout.rstrip().endswith(b'GUI_CURRENT_VERIFIED'):
+                raise ValueError('Current installation proof missing')
+            emit('ALREADY CURRENT. Школьник '+version+' уже установлен. Службы работают, автозвонки выключены. Запись не выполнялась.')
+            return
+        if not version:
+            import fresh_install
+            return fresh_install.prepare(args,root,manifest,remote,BASE_CHECK,emit)
+        if version!=manifest['rollback']['version']:
+            raise ValueError('Нет подходящего сценария для версии '+(version or 'без установленного Школьника')+'. Установка не запускалась.')
         emit('Checking device and saving overlay backup in one SSH session...')
         command=CHECK+space+"""umask 077
 d=$(mktemp -d /tmp/schoolbell-gui.XXXXXX)
@@ -146,6 +168,10 @@ def archive_allowed(folder):
         raise ValueError('Сначала проверьте результат установки: подтверждение отсутствует или устарело')
     if proof.get('version')!=data['manifest']['package']['version']:
         raise ValueError('Verified version differs from preparation')
+    if data.get('mode')=='fresh':
+        import fresh_install
+        fresh_install.evidence(folder,data)
+        return
     for filename,expected in [('backup.tar',data['backup_sha256']),('overlay.tar',data['overlay_sha256']),
                               (data['manifest']['rollback']['file'],data['manifest']['rollback']['sha256'])]:
         if Path(filename).name!=filename or digest(folder/filename)!=expected:
@@ -184,7 +210,7 @@ def run(args):
 
 if __name__=='__main__':
     p=argparse.ArgumentParser()
-    p.add_argument('action',choices=['prepare','install','verify','new-session']);p.add_argument('--source',required=True);p.add_argument('--index',required=True,type=int);p.add_argument('--session',required=True)
+    p.add_argument('action',choices=['prepare','install','verify','new-session','backup']);p.add_argument('--source',required=True);p.add_argument('--index',required=True,type=int);p.add_argument('--session',required=True)
     try: run(p.parse_args())
     except subprocess.CalledProcessError as exc:
         emit('Остановлено: SSH или проверка устройства завершились с кодом '+str(exc.returncode)+'. Подробности выше. Пакет не повторяется автоматически.');sys.exit(1)

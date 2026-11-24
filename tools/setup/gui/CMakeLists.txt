@@ -36,3 +36,7 @@ if(MINGW)
  set_property(TARGET harfbuzz::harfbuzz PROPERTY IMPORTED_LOCATION "${HARFBUZZ_STATIC}")
  set_property(TARGET harfbuzz::harfbuzz APPEND PROPERTY INTERFACE_LINK_LIBRARIES graphite2 rpcrt4 usp10)
 endif()
+
+if(WIN32)
+ target_link_libraries(router-setup PRIVATE iphlpapi)
+endif()

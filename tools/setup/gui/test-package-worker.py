@@ -26,6 +26,11 @@ class WorkerTests(unittest.TestCase):
   command=argv[-1]
   import shutil
   if shutil.which('bash'): real_run(['bash','-n'],input=command.encode(),check=True)
+  if 'GUI_VERSION_PROBE' in command:
+   return SimpleNamespace(stdout=(self.version+'\n').encode())
+  if 'GUI_CURRENT_VERIFIED' in command:
+   if self.sound!='-20\nfalse\nfalse':raise subprocess.CalledProcessError(1,argv)
+   return SimpleNamespace(stdout=b'GUI_CURRENT_VERIFIED\n')
   if 'backup.tar' in command:
    if self.version!='5.1.124':raise subprocess.CalledProcessError(1,argv)
    outer=io.BytesIO()
@@ -79,7 +84,7 @@ class WorkerTests(unittest.TestCase):
   self.assertTrue((Path(self.args.session)/'prepared.json').exists())
  def test_wrong_rollback_version_blocks(self):
   self.version='5.1.123'
-  with self.assertRaises(subprocess.CalledProcessError):w.run(self.args)
+  with self.assertRaises(ValueError):w.run(self.args)
  def test_verify_saved_operation_after_bundle_changed(self):
   w.run(self.args);self.args.action='install';w.run(self.args)
   (self.root/'payload.json').write_text('{}')
@@ -129,4 +134,14 @@ class WorkerTests(unittest.TestCase):
   (Path(self.args.session)/'backup.tar').write_bytes(b'bad')
   self.args.action='new-session'
   with self.assertRaises(ValueError):w.run(self.args)
+ def test_current_version_never_writes_or_prepares_install(self):
+  self.version='5.1.127';w.run(self.args)
+  self.assertEqual(self.writes,0)
+  self.assertFalse((Path(self.args.session)/'prepared.json').exists())
+  self.assertTrue(any('ALREADY CURRENT.' in str(c) for c in w.emit.call_args_list))
+ def test_current_unhealthy_not_success(self):
+  self.version='5.1.127';self.sound='changed'
+  with self.assertRaises(subprocess.CalledProcessError):w.run(self.args)
+  self.assertEqual(self.writes,0)
+  self.assertFalse(any('ALREADY CURRENT.' in str(c) for c in w.emit.call_args_list))
 if __name__=='__main__':unittest.main()
