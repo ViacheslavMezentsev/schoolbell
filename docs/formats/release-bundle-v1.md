@@ -6,7 +6,7 @@
 ## Имена / Names
 
 - `schoolbell-v5.1.127-openwrt-19.07.9-ramips-mt76x8-mipsel_24kc.zip`
-- `schoolbell-setup-wizard-v0.1.0-windows-x86_64.zip`
+- `schoolbell-setup-wizard-v0.2.0-windows-x86_64.zip`
 - EXE: `schoolbell-setup-wizard.exe`; продукт / product: Schoolbell Setup Wizard.
 
 Версия комплекта соответствует пакету Школьника; версия мастера независима.
@@ -21,9 +21,8 @@ Package and wizard versions are independent. Platform naming is not platform acc
 - `manifest.json`: `kind=schoolbell-package-bundle`, `format=1`, `version`, `tag`,
   `status`, профиль OpenWrt/target/architecture, точный ABI kernel/libc,
   supported_boards, tested_hardware_revisions, packages с относительными путями,
-  размерами, SHA256 и зависимостями. Минимальная версия мастера 0.1.0 относится к
-  планируемому контракту; `wizard.integration=pending` явно запрещает считать
-  интеграцию уже выполненной. Hardware revisions — профиль опытов проекта,
+  размерами, SHA256 и зависимостями. Минимальная версия мастера 0.2.0; `wizard.integration=fresh-pilot`
+  обозначает локально проверенную GUI-интеграцию свежей установки, без аппаратной приёмки. Hardware revisions — профиль опытов проекта,
   не приёмка конкретного ZIP; `hardware_validated=false` сохраняется.
 - `input-manifest.json`: точные исходные сведения входного комплекта; исходный commit/dirty
   не заменяется коммитом упаковки. `assembly_commit/assembly_dirty` описывают упаковщик отдельно.
@@ -56,8 +55,8 @@ is explicit, public release is blocked until release gates are implemented. No n
 
 1. Host install.py для свежей установки реализован локально: копия вне устройства,
    подтверждение, защита повторной записи. Аппаратная приёмка и upgrade с откатом остаются открыты.
-2. Обнаружение ZIP мастером, ограниченная безопасная распаковка (размер, число файлов,
-   дубликаты, traversal, ссылки), проверка manifest и фиксация хеша на сеанс.
+2. Обнаружение ZIP, ограниченная распаковка, проверка manifest и фиксация хеша подключены
+   к GUI 0.2.0. Следующий этап — отдельно разрешённая аппаратная приёмка.
 3. GitHub Releases: стабильные совместимые assets, скачивание с ограничениями/кэшем;
    подпись manifest/сумм и доверенный открытый ключ. Приватный ключ не входит в репозиторий.
 4. Лицензии/соответствующие исходники зависимостей, права аудио, чистый принятый commit,
@@ -155,3 +154,16 @@ Local result on 2026-11-24: make all, 23 ZIP-transaction tests, 15 fresh-install
 filesystem in selected tests. Windows CLI import and extraction of the actual 35 IPKs
 passed without SSH. Specification validation: 22 requirements, 16 TCs, no errors or
 warnings. No hardware operations were performed.
+
+## GUI 0.2.0
+
+Реальный режим обнаруживает ZIP рядом с EXE. Проверка выбора локальна; пароль/SSH не
+нужны. Версия из manifest отображается на кнопке установки. После подготовки используются
+сохранённые байты ZIP; смена комплекта и подключения требует нового сеанса. Новый сеанс
+не обходит неизвестный исход и сохраняет архив материалов. Сохраняется прежний встроенный
+сценарий обновления; ZIP используется только для свежей установки.
+
+The real GUI discovers sibling ZIPs and validates a selection locally without SSH/password.
+The install button uses the manifest version. Prepared sessions pin ZIP bytes and connection;
+new-session archival cannot bypass an uncertain write. Legacy embedded upgrades remain
+available separately; ZIP mode currently supports fresh installation only.

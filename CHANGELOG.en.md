@@ -4,6 +4,8 @@
 
 ## Unreleased — setup GUI prototype
 
+- Wizard 0.2.0: sibling ZIP selection/validation, manifest version and pinned fresh-install sessions; shared dropdown styling/chevrons across all modes. ZIP hardware acceptance remains pending.
+
 - ZIP: host prepare/install/verify for fresh OpenWrt, verified off-device overlay/recovery image, bounded extraction and pinned bundle, uncertain-write protection. Local validation only; GUI integration and hardware acceptance remain pending.
 
 - Bundle: preliminary host installation plan from a device snapshot, with integrity, compatibility, dependency and space checks. No writes or device access by the planner.

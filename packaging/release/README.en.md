@@ -13,8 +13,8 @@ The manual installer supports **fresh OpenWrt**. Upgrades, repair, firmware flas
 and automatic rollback are not supported. An already-installed version is not reinstalled.
 
 Run on a host with Python 3.8+ and OpenSSH; no router Python is required. On Windows
-use `python` or `py -3`, on WSL/Linux `python3`. GUI 0.1.0 still uses its embedded
-legacy bundle; GUI ZIP selection is a separate next stage.
+use `python` or `py -3`, on WSL/Linux `python3`. GUI 0.2.0 discovers sibling ZIPs and uses this fresh-install transaction.
+The legacy embedded upgrade bundle remains a separate option.
 
 ## Preparation
 
@@ -87,7 +87,7 @@ extracted directory on suitable device storage, not installers.
 ## Status
 
 Transactions are tested locally with synthetic data and injected SSH, including execution
-of shell guards in an isolated filesystem. ZIP hardware acceptance, GUI integration,
+of shell guards in an isolated filesystem. ZIP hardware acceptance, GUI hardware checks,
 Windows SSH transactions, corresponding dependency sources and audio rights remain open.
 `distribution_cleared=false` and `hardware_validated=false` remain. packages/ contains
 unchanged IPKs, licenses/ holds notices/open issues, RELEASE_NOTES.md describes the release,

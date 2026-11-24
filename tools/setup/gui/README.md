@@ -144,6 +144,40 @@ Detailed instructions, expected outcomes and error guidance are on the Help tab.
 
 ## Имя и версия / Name and version
 
-Schoolbell Setup Wizard 0.1.0 — «Мастер установки Школьника». Версия задаётся файлом wizard-version.txt, отображается в окне и свойствах EXE; не совпадает автоматически с версией Школьника. Имя будущего переносимого архива: `schoolbell-setup-wizard-v0.1.0-windows-x86_64.zip`. Внутреннее имя каталога данных RouterSetupPrototype сохранено, чтобы не потерять копии и блокировку незавершённой записи. ZIP-релиз мастера ещё не публикуется; состав runtime и лицензий требует отдельной подготовки.
+Schoolbell Setup Wizard 0.2.0 — «Мастер установки Школьника». Версия задаётся файлом wizard-version.txt, отображается в окне и свойствах EXE; не совпадает автоматически с версией Школьника. Имя будущего переносимого архива: `schoolbell-setup-wizard-v0.2.0-windows-x86_64.zip`. Внутреннее имя каталога данных RouterSetupPrototype сохранено, чтобы не потерять копии и блокировку незавершённой записи. ZIP-релиз мастера ещё не публикуется; состав runtime и лицензий требует отдельной подготовки.
 
-The wizard-version.txt file controls the wizard version independently of Schoolbell. Window and Windows EXE metadata show it. Future portable archive name: `schoolbell-setup-wizard-v0.1.0-windows-x86_64.zip`. The internal RouterSetupPrototype data location is retained to preserve backups and pending-write protection. Wizard ZIP distribution still requires runtime/license preparation.
+The wizard-version.txt file controls the wizard version independently of Schoolbell. Window and Windows EXE metadata show it. Future portable archive name: `schoolbell-setup-wizard-v0.2.0-windows-x86_64.zip`. The internal RouterSetupPrototype data location is retained to preserve backups and pending-write protection. Wizard ZIP distribution still requires runtime/license preparation.
+
+## ZIP-комплекты: 0.2.0 / ZIP bundles: 0.2.0
+
+Положите schoolbell-v…-openwrt-….zip рядом с EXE, откройте реальную установку и нажмите
+↻ у поля «Комплект». Выберите архив: проверка выполняется только на ПК, без пароля/SSH.
+Повреждение, иной профиль или требование новой версии мастера блокируют подготовку.
+Версия кнопки и подтверждения берётся из manifest. ZIP-пилот работает только с чистой
+OpenWrt; встроенный комплект сохраняет прежнее обновление с 5.1.124.
+
+После выбора укажите USB–Ethernet и пароль root. Подготовка сохраняет проверенную копию
+и закрепляет ZIP/подключение. Исходный ZIP после этого можно удалить: используется копия
+сеанса. Сменить комплект можно через «Новый сеанс»; неизвестный исход сначала требует
+verify. Пароль остаётся в текущей форме. GitHub-загрузка и ZIP-аппаратная приёмка ещё не выполнены.
+
+Все списки, включая простой/экспертный макет, используют StyledComboBox с рисованной
+стрелкой 24 × 24, текстом 18 px и строкой 48 px в обеих темах.
+
+Put schoolbell-v…-openwrt-….zip beside the EXE, open real installation, refresh Bundles
+and select it. Validation is local, without password/SSH; invalid profile/integrity or
+newer wizard requirements block preparation. Version labels come from the manifest.
+ZIP mode supports fresh OpenWrt; the embedded legacy upgrade remains separate.
+Preparation pins ZIP bytes and connection with verified backup. The original download
+is no longer required. Changing bundles requires New session; uncertain writes require
+verification first. Password remains in the current form. GitHub downloads and ZIP hardware
+acceptance are pending. All modes share one themed dropdown/chevron component.
+
+Локальная проверка 24.11.2026: `make all`, 7 тестов GUI ZIP и 11 Qt Quick Test — PASS.
+Статический EXE собран; в Windows проверены выбор ZIP до `ZIP VERIFIED`, версия 5.1.127
+в форме и общие стрелки в светлой/тёмной темах. Исправлено сравнение Windows-путей
+результата проверки ZIP. Подключения к стендам не выполнялись.
+
+Local validation on 2026-11-24: full `make all`, 7 GUI ZIP and 11 Qt Quick tests passed.
+Static EXE built; native Windows checks covered ZIP selection/receipt, version labels
+and shared light/dark dropdowns. Windows path normalization was corrected. No device access.
