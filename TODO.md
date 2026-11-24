@@ -20,6 +20,8 @@
 
 ## Осталось: интерфейс и Pages / Remaining: UI and Pages
 
+- [x] Мастер: увеличены шрифт и стрелка выбора сетевого подключения, раскрытый список оформлен в обеих темах Школьника. Qt Test и `make all` пройдены, статический EXE пересобран; без операций на устройствах. / Wizard: larger connection-picker text and chevron, Schoolbell-themed popup; QML tests, full checks and static build passed without device operations.
+
 - [x] 5.1.126: условная панель сохранения с сохранением отмены/сверки и повтора чтения, компактные заголовки, сворачиваемая справка медиатеки. make all пройден; на стенде проверены переходы вкладок, появление панели при временной правке и скрытие после отмены без сохранения. Автозвонки выключены, громкость сохранена. / Conditional save actions with cancellation/reconciliation/read recovery, compact headings and collapsible media help.
 
 - [x] 5.1.125: обновлены общие пояснения и Шпаргалка устройства/Pages без изменения поведения. make all пройден; 5.1.125 установлена на рабочий стенд, тексты проверены в браузере, автозвонки выключены и громкость сохранена. Pages собраны локально, публикация не выполнялась. / Updated shared UI explanations and help without behavior changes. make all passed; working bench upgraded and browser text checked with automation off and volume retained. Pages built locally, not published.
@@ -155,8 +157,14 @@
 - [x] Общая модель переходов GUI и тестов: подтверждения, отмена/закрытие, повтор без новой записи, защита от старых событий и отдельная итоговая проверка. Тесты модели включены в make all. / Shared UI/test state machine covers confirmations, cancel/close, retry without restart, stale events and a separate verification gate; included in make all.
 
 - [x] 24.11.2026: через GUI на отдельном MR3020 v3 выполнено обновление 5.1.124 → 5.1.127 поверх OpenWrt 19.07.9. BACKUP VERIFIED и UPGRADE VERIFIED получены; SHA256 копии/отката сверены, автомат выключен, звук/черновик/ревизия активного плана сохранены, службы работают. Пароль введён в форме без всплывающих окон; результат виден после автопрокрутки. / GUI upgrade passed on a separate device with verified backup, automation off and sound/plan preserved; inline password and visible result verified.
-- [ ] GUI: новая установка с зависимостями, firmware backend, автоматический выбор адаптера, восстановление после реального обрыва записи и последующие независимые сеансы обновления. Первый пилот ограничен переходом 5.1.124 → 5.1.127 и известным SSH-ключом; это не приёмка всего установщика. / Fresh dependencies, firmware, adapter discovery, actual interrupted-write recovery and subsequent independent upgrade sessions remain pending.
+- [ ] GUI: новая установка с зависимостями, firmware backend, настройка подключения, восстановление после реального обрыва записи и аппаратная проверка последующих независимых сеансов обновления. Первый пилот ограничен переходом 5.1.124 → 5.1.127 и известным SSH-ключом; это не приёмка всего установщика. / Fresh dependencies, firmware, connection configuration, actual interrupted-write recovery and hardware acceptance of independent upgrade sessions remain pending.
 
 - [ ] GUI: проверить новое поле пароля на устройстве после локальной проверки сохранения между операциями, показа/скрытия и очистки. / Hardware acceptance of the updated password field remains pending.
 
 - [x] GUI: общий PasswordField, память текущей вкладки и глазок; проверены Qt Test и визуально в статическом EXE, без SSH. / Shared field and tab-scoped retention passed local Qt and EXE checks without SSH.
+
+- [x] GUI: локальный список Ethernet по имени/IP, явный выбор и архивирование предыдущего сеанса с копиями. Неизвестный исход, повреждение и занятость блокируют архивирование. Локальные проверки не являются аппаратной приёмкой. / Named Ethernet selection and guarded session archival implemented; hardware acceptance remains pending.
+
+- [x] GUI: исправлены отступы кнопок диалога закрытия/отмены; статическая сборка и визуальная проверка обоих режимов. / Inset close/cancel actions verified in the static build in both modes.
+
+- [x] 24.11.2026: на отдельном устройстве повторная проверка GUI подтвердила установленную 5.1.127, выключенные автозвонки и сохранённые звук/план. После проверки пароль остался скрытым в форме; «Новый сеанс» сохранил архив и очистил пароль/выбор подключения. Повторная установка не выполнялась. / On a separate device, GUI re-verification confirmed 5.1.127, automation off and unchanged sound/plan. The masked password remained in the form; New session archived evidence and cleared password/connection. No reinstallation occurred.

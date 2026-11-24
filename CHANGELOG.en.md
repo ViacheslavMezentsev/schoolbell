@@ -4,6 +4,9 @@
 
 ## Unreleased — setup GUI prototype
 
+- GUI: network picker uses Schoolbell colors, 18 px text, a larger chevron and 48 px options.
+- GUI: group close/cancel dialog actions on the right with inset edge spacing.
+- GUI: named Ethernet selection and new sessions with archived backups; uncertain writes and corrupt backups block rotation.
 - GUI: retain passwords in the current tab between operations, with a shared show/hide button and preparation guidance.
 - GUI: added an initial existing-installation upgrade mode with device/backup checks, SSH askpass and separate result verification. The 5.1.124 → 5.1.127 upgrade passed on a separate device with automation off and settings preserved; password entry is inline and the log scrolls to the result. Firmware routes remain simulated.
 - Shared prototype state machine: cancel/close confirmation, retry without restart, stale-event protection and explicit result verification.

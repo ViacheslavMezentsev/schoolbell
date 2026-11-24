@@ -6,12 +6,16 @@
 #include <QDateTime>
 #include <QCoreApplication>
 #include <QFile>
+#include <QFileInfo>
 #include <QSettings>
 #include <QLocalServer>
 #include <QLocalSocket>
 #include <QUuid>
 #include <QDesktopServices>
 #include <QUrl>
+#include <QNetworkInterface>
+#include <QHostAddress>
+#include <QVariantList>
 class Backend : public QObject {
  Q_OBJECT
  Q_PROPERTY(QString sourceIP READ sourceIP NOTIFY changed)
@@ -20,6 +24,8 @@ class Backend : public QObject {
  Q_PROPERTY(QString stage READ stage NOTIFY changed)
  Q_PROPERTY(QString report READ report NOTIFY changed)
  Q_PROPERTY(QString session READ session NOTIFY changed)
+ Q_PROPERTY(QVariantList connections READ connections NOTIFY changed)
+ QVariantList choices;
  QProcess process;
  QLocalServer passwordServer;
  QString password;
@@ -45,10 +51,38 @@ public:
   connect(&process,&QProcess::errorOccurred,this,[this](QProcess::ProcessError error){ if(error==QProcess::FailedToStart){password.fill(QChar(0));password.clear();passwordServer.close();state="error";output+="\nCannot start packaged worker: "+process.errorString();emit changed();} });
   connect(&process,qOverload<int,QProcess::ExitStatus>(&QProcess::finished),this,[this](int code,QProcess::ExitStatus status){
    password.fill(QChar(0));password.clear();passwordServer.close();
-   if(code==0 && status==QProcess::NormalExit) state=state=="prepare"?"ready":"done";
+   if(code==0 && status==QProcess::NormalExit) {
+    if(state=="new-session") {state="idle";source.clear();index=0;emit sessionReset();}
+    else state=state=="prepare"?"ready":"done";
+   }
    else state=QFile::exists(folder+"/write-started")?"uncertain":"error";
    emit changed();
   });
+ }
+ QVariantList connections() const {return choices;}
+ Q_INVOKABLE void refreshConnections() {
+  if(busy())return;
+  choices.clear();
+  for(const auto &nic:QNetworkInterface::allInterfaces()) {
+   if(nic.type()!=QNetworkInterface::Ethernet || !(nic.flags()&QNetworkInterface::IsUp) || !(nic.flags()&QNetworkInterface::IsRunning))continue;
+   for(const auto &entry:nic.addressEntries()) {
+    if(entry.ip().protocol()!=QAbstractSocket::IPv4Protocol || entry.ip().isLoopback())continue;
+    if(entry.prefixLength()<1 || !QHostAddress("192.168.1.1").isInSubnet(entry.ip(),entry.prefixLength()))continue;
+    if(entry.ip()==QHostAddress("192.168.1.1"))continue;
+    QVariantMap row;row["label"]=nic.humanReadableName()+" · "+entry.ip().toString();
+    row["source"]=entry.ip().toString();row["index"]=nic.index();choices.append(row);
+   }
+  }
+  emit changed();
+ }
+ Q_INVOKABLE void newSession() {
+  if(busy() || state=="uncertain")return;
+  auto base=QCoreApplication::applicationDirPath();
+  auto env=QProcessEnvironment::systemEnvironment();env.insert("PYTHONIOENCODING","utf-8");
+  process.setProcessEnvironment(env);process.setWorkingDirectory(base);
+  output.clear();state="new-session";
+  process.start(base+"/python/python.exe",{base+"/package_worker.py","new-session","--source",source,"--index",QString::number(index),"--session",folder});
+  emit changed();
  }
  QString sourceIP() const {return source;}
  int adapterIndex() const {return index;}
@@ -78,7 +112,8 @@ public:
   process.start(base+"/python/python.exe",{base+"/package_worker.py",action,"--source",ip,"--index",QString::number(adapter),"--session",folder});
   emit changed();
  }
+ Q_INVOKABLE void openHistory(){ QDesktopServices::openUrl(QUrl::fromLocalFile(QFileInfo(folder).absolutePath()+"/session-history")); }
  Q_INVOKABLE void openBackup(){ QDesktopServices::openUrl(QUrl::fromLocalFile(folder)); }
  Q_INVOKABLE void openDevice(){if(state=="done") QDesktopServices::openUrl(QUrl("http://192.168.1.1/cgi-bin/luci/admin/schoolbell"));}
- signals: void changed();
+ signals: void changed(); void sessionReset();
 };

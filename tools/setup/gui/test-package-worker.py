@@ -80,4 +80,53 @@ class WorkerTests(unittest.TestCase):
  def test_wrong_rollback_version_blocks(self):
   self.version='5.1.123'
   with self.assertRaises(subprocess.CalledProcessError):w.run(self.args)
+ def test_verify_saved_operation_after_bundle_changed(self):
+  w.run(self.args);self.args.action='install';w.run(self.args)
+  (self.root/'payload.json').write_text('{}')
+  self.args.action='verify';w.run(self.args)
+  self.args.action='new-session';w.run(self.args)
+  self.assertEqual(self.writes,1)
+ def test_failed_verification_invalidates_previous_proof(self):
+  w.run(self.args);self.args.action='install';w.run(self.args)
+  self.sound='changed';self.args.action='verify'
+  with self.assertRaises(subprocess.CalledProcessError):w.run(self.args)
+  self.assertFalse((Path(self.args.session)/'verified.json').exists())
+  self.args.action='new-session'
+  with self.assertRaises(FileNotFoundError):w.run(self.args)
+ def test_archive_verified_session_preserves_backup(self):
+  w.run(self.args);self.args.action='install';w.run(self.args)
+  folder=Path(self.args.session);before=(folder/'backup.tar').read_bytes()
+  self.args.action='new-session';w.run(self.args)
+  history=list((folder.parent/'session-history').iterdir());self.assertEqual(len(history),1)
+  self.assertEqual((history[0]/'backup.tar').read_bytes(),before)
+  self.assertTrue((history[0]/'write-started').exists())
+  self.assertFalse((history[0]/'operation.lock').exists())
+  self.assertEqual(list(folder.iterdir()),[])
+  self.assertEqual(self.writes,1)
+ def test_archive_unknown_write_refused(self):
+  w.run(self.args);folder=Path(self.args.session);(folder/'write-started').write_text('unknown')
+  self.args.action='new-session'
+  with self.assertRaises((ValueError,FileNotFoundError)):w.run(self.args)
+  self.assertTrue((folder/'backup.tar').exists())
+ def test_archive_stale_proof_refused(self):
+  w.run(self.args);self.args.action='install';w.run(self.args)
+  folder=Path(self.args.session);(folder/'write-started').write_text('another write')
+  self.args.action='new-session'
+  with self.assertRaises(ValueError):w.run(self.args)
+  self.assertTrue((folder/'prepared.json').exists())
+ def test_archive_prepared_session_without_writing(self):
+  w.run(self.args);self.args.action='new-session';w.run(self.args)
+  self.assertEqual(self.writes,0)
+  self.args.action='prepare';w.run(self.args)
+  self.assertTrue((Path(self.args.session)/'prepared.json').exists())
+ def test_stable_guard_blocks_new_session(self):
+  folder=Path(self.args.session);guard=folder.parent/(folder.name+'.guard');guard.write_text('busy')
+  self.args.action='new-session'
+  with self.assertRaises(FileExistsError):w.run(self.args)
+  self.assertTrue(guard.exists())
+ def test_archive_corrupt_backup_refused(self):
+  w.run(self.args);self.args.action='install';w.run(self.args)
+  (Path(self.args.session)/'backup.tar').write_bytes(b'bad')
+  self.args.action='new-session'
+  with self.assertRaises(ValueError):w.run(self.args)
 if __name__=='__main__':unittest.main()

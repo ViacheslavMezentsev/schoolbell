@@ -158,10 +158,15 @@ ApplicationWindow {
   onRejected:app.dispatch({type:"dismiss"})
   contentItem:Label {text:app.realMode ? "Закрыть мастер? Резервная копия и журнал этапа останутся на ПК. Если результат установки не подтверждён, при следующем запуске сначала выполните проверку." : Flow.interruptionText(app.state); wrapMode:Text.WordWrap; color:theme.text}
   background:Rectangle {color:theme.panel; border.color:theme.border; radius:10}
-  footer:RowLayout {
-   ActionButton {text:"Продолжить сценарий"; onClicked:{app.dispatch({type:"dismiss"});interruption.close()}}
-   Item {Layout.fillWidth:true}
-   ActionButton {text:app.state.pending==="close" ? (app.realMode ? "Закрыть мастер" : "Закрыть макет") : "Начать заново"; onClicked:{app.dispatch({type:"accept"});interruption.close()}}
+  footer:Item {
+   implicitHeight:76
+   RowLayout {
+    anchors.fill:parent; anchors.leftMargin:20; anchors.rightMargin:20; anchors.topMargin:8; anchors.bottomMargin:20
+    spacing:12
+    Item {Layout.fillWidth:true}
+    ActionButton {text:"Продолжить сценарий"; onClicked:{app.dispatch({type:"dismiss"});interruption.close()}}
+    ActionButton {text:app.state.pending==="close" ? (app.realMode ? "Закрыть мастер" : "Закрыть макет") : "Начать заново"; onClicked:{app.dispatch({type:"accept"});interruption.close()}}
+   }
   }
  }
  Dialog {id:log; anchors.centerIn:parent; width:650; title:"Журнал имитации"; standardButtons:Dialog.Close; TextArea{width:600;text:app.report;readOnly:true;wrapMode:Text.Wrap}}
