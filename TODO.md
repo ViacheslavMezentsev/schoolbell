@@ -156,3 +156,7 @@
 
 - [x] 24.11.2026: через GUI на отдельном MR3020 v3 выполнено обновление 5.1.124 → 5.1.127 поверх OpenWrt 19.07.9. BACKUP VERIFIED и UPGRADE VERIFIED получены; SHA256 копии/отката сверены, автомат выключен, звук/черновик/ревизия активного плана сохранены, службы работают. Пароль введён в форме без всплывающих окон; результат виден после автопрокрутки. / GUI upgrade passed on a separate device with verified backup, automation off and sound/plan preserved; inline password and visible result verified.
 - [ ] GUI: новая установка с зависимостями, firmware backend, автоматический выбор адаптера, восстановление после реального обрыва записи и последующие независимые сеансы обновления. Первый пилот ограничен переходом 5.1.124 → 5.1.127 и известным SSH-ключом; это не приёмка всего установщика. / Fresh dependencies, firmware, adapter discovery, actual interrupted-write recovery and subsequent independent upgrade sessions remain pending.
+
+- [ ] GUI: проверить новое поле пароля на устройстве после локальной проверки сохранения между операциями, показа/скрытия и очистки. / Hardware acceptance of the updated password field remains pending.
+
+- [x] GUI: общий PasswordField, память текущей вкладки и глазок; проверены Qt Test и визуально в статическом EXE, без SSH. / Shared field and tab-scoped retention passed local Qt and EXE checks without SSH.
