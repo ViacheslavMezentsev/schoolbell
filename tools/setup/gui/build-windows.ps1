@@ -34,6 +34,8 @@ try {
  $runtime = Join-Path $PSScriptRoot '..\vendor\python-3.11.9-embed-amd64.zip'
  if ((Get-FileHash $runtime -Algorithm SHA256).Hash.ToLower() -ne '009d6bf7e3b2ddca3d784fa09f90fe54336d5b60f0e0f305c37f400bf83cfd3b') {throw 'Python archive checksum mismatch'}
  Expand-Archive -LiteralPath $runtime -DestinationPath (Join-Path $out 'python') -Force
+ foreach ($file in @('network_worker.py','network_snapshot.ps1')) {Copy-Item (Join-Path $PSScriptRoot $file) $out -Force}
+ foreach ($file in @('network_plan.py','firmware.py')) {Copy-Item (Join-Path $PSScriptRoot ('../'+$file)) $out -Force}
  Copy-Item (Join-Path $PSScriptRoot 'package_worker.py') $out -Force
  Copy-Item (Join-Path $PSScriptRoot 'session_lock.py') $out -Force
  Copy-Item (Join-Path $PSScriptRoot 'operation_protocol.py') $out -Force

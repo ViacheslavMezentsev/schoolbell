@@ -18,3 +18,7 @@ python3 tests/test_gui_zip.py
 
 python3 tools/setup/gui/test-operation-protocol.py
 python3 tools/setup/gui/test-session-recovery.py
+
+python3 tools/setup/test-network-plan.py
+
+python3 tools/setup/gui/test-network-worker.py

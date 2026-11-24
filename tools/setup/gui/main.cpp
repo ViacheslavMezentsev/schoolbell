@@ -2,6 +2,7 @@
 #include <QLocalSocket>
 #include <QQmlContext>
 #include "Backend.h"
+#include "FirmwareBackend.h"
 #ifdef Q_OS_WIN
 #include <windows.h>
 #endif
@@ -39,8 +40,8 @@ int main(int argc,char **argv){
  QCoreApplication::setApplicationVersion(SCHOOLBELL_WIZARD_VERSION);
  QGuiApplication::setApplicationDisplayName(QString::fromUtf8("Мастер установки ")+SCHOOLBELL_WIZARD_VERSION);
  QQuickStyle::setStyle("Basic");
- Backend backend;
- QQmlApplicationEngine engine;engine.rootContext()->setContextProperty("realBackend",&backend);
+ Backend backend; FirmwareBackend firmware;
+ QQmlApplicationEngine engine;engine.rootContext()->setContextProperty("realBackend",&backend);engine.rootContext()->setContextProperty("firmwareBackend",&firmware);
  QObject::connect(&engine,&QQmlApplicationEngine::objectCreationFailed,&app,[]{QCoreApplication::exit(1);},Qt::QueuedConnection);
  engine.load(QUrl("qrc:/RouterSetup/qml/Main.qml"));
  return app.exec();

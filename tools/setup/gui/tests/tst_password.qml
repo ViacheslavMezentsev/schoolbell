@@ -35,6 +35,15 @@ Item {
   property string received: ""
   function start(action, source, adapter, secret) { received=secret; stage=action==="prepare"?"ready":"done" }
  }
+ QtObject {
+  id:firmwareBackend
+  property bool busy:false
+  property var choices:[]
+  property string message:""
+  property string selectedProfile:""
+  function clearResult(){message=""}
+  function inspect(guid,profile,confirmed){selectedProfile=profile||"openwrt";message="Сеть не изменена"}
+ }
  Component {id:windowFactory; Main {}}
  Theme {id: theme}
  RealPane {id:pane;anchors.fill:parent;colors:theme}
@@ -60,6 +69,20 @@ Item {
    verify(button.visible);verify(button.enabled)
    button.clicked();compare(realBackend.canCancel,false);verify(!button.enabled)
    realBackend.busy=false;verify(!button.visible)
+  }
+  function test_firmware_preflight_requires_selection_and_model() {
+   let window=windowFactory.createObject(null);window.navigate("openwrt")
+   let route=findChild(window,"firmware-route"),picker=findChild(route,"firmware-adapter"),check=findChild(route,"firmware-check"),confirm=findChild(route,"firmware-model-confirmed")
+   verify(!check.enabled)
+   firmwareBackend.choices=[{guid:"fixture",label:"USB Ethernet"}]
+   picker.currentIndex=0;picker.activated(0);verify(!check.enabled)
+   confirm.checked=true;verify(check.enabled);check.clicked();compare(firmwareBackend.selectedProfile,"openwrt")
+   firmwareBackend.choices=[{guid:"other",label:"Other Ethernet"},{guid:"fixture",label:"USB Ethernet"}]
+   compare(picker.currentIndex,1);compare(route.selectedGuid,"fixture")
+   firmwareBackend.busy=true;window.navigate("home");compare(window.route,"openwrt");verify(!check.enabled)
+   firmwareBackend.busy=false;window.navigate("recovery");verify(!check.enabled);compare(firmwareBackend.message,"")
+   picker.currentIndex=0;picker.activated(0);confirm.checked=true;check.clicked();compare(firmwareBackend.selectedProfile,"factory")
+   window.destroy();firmwareBackend.choices=[];firmwareBackend.message=""
   }
   function test_main_routes_and_close_is_guarded() {
    let window=windowFactory.createObject(null)

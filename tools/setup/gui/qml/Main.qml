@@ -29,16 +29,17 @@ ApplicationWindow {
   background: Rectangle { radius: 8; color: control.highlighted ? theme.accent : control.down || control.hovered ? theme.soft : theme.panel; border.color: control.visualFocus ? theme.accent : theme.border; border.width: control.visualFocus ? 3 : 1 }
  }
 
+ readonly property bool operationBusy:realBackend.busy || firmwareBackend.busy
  property string route:"home"
  function navigate(next) {
-  if(realBackend.busy || ["home","openwrt","packages","recovery"].indexOf(next)<0)return;
+  if(app.operationBusy || ["home","openwrt","packages","recovery"].indexOf(next)<0)return;
   route=next;
  }
  property bool closeConfirmed:false
  readonly property string themeLabel: preferences.themeMode === "system" ? "системная" : preferences.themeMode === "dark" ? "тёмная" : "светлая"
  onClosing:function(event) {
-  event.accepted=closeConfirmed && !realBackend.busy;
-  if(!event.accepted && !realBackend.busy) interruption.open();
+  event.accepted=closeConfirmed && !app.operationBusy;
+  if(!event.accepted && !app.operationBusy) interruption.open();
  }
  ColumnLayout {
   anchors.fill:parent;anchors.margins:24;spacing:12
@@ -49,7 +50,7 @@ ApplicationWindow {
     Label {text:"v"+Qt.application.version+" · OpenWrt · Комплекты · Восстановление";color:theme.muted}
    }
    ActionButton {
-    objectName:"route-home";text:"К выбору задачи";visible:app.route!=="home";enabled:!realBackend.busy
+    objectName:"route-home";text:"К выбору задачи";visible:app.route!=="home";enabled:!app.operationBusy
     onClicked:app.navigate("home")
    }
    ActionButton {
@@ -74,7 +75,7 @@ ApplicationWindow {
     anchors.fill:parent;anchors.leftMargin:20;anchors.rightMargin:20;anchors.topMargin:8;anchors.bottomMargin:20;spacing:12
     Item {Layout.fillWidth:true}
     ActionButton {text:"Продолжить работу";onClicked:interruption.close()}
-    ActionButton {text:"Закрыть мастер";enabled:!realBackend.busy;onClicked:{app.closeConfirmed=true;app.close()}}
+    ActionButton {text:"Закрыть мастер";enabled:!app.operationBusy;onClicked:{app.closeConfirmed=true;app.close()}}
    }
   }
  }
