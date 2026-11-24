@@ -4,6 +4,8 @@
 
 ## Unreleased — setup GUI prototype
 
+- ZIP: host prepare/install/verify for fresh OpenWrt, verified off-device overlay/recovery image, bounded extraction and pinned bundle, uncertain-write protection. Local validation only; GUI integration and hardware acceptance remain pending.
+
 - Bundle: preliminary host installation plan from a device snapshot, with integrity, compatibility, dependency and space checks. No writes or device access by the planner.
 
 - Release preparation: independently versioned Schoolbell Setup Wizard 0.1.0, ZIP contract, deterministic candidate builder and release-note draft. Public distribution and manual installation remain gated.

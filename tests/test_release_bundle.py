@@ -26,6 +26,8 @@ class ReleaseTests(unittest.TestCase):
         self.root=Path(self.tmp.name);self.bundle=self.root/'bundle';self.bundle.mkdir()
         self.repo=self.root/'repo';(self.repo/'packaging/offline').mkdir(parents=True)
         shutil.copytree(ROOT/'packaging/release',self.repo/'packaging/release')
+        (self.repo/'tools/setup/gui').mkdir(parents=True)
+        shutil.copy2(ROOT/'tools/setup/gui/fresh_install.py',self.repo/'tools/setup/gui/fresh_install.py')
         (self.repo/'scripts').mkdir()
         shutil.copy2(ROOT/'scripts/schoolbell_ipk.py',self.repo/'scripts/schoolbell_ipk.py')
         (self.repo/'docs/releases').mkdir(parents=True)

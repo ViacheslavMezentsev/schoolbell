@@ -31,6 +31,7 @@ Package and wizard versions are independent. Platform naming is not platform acc
 - `dependencies.lock.json`, `packages.tsv`: замкнутый состав; kernel/libc не поставляются для замены.
 - `README.md`, `README.en.md`, `RELEASE_NOTES.md`: инструкции RU/EN и заметки версии.
 - `scripts/check.sh`, `scripts/verify.sh`: проверки без установки и изменения настроек.
+- `scripts/install.py`, `fresh_install.py`, `plan.py`, `schoolbell_ipk.py`, `snapshot.sh` внутри scripts/: host-транзакция и общие проверки.
 - `licenses/`: фактические материалы и незакрытые вопросы распространения.
 - `SHA256SUMS`: все вложенные файлы, кроме самого списка. Вне ZIP — отдельный SHA256SUMS архива.
 
@@ -53,9 +54,8 @@ is explicit, public release is blocked until release gates are implemented. No n
 
 ## Следующие этапы / Next stages
 
-1. Ручной install.sh с admission места, сохранённой вне устройства копией, явным планом,
-   подтверждением, защитой повторной записи и аппаратной проверкой. Пока не включён;
-   check/verify не выдаются за готовую самостоятельную установку.
+1. Host install.py для свежей установки реализован локально: копия вне устройства,
+   подтверждение, защита повторной записи. Аппаратная приёмка и upgrade с откатом остаются открыты.
 2. Обнаружение ZIP мастером, ограниченная безопасная распаковка (размер, число файлов,
    дубликаты, traversal, ссылки), проверка manifest и фиксация хеша на сеанс.
 3. GitHub Releases: стабильные совместимые assets, скачивание с ограничениями/кэшем;
@@ -63,7 +63,7 @@ is explicit, public release is blocked until release gates are implemented. No n
 4. Лицензии/соответствующие исходники зависимостей, права аудио, чистый принятый commit,
    аппаратная приёмка точных артефактов, переносимый комплект мастера.
 
-Manual installation, ZIP discovery, signed release download and distribution clearance are
+Manual-install hardware acceptance, GUI ZIP discovery, signed release download and distribution clearance are
 separate pending stages. Existing GUI package verification does not establish new ZIP acceptance.
 
 ## Локальная сборка / Local assembly
@@ -121,3 +121,37 @@ hardware acceptance remain pending.
 Stage checks: full `make all`, 13 planner tests, 15 packaging tests, specification
 validation without warnings and whitespace checks passed. The actual 35-IPK ZIP
 passed two CLI runs with a synthetic snapshot; no device was accessed.
+
+## Транзакция ZIP / ZIP transaction
+
+Host `scripts/install.py`: `prepare`, `install`, `verify`. Общая логика fresh_install.py
+используется также GUI. Подготовка принимает ZIP напрямую, ограничивает распаковку
+(64 МиБ ZIP, 128 МиБ содержимого, 512 файлов, 16 МиБ файл), запрещает ссылки, повторные
+пути без учёта регистра, traversal и специальные Windows-имена. Точный состав и IPK
+проверяются до SSH. Комплект фиксируется копией и SHA256 в новом сеансе.
+
+Полный overlay и образ восстановления остаются на ПК. Подготовка не перезаписывается;
+повторные команды сверяют хеши всех доказательств. Перед записью живые проверки
+устройства/загрузки/инвентаря/настроек/места выполняются в одной SSH-команде с установкой.
+До соединения создаётся write-started; неизвестный исход допускает только verify.
+Ошибка проверки аннулирует прежний verified. Оригинальный ZIP после подготовки не нужен:
+установка использует закреплённую копию, а не меняющийся файл рядом с EXE.
+
+The host CLI accepts a bounded ZIP and pins it in a new private session. It shares the
+GUI fresh-install core. Verified overlay/recovery material remains off-device; live
+checks precede explicit package installation in the same SSH command. Persistent
+write intent blocks retries after uncertain outcomes; verify failures clear old proof.
+Only fresh installation is implemented; old-version upgrades, repair, GUI integration
+and hardware acceptance remain pending. See the bundled RU/EN READMEs for commands.
+
+Локальный результат 24.11.2026: make all — PASS; 23 теста ZIP-транзакции,
+15 тестов fresh-install, 15 упаковки и 13 планировщика — PASS. Часть отрицательных
+сценариев исполняет shell в искусственной файловой системе. В Windows проверены
+импорт CLI и распаковка настоящих 35 IPK без SSH. ТЗ: 22 требования, 16 TC,
+без ошибок и предупреждений. Аппаратные операции не выполнялись.
+
+Local result on 2026-11-24: make all, 23 ZIP-transaction tests, 15 fresh-install tests,
+15 packaging tests and 13 planner tests passed. Shell guards run against a synthetic
+filesystem in selected tests. Windows CLI import and extraction of the actual 35 IPKs
+passed without SSH. Specification validation: 22 requirements, 16 TCs, no errors or
+warnings. No hardware operations were performed.

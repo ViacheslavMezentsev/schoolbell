@@ -110,6 +110,7 @@ def build(bundle, out, candidate=False):
                     supported_boards=['tplink,tl-mr3020-v3'],
                     tested_hardware_revisions=['TL-MR3020 EU v3.30'],
                     manual_installation='pending-acceptance',
+                    manual_installer={'entrypoint':'scripts/install.py','modes':['fresh'],'hardware_validated':False},
                     hardware_validated=False)
     entries = {}
     for row in manifest['packages']:
@@ -121,9 +122,10 @@ def build(bundle, out, candidate=False):
     entries['dependencies.lock.json'] = files['dependencies.lock.json'].read_bytes()
     entries['input-manifest.json'] = files['manifest.json'].read_bytes()
     entries['RELEASE_NOTES.md'] = notes.read_bytes()
-    for name in ('README.md','README.en.md','check.sh','verify.sh','snapshot.sh','plan.py'):
+    for name in ('README.md','README.en.md','check.sh','verify.sh','snapshot.sh','plan.py','install.py'):
         target = 'scripts/'+name if name.endswith(('.sh','.py')) else name
         entries[target] = (ROOT/'packaging/release'/name).read_bytes()
+    entries['scripts/fresh_install.py'] = (ROOT/'tools/setup/gui/fresh_install.py').read_bytes()
     entries['scripts/schoolbell_ipk.py'] = (ROOT/'scripts/schoolbell_ipk.py').read_bytes()
     entries['packages.tsv'] = ''.join(r['name']+'\t'+r['version']+'\t'+r['file']+'\n' for r in manifest['packages']).encode()
     entries['manifest.json'] = (json.dumps(manifest,ensure_ascii=False,indent=2)+'\n').encode()

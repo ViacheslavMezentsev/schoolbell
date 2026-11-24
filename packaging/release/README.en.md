@@ -2,65 +2,93 @@
 
 [Русский](README.md)
 
-**Local archive-format candidate, not a public installation release.** manifest.json
-identifies the application and files. Includes the app, native clock and all 33 pinned
-dependencies; excludes firmware and the wizard.
+**Local candidate, not a public installation release.** Includes Schoolbell, native
+clock and 33 pinned dependencies. Firmware and the GUI are separate.
 
-## Compatibility
+## Compatibility and scope
 
-OpenWrt 19.07.9, ramips/mt76x8, mipsel_24kc, MR3020 v3. scripts/check.sh checks exact
-kernel/libc ABI. Project hardware checks used EU v3.30; they do not validate every
-revision or fresh installation of this ZIP. Do not replace kernel/libc or force dependencies.
+OpenWrt 19.07.9, ramips/mt76x8, mipsel_24kc, TL-MR3020 v3; exact kernel/libc are checked.
+Project EU v3.30 experiments do not establish hardware acceptance of this ZIP.
+The manual installer supports **fresh OpenWrt**. Upgrades, repair, firmware flashing
+and automatic rollback are not supported. An already-installed version is not reinstalled.
 
-## Host checks
+Run on a host with Python 3.8+ and OpenSSH; no router Python is required. On Windows
+use `python` or `py -3`, on WSL/Linux `python3`. GUI 0.1.0 still uses its embedded
+legacy bundle; GUI ZIP selection is a separate next stage.
 
-Extract into a separate host directory and check SHA256SUMS. Hashes detect corruption;
-signed provenance is not implemented yet. Verify the download source first. Do not copy
-the entire bundle to a small router's /tmp without RAM admission; extract on the host.
+## Preparation
 
-## Professional workflow
+Extract on the host and check archive SHA256SUMS and the source. Hashes detect corruption,
+not authorship; signed downloads are pending. Do not copy the whole ZIP to router RAM,
+replace kernel/libc, update feeds or install wildcard IPKs.
 
-Before manual installation, save configuration/overlay and a recovery plan off-device,
-and stop automatic bells. Compare `opkg list-installed` with packages.tsv and check
-incremental RAM/flash needs. Existing compatible dependencies need not be reinstalled.
-Do not install a wildcard of every IPK or refresh feeds for this offline bundle; transfer
-only required packages. With the complete extracted bundle on suitable router storage,
-`sh scripts/check.sh` checks identity and integrity without changing settings. It neither
-admits space nor creates backups. After a separately performed installation,
-`sh scripts/verify.sh` checks versions, services and automation off. Neither script changes
-sound, network, time or packages.
+Use a dedicated Ethernet connection, reliable power, known root password or SSH key,
+a previously verified device key in known_hosts and a verified image of the same
+OpenWrt for recovery. Unknown keys are never accepted automatically. Routes are not
+changed. Specify the intended router IPv4 and the dedicated adapter's local IPv4.
+Automatic bells must be off. Reset is not needed for package installation.
 
-**Automatic install.sh and manual-install acceptance remain unfinished.** This candidate
-does not authorize unsupported upgrade/rollback paths. Wizard 0.1.0 still uses the legacy
-embedded bundle; ZIP discovery is the next stage.
+The ZIP excludes `tp_recovery.bin`. Prepare it using tools/setup documentation; the
+accepted SHA256 is
+`e621da95d07d25102b1016a28400122f5c92bce9830d5cc061323e306b6204fa`.
+Keep the session outside the extracted bundle in a private directory. The overlay
+backup contains passwords/settings: never publish it or commit it to Git.
 
-packages/ contains unchanged IPKs; licenses/ includes notices and distribution gaps;
-RELEASE_NOTES.md describes the version; input-manifest.json records input provenance;
-manifest.json defines format 1 and assembly provenance. Distribution clearance and hardware
-validation remain false. Corresponding sources, component/audio rights, fresh-install
-acceptance and signed artifacts must be addressed before public release. No device backups
-are included.
+## Prepare, install, verify
 
-## Preliminary plan on the host
+Run on the host from the extracted bundle. Replace ROUTER_IP, PC_IP and KNOWN_HOSTS;
+set paths to the original ZIP and recovery image. The session directory must be new;
+existing backups are never overwritten.
 
-The ZIP includes `scripts/snapshot.sh` (read-only device state) and `scripts/plan.py`
-(Python 3.8+ on the host, no networking). For an authorized device, run only snapshot.sh
-over SSH and save its standard output off-device as UTF-8 snapshot.tsv. Any SSH/script
-error means an incomplete snapshot; do not use it. Do not transfer the entire ZIP.
-Run from the extracted bundle on the host:
+```sh
+python3 scripts/install.py prepare --zip ../schoolbell-v5.1.127-openwrt-19.07.9-ramips-mt76x8-mipsel_24kc.zip --recovery ../tp_recovery.bin --session ../install-session --host ROUTER_IP --source PC_IP --known-hosts KNOWN_HOSTS
+python3 scripts/install.py install --session ../install-session
+python3 scripts/install.py verify --session ../install-session
+```
+
+`prepare` validates ZIP, profile, inventory and space. It saves full overlay, inventory,
+device/boot identity, protected-setting hashes and recovery image off-device. Transfer
+hash and archive readability must pass before PREPARED. Backup RAM admission is separate
+from package space.
+
+`install` asks for `INSTALL ROUTER_IP`; preparation lasts 30 minutes. Session evidence,
+IPKs, backups, connection, original boot, inventory, settings and space are rechecked.
+Only missing packages are transferred, SHA256-checked and explicitly passed to opkg.
+Success requires correct versions, services running, automation off and preserved
+network/system settings. A fresh system has no previous Schoolbell plans/settings.
+
+After an interrupted or uncertain write, `write-started` remains. **Do not retry install,
+delete the marker or bypass it with a new installation.** Run `verify` on the original
+session. Failed verification invalidates old success evidence. A reboot, key change or
+partial installation needs separate diagnosis; there is no automatic repair or rollback.
+
+The session retains `bundle.zip`, verified `overlay.tar`, `backup.tar`,
+`openwrt-recovery.bin` and linked receipts. Recovery means flashing that same OpenWrt
+through Reset and restoring overlay through a separate procedure, never the install
+command. Hardware acceptance of this recovery cycle is still required.
+
+The sibling `.guard` and `/tmp/schoolbell-release.lock` serialize this installer.
+A leftover lock after a crash needs investigation; do not remove an active lock or run
+other installation/configuration tools concurrently.
+
+## Read-only checks
+
+`snapshot.sh` reads device state; save its UTF-8 output outside the bundle. Reject any
+failed/incomplete capture. On the host:
 
 ```sh
 python3 scripts/plan.py --snapshot ../snapshot.tsv
 ```
 
-Keep snapshot.tsv outside the bundle directory: exact SHA256SUMS coverage rejects extra
-files. On Windows use `python` or `py -3` instead of `python3`. JSON output contains
-`install`/`retain`, estimated RAM/overlay requirements and input hashes. Only fresh and
-already-current inventories are supported. Upgrades need a validated rollback package;
-repair of incomplete installations is also refused. Estimates include 512 KiB overlay
-and 4096 KiB RAM reserves, exclude backup storage and cannot guarantee filesystem writes.
+The plan is `preliminary-only` / `write_authorized=false`; stale snapshots cannot replace
+live checks, backup or confirmation. `check.sh`/`verify.sh` are legacy checks of the entire
+extracted directory on suitable device storage, not installers.
 
-`preliminary-only` / `write_authorized=false` is not write admission or service health
-verification. Snapshots may be stale or altered. Live rechecks, verified off-device
-backup, recovery preparation and confirmation remain required before installation.
-No write script is included yet. Hashes detect corruption, not trusted provenance.
+## Status
+
+Transactions are tested locally with synthetic data and injected SSH, including execution
+of shell guards in an isolated filesystem. ZIP hardware acceptance, GUI integration,
+Windows SSH transactions, corresponding dependency sources and audio rights remain open.
+`distribution_cleared=false` and `hardware_validated=false` remain. packages/ contains
+unchanged IPKs, licenses/ holds notices/open issues, RELEASE_NOTES.md describes the release,
+and manifest.json/input-manifest.json record provenance.
