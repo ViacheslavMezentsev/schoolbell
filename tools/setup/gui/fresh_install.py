@@ -10,6 +10,9 @@ import tarfile
 import time
 import uuid
 
+RECOVERY_SHA = 'e621da95d07d25102b1016a28400122f5c92bce9830d5cc061323e306b6204fa'
+MAX_BACKUP_BYTES = 32 * 1024 * 1024
+
 # Same accepted stock LuCI alternatives as the existing console installer.
 STOCK = {name: 'git-22.045.73925-36e5c1c-1' for name in
          ('luci-base','luci-lib-ip','luci-lib-jsonc','luci-lib-nixio','luci-theme-bootstrap')}
@@ -73,11 +76,12 @@ def space(rows):
     return 'test "$(df -k /overlay | awk \'END {print $4}\')" -ge '+str(flash)+'\ntest "$(df -k /tmp | awk \'END {print $4}\')" -ge '+str(ram)+'\n'
 
 def read_backup(raw):
+    if len(raw)>MAX_BACKUP_BYTES: raise ValueError('Backup too large')
     header,sep,blob=raw.partition(b'\n')
-    if not sep or header.split()[0].decode()!=hashlib.sha256(blob).hexdigest(): raise ValueError('Backup checksum mismatch')
+    if not sep or not re.fullmatch(rb'[0-9a-f]{64}  [^\r\n]+',header) or header[:64].decode()!=hashlib.sha256(blob).hexdigest(): raise ValueError('Backup checksum mismatch')
     with tarfile.open(fileobj=io.BytesIO(blob)) as t:
         expected=['identity.txt','inventory.txt','overlay.tar','protected.txt']
-        if sorted(t.getnames())!=expected or any(not m.isfile() for m in t.getmembers()): raise ValueError('Invalid backup contents')
+        if sorted(t.getnames())!=expected or any(not m.isfile() or m.size>MAX_BACKUP_BYTES for m in t.getmembers()): raise ValueError('Invalid backup contents')
         parts={n:t.extractfile(n).read() for n in expected}
     with tarfile.open(fileobj=io.BytesIO(parts['overlay.tar'])) as t:
         for m in t.getmembers():
@@ -90,11 +94,12 @@ def prepare(args, root, manifest, remote, base, emit):
     rows=load_bundle(root,manifest['package'])
     # Keep a verified base image beside the backup for reflash + overlay recovery.
     image=root/'firmware/tp_recovery.bin'
-    expected_image='e621da95d07d25102b1016a28400122f5c92bce9830d5cc061323e306b6204fa'
+    expected_image=RECOVERY_SHA
     if digest(image)!=expected_image: raise ValueError('Missing verified OpenWrt recovery image')
     emit('Чистая OpenWrt: сохраняем конфигурацию и список пакетов. Запись пакетов ещё не началась.')
     command=base+FRESH+TEMP
-    command+='test "$(df -k /tmp | awk \'END {print $4}\')" -ge 6144\n'
+    command+='overlay_kib=$(du -sk /overlay | awk \'{print $1}\')\ncase "$overlay_kib" in \'\'|*[!0-9]*) exit 1;; esac\n'
+    command+='test "$(df -k /tmp | awk \'END {print $4}\')" -ge "$((overlay_kib * 2 + 6144))"\n'
     command+='{ '+IDENTITY+'} > "$d/identity.txt"\n{ '+PROTECTED+'} > "$d/protected.txt"\n'
     command+='opkg list-installed | sort > "$d/inventory.txt"\ntar -C /overlay -cf "$d/overlay.tar" .\n'
     command+='{ '+PROTECTED+'} > "$d/after.txt"\ncmp "$d/protected.txt" "$d/after.txt"\n'

@@ -89,6 +89,13 @@ class FreshTests(unittest.TestCase):
   with self.assertRaises(ValueError):f.load_bundle(self.root,self.manifest['package'])
  def test_bad_backup_hash(self):
   with self.assertRaises(ValueError):f.read_backup(b'bad\nnot tar')
+ def test_empty_backup_header(self):
+  with self.assertRaises(ValueError):f.read_backup(b'\n')
+ def test_backup_size_limit(self):
+  with patch.object(f,'MAX_BACKUP_BYTES',4),self.assertRaises(ValueError):f.read_backup(b'too large')
+ def test_backup_ram_admission(self):
+  self.prepare()
+  self.assertTrue(any('overlay_kib * 2 + 6144' in c for c in self.commands))
  def test_duplicate_inventory(self):
   with self.assertRaises(ValueError):f.inventory('x - 1\nx - 2')
 if __name__=='__main__':unittest.main()
