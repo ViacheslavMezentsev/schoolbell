@@ -2,7 +2,17 @@
 
 [Русский](CHANGELOG.md)
 
-## Unreleased — setup GUI prototype
+## Unreleased — setup GUI
+
+- Documentation: three-route implementation plan, including embedded verified OEM for offline recovery and separate settings reset.
+
+- GUI: OpenWrt / bundle / recovery entry routes with preparation guidance and explicit firmware limitations; real ZIP installation remains available.
+
+- GUI: generic bundle heading and Russian window title; restart restores ZIP results only with matching version and preparation/attempt hashes, without contacting the router.
+
+- Wizard 0.2.1: embedded packages removed from build and selection; installation requires an external ZIP. Full backup is independent of bundle preparation. GUI ZIP installation passed with retained dependencies; full dependency provisioning and backup restoration remain pending.
+
+### Earlier development stages (status at the time)
 
 - Wizard 0.2.0: sibling ZIP selection/validation, manifest version and pinned fresh-install sessions; shared dropdown styling/chevrons across all modes. ZIP hardware acceptance remains pending.
 

@@ -6,7 +6,7 @@
 ## Имена / Names
 
 - `schoolbell-v5.1.127-openwrt-19.07.9-ramips-mt76x8-mipsel_24kc.zip`
-- `schoolbell-setup-wizard-v0.2.0-windows-x86_64.zip`
+- `schoolbell-setup-wizard-v0.2.1-windows-x86_64.zip`
 - EXE: `schoolbell-setup-wizard.exe`; продукт / product: Schoolbell Setup Wizard.
 
 Версия комплекта соответствует пакету Школьника; версия мастера независима.
@@ -21,8 +21,8 @@ Package and wizard versions are independent. Platform naming is not platform acc
 - `manifest.json`: `kind=schoolbell-package-bundle`, `format=1`, `version`, `tag`,
   `status`, профиль OpenWrt/target/architecture, точный ABI kernel/libc,
   supported_boards, tested_hardware_revisions, packages с относительными путями,
-  размерами, SHA256 и зависимостями. Минимальная версия мастера 0.2.0; `wizard.integration=fresh-pilot`
-  обозначает локально проверенную GUI-интеграцию свежей установки, без аппаратной приёмки. Hardware revisions — профиль опытов проекта,
+  размерами, SHA256 и зависимостями. Минимальная версия мастера 0.2.1; `wizard.integration=fresh-pilot`
+  обозначает пилотную GUI-интеграцию свежей установки. Проверка приложения при сохранённых зависимостях не закрывает приёмку полного состава ZIP. Hardware revisions — профиль опытов проекта,
   не приёмка конкретного ZIP; `hardware_validated=false` сохраняется.
 - `input-manifest.json`: точные исходные сведения входного комплекта; исходный commit/dirty
   не заменяется коммитом упаковки. `assembly_commit/assembly_dirty` описывают упаковщик отдельно.
@@ -56,14 +56,15 @@ is explicit, public release is blocked until release gates are implemented. No n
 1. Host install.py для свежей установки реализован локально: копия вне устройства,
    подтверждение, защита повторной записи. Аппаратная приёмка и upgrade с откатом остаются открыты.
 2. Обнаружение ZIP, ограниченная распаковка, проверка manifest и фиксация хеша подключены
-   к GUI 0.2.0. Следующий этап — отдельно разрешённая аппаратная приёмка.
+   к GUI 0.2.0. В 0.2.1 подтверждена установка приложения с сохранёнными зависимостями; полный состав и восстановление копии ещё требуют приёмки.
 3. GitHub Releases: стабильные совместимые assets, скачивание с ограничениями/кэшем;
    подпись manifest/сумм и доверенный открытый ключ. Приватный ключ не входит в репозиторий.
 4. Лицензии/соответствующие исходники зависимостей, права аудио, чистый принятый commit,
    аппаратная приёмка точных артефактов, переносимый комплект мастера.
 
-Manual-install hardware acceptance, GUI ZIP discovery, signed release download and distribution clearance are
-separate pending stages. Existing GUI package verification does not establish new ZIP acceptance.
+GUI ZIP discovery is implemented, and installation with retained dependencies was accepted on 2026-11-24.
+Full dependency provisioning, manual-install acceptance, backup restoration, signed release download and
+distribution clearance remain separate pending stages.
 
 ## Локальная сборка / Local assembly
 
@@ -167,3 +168,12 @@ The real GUI discovers sibling ZIPs and validates a selection locally without SS
 The install button uses the manifest version. Prepared sessions pin ZIP bytes and connection;
 new-session archival cannot bypass an uncertain write. Legacy embedded upgrades remain
 available separately; ZIP mode currently supports fresh installation only.
+
+### Уточнение 0.2.1 / 0.2.1 update
+
+Текущий мастер использует только внешние ZIP. Указанный выше встроенный режим
+относится к 0.2.0 и исключён из выбора/сборки 0.2.1. Новый ZIP требует 0.2.1,
+включающую исправление длины команды Dropbear и подтверждение неизменённого
+состояния после неудачной попытки. / Current wizard is external-ZIP-only;
+the legacy embedded selection above describes 0.2.0. New bundles require 0.2.1
+for bounded Dropbear commands and unchanged-state recovery evidence.

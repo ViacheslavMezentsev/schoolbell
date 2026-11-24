@@ -1,183 +1,126 @@
-> **Реальный пилот Windows / Windows real-device pilot:** отдельный режим обновления существующего Школьника 5.1.124 до 5.1.127 поверх OpenWrt 19.07.9. Свежая установка из офлайн-комплекта реализована и проверена локально, аппаратная приёмка ещё предстоит. Перепрошивка пока остаётся макетом. / A separate mode upgrades an existing Schoolbell 5.1.124 installation to 5.1.127 on OpenWrt 19.07.9. Fresh offline installation is implemented and locally tested, pending hardware acceptance. Firmware operations remain simulated.
+# Мастер установки / Setup wizard
 
-# Мастер установки — GUI / Setup wizard GUI
+[План трёх маршрутов](../../../docs/SETUP_WIZARD_PLAN.md) · [Implementation plan](../../../docs/SETUP_WIZARD_PLAN.en.md)
 
-QML/C++-интерфейс с отдельным реальным режимом обновления пакета по SSH. Маршруты OpenWrt и возврата OEM пока моделируются; режим «МАКЕТ» не обращается к устройствам. Реальные операции доступны только через «Реальная установка», их границы описаны ниже.
+## Русский
 
-## Windows
+Текущая версия мастера — **0.2.1**, независимо от версии пакета Школьника.
+Стартовый экран предлагает три маршрута: установить OpenWrt на новый роутер,
+установить комплект Школьника из внешнего ZIP, восстановить заводскую прошивку.
+Реальная запись из GUI доступна только для комплекта; два маршрута прошивки
+показывают подготовку и инструкции к консольному комплекту, без запуска сервера. Макет, имитация
+прошивки, тестовые исходы и переключение простого/экспертного макета удалены.
+Прошивка OpenWrt и возврат OEM через GUI пока не реализованы; используйте отдельно
+документированный [консольный комплект](../README.md).
 
-Из PowerShell: `./build-windows.ps1`. Нужны установленные MSYS2 MinGW64, CMake, Ninja, GCC и Qt6 static. Путь MSYS2 можно передать через `-MsysRoot`. Компиляторы работают с временной локальной копией: UNC-путь WSL не подходит для CMD/Ninja. Исходники остаются в репозитории.
+### Что понадобится
 
-Результат: `out/setup-gui/schoolbell-setup-wizard.exe` от корня репозитория. Qt/QML и сторонние библиотеки встроены; системные DLL Windows остаются необходимыми. Скрипт отклоняет импорты отсутствующих в System32 DLL. Проверено на текущем Windows с очищенным PATH; чистая VM ещё не проверялась. Первая проба выявила зависимость HarfBuzz, исправленная сборка её устраняет. EXE около 52 МиБ, без Authenticode-подписи. Это локальная опытная сборка, не релиз для распространения.
+Windows 11, отдельный USB–Ethernet-адаптер, кабель RJ45, питание роутера и пароль
+root. Пилот ограничен отдельным MR3020 v3 / OpenWrt 19.07.9. Поддержка других
+профилей и ОС не подтверждена. Автозвонки перед подготовкой должны быть выключены.
 
-Откройте CMakeLists.txt в Qt Creator для редактирования. Комплект Qt должен соответствовать компилятору. Макету не нужны Python/PySide6 и Lua. Реальный режим использует встроенный Python из комплекта рядом с EXE; системный Python не требуется. Lua 5.1 и liblua5.1-0-dev устанавливаются только в среду разработки WSL для общего make all, который проверяет Lua-код Школьника; они не являются зависимостями GUI. Linux/macOS пока не собраны и не проверены.
+### Установка
 
-Первый шаг обоих режимов — список оборудования с обязательным USB–Ethernet-адаптером. Простой режим по умолчанию предлагает «Установить Школьник» (OpenWrt и приложение одним маршрутом, 10 шагов после выбора задачи) и возврат TP-Link с пошаговыми подсказками. Экспертный режим дополнительно открывает отдельные маршруты OpenWrt (7 шагов), пакетов (6 шагов) и возврата TP-Link (7 шагов). У каждого свои подготовка, резервная копия, выбор комплекта, проверка и результат. Пакеты не используют Reset и прошивку; возврат OEM не использует SSH и пакеты. Ошибки сценария моделируются без обращения к сети; повтор продолжает остановленный этап, сброс возвращает к подготовке оборудования. Состояние сценария не сохраняется между запусками.
+1. Положите `schoolbell-v…-openwrt-….zip` рядом с EXE, нажмите ↻ и выберите комплект.
+   До обращения к роутеру проверяются формат, профиль, версия мастера и SHA256.
+   Встроенных IPK в сборке больше нет. GitHub-загрузка пока не подключена.
+2. Выберите выделенный USB–Ethernet и введите пароль. Глазок показывает/скрывает
+   пароль; он хранится только в памяти текущей формы. Между операциями и при чтении
+   справки пароль сохраняется; новый сеанс, смена подключения/комплекта и закрытие
+   очищают его.
+3. «Сохранить полную копию» независимо от ZIP сохраняет overlay и MTD на ПК,
+   сверяет размер и SHA256, не меняет пакеты. Копии содержат частные настройки.
+4. «Проверить устройство» подготавливает установку: проверяет профиль, свободное
+   место и состав пакетов, сохраняет копию и образ восстановления, закрепляет ZIP
+   и подключение за сеансом. Прямой маршрут проверяется перед каждым SSH.
+5. После BACKUP VERIFIED нажмите «Установить» и подтвердите. Пока ZIP поддерживает
+   установку при отсутствии Школьника и его данных; обновление не реализовано.
+   Не отключайте питание и кабель. Мастер не регулирует громкость, сеть или часы;
+   автозвонки остаются выключенными.
+6. FRESH VERIFIED означает успешную проверку пакета и служб. Проверьте интерфейс
+   кнопкой «Открыть Школьник». При обрыве используйте «Проверить результат»;
+   повторная установка блокируется.
 
-На шагах с Reset справа показана [сохранённая фотография TP-Link EU v3.30](../vendor/photos.md) с указателем на WPS/RESET. Оригинал не изменяется, указатель рисуется QML; фото встраивается в EXE из vendor, права TP-Link сохраняются. Это макет подсказок, а не разрешение на физические действия.
+UNCHANGED VERIFIED — отдельный результат: пакет не установлен, идентичность и
+загрузка устройства, состав пакетов и защищённые настройки совпали с подготовкой,
+данные приложения отсутствуют. Только связанное с конкретной попыткой доказательство
+разрешает архивировать неудачный сеанс через «Новый сеанс». Это не успех установки.
+Материалы сохраняются в архиве сеансов; после начала записи нельзя просто стереть
+маркер и повторить установку.
 
-Проверка модели: `node tools/setup/gui/test-flow.cjs` из корня. Публичная упаковка потребует перечня лицензий, соответствующих исходников и выполнения условий статической линковки Qt и зависимостей.
+После перезапуска связанная квитанция восстанавливает прошлый результат установки или подтверждённого отсутствия изменений. Проверяются версия и SHA256 подготовки и попытки; повреждённая или устаревшая квитанция оставляет исход неизвестным. Это сохранённый результат, не новая проверка роутера.
+
+⧉ копирует весь протокол. «Установка» и «Справка» используют общий заголовок;
+форма прокручивается на небольшом экране. Все списки имеют общий стиль. Доступны
+системная, светлая и тёмная темы с сохранением выбора. Закрытие во время операции
+блокируется; в покое требуется подтверждение с сохранением копий/журнала.
+
+### Сборка и проверки
+
+В PowerShell: `./build-windows.ps1`. Требуются MSYS2 MinGW64, CMake, Ninja, GCC и
+Qt6 static; альтернативный путь задаётся `-MsysRoot`. `-RecoveryImage` задаёт
+закреплённый образ восстановления (проверяется SHA256). Результат —
+`out/setup-gui-external/schoolbell-setup-wizard.exe` от корня репозитория. Рядом
+нужны поставляемые сборкой Python runtime, worker-скрипты и образ восстановления;
+одного EXE для реальных операций недостаточно. Qt/QML статические, сторонних DLL
+в импортах нет. EXE без Authenticode; распространение требует завершения лицензий
+и чистой VM-проверки. Lua нужен тестам Школьника в WSL, не GUI.
+
+`make all` — host-проверки; Qt Quick Test: `qmltestrunner -platform offscreen
+-input tools/setup/gui/tests`. При проблемах UNC скопируйте qml/ и tests/ вместе
+во временный локальный каталог. Host-тесты не заменяют приёмку на роутере.
+
+24.11.2026: внешний ZIP принят на отдельном устройстве после разрешённого удаления
+Школьника при сохранённых зависимостях. Первая попытка SSH 255: команда 9708 байт
+превысила MAX_CMD_LEN=9000 Dropbear 2019.78. Исправлены хеш-сравнение состава и цикл
+проверки версий; добавлен предел 8000 байт. После UNCHANGED VERIFIED и нового сеанса
+получен FRESH VERIFIED. Владелец подтвердил UI 5.1.127, автозвонки выключены и
+громкость 100 %. Полная установка зависимостей на чистую прошивку и восстановление
+копии остаются отдельными проверками. [Протокол](../../../docs/acceptance/ACCEPTANCE_RUN.md).
 
 ## English
 
-QML/C++ GUI with a bounded real SSH package-upgrade mode. The separate prototype routes perform no device operations; OpenWrt and OEM flashing remain simulated. Real operations require the bundled Python runtime, worker and packages beside the static EXE. Build with PowerShell `./build-windows.ps1`; optional `-MsysRoot` selects MSYS2. Requires MinGW64 GCC, CMake, Ninja and static Qt6. The GUI needs no Lua runtime; Lua 5.1 and its development package are WSL dependencies for the repository-wide Schoolbell tests only. Sources are copied to a local temporary directory to avoid UNC limitations. Output: `out/setup-gui/schoolbell-setup-wizard.exe` at repository root. Third-party runtimes are linked in; Windows system DLLs are still required. Build checks DLL imports. Tested locally with a clean PATH, not in a clean VM. Unsigned local prototype, approximately 52 MiB; Linux/macOS untested. Distribution requires dependency notices, corresponding sources and applicable static-linking license compliance. Simplified simulated routes are not real installation instructions.
-
-## Темы / Themes
-
-Кнопка в шапке переключает системную → тёмную → светлую тему. Выбор хранится локально через Qt Settings (Schoolbell/RouterSetupPrototype), независимо от сброса сценария. Системная тема следует настройке ОС. Палитра Theme.qml повторяет CSS Школьника; кнопки высотой 48 px, скругления, фокус и состояния общие. / The header cycles system → dark → light. Qt Settings persists the selection independently of scenario reset. System mode follows OS appearance. Theme.qml mirrors Schoolbell CSS tokens; action buttons share 48 px height, rounded borders and focus states.
-
-## Локальная проверка / Local verification
-
-Проверен запуск статического EXE без MSYS2 в PATH, переключение светлой и тёмной тем и сохранение выбора после перезапуска. В сценарии ошибки DHCP выполнение остановилось на 90 %, после «Повторить этап» достигнут экран результата. При проверке исправлены контраст текста на акцентном фоне, делегат списка и отступы экрана подключения. Смена темы ОС во время работы и чистая Windows VM пока не проверялись.
-
-Verified static EXE startup without MSYS2 on PATH, light/dark switching and persistence across restart. The simulated DHCP failure stopped at 90%; retry reached the result screen. Fixed accent text contrast, combo delegate and connection-screen spacing. Live OS theme changes and a clean Windows VM remain untested.
-
-## Разделение маршрутов / Separate routes
-
-Both modes begin with the equipment checklist, including a mandatory USB–Ethernet adapter. Default guided mode offers combined Schoolbell installation (10 steps after task selection) and guided factory recovery. Expert mode additionally exposes standalone OpenWrt (7 steps), packages (6) and factory recovery (7). Each has its own backup, bundle, checks, progress and result. Packages never enter recovery; OEM recovery never runs SSH/package stages. Selected bundles are shown in the simulated result. Errors/retry/reset remain local simulation. State is not persisted between launches. The original archived TP-Link EU v3.30 photo is embedded with a QML WPS/RESET overlay; TP-Link retains image rights. Model checks: `node tools/setup/gui/test-flow.cjs`.
-
-23.11.2026: статическая сборка и тест маршрутов в WSL пройдены. Первоначальная остановка общего `make all` устранена установкой отсутствовавших пакетов Ubuntu `lua5.1` и `liblua5.1-0-dev` (5.1.5). Повторный полный `make all` пройден, включая runtime, UI, IPK и Pages. Это локальные проверки, не аппаратная приёмка. / Static build and WSL route tests passed. The initial full-suite blocker was resolved by installing the missing Ubuntu lua5.1 and liblua5.1-0-dev packages (5.1.5). The complete make all then passed, including runtime, UI, IPK and Pages. These are host checks, not hardware acceptance.
-
-В Windows визуально пройдены три маршрута до результата; в OEM проверены остановка на ошибке DHCP и повтор. Фото WPS/RESET проверено в статическом EXE. / All three routes were visually completed in Windows; OEM DHCP failure and retry were exercised. The WPS/RESET image was checked in the static EXE.
-
-## Простой режим / Guided mode
-
-Режим выбирается на первом экране оборудования; во время сценария он заблокирован, чтобы не менять уже начатые шаги. «Отменить сценарий» после подтверждения возвращает на подготовку. Оборудование: Windows 11, USB–Ethernet, RJ45-кабель, MR3020 EU v3.30 и его питание Type-C. Аудиокарта, при необходимости хаб и активные колонки перечислены отдельно для последующей работы звонков. Сверка наклейки и копирование представлены подтверждениями имитации, не аппаратными результатами. Работа с Reset разделена на отключение питания, удержание кнопки, подачу питания и отпускание после смоделированного начала передачи. Ошибки объясняют следующий шаг и не предлагают повторно прошивать при проблеме связи. В реальном режиме доступен локальный список Ethernet; подтверждение модели роутера выполняется только при подготовке. Копии и открытие настоящего интерфейса доступны отдельно в реальном режиме ниже.
-
-Select guided/expert mode on the initial equipment screen; mode changes are blocked during a route. Reset returns to preparation. Required equipment includes Windows 11, USB–Ethernet, RJ45 cable, MR3020 EU v3.30 and Type-C power. Audio hardware is listed separately for later bell playback. Label and backup confirmations simulate preparation, not hardware evidence. Reset instructions are split into power-off, hold, power-on and release after simulated transfer starts. Friendly failures explain the next action without reflashing for a connectivity error. The real mode lists local Ethernet connections; router identity is checked during preparation. Real backups and opening the device UI are provided in the separate real mode below.
-
-Проверка 23.11.2026: статический EXE собран, тесты модели режимов и полный make all пройдены. В GUI пройден основной маршрут, проверены первый экран обоих режимов и набор задач эксперта. Проверка понятности с новичком ещё предстоит. / Verified static build, mode-model tests and full make all; visually completed the guided Schoolbell route and checked equipment-first screens and expert choices. Novice usability acceptance remains pending.
-
-## Ошибки, отмена и закрытие / Errors, cancellation and close
-
-Интерфейс и тесты используют одну модель переходов Flow.js. «Назад» снимает подтверждения и выбранный комплект, смена задачи очищает сценарий ошибки. Во время выполнения нельзя менять маршрут. Отмена и закрытие окна требуют ответа в диалоге; имитация на это время приостанавливается. Продолжение сохраняет текущий этап, подтверждённая отмена очищает результат. Запоздалые события предыдущего запуска игнорируются. Повтор после ошибки сохраняет прогресс и не запускает запись прошивки заново. 100 % ещё не означает успех: отдельная итоговая проверка может завершиться ошибкой. В панели проверки макета доступен такой сценарий.
-
-The UI and tests use the same Flow.js state machine. Back clears confirmations and bundle selection; changing tasks clears the failure scenario. Running routes cannot change. Cancel and window close require confirmation and pause simulation until answered. Continue retains the stage; confirmed reset clears the result. Stale events are ignored. Retry retains progress without restarting flashing. A separate verification gate follows 100%, including an injectable verification failure. Tests run with `node tools/setup/gui/test-state.cjs` and as part of `make all` / UI tests. These safeguards apply to simulation only; a real backend will need its own persistent operation state and recovery protocol.
-
-23.11.2026: полный make all с тестами общей модели пройден; статический EXE пересобран. В GUI проверены отказ от закрытия, пауза во время диалога, ошибка итоговой проверки при 100 %, повтор до результата, подтверждённая отмена и закрытие с последующим чистым запуском. / Full make all including shared-model tests passed; static EXE rebuilt. GUI checks covered close rejection, dialog pause, verification failure at 100%, retry to success, confirmed cancellation and close followed by a fresh launch.
-
-## Реальные пакеты: первый этап / Real packages: first stage
-
-Кнопка «Реальная установка» открывает отдельную область. Выберите подключение по имени и IPv4 из списка. «Обновить» перечитывает локальные подключения без сетевых проб. Список содержит работающие Ethernet-интерфейсы в сети целевого адреса; мастер не утверждает, что каждый из них USB или подключён к нужному роутеру. «Проверить и сохранить копию» проверяет прямой маршрут, известный ключ SSH, модель платы, OpenWrt, kernel и native clock, выключенный автомат, место и версию отката. Неизвестный ключ не принимается автоматически. Пароль root вводится один раз в текущей вкладке и сохраняется в её памяти между операциями, в том числе после ошибки. Общий компонент PasswordField имеет кнопку показа/скрытия справа; запуск операции скрывает символы. При уходе из вкладки, смене подключения или закрытии мастера пароль очищается. Знание пароля OpenWrt указано в подготовке; Reset-восстановление его не требует. OpenSSH получает его через приватный локальный канал текущего пользователя, без всплывающих окон, файла или аргумента командной строки. Подготовка выполняется в одной SSH-сессии; установка вместе с проверкой — во второй. После завершения этапа пароль удаляется из состояния backend.
-
-Полная копия overlay читается на ПК, SHA256 сверяется с устройством, архив проверяется без распаковки; рядом сохраняется IPK отката. Копия содержит конфиденциальные настройки: не публикуйте её. Каталог можно открыть кнопкой. После подтверждения выполняется только `opkg install` локального проверенного IPK. Нет перепрошивки, настройки сети, часов или громкости. Итог проверяет версию, отсутствие package.pending, выключенный автомат, громкость/mute/подтверждение звука, сохранённый черновик и ревизию активного плана, работу служб. Открытие страницы не заменяет эти проверки.
-
-Запись имеет постоянный маркер на ПК; после неизвестного исхода доступна проверка, а автоматический повтор записи запрещён. Во время операции окно нельзя закрыть штатной кнопкой. Аварийное завершение Windows не предотвращается; оставшийся operation.lock требует ручного разбора после проверки отсутствия worker-процесса. Откат не запускается автоматически. Первичная установка с зависимостями реализована ниже и ожидает аппаратной приёмки; настройка сети и перепрошивка ещё не подключены.
-
-Статическим остаётся Qt EXE. Реальному режиму нужны лежащие рядом `package_worker.py`, `payload.json`, IPK и встроенный Python из проверенного архива; сборщик копирует их в out/setup-gui. Системный Windows OpenSSH и PowerShell используются без изменения сети. Весь каталог переносится вместе, один EXE достаточен только для макета. Linux/macOS для реального режима не поддержаны.
-
-Use **Real installation** for the bounded existing-installation upgrade. The operator explicitly selects a dedicated connection by name and IPv4; the index comes from the OS. Refresh only reads local interface data, without network probes. Eligible Ethernet interfaces are not assumed to be USB or connected to the intended router. Preparation verifies direct routing, the existing SSH host key, board/runtime, automation off, space and a matching rollback package. Enter the root password once per tab. The shared PasswordField retains it in memory between operations, including failures, with a show/hide button. Starting an operation masks it; leaving the tab, changing the connection or closing clears it. Preparation lists the OpenWrt password requirement; Reset recovery needs no password. A private current-user local channel supplies OpenSSH without popups, password files or command-line secrets. Preparation uses one SSH session; installation and verification share another. Backend credential state is cleared when the stage ends. An overlay archive is transferred, compared against the device SHA256 and validated without extraction; the rollback IPK is saved beside it. Backups contain private configuration and must not be published.
-
-Installation runs the verified local package through opkg only. Postchecks cover version, pending marker, automation off, unchanged sound controls/draft/active-plan revision and services. A persistent write marker prevents blind retries; uncertain outcomes allow verification. Closing is blocked while the worker runs. Forced process termination is not prevented; a stale operation.lock requires investigation before removal. Firmware, network configuration, automatic rollback and non-Windows backends remain outside this pilot. Fresh dependencies are implemented below and await hardware acceptance. Copy the whole generated directory: only the Qt EXE is static; real operations also need the bundled Python runtime, worker and IPKs. Windows OpenSSH/PowerShell are used.
-
-Требования: [GUI package pilot](../../../docs/requirements/TECHNICAL_SPECIFICATION_SETUP_GUI.md). Локальные негативные тесты: `python3 tools/setup/gui/test-package-worker.py`; включены в make all. Первый аппаратный результат приведён ниже; остальные условия ошибок требуют отдельной проверки. / Local fault tests are part of make all; the initial hardware result follows, while hardware fault cases remain pending.
-
-24.11.2026: статический EXE, полный make all и проверка отдельного ТЗ пройдены. Девять регрессионных тестов worker покрывают повреждённые файлы, конкуренцию, неизвестный исход записи и настройки звука без отдельного файла. При аппаратной подготовке выявлены и устранены повторные запросы пароля и ошибочное требование sound-control.json. Пароль перенесён в форму, подготовка объединена в одну SSH-сессию. / Static EXE, full make all and specification checks passed. Nine worker regressions cover corruption, concurrency, unknown write outcomes and default sound settings without a file. Hardware preparation exposed repeated password prompts and the invalid sound-control.json requirement; both were fixed with inline password entry and one preparation session.
-
-24.11.2026, итог: отдельный MR3020 v3 / OpenWrt 19.07.9 обновлён через GUI с 5.1.124 до 5.1.127. Получены BACKUP VERIFIED и UPGRADE VERIFIED, хеши локального архива и IPK отката повторно сверены. Автозвонки выключены; volume_db=0, mute=false, confirm_play=false, черновик и ревизия активного плана сохранены. Worker завершён, operation.lock снят, маркер записи и протокол сохранены. Службы проверены по SSH; отдельный вход в LuCI после этого обновления ещё не проверялся. Рабочее устройство не использовалось. На установку не распространяются результаты имитационных firmware-сценариев. После пересборки IPK хеш изменился — подготовка повторена с новым комплектом, защита не обходилась.
-
-2026-11-24 result: a separate MR3020 v3 / OpenWrt 19.07.9 was upgraded from 5.1.124 to 5.1.127 through the GUI. Backup and upgrade verification passed; local archive and rollback hashes were independently rechecked. Automation remains off; volume/mute/confirmation, draft and active-plan revision are unchanged. Worker exited and released its lock; write evidence and logs remain. Services passed SSH checks; a separate authenticated LuCI check is still pending. The working device was not used. Firmware simulation is not hardware acceptance. Rebuilding changed the IPK hash, so preparation was repeated rather than bypassed.
-
-### Поле пароля: локальная проверка / Password field: local check
-
-24.11.2026: `make all`, валидатор ТЗ и статическая сборка — PASS. Qt Test с подменённым backend проверяет сохранение ввода между подготовкой/установкой/проверкой и после ошибки, показ, скрытие при запуске и очистку при выходе. В собранном EXE визуально проверены глазок и очистка при возврате; использован только тестовый текст, SSH не запускался. Новая аппаратная проверка не проводилась.
-
-2026-11-24: full checks, specification validation and static build passed. Qt Test uses a fake backend to verify retention across operations/errors, reveal, masking on start and clearing on exit. The EXE was visually checked with test text only; no SSH or new hardware acceptance.
-
-Run with Qt 6 Quick Test installed (separately from `make all`):
-```powershell
-$env:QT_QUICK_CONTROLS_STYLE = 'Basic'
-qmltestrunner -platform offscreen -input tools/setup/gui/tests -o password-tests.txt,txt
-```
-
-### Подключения и новый сеанс / Connections and new sessions
-
-«Новый сеанс» сохраняет предыдущий каталог в `session-history` с уникальным именем; копии доступны через «Архив копий». После неизвестного исхода сначала нужна «Проверить результат». Старые подтверждения пилота без привязки к копии/маркеру также требуют повторной проверки. При повреждении копии или оставшемся после аварии lock/guard мастер останавливается; файлы вручную автоматически не удаляются. Пароль и выбор подключения очищаются. Смена сеанса не переустанавливает пакет и не снимает ограничение комплекта на исходную версию 5.1.124: повторная установка 5.1.127 поверх самой себя не заявляется.
-
-New session archives the previous directory under a unique `session-history` name; Archive copies opens it. An uncertain write or legacy proof requires result verification first. Corrupt backups and crash locks/guards block continuation without deleting evidence. Password and selection clear. Session rotation performs no device operation and does not relax the bundle's 5.1.124 source-version requirement; reinstalling 5.1.127 over itself is not claimed.
-
-Проверка результата использует сохранённый комплект и копию сеанса, даже если текущий комплект мастера пересобран. Неудачная повторная проверка аннулирует старое подтверждение. / Result verification uses the saved operation even after rebuilding the current bundle; a failed recheck invalidates the old proof.
-
-24.11.2026: 17 локальных тестов worker, Qt Test (выбор подключения, сброс сеанса, пароль), полный `make all`, валидатор ТЗ и статическая сборка пройдены. В EXE проверены отображение локального подключения и блокировка нового сеанса для старого неподтверждённого результата. Сеансы реальных устройств не архивировались, SSH не запускался. / Local worker and QML tests, full checks, specification validation and static build passed; the EXE showed the local connection and blocked rotation of an unverified legacy session. No real session was archived and no SSH ran.
-
-Кнопки закрытия/отмены сгруппированы справа: отступы 20 px от боковых/нижнего краёв, интервал 12 px. Проверены визуально в статическом EXE для макета и реального режима; действия с роутером не запускались. / Close/cancel actions are grouped on the right with 20 px edge insets and a 12 px gap; visually checked in both prototype and real-mode dialogs without device operations.
-
-Список подключений оформлен в цветах Школьника: шрифт 18 px, векторная стрелка 24 px, строки раскрытого списка высотой 48 px. Проверены обе темы, выбор пункта в Qt Test и полный `make all`; статический EXE пересобран. / The connection picker uses Schoolbell colors, an 18 px font, a 24 px vector chevron and 48 px popup rows. Both themes, item selection in Qt Test and full `make all` passed; the static EXE was rebuilt.
-
-24.11.2026: на отдельном устройстве повторная проверка GUI подтвердила установленную 5.1.127, выключенные автозвонки и сохранённые звук/план. После проверки пароль остался скрытым в форме; «Новый сеанс» сохранил архив и очистил пароль/выбор подключения. Повторная установка не выполнялась. / On a separate device, GUI re-verification confirmed 5.1.127, automation off and unchanged sound/plan. The masked password remained in the form; New session archived evidence and cleared password/connection. No reinstallation occurred.
-
-Проверка целевой версии: «Проверить устройство» распознаёт уже установленную 5.1.127, проверяет среду/службы и выключенный автомат. При успехе выводится отдельное состояние без подготовки записи; установка недоступна. Свежая установка описана ниже. / Check device recognizes an already-installed 5.1.127, verifies runtime/services and automation off, and reports a distinct state without preparing a write. Fresh dependency installation is described below.
-
-## Свежая установка и копия перед прошивкой / Fresh installation and pre-flash backup
-
-Полный комплект собирается в WSL из локального кэша, без обращения к устройству:
-
-```sh
-python3 scripts/build-schoolbell-bundle.py --schoolbell out/modbus-schoolbell_5.1.127_all.ipk --native out/setup-5.1.124-bundle/modbus-schoolbell-clock_1.0.0_mipsel_24kc.ipk --out out/setup-gui-fresh-bundle
-```
-
-Выходной каталог должен быть новым; при пересборке используйте отдельный каталог и передайте его сборщику GUI через `-FreshBundle`; образ можно указать через `-RecoveryImage`. Для статической сборки также нужен проверенный OpenWrt recovery image. Реальный комплект переносится целиком, включая bundle, firmware и Python. Сборка/копии не добавляются в Git.
-
-Чистая OpenWrt должна уже иметь пароль root и известный ключ SSH. Мастер проверяет ABI/libc, отсутствие прежних данных Школьника, версии зависимостей, свободное место и SHA256. Сохраняет overlay, список пакетов и образ восстановления, затем после подтверждения устанавливает только недостающие пакеты. Версии штатной LuCI принимаются по той же таблице, что в консольном установщике. Сеть, часы и пароль не меняются; автозвонки после установки выключены. Прежних настроек громкости Школьника на чистой системе нет: используется начальное состояние новой установки, мастер не вызывает регулировку громкости.
-
-Откат свежей установки требует той же OpenWrt через Reset и восстановления сохранённого overlay; автоматически не выполняется. При неизвестном исходе повтор записи запрещён. «Сохранить копию перед прошивкой» после проверки актуальной версии читает все MTD и overlay; проверяет SHA256, загрузку и неизменность звука/плана. Копии конфиденциальны и остаются на ПК.
-
-Build the full bundle in WSL from the local cache using the command above; use a new output directory. The Windows GUI bundle also needs the verified OpenWrt recovery image. Copy the complete output directory. Fresh installation requires a root password and a known SSH key, verifies runtime/dependencies/space, saves overlay/inventory/recovery image and installs only missing packages after confirmation. Stock LuCI alternatives match the console installer. Network, time and password remain unchanged; automatic bells stay off. A fresh system has no previous Schoolbell volume setting; the wizard does not adjust volume. Recovery requires reflashing the same OpenWrt and restoring overlay; no automatic rollback or blind retry occurs. Pre-flash backup reads all MTD partitions and overlay, verifies remote/local SHA256 and unchanged sound/plan, and keeps private copies on the PC.
-
-24.11.2026: владелец подтвердил ALREADY CURRENT на отдельном роутере, без повторной установки. Свежая установка: 12 локальных тестов; копии перед прошивкой: 4 локальных теста. Полная копия подтверждена на отдельном устройстве: семь MTD и overlay, все SHA256 повторно сверены на ПК. Аппаратная свежая установка ещё не подтверждена. / Owner confirmed ALREADY CURRENT on the separate router without reinstallation. Fresh install: 12 local tests; pre-flash backup: 4 local tests. The full backup passed on the separate device: seven MTD partitions and overlay, with all SHA256 hashes independently rechecked on the PC. Fresh hardware installation remains pending.
-
-Локальные проверки второго этапа: 35 Python-тестов worker/свежей установки/копии, 5 проверок Qt, валидатор ТЗ и полный `make all` пройдены. Статический EXE пересобран; встроенный Python проверил все 35 IPK комплекта. / Stage-two local checks passed: 35 Python tests, 5 Qt checks, specification validation and full `make all`. Static EXE rebuilt; embedded Python validated all 35 bundle IPKs.
-
-### Результаты и выбор адаптера / Results and adapter selection
-
-Кнопка ⧉ копирует весь текст результатов, включая строки вне видимой области; на две секунды появляется ✓. Пустой журнал копировать нельзя. Область результатов выделена рамкой. Кнопка ↻ обновляет список подключений. Windows добавляет краткое описание сетевой карты к имени подключения и IP; если описание недоступно, остаются имя и адрес. Определение описания не обращается к роутеру.
-
-The ⧉ button copies the complete report, including off-screen lines, and briefly shows ✓. It is disabled for an empty report. Results have a border. The ↻ button refreshes connections. Windows adds a short adapter description alongside the connection name and IP, falling back to the name and address when unavailable. Description lookup does not contact the router.
-
-### Справка и небольшое окно / Help and small windows
-
-Подробные инструкции, ожидаемые результаты и действия при ошибке перенесены в «Справку». В «Установке» оставлены краткая инструкция и условия подготовки. Обе вкладки прокручиваются независимо; группы кнопок переносятся, нижние действия доступны при малой высоте окна. Справка не сбрасывает пароль и не останавливает операцию, но скрывает показанный пароль. Выход к макету и закрытие по-прежнему очищают ввод.
-
-Detailed instructions, expected outcomes and error guidance are on the Help tab. Installation keeps a short instruction and preparation conditions. Each tab scrolls independently and action groups wrap, keeping lower actions reachable in short windows. Help retains the password and ongoing operation but masks revealed input. Leaving real mode or closing still clears the password.
-
-Кнопки «Установка» и «Справка» размещены справа от общего заголовка, в одной строке; заголовок остаётся видимым при прокрутке обеих вкладок. / Installation and Help sit to the right of the shared heading on one row; the heading remains visible while either tab scrolls.
-
-## Имя и версия / Name and version
-
-Schoolbell Setup Wizard 0.2.0 — «Мастер установки Школьника». Версия задаётся файлом wizard-version.txt, отображается в окне и свойствах EXE; не совпадает автоматически с версией Школьника. Имя будущего переносимого архива: `schoolbell-setup-wizard-v0.2.0-windows-x86_64.zip`. Внутреннее имя каталога данных RouterSetupPrototype сохранено, чтобы не потерять копии и блокировку незавершённой записи. ZIP-релиз мастера ещё не публикуется; состав runtime и лицензий требует отдельной подготовки.
-
-The wizard-version.txt file controls the wizard version independently of Schoolbell. Window and Windows EXE metadata show it. Future portable archive name: `schoolbell-setup-wizard-v0.2.0-windows-x86_64.zip`. The internal RouterSetupPrototype data location is retained to preserve backups and pending-write protection. Wizard ZIP distribution still requires runtime/license preparation.
-
-## ZIP-комплекты: 0.2.0 / ZIP bundles: 0.2.0
-
-Положите schoolbell-v…-openwrt-….zip рядом с EXE, откройте реальную установку и нажмите
-↻ у поля «Комплект». Выберите архив: проверка выполняется только на ПК, без пароля/SSH.
-Повреждение, иной профиль или требование новой версии мастера блокируют подготовку.
-Версия кнопки и подтверждения берётся из manifest. ZIP-пилот работает только с чистой
-OpenWrt; встроенный комплект сохраняет прежнее обновление с 5.1.124.
-
-После выбора укажите USB–Ethernet и пароль root. Подготовка сохраняет проверенную копию
-и закрепляет ZIP/подключение. Исходный ZIP после этого можно удалить: используется копия
-сеанса. Сменить комплект можно через «Новый сеанс»; неизвестный исход сначала требует
-verify. Пароль остаётся в текущей форме. GitHub-загрузка и ZIP-аппаратная приёмка ещё не выполнены.
-
-Все списки, включая простой/экспертный макет, используют StyledComboBox с рисованной
-стрелкой 24 × 24, текстом 18 px и строкой 48 px в обеих темах.
-
-Put schoolbell-v…-openwrt-….zip beside the EXE, open real installation, refresh Bundles
-and select it. Validation is local, without password/SSH; invalid profile/integrity or
-newer wizard requirements block preparation. Version labels come from the manifest.
-ZIP mode supports fresh OpenWrt; the embedded legacy upgrade remains separate.
-Preparation pins ZIP bytes and connection with verified backup. The original download
-is no longer required. Changing bundles requires New session; uncertain writes require
-verification first. Password remains in the current form. GitHub downloads and ZIP hardware
-acceptance are pending. All modes share one themed dropdown/chevron component.
-
-Локальная проверка 24.11.2026: `make all`, 7 тестов GUI ZIP и 11 Qt Quick Test — PASS.
-Статический EXE собран; в Windows проверены выбор ZIP до `ZIP VERIFIED`, версия 5.1.127
-в форме и общие стрелки в светлой/тёмной темах. Исправлено сравнение Windows-путей
-результата проверки ZIP. Подключения к стендам не выполнялись.
-
-Local validation on 2026-11-24: full `make all`, 7 GUI ZIP and 11 Qt Quick tests passed.
-Static EXE built; native Windows checks covered ZIP selection/receipt, version labels
-and shared light/dark dropdowns. Windows path normalization was corrected. No device access.
+Wizard **0.2.1** starts with three routes: OpenWrt installation, a Schoolbell ZIP
+bundle, and factory recovery. Firmware routes currently provide preparation and
+console-kit instructions; only the package route performs real GUI operations. Prototype
+routes, simulated outcomes and mock simple/expert modes have been removed. GUI
+firmware/OEM flashing is not implemented; use the separately documented console kit.
+
+Requires Windows 11, dedicated USB–Ethernet/RJ45, router power and root password.
+The pilot targets MR3020 v3 / OpenWrt 19.07.9 only, with automatic bells off.
+Place a compatible ZIP beside the EXE, refresh and select it. Validation is local.
+No embedded packages or GitHub download are offered. Full MTD/overlay backup is
+independent of ZIP selection. Prepare pins the validated bundle and connection,
+saves recovery evidence and checks the direct route before each SSH operation.
+Install requires confirmation; ZIP upgrades are not supported yet. Keep power
+and Ethernet connected. Password stays in the form between operations/help,
+with a shared reveal icon; closing or changing session/connection/bundle clears it.
+
+FRESH VERIFIED confirms installation. After an uncertain outcome, Verify reads
+state without repeating writes. UNCHANGED VERIFIED separately proves the original
+identity/boot, inventory and protected settings with no app/data; its bound receipt
+permits archival and a new session, not a claim of successful installation.
+Restart restores the previous result only from a receipt bound to the version and preparation/attempt hashes. Missing or stale receipts keep the outcome uncertain; this is not a fresh device check.
+Backups contain private settings and must not be published. Logs can be copied;
+the scrollable form and shared dropdowns support light/dark/system themes.
+Closing is blocked while busy and confirmed otherwise.
+
+Build with `./build-windows.ps1` using MSYS2 static Qt6/MinGW64. Output directory:
+`out/setup-gui-external`. Real operations require the adjacent Python/runtime
+scripts and pinned recovery image, not just the static EXE. No Authenticode;
+clean-host and distribution/licensing acceptance remains pending. Lua is a WSL
+Schoolbell test dependency, not a GUI runtime requirement. Run `make all` and
+Qt Quick tests (copy qml/tests together locally if UNC resolution fails).
+
+2026-11-24: GUI ZIP app installation passed after authorized app removal with
+dependencies retained. Initial SSH 255 was caused by a 9708-byte command exceeding
+Dropbear's 9000-byte limit. Inventory hashing/compact version checks and an
+8000-byte guard fixed it. The failed session was archived after unchanged-state
+proof; a new attempt passed. Owner confirmed UI 5.1.127, automation off, volume
+100%. Full dependency provisioning and restoration remain separate tests.
+[Acceptance](../../../docs/acceptance/ACCEPTANCE_RUN.en.md) ·
+[Dropbear source](https://raw.githubusercontent.com/mkj/dropbear/DROPBEAR_2019.78/sysoptions.h).
+
+The executable/artifact name remains `schoolbell-setup-wizard`; display name is
+«Мастер установки». The internal RouterSetupPrototype data directory is retained
+to preserve old sessions and backups. Source [requirements](../../../docs/requirements/TECHNICAL_SPECIFICATION_SETUP_GUI.md).

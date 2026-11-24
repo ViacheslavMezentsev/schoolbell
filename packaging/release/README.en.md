@@ -13,7 +13,7 @@ The manual installer supports **fresh OpenWrt**. Upgrades, repair, firmware flas
 and automatic rollback are not supported. An already-installed version is not reinstalled.
 
 Run on a host with Python 3.8+ and OpenSSH; no router Python is required. On Windows
-use `python` or `py -3`, on WSL/Linux `python3`. GUI 0.2.0 discovers sibling ZIPs and uses this fresh-install transaction.
+use `python` or `py -3`, on WSL/Linux `python3`. GUI 0.2.1 discovers sibling ZIPs and uses this fresh-install transaction.
 The legacy embedded upgrade bundle remains a separate option.
 
 ## Preparation

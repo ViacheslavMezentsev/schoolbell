@@ -306,3 +306,17 @@ The working reference uses third-party slide-switch 0.9.5 and local mode-* handl
 The first RAM test did not execute: target BusyBox lacks base64 and the wrapper incorrectly exited 0. It is not a PASS. After fixing transfer and fail-fast handling, the RAM-only candidate confirmed AP → WISP → 3G/4G → AP with SSH exit 0. Local tests cover invalid, missing, duplicate and oversized data and no stale-file fallback. The installed package was not replaced; UI and full 5.1.124 kit acceptance remain pending. The working bench was read only. Local evidence: tests/manual/134-switch-fresh-install (not published).
 
 The separate bench was subsequently upgraded through opkg from 5.1.123 to 5.1.124 after verified configuration/MTD backups and rollback preparation. Package SHA, version, absence of package.pending and services passed. Automation stayed off; volume_db=0, muted=false and confirm_play=nil matched before/after. The installed reader detected AP. The owner confirmed AP → WISP → 3G/4G → AP in Resources without refreshing. Upgrade and UI passed; a fresh installation of the complete 5.1.124 kit remains untested. The working bench was not accessed during this stage. Evidence: tests/manual/135-switch-install-5-1-124 (not published).
+
+## 2026-11-24 — GUI ZIP, wizard 0.2.1
+
+Verified overlay and seven MTD backups on a separate MR3020 v3 / OpenWrt 19.07.9.
+The owner authorized app removal with dependencies retained. Baseline: 5.1.127,
+automation off, volume 100% (0 dB), no active plan/draft. The first attempt failed
+with SSH 255: its 9708-byte command exceeded Dropbear's 9000-byte limit. No app was
+installed. Inventory hashing, compact version checks, an 8000-byte guard and diagnostics
+were added. UNCHANGED VERIFIED confirmed identity/boot, inventory and protected settings;
+the failed session and backups were archived. New preparation of the corrected external
+ZIP completed with FRESH VERIFIED. The owner confirmed UI 5.1.127, automation off and
+volume 100%. Network/time were unchanged; the working bench was not accessed. This is
+successful final-state acceptance after a fix, not an uninterrupted first attempt or
+full dependency provisioning on stock OpenWrt. Local evidence: tests/manual/240-gui-external-zip.

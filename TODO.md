@@ -159,7 +159,7 @@
 - [x] 24.11.2026: через GUI на отдельном MR3020 v3 выполнено обновление 5.1.124 → 5.1.127 поверх OpenWrt 19.07.9. BACKUP VERIFIED и UPGRADE VERIFIED получены; SHA256 копии/отката сверены, автомат выключен, звук/черновик/ревизия активного плана сохранены, службы работают. Пароль введён в форме без всплывающих окон; результат виден после автопрокрутки. / GUI upgrade passed on a separate device with verified backup, automation off and sound/plan preserved; inline password and visible result verified.
 - [ ] GUI: новая установка с зависимостями, firmware backend, настройка подключения, восстановление после реального обрыва записи и аппаратная проверка последующих независимых сеансов обновления. Первый пилот ограничен переходом 5.1.124 → 5.1.127 и известным SSH-ключом; это не приёмка всего установщика. / Fresh dependencies, firmware, connection configuration, actual interrupted-write recovery and hardware acceptance of independent upgrade sessions remain pending.
 
-- [ ] GUI: проверить новое поле пароля на устройстве после локальной проверки сохранения между операциями, показа/скрытия и очистки. / Hardware acceptance of the updated password field remains pending.
+- [x] GUI: поле пароля проверено при аппаратной установке из ZIP 24.11.2026; пароль сохранён между подготовкой и установкой, без повторного ввода. / Inline password retention accepted during GUI ZIP installation.
 
 - [x] GUI: общий PasswordField, память текущей вкладки и глазок; проверены Qt Test и визуально в статическом EXE, без SSH. / Shared field and tab-scoped retention passed local Qt and EXE checks without SSH.
 
@@ -183,11 +183,28 @@
 - [x] Имена Schoolbell Setup Wizard 0.1.0, отдельная версия EXE; контракт ZIP формата 1 и docs/releases/v5.1.127.md. / Independent wizard naming/version, ZIP v1 contract and release-note draft.
 - [x] Локальный детерминированный ZIP-кандидат из закреплённого офлайн-комплекта; проверки ABI, состава, метаданных и SHA256. Публичный выпуск заблокирован. / Deterministic local candidate builder with identity/integrity checks; public release blocked.
 - [x] Host install.py: свежая установка из ZIP, проверенная копия вне устройства, привязка сеанса, подтверждение и проверка после неизвестного исхода; локальные тесты без устройств. / Host fresh ZIP transaction implemented and tested locally without devices.
-- [ ] Аппаратно принять свежую ZIP-установку и восстановление копии; добавить обновление с проверенным IPK отката и аппаратно принять GUI ZIP. / Accept fresh ZIP installation/recovery and GUI ZIP on hardware; add rollback-backed upgrades.
+- [ ] Принять установку всех зависимостей ZIP на чистую OpenWrt и восстановление копии; добавить обновление с проверенным IPK отката. GUI ZIP при сохранённых зависимостях принят 24.11.2026, см. ниже. / Accept full ZIP dependency provisioning, backup restoration and rollback-backed upgrades; retained-dependency GUI installation passed on 2026-11-24.
 - [x] 24.11.2026: предварительный план по снимку устройства в ZIP; локальные проверки состава, ABI, зависимостей и места. Сам по себе план не разрешает запись; подготовка и запись теперь выделены в install.py. / A preliminary plan never authorizes a write; install.py now provides separate preparation and write commands.
 - [x] GUI 0.2.0: обнаружение ZIP рядом с EXE, локальная проверка, версия из manifest, фиксация комплекта/подключения и общая транзакция prepare/install/verify; локальные проверки без устройств. / GUI local ZIP discovery/validation and pinned fresh-install transaction implemented and locally tested.
 - [x] Все выпадающие списки мастера используют общий StyledComboBox: одинаковая стрелка, шрифт и обе темы. / All wizard dropdowns share their chevron, typography and themed styling.
 - [ ] GitHub Releases, кэш, подписи артефактов и обработка недоступности сети. / Release download, cache, signatures and offline handling.
 - [ ] Подготовить переносимый ZIP мастера с runtime/лицензиями; проверить без среды разработки. Закрыть лицензии/исходники зависимостей и права аудио до публикации. / Portable wizard/runtime/license delivery and clean-host checks; clear dependency/source/audio distribution gates.
 
-- [ ] Визуально проверить длинное название мастера 0.1.0 в обеих темах и при масштабировании: сборка/метаданные/Qt-тесты прошли, инструмент финального осмотра завершился ошибкой. / Inspect renamed header layout; build/metadata/Qt passed, final viewing tool failed.
+- [x] Заголовок мастера 0.2.1 и три маршрута визуально проверены в обеих темах. / Wizard 0.2.1 title and three routes visually checked in both themes.
+- [ ] Проверить масштабирование 100/150/200 % на чистой Windows. / Verify 100/150/200% scaling on clean Windows.
+
+## Текущая проверка GUI ZIP / Current GUI ZIP check
+
+- [x] 0.2.1: только внешние ZIP, отдельная полная копия без установочного комплекта. / External bundles only, independent full backup.
+- [x] 24.11.2026: GUI ZIP после разрешённого удаления приложения, с сохранёнными зависимостями: полная копия, подготовка, FRESH VERIFIED, вход в 5.1.127, автозвонки выключены, громкость 100 %. Первый SSH 255 устранён сокращением команды; исходное состояние подтверждено перед новым сеансом. / GUI ZIP app installation passed with retained dependencies after fixing Dropbear command length; backups, services, UI and unchanged volume/automation confirmed.
+- [ ] Установка всех зависимостей из ZIP на чистую заводскую OpenWrt и восстановление копии остаются отдельными проверками. / Full dependency provisioning on stock OpenWrt and backup restoration remain separate acceptance tests.
+
+- [x] GUI: общий заголовок «OpenWrt · Комплект», русское название окна; локальное восстановление результата ZIP по связанной квитанции, без обращения к устройству. / Generic bundle heading, Russian window title and bound local ZIP result restoration.
+
+- [x] Стартовый выбор трёх маршрутов с оборудованием и пояснениями: OpenWrt, комплект, заводское восстановление; без имитации. / Three-route navigation and preparation guidance without simulation.
+- [ ] Подключить к GUI отдельную прошивку OpenWrt без установки пакетов и RestoreFactory: повышение прав, выбор адаптера, READY, передача, ожидание загрузки и восстановление DHCP. / Implement GUI firmware-only and factory-recovery operations and acceptance.
+
+## План трёх маршрутов / Three-route plan
+
+- [ ] Выполнить этапы 0–8 [плана мастера](docs/SETUP_WIZARD_PLAN.md): общие операции → сеть/профили → OpenWrt → встроенный OEM → комплекты/копии → релизы и поставка. / Follow [stages 0–8](docs/SETUP_WIZARD_PLAN.en.md).
+- [ ] Встроить проверенный OEM EU v3.30 Build250625 и обеспечить автономный возврат без Интернета; заводской сброс настроек остаётся отдельным действием. / Embed verified OEM for offline recovery; keep settings reset separate.
