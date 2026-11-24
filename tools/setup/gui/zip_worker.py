@@ -15,6 +15,7 @@ if not RUNTIME.is_dir():
 sys.path.insert(0,str(RUNTIME))
 import install as transaction
 import package_worker as legacy
+from session_lock import marker
 from operation_protocol import Cancelled, checkpoint, phase
 
 TARGET='192.168.1.1'
@@ -84,7 +85,7 @@ def run_core(args,root=None,route_check=None,transport=None,emit=print):
             result=remote(command,**kw)
             checkpoint(args)
             return result
-        transaction.prepare(state/'zip-session',state/'selected.zip',root/'firmware/tp_recovery.bin',conn,checked,emit)
+        transaction.prepare(state/'zip-session',state/'selected.zip',root/'firmware/tp_recovery.bin',conn,checked,emit,marker_writer=marker)
         return 'ready'
     if args.action not in ('install','verify'): raise ValueError('Unsupported ZIP operation')
     binding=json.loads((state/'zip-binding.json').read_bytes())
@@ -102,7 +103,7 @@ def run_core(args,root=None,route_check=None,transport=None,emit=print):
     checkpoint(args)
     try:
         transaction.resume(state/'zip-session',args.action,factory,
-                           'INSTALL '+TARGET if args.action=='install' else None,emit)
+                           'INSTALL '+TARGET if args.action=='install' else None,emit,marker_writer=marker)
         return 'done'
     except Cancelled:
         raise

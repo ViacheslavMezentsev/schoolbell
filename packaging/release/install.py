@@ -89,7 +89,7 @@ def unpack(raw, destination):
     return root,doc,rows,digest
 
 @contextmanager
-def guard(session, create=False):
+def guard(session, create=False, marker_writer=None):
     session=Path(session).absolute()
     runtime_root=Path(__file__).resolve().parents[1]
     if (runtime_root/'manifest.json').is_file() and (session==runtime_root or runtime_root in session.parents):
@@ -97,8 +97,11 @@ def guard(session, create=False):
     if session.is_symlink(): raise ValueError('Symlink session')
     session.parent.mkdir(parents=True,exist_ok=True)
     lock=session.parent/(session.name+'.guard')
-    fd=os.open(lock,os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600)
-    os.close(fd)
+    if marker_writer is None:
+        fd=os.open(lock,os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600)
+        os.close(fd)
+    else:
+        marker_writer(lock)
     try:
         if create: session.mkdir(mode=0o700)
         elif not session.is_dir(): raise ValueError('Missing session')
@@ -145,8 +148,8 @@ def cache_bundle(session,root,doc,rows,recovery):
     target=next(row for row in translated if row['name']=='modbus-schoolbell')
     return legacy,{'package':target}
 
-def prepare(session,archive,recovery,conn,remote,emit=print):
-    with guard(session,create=True) as state:
+def prepare(session,archive,recovery,conn,remote,emit=print,marker_writer=None):
+    with guard(session,create=True,marker_writer=marker_writer) as state:
         # Validate all local material before the first connection.
         raw=zip_bytes(archive); (state/'bundle.zip').write_bytes(raw)
         root,doc,rows,digest=unpack(raw,state/'archive')
@@ -180,8 +183,8 @@ def receipt(state):
     fresh.load_bundle(state/'payload',data['manifest']['package'])
     return doc,data
 
-def resume(session,action,remote_factory=SSH,confirm=None,emit=print):
-    with guard(session) as state:
+def resume(session,action,remote_factory=SSH,confirm=None,emit=print,marker_writer=None):
+    with guard(session,marker_writer=marker_writer) as state:
         if action=='verify': (state/'verified.json').unlink(missing_ok=True)
         doc,data=receipt(state)
         if action=='install':

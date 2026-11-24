@@ -1,6 +1,7 @@
 """Windows GUI package-upgrade worker. No firmware/network configuration operations."""
 import argparse, hashlib, json, os, re, subprocess, sys, tarfile, time, uuid
 from pathlib import Path
+from session_lock import lease, marker, recover
 from operation_protocol import Operation, Cancelled, checkpoint, phase
 
 CHECK = """set -eu
@@ -195,19 +196,26 @@ def archive_allowed(folder):
 
 
 def run(args):
+    folder=Path(args.session)
+    with lease(folder):
+        if args.action=="recover-session":
+            result=recover(folder)
+            emit("Локальный сеанс восстановлен. Установка не повторялась; проверьте результат или начните новый сеанс.")
+            return result
+        return run_locked(args)
+
+def run_locked(args):
     import uuid
     folder=Path(args.session);folder.parent.mkdir(parents=True,exist_ok=True)
     # Stable lock spans archival and recreation of the active session directory.
     guard=folder.parent/(folder.name+'.guard')
-    guard_fd=os.open(guard,os.O_CREAT|os.O_EXCL|os.O_WRONLY,0o600)
-    os.close(guard_fd)
+    marker(guard)
     lock=None
     try:
         folder.mkdir(parents=True,exist_ok=True)
         candidate=folder/'operation.lock'
-        fd=os.open(candidate,os.O_CREAT|os.O_EXCL|os.O_WRONLY,0o600)
+        marker(candidate)
         lock=candidate
-        os.write(fd,str(os.getpid()).encode());os.close(fd)
         if args.action=='new-session':
             phase(args,'archiving')
             archive_allowed(folder)
@@ -235,7 +243,7 @@ def dispatch(args):
 
 if __name__=='__main__':
     p=argparse.ArgumentParser()
-    p.add_argument('action',choices=['prepare','install','verify','new-session','backup','inspect-zip']);p.add_argument('--source',required=True);p.add_argument('--index',required=True,type=int);p.add_argument('--session',required=True);p.add_argument('--zip',default='')
+    p.add_argument('action',choices=['prepare','install','verify','new-session','backup','inspect-zip','recover-session']);p.add_argument('--source',required=True);p.add_argument('--index',required=True,type=int);p.add_argument('--session',required=True);p.add_argument('--zip',default='')
     p.add_argument('--operation-id',default='');p.add_argument('--session-id',default='')
     try:
         args=p.parse_args()

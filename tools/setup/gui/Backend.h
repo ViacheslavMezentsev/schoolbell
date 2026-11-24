@@ -31,6 +31,7 @@
 #endif
 class Backend : public QObject {
  Q_OBJECT
+ Q_PROPERTY(bool interrupted READ interrupted NOTIFY changed)
  Q_PROPERTY(bool canCancel READ canCancel NOTIFY changed)
  Q_PROPERTY(QString operationMessage READ operationMessage NOTIFY changed)
  Q_PROPERTY(QString sourceIP READ sourceIP NOTIFY changed)
@@ -119,7 +120,17 @@ public:
   lastEvent=record;
   if(record.value("kind").toString()=="phase")eventPhase=record.value("value").toString();
  }
- bool canCancel() const {return busy() && activeAction!="install" && activeAction!="new-session" && !cancelRequested;}
+ bool interrupted() const {return QFile::exists(folder+".guard") || QFile::exists(folder+"/operation.lock");}
+ Q_INVOKABLE void recoverSession() {
+  if(busy())return;
+  auto base=QCoreApplication::applicationDirPath();
+  auto env=QProcessEnvironment::systemEnvironment();env.insert("PYTHONIOENCODING","utf-8");
+  process.setProcessEnvironment(env);process.setWorkingDirectory(base);
+  state="recover-session";
+  launch({base+"/package_worker.py",state,"--source","192.0.2.2","--index","1","--session",folder});
+  emit changed();
+ }
+ bool canCancel() const {return busy() && activeAction!="install" && activeAction!="new-session" && activeAction!="recover-session" && !cancelRequested;}
  QString operationMessage() const {
   if(cancelRequested && busy())return "Отмена запрошена. Ожидаем завершения текущего запроса; питание и кабель оставьте подключёнными.";
   const QMap<QString,QString> labels={{"starting","Запускается операция…"},{"validating-zip","Проверяется архив на компьютере…"},{"preparing","Проверяется устройство и сохраняется копия…"},{"backup","Читается и проверяется полная копия…"},{"installing","Устанавливаются и проверяются пакеты. Не отключайте питание и кабель."},{"verifying","Проверяется результат без повторной установки…"},{"archiving","Сохраняются материалы предыдущего сеанса…"}};
@@ -214,7 +225,7 @@ public:
   emit changed();
  }
  Q_INVOKABLE void newSession() {
-  if(busy() || state=="uncertain")return;
+  if(busy() || interrupted() || state=="uncertain")return;
   auto base=QCoreApplication::applicationDirPath();
   auto env=QProcessEnvironment::systemEnvironment();env.insert("PYTHONIOENCODING","utf-8");
   process.setProcessEnvironment(env);process.setWorkingDirectory(base);
@@ -230,7 +241,7 @@ public:
  QString report() const {return output;}
  QString session() const {return folder;}
  Q_INVOKABLE void start(QString action,QString ip,int adapter,QString secret) {
-  if(busy() || (action!="prepare" && action!="install" && action!="verify" && action!="backup")) return;
+  if(busy() || interrupted() || (action!="prepare" && action!="install" && action!="verify" && action!="backup")) return;
   if(action=="backup" && (writeStarted() || bundleLocked()))return;
   if(action=="prepare" && (!bundleReady() || (zipMode() && bundleLocked())))return;
   if(action=="install" && (state!="ready" || !zipMode())) return;

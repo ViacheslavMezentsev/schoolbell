@@ -9,6 +9,8 @@ Item {
   property string sourceIP: "192.0.2.2"
   property int adapterIndex: 1
   property bool busy: false
+  property bool interrupted:false
+  function recoverSession() {}
   property bool canCancel:false
   property string operationMessage:"Выполняется проверка"
   function requestCancel(){canCancel=false}
@@ -38,6 +40,17 @@ Item {
  RealPane {id:pane;anchors.fill:parent;colors:theme}
  TestCase {
   name: "PasswordLifecycle"; when: windowShown
+  function test_interrupted_session_has_recovery_action() {
+   pane.visible=true;pane.helpVisible=false;realBackend.busy=false
+   realBackend.interrupted=true
+   verify(findChild(pane,"recover-session").visible)
+   verify(!findChild(pane,"prepare-button").enabled)
+   verify(!findChild(pane,"install-button").enabled)
+   verify(!findChild(pane,"new-session").enabled)
+   realBackend.busy=true;verify(!findChild(pane,"recover-session").visible)
+   realBackend.busy=false;realBackend.interrupted=false
+   verify(!findChild(pane,"recover-session").visible)
+  }
   function test_cancel_button_tracks_operation() {
    pane.visible=true;pane.helpVisible=false
    let button=findChild(pane,"cancel-operation")

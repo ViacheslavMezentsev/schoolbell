@@ -43,7 +43,7 @@ Rectangle {
    StyledComboBox {colors:pane.colors;id:bundlePicker;objectName:"bundle-picker";Layout.fillWidth:true;implicitHeight:48;font.pixelSize:18
     model:realBackend.bundleChoices;textRole:"label"
     displayText:realBackend.zipMode ? realBackend.bundlePath.split(/[\\/]/).pop() : "Выберите ZIP-комплект"
-    enabled:!realBackend.busy && !realBackend.bundleLocked
+    enabled:!realBackend.busy && !realBackend.interrupted && !realBackend.bundleLocked
     onActivated:{password.clear();realBackend.selectBundle(realBackend.bundleChoices[currentIndex].path)}
    }
    RealButton {text:"↻";font.pixelSize:28;implicitWidth:48;leftPadding:0;rightPadding:0
@@ -61,7 +61,7 @@ Rectangle {
     id:connection;objectName:"connection-picker";Layout.fillWidth:true;implicitHeight:48
     model:realBackend.connections;textRole:"label";currentIndex:-1
     displayText:["ready","uncertain","done","current","backedup"].indexOf(realBackend.stage)>=0 ? realBackend.connectionLabel(pane.selectedSource,pane.selectedIndex) : pane.connectionSelected ? currentText : "Выберите выделенный USB–Ethernet"
-    enabled:!realBackend.busy && ["idle","error"].indexOf(realBackend.stage)>=0
+    enabled:!realBackend.busy && !realBackend.interrupted && ["idle","error"].indexOf(realBackend.stage)>=0
     onActivated:{let row=realBackend.connections[currentIndex];password.clear();pane.selectedSource=row.source;pane.selectedIndex=row.index;pane.connectionSelected=true}
    }
    RealButton {text:"↻";font.pixelSize:28;implicitWidth:48;leftPadding:0;rightPadding:0;Accessible.name:"Обновить список подключений";ToolTip.visible:hovered;ToolTip.text:Accessible.name;enabled:connection.enabled;onClicked:{password.clear();pane.connectionSelected=false;realBackend.refreshConnections();connection.currentIndex=-1}}
@@ -76,12 +76,13 @@ Rectangle {
    PasswordField {id:password;clearOnHide:false;objectName:"router-password";colors:pane.colors;Layout.fillWidth:true;enabled:!realBackend.busy;placeholderText:"Пароль администратора OpenWrt (root)"}
   }
   Flow {Layout.fillWidth:true;spacing:6
-   RealButton {objectName:"prepare-button";text:"1. Проверить устройство";implicitHeight:48;enabled:!realBackend.busy && realBackend.bundleReady && (!realBackend.zipMode || !realBackend.bundleLocked) && ["idle","error","ready","backedup"].indexOf(realBackend.stage)>=0 && (pane.connectionSelected || realBackend.stage==="ready") && pane.selectedSource.length>0 && password.text.length>0;onClicked:run("prepare")}
-   RealButton {objectName:"install-button";text:"2. Установить "+realBackend.bundleVersion;implicitHeight:48;enabled:!realBackend.busy && realBackend.stage==="ready" && password.text.length>0;onClicked:confirm.open()}
-   RealButton {text:"Проверить результат";implicitHeight:48;enabled:!realBackend.busy && ["uncertain","done"].indexOf(realBackend.stage)>=0 && password.text.length>0;onClicked:run("verify")}
+   RealButton {objectName:"prepare-button";text:"1. Проверить устройство";implicitHeight:48;enabled:!realBackend.busy && !realBackend.interrupted && realBackend.bundleReady && (!realBackend.zipMode || !realBackend.bundleLocked) && ["idle","error","ready","backedup"].indexOf(realBackend.stage)>=0 && (pane.connectionSelected || realBackend.stage==="ready") && pane.selectedSource.length>0 && password.text.length>0;onClicked:run("prepare")}
+   RealButton {objectName:"install-button";text:"2. Установить "+realBackend.bundleVersion;implicitHeight:48;enabled:!realBackend.busy && !realBackend.interrupted && realBackend.stage==="ready" && password.text.length>0;onClicked:confirm.open()}
+   RealButton {text:"Проверить результат";implicitHeight:48;enabled:!realBackend.busy && !realBackend.interrupted && ["uncertain","done"].indexOf(realBackend.stage)>=0 && password.text.length>0;onClicked:run("verify")}
   }
   Label {Layout.fillWidth:true;wrapMode:Text.WordWrap;font.bold:true;color:["done","current"].indexOf(realBackend.stage)>=0?colors.success:colors.warning;text:realBackend.stage==="not-applied"?"Установка не выполнена. Исходное состояние подтверждено. Начните новый сеанс.":realBackend.busy?realBackend.operationMessage:realBackend.stage==="backedup"?"Копия перед прошивкой проверена и сохранена на ПК.":realBackend.stage==="current"?"Школьник уже установлен. Службы проверены, автозвонки выключены.":realBackend.stage==="done"?(realBackend.fresh?"Новая установка проверена. Автозвонки выключены.":"Установка проверена. Автозвонки выключены, громкость сохранена."):realBackend.stage==="ready"?"Резервная копия проверена. Можно подтвердить установку.":realBackend.stage==="uncertain"?"Исход записи требует проверки. Повторная установка заблокирована.":realBackend.stage==="error"?(realBackend.zipMode && realBackend.bundleLocked?"Подготовка остановлена. Сохраните материалы через «Новый сеанс» перед новой попыткой.":"Операция остановлена. Подробности ниже."):"Начните с проверки устройства и резервной копии."}
-  RealButton {objectName:"firmware-backup";text:"Сохранить полную копию";enabled:!realBackend.busy && !realBackend.bundleLocked && ["idle","error","current","backedup"].indexOf(realBackend.stage)>=0 && pane.connectionSelected && password.text.length>0;onClicked:run("backup")}
+  RealButton {objectName:"firmware-backup";text:"Сохранить полную копию";enabled:!realBackend.busy && !realBackend.interrupted && !realBackend.bundleLocked && ["idle","error","current","backedup"].indexOf(realBackend.stage)>=0 && pane.connectionSelected && password.text.length>0;onClicked:run("backup")}
+  RealButton {objectName:"recover-session";text:"Восстановить незавершённый сеанс";visible:!realBackend.busy && realBackend.interrupted;onClicked:recoveryConfirm.open()}
   RealButton {objectName:"cancel-operation";text:"Отменить операцию";visible:realBackend.busy;enabled:realBackend.canCancel;onClicked:realBackend.requestCancel()}
   ProgressBar {Layout.fillWidth:true;indeterminate:true;visible:realBackend.busy}
   Rectangle {
@@ -100,7 +101,7 @@ Rectangle {
    }
   }
   Flow {Layout.fillWidth:true;spacing:6
-   RealButton {objectName:"new-session";text:"Новый сеанс";enabled:!realBackend.busy && realBackend.stage!=="uncertain";onClicked:newSessionConfirm.open()}
+   RealButton {objectName:"new-session";text:"Новый сеанс";enabled:!realBackend.busy && !realBackend.interrupted && realBackend.stage!=="uncertain";onClicked:newSessionConfirm.open()}
    RealButton {text:"Открыть резервную копию";implicitHeight:48;onClicked:realBackend.openBackup()}
    RealButton {text:"Архив копий";onClicked:realBackend.openHistory()}
    RealButton {text:"Открыть Школьник";implicitHeight:48;enabled:["done","current"].indexOf(realBackend.stage)>=0;onClicked:realBackend.openDevice()}
@@ -128,6 +129,10 @@ Rectangle {
     }
    }
   }
+ }
+ Dialog {id:recoveryConfirm;anchors.centerIn:parent;width:580;modal:true;title:"Восстановить локальный сеанс?";standardButtons:Dialog.Ok|Dialog.Cancel
+  Label {width:530;wrapMode:Text.WordWrap;text:"Мастер проверит, завершился ли прежний процесс, и сохранит оставшиеся блокировки в архиве. Копии сохранятся. Установка не повторяется. После начавшейся записи потребуется проверка результата на роутере."}
+  onAccepted:realBackend.recoverSession()
  }
  Dialog {id:newSessionConfirm;anchors.centerIn:parent;width:580;modal:true;title:"Начать новый сеанс?";standardButtons:Dialog.Ok|Dialog.Cancel
   Label {width:530;wrapMode:Text.WordWrap;text:"Предыдущие резервные копии и протокол сохранятся в архиве на компьютере. Пароль будет очищен. Для следующего обновления потребуется новая проверка и резервная копия. Роутер не изменяется."}

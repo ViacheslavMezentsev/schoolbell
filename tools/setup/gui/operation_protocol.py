@@ -8,7 +8,7 @@ import subprocess
 RESULTS = {
     'inspect-zip': {'idle'}, 'prepare': {'ready', 'current'},
     'install': {'done'}, 'verify': {'done', 'not-applied'},
-    'backup': {'backedup'}, 'new-session': {'idle'},
+    'backup': {'backedup'}, 'recover-session': {'uncertain','error'}, 'new-session': {'idle'},
 }
 class Cancelled(Exception):
     pass
@@ -39,7 +39,7 @@ class Operation:
         os.replace(temporary,self.path)
 
     def checkpoint(self):
-        if self.action not in ('install','new-session') and self.cancel_path.exists():
+        if self.action not in ('install','new-session','recover-session') and self.cancel_path.exists():
             raise Cancelled('Операция отменена. Сохранённые материалы остаются на ПК.')
 
     def execute(self, args, dispatch):
