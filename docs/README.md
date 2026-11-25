@@ -1,5 +1,7 @@
 # Карта документов «Школьника»
 
+[Установка: GUI или консоль](INSTALLATION.md) · [Подготовка релизов](RELEASING.md)
+
 [English](README.en.md) · [Проект](../README.md) · [План миграции](MIGRATION.md)
 
 ## Текущее состояние

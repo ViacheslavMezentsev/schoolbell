@@ -1,5 +1,7 @@
 # Shkolnik
 
+[Installation: GUI or console](docs/INSTALLATION.en.md) · [Preparing releases](docs/RELEASING.en.md)
+
 [![CI](https://img.shields.io/github/actions/workflow/status/ViacheslavMezentsev/schoolbell/ci.yml?branch=main&label=CI&style=flat-square)](https://github.com/ViacheslavMezentsev/schoolbell/actions/workflows/ci.yml)
 
 [Русский](README.md)

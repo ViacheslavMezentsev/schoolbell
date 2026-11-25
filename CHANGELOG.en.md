@@ -2,6 +2,17 @@
 
 [Русский](CHANGELOG.md)
 
+## Unreleased — 2026-11-25
+
+- Added manual GitHub artifact workflow and allowlisted portable wizard 0.3.0 packaging; publication stays separate. Fresh 5.1.127 installation passed after manual SSH host-key verification.
+
+- GUI: firmware flashing requires no backup or separate acknowledgement of its absence; one start confirmation remains. Completed ZIP sessions explain why a new full backup is unavailable.
+
+- Owner authorized as-is publication on 2026-11-25: removed the incomplete-materials packaging gate; default prerelease, separate review status, integrity checks retained.
+
+- GUI network helper waits for a DHCP lease on the selected adapter, handles addressless intervals and retains recovery state for retry. Network test completed after the fix; no flashing.
+- Added a shared GUI/CLI installation guide and paired release workflow; corrected ZIP acceptance in 5.1.127 notes.
+
 ## Unreleased — setup GUI
 
 - GUI: explicit confirmation and UAC helper for network preparation/restoration; write-ahead state, adapter GUID, concurrency guard and retry. No firewall/TFTP; hardware validation pending.

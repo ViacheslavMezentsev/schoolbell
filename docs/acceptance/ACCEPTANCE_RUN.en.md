@@ -320,3 +320,22 @@ ZIP completed with FRESH VERIFIED. The owner confirmed UI 5.1.127, automation of
 volume 100%. Network/time were unchanged; the working bench was not accessed. This is
 successful final-state acceptance after a fix, not an uninterrupted first attempt or
 full dependency provisioning on stock OpenWrt. Local evidence: tests/manual/240-gui-external-zip.
+
+## 2026-11-25 — GUI network, no flashing
+
+Dedicated USB–Ethernet preparation via GUI/UAC assigned the temporary address and confirmed a direct route. Initial restoration removed it and enabled DHCP, but failed without a confirmed lease; the journal survived. After the addressless-read and targeted RenewDHCPLease fix, retry acquired a Preferred DHCP address and removed the journal. Other adapters/settings/IPs matched the baseline. No working-device, sound or firmware operations. This accepts the restoration retry, not a fresh corrected full cycle, factory profile or TFTP. Mock-cmdlet tests are local evidence only.
+
+## 2026-11-25 acceptance — wizard 0.3.0
+
+On a separate EU v3.30, the first GUI OEM transfer stopped at 262144 bytes. After
+fixing the receipt atomic-write conflict, retry transferred 8126464 bytes including
+the final empty block ACK. DHCP recovered and the owner confirmed OEM login.
+GUI OpenWrt 19.07.9 flashing then completed; boot and DHCP were verified. External
+ZIP provisioning installed the app and missing dependencies: FRESH VERIFIED and
+Schoolbell 5.1.127 UI confirmed by the owner. Automation off; no audio test.
+The owner did not transcribe the full OEM version in this run.
+
+A stale SSH host key blocked ZIP preparation; the new key was independently compared
+and the record replaced manually. This is not unattended first-user acceptance.
+Power-loss recovery, OEM-to-OEM in this GUI and clean Windows require separate runs.
+Local ZIP evidence does not automatically validate future GitHub builds.

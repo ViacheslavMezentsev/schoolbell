@@ -1,5 +1,7 @@
 # Описания релизов / Release notes
 
+[Порядок подготовки выпуска](../RELEASING.md) · [Release workflow](../RELEASING.en.md)
+
 Один файл `v<версия>.md` на тег Школьника, например [v5.1.127](v5.1.127.md).
 Заметки RU/EN готовятся до создания тега и копируются владельцем в GitHub Release.
 Наличие файла не означает, что тег создан или выпуск опубликован. После публикации
@@ -15,3 +17,5 @@ One bilingual `v<version>.md` file per Schoolbell tag. Prepare before tagging; t
 copies it to GitHub Release. Files do not imply published tags/releases. Include changes,
 compatibility, assets, installation/upgrade, limits and tested scenarios; omit private
 paths, device identifiers, secrets and logs. State the tested wizard version separately.
+
+Решение владельца 25.11.2026: публикация разрешена как есть. Незавершённые материалы распространения не блокируют выпуск; прежние формулировки о блокировке заменены этим решением. Открытые вопросы остаются сведениями, не утверждением завершённого аудита. / Owner decision 2026-11-25: as-is publication authorized; incomplete distribution materials do not block releases. Prior blocking statements are superseded; open review items remain informational.

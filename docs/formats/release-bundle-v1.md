@@ -1,12 +1,12 @@
 # Комплект выпуска, формат 1 / Release bundle format 1
 
 Дата / Date: 24.11.2026. Статус / Status: согласованный контракт, локальный кандидат;
-не готовность к публичному распространению / agreed contract, local candidate only.
+публикация как есть разрешена владельцем 25.11.2026 / owner-authorized as-is publication on 2026-11-25.
 
 ## Имена / Names
 
 - `schoolbell-v5.1.127-openwrt-19.07.9-ramips-mt76x8-mipsel_24kc.zip`
-- `schoolbell-setup-wizard-v0.2.1-windows-x86_64.zip`
+- `schoolbell-setup-wizard-v0.3.0-windows-x86_64.zip`
 - EXE: `schoolbell-setup-wizard.exe`; продукт / product: Schoolbell Setup Wizard.
 
 Версия комплекта соответствует пакету Школьника; версия мастера независима.
@@ -36,22 +36,25 @@ Package and wizard versions are independent. Platform naming is not platform acc
 
 Paths are relative and safe; no symlinks, device data, executables, firmware or development
 tools enter the package ZIP. The GUI ZIP is separate and will contain its own runtime,
-workers, compatibility metadata, documentation and licenses. Its public packager is pending.
+workers, compatibility metadata, documentation and licenses. Its allowlisted packager is scripts/build-wizard-release.py.
 
 ## Кандидат и релиз / Candidate versus release
 
 Сборщик принимает проверенный офлайн-каталог и публикует результат только в новый
 локальный каталог. ZIP детерминирован для одинаковых входных байтов и сведений о сборке.
 Проверяются точный набор зависимостей, ABI, control-метаданные IPK и SHA256.
-Кандидат сохраняет `distribution_cleared=false`; нельзя снять его редактированием флага.
-Без `--candidate` сборщик отказывает: публичный release gate ещё не реализован.
+По решению владельца 25.11.2026 незавершённый аудит материалов НЕ блокирует выпуск.
+Без --candidate сборщик создаёт status=prerelease; с --candidate — status=candidate.
+publication.authorized=true фиксирует решение; distribution_review.complete=false и
+blocking=false сохраняют открытый статус без блокировки. Legacy distribution_cleared=false
+не является запретом публикации и не используется как допуск к установке.
 Ни один шаг упаковки не обращается к роутеру или сети.
 
 For identical input bytes and assembly metadata, ZIP bytes are reproducible. Exact pins,
-ABI, package metadata and hashes are checked; destination must not exist. Candidate mode
-is explicit, public release is blocked until release gates are implemented. No network/device access.
+ABI, package metadata and hashes are checked; destination must not exist. Candidate mode is explicit; default prerelease packaging is authorized by the owner.
+Incomplete distribution review is recorded without blocking; integrity checks remain mandatory. No network/device access.
 
-## Следующие этапы / Next stages
+## План на 24.11.2026 (исторический) / Plan as of 2026-11-24 (historical)
 
 1. Host install.py для свежей установки реализован локально: копия вне устройства,
    подтверждение, защита повторной записи. Аппаратная приёмка и upgrade с откатом остаются открыты.
@@ -177,3 +180,25 @@ available separately; ZIP mode currently supports fresh installation only.
 состояния после неудачной попытки. / Current wizard is external-ZIP-only;
 the legacy embedded selection above describes 0.2.0. New bundles require 0.2.1
 for bounded Dropbear commands and unchanged-state recovery evidence.
+
+## Поставка мастера 0.3.0 / Wizard 0.3.0 distribution
+
+Один корень schoolbell-setup-wizard-v0.3.0-windows-x86_64: статический EXE с двумя
+образами, фиксированные worker/helper, Python из проверенного архива, zip-runtime,
+образ для операции копии, README RU/EN, manifest, build-receipt и SHA256SUMS.
+Сеансы/копии и прочие файлы каталога сборки не копируются. GitHub workflow собирает
+два ZIP и IPK из одного commit; release-pair.json отличает совместимость формата от
+аппаратной приёмки конкретных байтов. Сам workflow не публикует Release.
+
+One root with static EXE/both images, allowlisted workers/helpers, pinned Python,
+ZIP runtime, backup recovery image, RU/EN guides, manifest, build receipt and hashes.
+No session/backup or arbitrary build-directory files. The manual GitHub workflow
+assembles both ZIPs and the IPK from one commit; release-pair.json distinguishes
+format compatibility from exact-byte hardware acceptance. It does not publish a Release.
+
+25.11.2026: свежая установка GUI из ZIP на чистую OpenWrt принята с ручной заменой
+проверенного SSH-ключа после перепрошивки. Это обновляет прежний открытый пункт
+полного состава; ручной CLI и восстановление overlay остаются отдельными проверками.
+/ Fresh GUI ZIP provisioning passed with manual verified host-key replacement after
+flashing. This supersedes the earlier full-provisioning pending item; CLI and overlay
+restoration acceptance remain separate.

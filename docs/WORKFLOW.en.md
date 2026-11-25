@@ -34,3 +34,12 @@ fast-forward, atomic push and topic deletion. After exact-HEAD CI, `git land BRA
 is supported. It does not check CI itself and deletes the completed topic branch.
 Never run it with a dirty tree or a mismatched CI SHA.
 If fast-forward fails, resolve integration explicitly and rerun CI.
+
+## Publication decision — 2026-11-25
+
+The owner authorized as-is publication. Incomplete distribution materials, license
+review or corresponding sources must not block packaging/publication. Do not
+reintroduce this gate without a new owner decision. Document open items without
+claiming completion. Integrity and compatibility checks remain. Push, tags and
+publication stay with the owner unless explicitly delegated; as-is authorization
+does not trigger automatic artifact uploads.

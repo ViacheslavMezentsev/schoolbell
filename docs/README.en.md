@@ -1,5 +1,7 @@
 # Shkolnik document map
 
+[Installation: GUI or console](INSTALLATION.en.md) · [Preparing releases](RELEASING.en.md)
+
 [Русский](README.md) · [Project](../README.en.md) · [Migration](MIGRATION.md)
 
 ## Current state

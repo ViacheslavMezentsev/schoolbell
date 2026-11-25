@@ -1,5 +1,7 @@
 # Мастер установки / Setup wizard
 
+[Единое руководство установки](../../../docs/INSTALLATION.md) · [Installation guide](../../../docs/INSTALLATION.en.md) · [Релизы / Releases](../../../docs/RELEASING.md)
+
 [План трёх маршрутов](../../../docs/SETUP_WIZARD_PLAN.md) · [Implementation plan](../../../docs/SETUP_WIZARD_PLAN.en.md)
 
 ## Русский
@@ -165,3 +167,27 @@ GUID. Это не запуск TFTP. Реальные операции с ада
 Network helper: explicit UAC-confirmed temporary addressing and GUID-bound DHCP
 restoration are connected. This is not TFTP. Actual adapter operations remain
 unaccepted; mocked-command tests only. See NETWORK_PREFLIGHT for recovery limits.
+
+### Резервная копия перед перепрошивкой / Backup before flashing
+
+В обоих вариантах прошивки резервная копия необязательна и не блокирует запуск. В форме нет отдельного выбора о копии; остаётся одно подтверждение перед запуском. Полная копия из OpenWrt остаётся отдельным действием; после завершённой ZIP-установки для новой копии начните новый сеанс.
+
+Both firmware operations can run without a backup. No separate backup choice blocks the form; one start confirmation remains. A full OpenWrt backup remains a separate action; start a new session to create one after a completed ZIP installation.
+
+Заводская система: копия настроек сохраняется вручную через TP-Link → System Tools → Backup & Restore; это не копия всех разделов flash и не перенос настроек в OpenWrt. Полная копия кнопкой мастера доступна только на работающей OpenWrt через SSH. Выбор способа зависит от текущей системы, а не только от целевой прошивки (возврат OEM возможен также из OEM).
+
+OEM: save configuration manually through TP-Link → System Tools → Backup & Restore. This is neither a full flash backup nor an OpenWrt configuration migration. The wizard full-backup action requires running OpenWrt with SSH. The method depends on the current OS, not merely the destination firmware (OEM-to-OEM is also possible).
+
+### Текущее состояние 25.11.2026 / Current status
+
+Мастер 0.3.0 встроил оба образа и реальную GUI-передачу с ожиданием загрузки и DHCP.
+Возврат OEM и установка OpenWrt + свежего Школьника проверены на отдельном устройстве;
+старый SSH-ключ перед ZIP заменён вручную после сверки. Прежние записи «без TFTP»
+выше описывают ранние этапы. Новый portable ZIP и чистая Windows требуют своей приёмки.
+Упаковка: `python3 scripts/build-wizard-release.py --build out/setup-gui-external --out out/wizard-preview`.
+
+Wizard 0.3.0 embeds both images and connects actual transfer, boot wait and DHCP.
+OEM recovery and OpenWrt plus fresh Schoolbell passed on a separate device with
+manual verified SSH-key replacement before ZIP installation. Earlier no-TFTP notes
+above describe previous stages. The new portable ZIP and clean Windows still need
+separate acceptance. See [release procedure](../../../docs/RELEASING.en.md).

@@ -89,3 +89,5 @@ media-manifest.json. [Доставка и проверенные пробелы]
 описанной области. По решению владельца штатные мелодии сохраняются без изменений.
 
 Проверки аудита: полный `make all` — PASS в WSL; `git diff --check` — PASS. Метаданные, control и payload пересобранного IPK идентичны принятому кандидату 5.1.28. Хеши всех штатных MP3 сохранены. Это host-проверки, не аппаратная приёмка.
+
+Решение владельца 25.11.2026: публикация разрешена как есть. Незавершённые материалы распространения не блокируют выпуск; прежние формулировки о блокировке заменены этим решением. Открытые вопросы остаются сведениями, не утверждением завершённого аудита. / Owner decision 2026-11-25: as-is publication authorized; incomplete distribution materials do not block releases. Prior blocking statements are superseded; open review items remain informational.

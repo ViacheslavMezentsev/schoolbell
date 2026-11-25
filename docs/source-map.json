@@ -1401,17 +1401,17 @@
       "source": "docs/packages/schoolbell/ACCEPTANCE_RUN.en.md",
       "destination": "docs/acceptance/ACCEPTANCE_RUN.en.md",
       "source_sha256": "b897b27c3bb283ca9709a4cc73681939e1831b0bd77c3da2282fcbf24490ddcd",
-      "destination_sha256": "dc26a2381f8e6ff10499694c8afdde2cccbb78e329a2863f04d8d21cb5886b24",
-      "changes": "Adapted acceptance record; includes OEM recovery and confirmed GUI ZIP installation with retained dependencies on 2026-11-24",
-      "prose_sha256": "67af77bcb0d86ae470ad8b00337c33777fa1fd4df3a2c19c4007f5769b5d82ab"
+      "destination_sha256": "0b0fe8d55bc82565013922ed35d7db1dafbef793e26607b2530523cc4687c8d3",
+      "changes": "Adapted acceptance record; includes OEM recovery and confirmed GUI ZIP installation with retained dependencies on 2026-11-24; 2026-11-25 GUI network restoration result, no flashing; GUI full cycle acceptance 2026-11-25 with manual SSH key repair",
+      "prose_sha256": "09a847735b7a1729d970d48e2f5a85ee4b2ddecde77a342b8e7c4d43124fdfc5"
     },
     {
       "source": "docs/packages/schoolbell/ACCEPTANCE_RUN.md",
       "destination": "docs/acceptance/ACCEPTANCE_RUN.md",
       "source_sha256": "47af9da767957c40bf358d3fa7b4f57f50f08581ef45fd5abe08a677e8d17f93",
-      "destination_sha256": "4b8efc7e2b7714a3e37a278a293b76a2b8f9484a625f047652d2c3307670ffb2",
-      "changes": "Adapted acceptance record; includes OEM recovery and confirmed GUI ZIP installation with retained dependencies on 2026-11-24",
-      "prose_sha256": "58fabb41ae655c7c3873f806db4e1caa79ed11fa31ef2ac1c4d0ed4a46349bec"
+      "destination_sha256": "98c4cb760fc2bcd29ce9ad123860210d6c1f12126ddabf30f0770f06b5193195",
+      "changes": "Adapted acceptance record; includes OEM recovery and confirmed GUI ZIP installation with retained dependencies on 2026-11-24; 2026-11-25 GUI network restoration result, no flashing; GUI full cycle acceptance 2026-11-25 with manual SSH key repair",
+      "prose_sha256": "29168bea439b8e26244a145d9f6754d6256c42dbfaf599bab4d8a671bbe25aa3"
     },
     {
       "source": "docs/packages/schoolbell/ANNUAL_CALENDAR.en.md",

@@ -2,6 +2,29 @@
 
 Актуализировано 23.11.2026 по результатам до 5.1.127 включительно. Выполненное отделено от оставшихся проверок. Старые версии в подтверждениях обозначают дату результата, а не версию для следующей проверки. Новые аппаратные проверки выполнять на согласованной текущей версии и отдельно разрешённом устройстве. / Reviewed on 2026-11-23 through 5.1.127. Historical results are not new hardware acceptance; use an agreed current version and authorized target for remaining checks.
 
+## Артефакты GitHub / GitHub artifacts
+
+- [x] Подготовлены явный упаковщик мастера, инструкции RU/EN и ручной workflow целевого MIPS/Windows выпуска без публикации. / Added allowlisted packager, RU/EN instructions and manual MIPS/Windows artifact workflow without publishing.
+- [x] Локально: make all, 7 тестов упаковщика и 6 тестов пары, целевая MIPS-сборка, статическая сборка EXE, распаковка в путь с пробелами/кириллицей, --check-firmware и импорты вложенного Python — PASS. Не проверка чистой Windows или GitHub runner. / Local checks passed; not clean-host or remote-runner acceptance.
+- [ ] Первый запуск workflow после push и проверка точного HEAD. / First remote run after push, exact HEAD checks.
+- [ ] Проверка распакованной пары на чистой Windows 11, подпись сумм и публикация владельцем. / Clean Windows 11 acceptance, checksum signing and owner publication.
+- [x] 25.11.2026: GUI возврат OEM, OpenWrt и свежая установка Школьника 5.1.127; DHCP восстановлен, пользователь подтвердил интерфейс. Смена SSH-ключа потребовала ручной помощи; OEM → OEM новым GUI отдельно не проверено. / Full cycle passed with manual host-key repair; OEM-to-OEM in this GUI remains untested.
+
+## GUI: замечания полного цикла 25.11.2026 / Full-cycle findings
+
+- [ ] После выполненной мастером перепрошивки OpenWrt обрабатывать смену SSH host key с привязкой к устройству и операции; не отключать проверку ключей. В текущем опыте запись обновлена вручную после сверки ключа, полученного при проверке свежей системы. / Handle host-key rotation after wizard flashing with device/operation binding; preserve key verification.
+- [ ] Ошибка SSH до записи: разрешить повтор подготовки с сохранением выбранного ZIP, адаптера и пароля в текущей вкладке, сохраняя протокол попыток. / Retry pre-write SSH preparation failures without restarting the session or clearing the form.
+
+## Следующая группа: два способа установки и выпуск / Next: installation methods and release
+
+- [x] 25.11.2026: по решению владельца снята блокировка публикации из-за незавершённых материалов. Реальный ZIP 35 IPK собран без --candidate; 17 тестов упаковки, make all, PowerShell helper tests, валидатор ТЗ и diff-check — PASS. Ничего не опубликовано. / Owner-authorized prerelease packaging passed with a real 35-IPK archive, full host checks and helper tests; no publication.
+
+- [x] 25.11.2026: GUI-подготовка выделенного USB–Ethernet; после исправления временного отсутствия IPv4 и адресного DHCP renew восстановление получило аренду, удалило журнал; остальные адаптеры не изменены. Повторное восстановление принято, новый полный цикл исправленной подготовки/восстановления и OEM-профиль отдельно не повторялись. / Network restoration passed after the fix, not a new full-cycle or factory-profile acceptance.
+- [x] Единое руководство GUI/CLI и порядок Draft/Pre-release: [RU](docs/INSTALLATION.md), [EN](docs/INSTALLATION.en.md), [выпуски](docs/RELEASING.md). / Shared installation and release guides.
+- [ ] Встроить оба закреплённых образа в мастер; единый firmware-only механизм CLI/GUI, READY/прогресс, ограниченный firewall, ожидание загрузки и восстановление сети. / Embed both images and share a firmware-only engine.
+- [ ] Отдельно принять точную GUI-сборку: OEM → OpenWrt, OpenWrt → OEM, OEM → OEM, затем чистая прошивка → полный ZIP. / Accept exact-build firmware routes and clean package provisioning.
+- [ ] Переносимый GUI ZIP по явному списку файлов, чистая Windows, точная совместимая пара, подпись сумм; приложить имеющиеся материалы и первый предварительный выпуск владельцем. Незавершённый аудит материалов по решению владельца от 25.11.2026 не блокирует выпуск. / Portable GUI archive, clean Windows, accepted pair, signed checksums and available materials; incomplete review does not block publication under the owner decision.
+
 ## Осталось: надёжность / Remaining: reliability
 
 - [ ] TC-234: повторно проверить достоверность NTP после исправления обработки periodic. 08.11.2026 отключение сети на 18 минут и возврат Интернета подтверждены; periodic ошибочно продлевал синхронизацию без сети. 09.11.2026 установлена 5.1.121: при отключении 10:08–10:26 ложного подтверждения нет, метка не обновляется; исходный и конечный статус waiting. Переход свежего stratum через истечение к новому подтверждению остаётся непроверенным. / Recheck NTP confidence after the periodic-event fix. Physical 18-minute network loss/recovery passed; periodic falsely renewed synchronization. 5.1.121 deployed and retested on 2026-11-09: no false confirmation during 10:08–10:26 outage; initial/final waiting. Fresh stratum expiry/reconfirmation remains untested.
