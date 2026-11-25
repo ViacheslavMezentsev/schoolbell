@@ -1,5 +1,7 @@
 # Changelog
 
+- The downloaded wizard 0.3.1 / Schoolbell 5.1.127 pair passed hash checks, same-version reinstall and the OpenWrt → OEM → OpenWrt → fresh Schoolbell installation cycle. DHCP recovered automatically and the final UI was verified. Clean Windows and exact-build OEM-to-OEM remain separate checks.
+
 ## Unreleased — Setup wizard 0.3.1
 
 - Unknown-duration operations use a cycling blue segment. Successful INSTALL VERIFIED output includes the URL without a failure warning.

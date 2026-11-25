@@ -124,3 +124,7 @@ fresh package installation and reinstall on the test device. Record archive hash
 source commit, results and limitations before signing sums and preparing the first
 release from that exact pair. Local EXE acceptance is not downloaded artifact
 acceptance; this does not impose a publication block on the owner.
+
+## Downloaded pair check — 2026-11-26
+
+The downloaded wizard 0.3.1 / Schoolbell 5.1.127 pair passed hash checks, same-version reinstall and the OpenWrt → OEM → OpenWrt → fresh Schoolbell installation cycle. DHCP recovered automatically and the final UI was verified. Clean Windows and exact-build OEM-to-OEM remain separate checks. [Протокол / Report](acceptance/wizard-0.3.1-github.md).
