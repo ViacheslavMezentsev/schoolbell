@@ -1,8 +1,30 @@
 # Changelog
 
+## Unreleased — Setup wizard 0.3.1
+
+- Unknown-duration operations use a cycling blue segment. Successful INSTALL VERIFIED output includes the URL without a failure warning.
+
+- Added the root/LuCI reminder below the password field. SSH authentication rejection is distinguished from network errors; users can correct the password and retry.
+
+- Schoolbell link: pointing-hand cursor and hover tooltip.
+
+- 2026-11-26: owner confirmed same-version 5.1.127 reinstall and opening the interface via button and text link; invalid-password hardware acceptance remains separate.
+
+- After an install attempt, the GUI shows the Schoolbell URL and records it in the log; a failed attempt does not claim interface availability.
+
+- Package GUI: reinstall and retry without mandatory preparation/backup; separate attempts, warnings and explicit SSH host-key acceptance.
+
 [Русский](CHANGELOG.md)
 
 ## Unreleased — 2026-11-25
+
+- Wizard: Open action log opens one append-only session file starting with adapter selection; repeated clicks no longer create copies.
+
+- Wizard: request wait reduced to three minutes; completed-operation log download replaces the history section.
+
+- Wizard: removed the router-working confirmation button; added request and flash/boot wait countdowns without automatically claiming success.
+
+- Wizard: both firmware routes now use sequential steps with a fixed result panel and collapsed help/diagnostics. Transfer results are scoped by UUID while shared network crash recovery remains.
 
 - Fixed static OpenSSL system dependencies: Winsock and BCrypt propagate to all consumers, including QtCore tests; static discovery is enabled before finding Qt.
 

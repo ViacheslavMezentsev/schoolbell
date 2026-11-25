@@ -10,7 +10,7 @@ Audit status stays separate from permission to publish; no script uploads automa
 
 ## Assets
 
-- `schoolbell-setup-wizard-v0.3.0-windows-x86_64.zip`: portable GUI with both pinned images.
+- `schoolbell-setup-wizard-v0.3.1-windows-x86_64.zip`: portable GUI with both pinned images.
 - `schoolbell-v5.1.127-openwrt-19.07.9-ramips-mt76x8-mipsel_24kc.zip`: application and dependencies.
 - `modbus-schoolbell_5.1.127_all.ipk`: expert application-only asset.
 - `target-build.json`, `release-pair.json`, `SHA256SUMS`: provenance, format pairing and hashes.
@@ -110,3 +110,17 @@ diagnostic capture passed. Full UCRT64 compilation remains a GitHub check.
 The next log passed configuration and failed linking test-session-proof: all undefined symbols belong to Winsock and BCrypt. Replacing .dll.a with .a is insufficient: static archives need transitive system dependencies. OPENSSL_USE_STATIC_LIBS is now set before find_package(Qt6); OpenSSL::Crypto propagates crypt32, ws2_32 and bcrypt to every consumer, including QtCore tests. This repairs linking rather than adding packages. A new GitHub run must confirm the complete current UCRT64/Qt 6.12 build.
 
 Post-fix local checks passed: make all, static MINGW64 build, both C++ tests, embedded-image verification and system-only DLL imports. This does not certify the GitHub UCRT64 build.
+
+## Updated artifact acceptance: 0.3.1 / 5.1.127
+
+After push/CI/land, the owner dispatches `release-artifacts.yml` on main. Match the
+run headSha to the accepted HEAD, download `schoolbell-windows-preview-<SHA>`, and
+verify SHA256SUMS and release-pair.json. Extract the wizard into a new folder and
+place bundle 5.1.127 beside it; do not mix in locally built workers.
+
+First check EXE startup without MSYS2 on PATH, embedded firmware (`--check-firmware`),
+ZIP selection and both themes. Then separately accept OEM restore, OpenWrt,
+fresh package installation and reinstall on the test device. Record archive hashes,
+source commit, results and limitations before signing sums and preparing the first
+release from that exact pair. Local EXE acceptance is not downloaded artifact
+acceptance; this does not impose a publication block on the owner.

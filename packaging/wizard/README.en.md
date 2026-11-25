@@ -14,7 +14,8 @@ set it in LuCI first. Python is bundled; Qt/MSYS2/Python installation is unneces
    for boot and network restoration.
 4. Download the separate `schoolbell-v…-openwrt-19.07.9-ramips-mt76x8-mipsel_24kc.zip`.
    Put it beside the EXE or select it in the form; do not extract it. Enter the
-   password, check the device, then separately confirm installation.
+   password and confirm installation. Inspection and full backup are optional;
+   reinstall and retry do not require a new session.
 5. Open the router interface and check its version. Fresh installation leaves automatic bells off.
 
 OEM recovery installs Build250625, not any arbitrary previous OEM version.
@@ -24,11 +25,11 @@ TP-Link Backup & Restore for configuration backups.
 
 ## Known limitations
 
-Preview, without Authenticode. Reflashing OpenWrt may change the saved SSH host key;
-the GUI does not rotate it yet. Do not disable verification: an expert must compare
-the new key and replace only the matching old record. A pre-write preparation
-failure may require a new session. The full cycle passed with that manual repair,
-not as an unconditional clean-PC acceptance. A clean Windows host and this exact ZIP
+Preview, without Authenticode. After flashing OpenWrt, the wizard displays a new
+SSH fingerprint for explicit acceptance in the form. Correct an invalid password
+in the same field and retry. Full backup is optional for package installation too.
+Old attempts and backups are preserved; the Schoolbell URL appears in the form
+and log after an attempt. A clean Windows host and this exact ZIP
 still require separate testing. Distribution materials remain incomplete; see
 licenses/OPEN-ITEMS.md. SHA256SUMS checks integrity, not publisher identity without
 a trusted signature.

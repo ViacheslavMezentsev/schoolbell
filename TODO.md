@@ -1,26 +1,32 @@
 # Задачи проекта / Project tasks
 
-Актуализировано 23.11.2026 по результатам до 5.1.127 включительно. Выполненное отделено от оставшихся проверок. Старые версии в подтверждениях обозначают дату результата, а не версию для следующей проверки. Новые аппаратные проверки выполнять на согласованной текущей версии и отдельно разрешённом устройстве. / Reviewed on 2026-11-23 through 5.1.127. Historical results are not new hardware acceptance; use an agreed current version and authorized target for remaining checks.
+Актуализировано 26.11.2026 по результатам до 5.1.127 включительно. Выполненное отделено от оставшихся проверок. Старые версии в подтверждениях обозначают дату результата, а не версию для следующей проверки. Новые аппаратные проверки выполнять на согласованной текущей версии и отдельно разрешённом устройстве. / Reviewed on 2026-11-26 through 5.1.127. Historical results are not new hardware acceptance; use an agreed current version and authorized target for remaining checks.
 
 ## Артефакты GitHub / GitHub artifacts
 
 - [x] Сопоставлены локальные CMake cache/Ninja и владельцы библиотек pacman; добавлено сохранение диагностики GitHub при отказе. / Audited local CMake/Ninja dependencies and pacman ownership; preserve failed build diagnostics.
 
 - [x] WebP/TIFF: новый GitHub-запуск прошёл конфигурацию Qt и начал компиляцию. / The next GitHub run passed Qt configuration and started compilation.
-- [ ] Повторить UCRT64-сборку после исправления линковки OpenSSL: test-session-proof остановился на символах Winsock/BCrypt; зависимости исправлены на общей цели OpenSSL::Crypto. / Retry UCRT64 after fixing shared OpenSSL::Crypto dependencies: test-session-proof failed on Winsock/BCrypt symbols.
+- [x] Пользователь подтвердил успешную сборку артефактов GitHub после исправления OpenSSL. Предыдущий отказ: test-session-proof остановился на символах Winsock/BCrypt; зависимости исправлены на общей цели OpenSSL::Crypto. / Retry UCRT64 after fixing shared OpenSSL::Crypto dependencies: test-session-proof failed on Winsock/BCrypt symbols.
 
 
 - [x] Подготовлены явный упаковщик мастера, инструкции RU/EN и ручной workflow целевого MIPS/Windows выпуска без публикации. / Added allowlisted packager, RU/EN instructions and manual MIPS/Windows artifact workflow without publishing.
 - [x] Локально: make all, 7 тестов упаковщика и 6 тестов пары, целевая MIPS-сборка, статическая сборка EXE, распаковка в путь с пробелами/кириллицей, --check-firmware и импорты вложенного Python — PASS. Не проверка чистой Windows или GitHub runner. / Local checks passed; not clean-host or remote-runner acceptance.
 - [x] Исправление окружения проверено локально: make all, статическая сборка MINGW64 и ZIP — PASS; все 18 UCRT64-пакетов найдены в актуальной базе MSYS2. Полная сборка UCRT64 на GitHub ещё не проверена. / Local checks passed; full UCRT64 GitHub build remains pending.
-- [ ] Повторить GitHub-сборку после перехода на UCRT64: запуск 45612351368 прошёл packages, но wizard остановился до компиляции (qt6-static отсутствует в MINGW64). / Repeat after UCRT64 fix: packages passed, wizard failed before compilation because MINGW64 qt6-static was unavailable.
+- [x] Предыдущая GitHub-сборка после исправлений принята пользователем; исторический отказ: запуск 45612351368 прошёл packages, но wizard остановился до компиляции (qt6-static отсутствует в MINGW64). / Repeat after UCRT64 fix: packages passed, wizard failed before compilation because MINGW64 qt6-static was unavailable.
 - [ ] Проверка распакованной пары на чистой Windows 11, подпись сумм и публикация владельцем. / Clean Windows 11 acceptance, checksum signing and owner publication.
 - [x] 25.11.2026: GUI возврат OEM, OpenWrt и свежая установка Школьника 5.1.127; DHCP восстановлен, пользователь подтвердил интерфейс. Смена SSH-ключа потребовала ручной помощи; OEM → OEM новым GUI отдельно не проверено. / Full cycle passed with manual host-key repair; OEM-to-OEM in this GUI remains untested.
 
+- [x] Пошаговый экран обоих профилей и отдельные UUID результатов: статическая сборка, make all, 10 тестов transfer worker, 5 тестов UAC bridge, mock-тесты helper и валидатор ТЗ прошли; стартовые экраны осмотрены в обеих темах. / Sequential screens and scoped receipts passed local checks; start screens inspected in both themes.
+- [x] Пользователь подтвердил успешное OEM-восстановление пошаговым GUI на отдельном стенде; замечания: лишняя кнопка подтверждения и отсутствие обратного отсчёта. / Owner confirmed successful OEM recovery with the sequential GUI; requested removal of confirmation and a countdown.
+- [x] Пользователь подтвердил работу таймера и успешное восстановление без кнопки подтверждения загрузки. / Owner confirmed the countdown and successful recovery without the extra confirmation button.
+- [x] Пользователь подтвердил работу сборки с 03:00 и сохранение лога; замечание — каждое нажатие создавало копию. / Owner confirmed the 03:00 build and log saving; repeated clicks created copies.
+- [ ] Проверить открытие единственного текущего лога новой сборкой. / Accept opening the single live action log.
+
 ## GUI: замечания полного цикла 25.11.2026 / Full-cycle findings
 
-- [ ] После выполненной мастером перепрошивки OpenWrt обрабатывать смену SSH host key с привязкой к устройству и операции; не отключать проверку ключей. В текущем опыте запись обновлена вручную после сверки ключа, полученного при проверке свежей системы. / Handle host-key rotation after wizard flashing with device/operation binding; preserve key verification.
-- [ ] Ошибка SSH до записи: разрешить повтор подготовки с сохранением выбранного ZIP, адаптера и пароля в текущей вкладке, сохраняя протокол попыток. / Retry pre-write SSH preparation failures without restarting the session or clearing the form.
+- [x] Новый SSH-ключ явно принимается по отпечатку в форме; пользователь подтвердил успешный вход и установку после перепрошивки. / Explicit fingerprint acceptance in the form passed in the owner test after flashing.
+- [x] Ошибка SSH до записи: разрешён повтор подготовки с сохранением выбранного ZIP, адаптера и пароля в текущей вкладке, сохраняя протокол попыток. / Retry pre-write SSH preparation failures without restarting the session or clearing the form.
 
 ## Следующая группа: два способа установки и выпуск / Next: installation methods and release
 
@@ -28,7 +34,7 @@
 
 - [x] 25.11.2026: GUI-подготовка выделенного USB–Ethernet; после исправления временного отсутствия IPv4 и адресного DHCP renew восстановление получило аренду, удалило журнал; остальные адаптеры не изменены. Повторное восстановление принято, новый полный цикл исправленной подготовки/восстановления и OEM-профиль отдельно не повторялись. / Network restoration passed after the fix, not a new full-cycle or factory-profile acceptance.
 - [x] Единое руководство GUI/CLI и порядок Draft/Pre-release: [RU](docs/INSTALLATION.md), [EN](docs/INSTALLATION.en.md), [выпуски](docs/RELEASING.md). / Shared installation and release guides.
-- [ ] Встроить оба закреплённых образа в мастер; единый firmware-only механизм CLI/GUI, READY/прогресс, ограниченный firewall, ожидание загрузки и восстановление сети. / Embed both images and share a firmware-only engine.
+- [x] Оба закреплённых образа встроены; GUI выполняет передачу, ожидание и восстановление сети. / Both pinned images are embedded; GUI transfer, wait and network restoration are implemented.
 - [ ] Отдельно принять точную GUI-сборку: OEM → OpenWrt, OpenWrt → OEM, OEM → OEM, затем чистая прошивка → полный ZIP. / Accept exact-build firmware routes and clean package provisioning.
 - [ ] Переносимый GUI ZIP по явному списку файлов, чистая Windows, точная совместимая пара, подпись сумм; приложить имеющиеся материалы и первый предварительный выпуск владельцем. Незавершённый аудит материалов по решению владельца от 25.11.2026 не блокирует выпуск. / Portable GUI archive, clean Windows, accepted pair, signed checksums and available materials; incomplete review does not block publication under the owner decision.
 
@@ -255,3 +261,17 @@
 - [ ] Отдельно принять UAC (включая отмену), временный адрес и восстановление DHCP на выделенном USB–Ethernet; проверить повтор после закрытия мастера, отсутствующий адаптер и позднюю аренду. / Accept real UAC/cancel, temporary address, DHCP restoration, restart, unplugged adapter and late lease separately.
 
 - Проверки группы UAC-helper: make all PASS, 17 Qt-тестов PASS, 4 теста моста UAC PASS, PowerShell mock-сценарии PASS; статический EXE собран. Настоящее повышение прав и сетевые команды не запускались. / UAC-helper group: make all, 17 Qt tests, 4 bridge tests and PowerShell mocked scenarios passed; static EXE built. No real elevation or network mutation was run.
+
+## Повторяемая установка GUI / Repeatable GUI installation
+
+- [x] Пользователь подтвердил новую установку OpenWrt; выявлено наследование старого пакетного сеанса и SSH-ключа. / Owner confirmed OpenWrt installation; stale package state and host key identified.
+- [x] Пользователь подтвердил новую установку из ZIP и установку поверх той же версии 5.1.127, открытие Школьника по кнопке и текстовой ссылке. / Owner confirmed fresh ZIP installation, same-version 5.1.127 reinstall, and opening Schoolbell via both button and text link.
+- [ ] Отдельно проверить повтор после ошибки записи, неверный пароль и сохранение пользовательского плана/громкости при повторной установке. / Separately accept retry after a write failure, invalid password, and preservation of a populated plan/volume on reinstall.
+
+- [x] Пользователь подтвердил новую установку 5.1.127 через GUI с принятием нового SSH-ключа: INSTALL VERIFIED, службы работают, автомат выключен; сетевые/системные файлы сверены. Повтор поверх той же версии затем подтверждён пользователем 26.11.2026. / Owner confirmed fresh GUI installation and explicit host-key acceptance; same-version reinstall was subsequently confirmed on 2026-11-26.
+
+## Кандидат мастера 0.3.1 / Wizard 0.3.1 candidate
+
+- [x] Локально: 20 Qt-проверок, 24 проверки worker, 23 сценария ZIP с подменённым транспортом; ТЗ 1.26 без замечаний. / Local Qt, worker, injected ZIP transport and specification checks passed.
+- [ ] Собрать на GitHub точный принятый HEAD, скачать пару 0.3.1/5.1.127, проверить суммы, запуск и все заявленные маршруты из скачанной поставки. Локальная сборка не заменяет эту проверку. / Build accepted HEAD on GitHub and accept the downloaded exact pair.
+- [ ] После проверки пары оформить первый предварительный релиз владельцем; не заменять старые опубликованные артефакты. / Owner publishes the first preview after pair acceptance; do not replace existing published assets.
