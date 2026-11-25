@@ -22,7 +22,13 @@ function New-NetFirewallRule {param($Name,$DisplayName,$Direction,$Action,$Proto
  $script:rule=$true
 }
 function Restore-NetworkState($path){$script:restores++;$script:rule=$false;if($script:failRestore){throw 'DHCP failure'};Remove-Item -LiteralPath $path}
-function Start-Sleep {param($Seconds);$script:waited+=$Seconds}
+function Start-Sleep {param($Seconds)
+ if($Seconds -eq 90){
+  $s=Read-FlashSession $root
+  Assert ($s.phase -eq 'boot-wait' -and $s.wait_until_ms -gt [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()) 'boot countdown published before waiting'
+ }
+ $script:waited+=$Seconds
+}
 $export={param($profile,$dir);$script:exports++}
 $transfer={param($profile,$dir,$op)
  $s=Read-FlashSession $dir;$s.possible_write=$true;$s.transfer_complete=$true;$s.phase='transferred';$s.acknowledged=8126464;Write-NetworkState (Join-Path $dir 'flash-session.json') $s
@@ -33,9 +39,13 @@ try {
   Assert ((Read-FlashSession $root).phase -eq 'needs-check') 'manual version check required'
   Assert ($script:waited -ge 90 -and !$script:rule -and !(Test-Path (Join-Path $root 'network.json'))) 'wait and cleanup'
   Expect-Failure {Invoke-FlashSession $root $guid $profile $id {} $export $transfer}
-  Assert ($script:exports -eq 1) 'no second transfer'
+  Assert ($script:exports -eq 1) 'same operation cannot be replayed'
+  $other='33333333-3333-4333-8333-333333333333'
+  Invoke-FlashSession $root $guid $profile $other {} $export $transfer
+  Assert ($script:exports -eq 2) 'completed previous session does not block new operation'
   Confirm-FlashSession $root $id $profile
-  Assert ((Read-FlashSession $root).phase -eq 'user-confirmed') 'manual evidence distinct from automatic success'
+  Assert ((Get-Content -Raw (Join-Path $root ('flash-'+$id+'.json')) | ConvertFrom-Json).phase -eq 'user-confirmed') 'own receipt confirmed'
+  Assert ((Read-FlashSession $root).operation -eq $other -and (Read-FlashSession $root).phase -eq 'needs-check') 'other session not overwritten'
  }
  Reset-Test;$script:failPrepare=$true
  Expect-Failure {Invoke-FlashSession $root $guid 'openwrt' $id {} $export $transfer}

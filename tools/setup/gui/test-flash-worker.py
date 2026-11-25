@@ -1,6 +1,6 @@
 import importlib.util, json, hashlib, socket, struct, sys, tempfile, threading, unittest
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 sys.path.insert(0,str(Path(__file__).resolve().parent.parent))
 import flash_worker as worker
 from tftp_server import serve, transfer
@@ -34,6 +34,28 @@ class FlashTests(unittest.TestCase):
     self.assertTrue(self.receipt()['possible_write'])
     event('transferred',len(data))
    self.run_profile(transport,profile);self.assertTrue(self.receipt()['transfer_complete'])
+ def test_operation_receipts_do_not_overwrite_previous_result(self):
+  self.seed()
+  def complete(data,event):event('ready',0);event('transferring',0);event('transferred',len(data))
+  self.run_profile(complete)
+  first=self.root/('flash-'+self.id+'.json');original=first.read_bytes()
+  self.assertEqual(json.loads(original),self.receipt())
+  self.id='22222222-2222-4222-8222-222222222222';self.seed('factory')
+  self.run_profile(complete,'factory')
+  self.assertEqual(first.read_bytes(),original)
+  self.assertEqual(json.loads((self.root/('flash-'+self.id+'.json')).read_text()),self.receipt())
+ def test_gui_transport_uses_three_minute_wait(self):
+  self.seed();transport=Mock()
+  with patch.object(worker,'serve',transport):self.run_profile(transport)
+  self.assertEqual(transport.call_args.kwargs['wait_seconds'],180)
+ def test_ready_deadline_and_transfer_clear_countdown(self):
+  self.seed()
+  def transport(data,event):
+   with patch.object(worker.time,'time',return_value=1000):event('ready',0)
+   self.assertEqual(self.receipt()['wait_until_ms'],1180000)
+   event('transferring',0)
+   self.assertEqual(self.receipt()['wait_until_ms'],0)
+  self.run_profile(transport)
  def test_bad_hash_never_starts_transport(self):
   self.seed();(self.root/'openwrt.bin').write_bytes(b'bad')
   with self.assertRaises(ValueError):self.run_profile(lambda *a:self.fail('transport started'))

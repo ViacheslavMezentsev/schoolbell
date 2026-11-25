@@ -44,6 +44,8 @@ try {
  if ($LASTEXITCODE) { throw 'Session proof tests failed' }
  & (Join-Path $build 'test-operation-status.exe')
  if ($LASTEXITCODE) { throw 'Operation status tests failed' }
+ & (Join-Path $build 'test-firmware-action-log.exe')
+ if ($LASTEXITCODE) { throw 'Firmware action log tests failed' }
  $exe = Join-Path $build 'schoolbell-setup-wizard.exe'
  & "$bin\strip.exe" $exe
  if ($LASTEXITCODE) { throw 'Strip failed' }

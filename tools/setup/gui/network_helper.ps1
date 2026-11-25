@@ -38,7 +38,7 @@ try {
   $previous=Read-FlashSession $root
   if ($previous -and $previous.possible_write -and $previous.phase -ne 'user-confirmed') {
    $previous.phase=if ($previous.transfer_complete) {'needs-check'} else {'unknown'}
-   Write-NetworkState (Join-Path $root 'flash-session.json') $previous
+   Save-FlashSession $root $previous
   }
   exit 0
  }

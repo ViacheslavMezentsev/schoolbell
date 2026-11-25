@@ -3,6 +3,7 @@ import argparse, hashlib, json, os, uuid, time, logging
 from pathlib import Path
 from firmware import PROFILES, RECOVERY_BYTES
 from tftp_server import serve
+REQUEST_WAIT_SECONDS = 180
 
 def write(path, state):
     temp=path.with_suffix('.tmp')
@@ -29,18 +30,21 @@ def run(profile, root, operation, transport=serve):
         raise ValueError('Unpinned firmware bytes')
     def event(phase,count):
         state.update(phase=phase,acknowledged=count)
+        state['wait_until_ms']=int(time.time()*1000)+REQUEST_WAIT_SECONDS*1000 if phase=='ready' else 0
         if phase=='transferring':state['possible_write']=True
         if phase=='transferred':state['transfer_complete']=True
         write(path,state)
+        write(root/('flash-'+operation+'.json'),state)
     try:
         if transport is serve:
             cancel=Path(__file__).resolve().parent/('flash-stop-'+operation+'.request')
-            transport(data,event,cancelled=cancel.exists)
+            transport(data,event,wait_seconds=REQUEST_WAIT_SECONDS,cancelled=cancel.exists)
         else:transport(data,event)
     except Exception:
         logging.exception("Firmware transfer failed")
         state['phase']='unknown' if state.get('possible_write') else 'not-started'
         write(path,state)
+        write(root/('flash-'+operation+'.json'),state)
         raise
 
 if __name__=='__main__':

@@ -52,7 +52,7 @@ def main():
   if a.action=='flash':
    previous=[None]
    def progress():
-    path=Path(os.environ['ProgramData'])/'SchoolbellNetworkHelper-v1/flash-session.json'
+    path=Path(os.environ['ProgramData'])/'SchoolbellNetworkHelper-v1'/('flash-'+str(uuid.UUID(a.operation))+'.json')
     if not path.is_file() or path.stat().st_size>8192:return
     event=json.loads(path.read_text(encoding='utf-8-sig'))
     if event.get('schema')!=1 or event.get('operation')!=a.operation or event.get('profile')!=a.profile:return
@@ -62,7 +62,7 @@ def main():
    result=elevate(args,progress)
   else:result=elevate(args)
  except Exception:result='failed'
- messages={'cancelled':'Запрос UAC отменён. Помощник не запускался.', 'busy':'Сетью уже занимается другой помощник. Дождитесь завершения.', 'failed':'Операция не подтверждена. При оставшихся настройках нажмите «Восстановить сеть».', 'ok':('Временный адрес подготовлен, прямой маршрут проверен. Сервер не запущен — Reset не нажимайте. После проверки восстановите сеть.' if a.action=='prepare' else 'DHCP и получение адреса подтверждены (либо сохранённого состояния не было).')}
+ messages={'cancelled':'Запрос UAC отменён. Помощник не запускался.', 'busy':'Сетью уже занимается другой помощник. Дождитесь завершения.', 'failed':'Операция не подтверждена. При оставшихся настройках нажмите «Восстановить сеть».', 'ok':('Временный адрес подготовлен, прямой маршрут проверен. Сервер не запущен — Reset не нажимайте. После проверки восстановите сеть.' if a.action=='prepare' else 'Восстановление сети завершено: временных настроек мастера не осталось.')}
  if a.action in ('flash','confirm') and result=='ok':
   messages['ok']='Сеть восстановлена. Проверьте загрузку и версию в интерфейсе роутера.' if a.action=='flash' else 'Проверка загрузки отмечена пользователем. Это не автоматическая проверка версии.'
  print(json.dumps(dict(helper_result=result,message=messages[result]),ensure_ascii=False),flush=True)

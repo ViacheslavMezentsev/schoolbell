@@ -66,3 +66,9 @@ if(MINGW)
 endif()
 
 qt_add_resources(router-setup "firmware_images" PREFIX "/firmware" BASE "${CMAKE_CURRENT_SOURCE_DIR}/embedded-firmware" FILES embedded-firmware/openwrt.bin embedded-firmware/factory.bin embedded-firmware/reset.jpg)
+
+add_executable(test-firmware-action-log test-firmware-action-log.cpp)
+target_link_libraries(test-firmware-action-log PRIVATE Qt6::Core)
+if(MINGW)
+ target_link_options(test-firmware-action-log PRIVATE -static -static-libgcc -static-libstdc++)
+endif()
