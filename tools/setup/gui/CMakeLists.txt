@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.21)
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/wizard-version.txt" WIZARD_VERSION LIMIT_COUNT 1)
 project(SchoolbellSetupWizard VERSION ${WIZARD_VERSION} LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
+# Ask FindOpenSSL for static metadata before Qt discovers its dependencies.
+if(MINGW)
+ set(OPENSSL_USE_STATIC_LIBS TRUE)
+endif()
 find_package(Qt6 REQUIRED COMPONENTS Quick QuickControls2 Network)
 qt_standard_project_setup()
 qt_add_executable(router-setup WIN32 main.cpp Backend.h FirmwareBackend.h FirmwareImages.h)
@@ -34,7 +38,9 @@ endif()
 if(MINGW)
  qt_import_plugins(router-setup EXCLUDE_BY_TYPE imageformats INCLUDE Qt6::QJpegPlugin)
  set_property(TARGET Freetype::Freetype APPEND PROPERTY INTERFACE_LINK_LIBRARIES bz2)
- set_property(TARGET OpenSSL::Crypto APPEND PROPERTY INTERFACE_LINK_LIBRARIES crypt32)
+ # Keep system dependencies after libcrypto for every consumer, including
+ # Core-only tests (Qt 6.12 uses OpenSSL there too).
+ set_property(TARGET OpenSSL::Crypto APPEND PROPERTY INTERFACE_LINK_LIBRARIES crypt32 ws2_32 bcrypt)
 endif()
 
 if(MINGW)

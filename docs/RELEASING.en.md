@@ -106,3 +106,7 @@ component discovery; excluding a plugin from the EXE does not remove Qt's
 configuration-time requirements. Tools: GCC/binutils, CMake, Ninja and pkgconf;
 GCC pulls in binutils. Post-fix make all, fresh static MINGW64 build and six-file
 diagnostic capture passed. Full UCRT64 compilation remains a GitHub check.
+
+The next log passed configuration and failed linking test-session-proof: all undefined symbols belong to Winsock and BCrypt. Replacing .dll.a with .a is insufficient: static archives need transitive system dependencies. OPENSSL_USE_STATIC_LIBS is now set before find_package(Qt6); OpenSSL::Crypto propagates crypt32, ws2_32 and bcrypt to every consumer, including QtCore tests. This repairs linking rather than adding packages. A new GitHub run must confirm the complete current UCRT64/Qt 6.12 build.
+
+Post-fix local checks passed: make all, static MINGW64 build, both C++ tests, embedded-image verification and system-only DLL imports. This does not certify the GitHub UCRT64 build.

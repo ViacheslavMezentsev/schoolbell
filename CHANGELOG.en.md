@@ -4,6 +4,8 @@
 
 ## Unreleased — 2026-11-25
 
+- Fixed static OpenSSL system dependencies: Winsock and BCrypt propagate to all consumers, including QtCore tests; static discovery is enabled before finding Qt.
+
 - Fixed the subsequent Qt 6.12 GitHub configuration failure: add WebP and TIFF required by QtGui plugin packages.
 
 - GitHub artifacts: use UCRT64 static Qt with matching compiler, CMake paths and dependencies; retain explicit local MINGW64 support.

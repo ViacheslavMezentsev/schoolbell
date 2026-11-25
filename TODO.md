@@ -6,7 +6,8 @@
 
 - [x] Сопоставлены локальные CMake cache/Ninja и владельцы библиотек pacman; добавлено сохранение диагностики GitHub при отказе. / Audited local CMake/Ninja dependencies and pacman ownership; preserve failed build diagnostics.
 
-- [ ] Повторить UCRT64-сборку с WebP/TIFF: окружение и helper-тесты прошли, Qt 6.12 остановил CMake на отсутствующем WrapWebP; TIFF также отсутствовал. Добавлены оба пакета. Предупреждение Graphs2DImpl остаётся отдельным наблюдением, его устранение не заявлено. / Retry with WebP/TIFF: environment and helper checks passed; Qt 6.12 configuration failed on missing WrapWebP. Graphs2DImpl warning remains a separate observation.
+- [x] WebP/TIFF: новый GitHub-запуск прошёл конфигурацию Qt и начал компиляцию. / The next GitHub run passed Qt configuration and started compilation.
+- [ ] Повторить UCRT64-сборку после исправления линковки OpenSSL: test-session-proof остановился на символах Winsock/BCrypt; зависимости исправлены на общей цели OpenSSL::Crypto. / Retry UCRT64 after fixing shared OpenSSL::Crypto dependencies: test-session-proof failed on Winsock/BCrypt symbols.
 
 
 - [x] Подготовлены явный упаковщик мастера, инструкции RU/EN и ручной workflow целевого MIPS/Windows выпуска без публикации. / Added allowlisted packager, RU/EN instructions and manual MIPS/Windows artifact workflow without publishing.
