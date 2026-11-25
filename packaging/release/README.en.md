@@ -86,9 +86,10 @@ extracted directory on suitable device storage, not installers.
 
 ## Status
 
-Transactions are tested locally with synthetic data and injected SSH, including execution
-of shell guards in an isolated filesystem. ZIP hardware acceptance, GUI hardware checks,
-Windows SSH transactions, corresponding dependency sources and audio rights remain open.
-`distribution_cleared=false` and `hardware_validated=false` remain. packages/ contains
-unchanged IPKs, licenses/ holds notices/open issues, RELEASE_NOTES.md describes the release,
-and manifest.json/input-manifest.json record provenance.
+GUI application installation with retained dependencies passed on 2026-11-24.
+Full dependency provisioning and manual hardware acceptance remain open. The owner
+authorized as-is publication on 2026-11-25; incomplete distribution materials do not
+block packaging/publication. distribution_cleared=false and hardware_validated=false
+record incomplete review/acceptance, not a publication prohibition. See manifest.publication
+and distribution_review. packages/ holds unchanged IPKs, licenses/ available notices
+and open items; RELEASE_NOTES.md and input-manifest.json preserve scope/provenance.

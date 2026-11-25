@@ -77,9 +77,23 @@ class ReleaseTests(unittest.TestCase):
                 digest,name=line.split('  ');self.assertEqual(hashlib.sha256(entries[name]).hexdigest(),digest)
             self.assertEqual(entries['packages/'+self.rows[0]['file']],(self.bundle/self.rows[0]['file']).read_bytes())
         with self.assertRaises(ValueError):self.build()
-    def test_public_release_blocked(self):
+    def test_prerelease_allowed_with_incomplete_distribution_review(self):
+        archive=self.build(candidate=False)
+        with zipfile.ZipFile(archive) as z:
+            m=json.loads(z.read('schoolbell-v5.1.127/manifest.json'))
+        self.assertEqual(m['status'],'prerelease')
+        self.assertTrue(m['publication']['authorized'])
+        self.assertFalse(m['publication']['automatic_upload'])
+        self.assertEqual(m['distribution_review'],{'complete':False,'blocking':False})
+        self.assertFalse(m['distribution_cleared'])
+        self.assertFalse(m['hardware_validated'])
+    def test_prerelease_keeps_integrity_gate(self):
+        (self.bundle/self.rows[0]['file']).write_bytes(b'corrupt')
         with self.assertRaises(ValueError):self.build(candidate=False)
         self.assertFalse((self.root/'out').exists())
+    def test_prerelease_reproducible(self):
+        a=self.build(candidate=False);b=self.build('second',candidate=False)
+        self.assertEqual(a.read_bytes(),b.read_bytes())
     def test_corrupt_input(self):
         (self.bundle/self.rows[0]['file']).write_bytes(b'corrupt')
         with self.assertRaises(ValueError):self.build()

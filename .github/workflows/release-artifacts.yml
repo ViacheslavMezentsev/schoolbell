@@ -1,0 +1,91 @@
+name: Schoolbell release artifacts
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  packages:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Host dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lua5.1 liblua5.1-0-dev gcc libc6-dev make python3 patch xz-utils
+      - run: make all
+      - name: Build actual MIPS clock and pinned dependencies
+        run: python3 scripts/build-target.py --download --out out/release-target
+      - name: Build package ZIP
+        run: |
+          python3 scripts/build-schoolbell-release.py --bundle out/release-target/bundle --out out/release-packages
+          cp out/release-target/script/modbus-schoolbell_*_all.ipk out/release-packages/
+          cp out/release-target/build-provenance.json out/release-packages/target-build.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: package-inputs
+          path: out/release-packages/
+          if-no-files-found: error
+          retention-days: 14
+  wizard:
+    needs: packages
+    runs-on: windows-2022
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/download-artifact@v4
+        with:
+          name: package-inputs
+          path: out/release-pair
+      - uses: msys2/setup-msys2@v2
+        id: msys2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            mingw-w64-x86_64-qt6-static
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-ninja
+      - name: Download pinned OpenWrt recovery image
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force out/firmware | Out-Null
+          Invoke-WebRequest 'https://downloads.openwrt.org/releases/19.07.9/targets/ramips/mt76x8/openwrt-19.07.9-ramips-mt76x8-tplink_tl-mr3020-v3-squashfs-tftp-recovery.bin' -OutFile out/firmware/openwrt.bin
+          if ((Get-FileHash out/firmware/openwrt.bin -Algorithm SHA256).Hash.ToLower() -ne 'e621da95d07d25102b1016a28400122f5c92bce9830d5cc061323e306b6204fa') {throw 'Firmware checksum mismatch'}
+      - name: Build static wizard and run local helper checks
+        shell: pwsh
+        env:
+          MSYS_ROOT: ${{ steps.msys2.outputs.msys2-location }}
+        run: ./tools/setup/gui/build-windows.ps1 -MsysRoot $env:MSYS_ROOT -RecoveryImage (Resolve-Path out/firmware/openwrt.bin)
+      - name: Package allowlisted portable files
+        shell: pwsh
+        run: |
+          python scripts/build-wizard-release.py --build out/setup-gui-external --out out/release-wizard
+          if ($LASTEXITCODE) {throw 'Wizard packaging failed'}
+          Copy-Item out/release-wizard/*.zip out/release-pair/
+          python scripts/finalize-release-artifacts.py --directory out/release-pair
+          if ($LASTEXITCODE) {throw 'Artifact checks failed'}
+      - name: Extracted portable smoke test (no network or router)
+        shell: pwsh
+        run: |
+          $archive = Get-Item out/release-wizard/*.zip
+          Expand-Archive $archive.FullName 'out/portable check'
+          $exe = Get-ChildItem 'out/portable check' -Filter schoolbell-setup-wizard.exe -Recurse
+          $result = Start-Process -FilePath $exe.FullName -ArgumentList '--check-firmware' -WindowStyle Hidden -Wait -PassThru
+          if ($result.ExitCode) {throw 'Extracted firmware check failed'}
+          & (Join-Path $exe.DirectoryName 'python/python.exe') -c 'import package_worker, flash_worker, network_elevate; print("PORTABLE IMPORTS OK")'
+          if ($LASTEXITCODE) {throw 'Portable runtime imports failed'}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: schoolbell-windows-preview-${{ github.sha }}
+          path: out/release-pair/
+          if-no-files-found: error
+          retention-days: 30
+# Deliberately no tag, release creation, device access, or contents:write permission.

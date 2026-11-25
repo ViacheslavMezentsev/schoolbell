@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Package a verified offline directory into a deterministic release candidate. No network/device access."""
+"""Package a verified offline directory into a deterministic release archive. No network/device access."""
 import argparse
 import copy
 import hashlib
@@ -96,15 +96,14 @@ def build(bundle, out, candidate=False):
     commit = subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
     dirty = bool(subprocess.check_output(['git','status','--porcelain','--untracked-files=normal'],cwd=ROOT))
     json.loads(files['licenses/DEPENDENCIES.json'].read_bytes())
-    if not candidate:
-        # Explicitly closed until license, audio and hardware release evidence is implemented.
-        raise ValueError('Public release gate is not implemented; use --candidate for local validation only')
     notes = ROOT / ('docs/releases/v' + version + '.md')
     if not notes.is_file():
         raise ValueError('Missing release notes for package version')
     manifest = copy.deepcopy(doc)
     manifest.update(format=1, kind='schoolbell-package-bundle', version=version, tag='v'+version,
-                    status='candidate', distribution_cleared=False,
+                    status='candidate' if candidate else 'prerelease', distribution_cleared=False,
+                    publication={'authorized':True,'decision_date':'2026-11-25','authority':'repository-owner','automatic_upload':False},
+                    distribution_review={'complete':False,'blocking':False},
                     assembly_commit=commit, assembly_dirty=dirty,
                     wizard={'minimum_version':'0.2.1','bundle_format':1,'integration':'fresh-pilot'},
                     supported_boards=['tplink,tl-mr3020-v3'],
@@ -154,6 +153,6 @@ if __name__ == '__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--bundle',required=True,type=Path)
     parser.add_argument('--out',required=True,type=Path)
-    parser.add_argument('--candidate',action='store_true',help='local candidate only; not distribution clearance')
+    parser.add_argument('--candidate',action='store_true',help='mark as local candidate rather than owner-authorized prerelease; neither mode uploads')
     args=parser.parse_args()
     build(args.bundle,args.out,args.candidate)

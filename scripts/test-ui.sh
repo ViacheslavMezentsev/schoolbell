@@ -24,3 +24,9 @@ python3 tools/setup/test-network-plan.py
 python3 tools/setup/gui/test-network-worker.py
 
 python3 tools/setup/gui/test-network-elevate.py
+
+python3 tools/setup/gui/test-flash-worker.py
+
+python3 tests/test_wizard_release.py
+
+python3 tests/test_release_pair.py
