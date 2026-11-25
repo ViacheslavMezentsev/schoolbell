@@ -61,6 +61,8 @@ jobs:
             mingw-w64-ucrt-x86_64-harfbuzz
             mingw-w64-ucrt-x86_64-libb2
             mingw-w64-ucrt-x86_64-libjpeg-turbo
+            mingw-w64-ucrt-x86_64-libtiff
+            mingw-w64-ucrt-x86_64-libwebp
             mingw-w64-ucrt-x86_64-libpng
             mingw-w64-ucrt-x86_64-openssl
             mingw-w64-ucrt-x86_64-pcre2
@@ -78,6 +80,14 @@ jobs:
         env:
           MSYS_ROOT: ${{ steps.msys2.outputs.msys2-location }}
         run: ./tools/setup/gui/build-windows.ps1 -MsysRoot $env:MSYS_ROOT -MsysEnvironment UCRT64 -RecoveryImage (Resolve-Path out/firmware/openwrt.bin)
+      - name: Preserve build diagnostics even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wizard-build-diagnostics-${{ github.sha }}
+          path: out/setup-gui-diagnostics/
+          if-no-files-found: warn
+          retention-days: 14
       - name: Package allowlisted portable files
         shell: pwsh
         run: |

@@ -84,3 +84,25 @@ The system-DLL-only check remains. Run 45612351368 passed packages but wizard fa
 before compilation: `target not found: mingw-w64-x86_64-qt6-static`.
 Rerunning that old run does not update its code; start a new workflow on main after landing.
 [UCRT64 package](https://packages.msys2.org/packages/mingw-w64-ucrt-x86_64-qt6-static).
+
+2026-11-25 follow-up: UCRT64 and helper tests passed. Qt 6.12 loaded graphics
+plugin metadata during find_package and failed on WrapWebP; TIFF was also absent.
+Added libwebp and libtiff. Excluding imageformats at link time does not prevent
+configuration-time dependency discovery. The Graphs2DImpl warning was not the
+terminal error and has not been separately fixed. Full success requires a new
+GitHub run after landing.
+
+Local audit covered configure output, CMakeCache.txt, build.ninja and pacman file
+owners. WebP/TIFF existed on the development PC but were missing in CI. Other
+external libraries are covered; vulkan-loader comes through qt6-static. Comparing
+Qt 6.11.2/MINGW64 with the Qt 6.12/UCRT64 log is not full local UCRT64 acceptance.
+The workflow preserves wizard-build-diagnostics on failure: configuration, verbose
+link/build output, Ninja graph, CMake configuration log/cache and package versions.
+These diagnostics are excluded from the public wizard ZIP.
+
+Successful local linking uses Brotli, OpenSSL, JPEG, PNG, HarfBuzz, Graphite2,
+FreeType, bzip2, zlib, libb2 and PCRE2. TIFF, WebP and Vulkan also participate in
+component discovery; excluding a plugin from the EXE does not remove Qt's
+configuration-time requirements. Tools: GCC/binutils, CMake, Ninja and pkgconf;
+GCC pulls in binutils. Post-fix make all, fresh static MINGW64 build and six-file
+diagnostic capture passed. Full UCRT64 compilation remains a GitHub check.

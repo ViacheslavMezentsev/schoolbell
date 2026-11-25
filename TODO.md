@@ -4,6 +4,11 @@
 
 ## Артефакты GitHub / GitHub artifacts
 
+- [x] Сопоставлены локальные CMake cache/Ninja и владельцы библиотек pacman; добавлено сохранение диагностики GitHub при отказе. / Audited local CMake/Ninja dependencies and pacman ownership; preserve failed build diagnostics.
+
+- [ ] Повторить UCRT64-сборку с WebP/TIFF: окружение и helper-тесты прошли, Qt 6.12 остановил CMake на отсутствующем WrapWebP; TIFF также отсутствовал. Добавлены оба пакета. Предупреждение Graphs2DImpl остаётся отдельным наблюдением, его устранение не заявлено. / Retry with WebP/TIFF: environment and helper checks passed; Qt 6.12 configuration failed on missing WrapWebP. Graphs2DImpl warning remains a separate observation.
+
+
 - [x] Подготовлены явный упаковщик мастера, инструкции RU/EN и ручной workflow целевого MIPS/Windows выпуска без публикации. / Added allowlisted packager, RU/EN instructions and manual MIPS/Windows artifact workflow without publishing.
 - [x] Локально: make all, 7 тестов упаковщика и 6 тестов пары, целевая MIPS-сборка, статическая сборка EXE, распаковка в путь с пробелами/кириллицей, --check-firmware и импорты вложенного Python — PASS. Не проверка чистой Windows или GitHub runner. / Local checks passed; not clean-host or remote-runner acceptance.
 - [x] Исправление окружения проверено локально: make all, статическая сборка MINGW64 и ZIP — PASS; все 18 UCRT64-пакетов найдены в актуальной базе MSYS2. Полная сборка UCRT64 на GitHub ещё не проверена. / Local checks passed; full UCRT64 GitHub build remains pending.

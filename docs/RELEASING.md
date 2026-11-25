@@ -143,3 +143,26 @@ GitHub использует UCRT64 и пакет `mingw-w64-ucrt-x86_64-qt6-stat
 `target not found: mingw-w64-x86_64-qt6-static`. Повтор старого запуска код не обновит;
 после слияния исправления нужен новый Run workflow на main.
 [Пакет UCRT64](https://packages.msys2.org/packages/mingw-w64-ucrt-x86_64-qt6-static).
+
+25.11.2026, следующий запуск: UCRT64 и helper-тесты прошли. Qt 6.12 загрузил
+описания графических плагинов при find_package и остановился на WrapWebP; TIFF
+также отсутствовал. В список добавлены libwebp и libtiff. Исключение imageformats
+при линковке не отменяет чтение зависимостей при конфигурации. Предупреждение
+Graphs2DImpl в этом журнале не является итоговой ошибкой и отдельно не исправлялось.
+Подтверждение полного успеха требует нового GitHub-запуска после слияния.
+
+Локальная сверка: разобраны configure.log, CMakeCache.txt, build.ninja и владельцы
+файлов в pacman. WebP/TIFF были установлены на рабочем ПК и отсутствовали в CI.
+Остальные внешние библиотеки покрыты списком, vulkan-loader приходит через qt6-static.
+Это сопоставление Qt 6.11.2/MINGW64 с журналом Qt 6.12/UCRT64, не полный локальный
+PASS UCRT64. Workflow сохраняет wizard-build-diagnostics даже при отказе: configure.log,
+подробную строку линковки в build.log/build.ninja, CMakeConfigureLog.yaml, cache и
+список версий пакетов. Эти файлы не входят в публичный ZIP мастера.
+
+Состав внешних библиотек успешной локальной линковки: Brotli, OpenSSL, JPEG,
+PNG, HarfBuzz, Graphite2, FreeType, bzip2, zlib, libb2 и PCRE2. TIFF, WebP и
+Vulkan нужны также на этапе обнаружения компонентов; исключение плагина из
+конечного EXE не освобождает от конфигурационных зависимостей Qt. Инструменты:
+GCC/binutils, CMake, Ninja, pkgconf; binutils устанавливается вместе с GCC.
+Проверки после правки: make all, новая статическая сборка MINGW64 и сохранение
+шести диагностических файлов — PASS. Полная сборка UCRT64 остаётся проверкой GitHub.

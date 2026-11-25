@@ -4,6 +4,8 @@
 
 ## Unreleased — 2026-11-25
 
+- Fixed the subsequent Qt 6.12 GitHub configuration failure: add WebP and TIFF required by QtGui plugin packages.
+
 - GitHub artifacts: use UCRT64 static Qt with matching compiler, CMake paths and dependencies; retain explicit local MINGW64 support.
 
 - Added manual GitHub artifact workflow and allowlisted portable wizard 0.3.0 packaging; publication stays separate. Fresh 5.1.127 installation passed after manual SSH host-key verification.

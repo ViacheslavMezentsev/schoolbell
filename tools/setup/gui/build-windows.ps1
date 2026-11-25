@@ -28,12 +28,17 @@ $image=if ($RecoveryImage) {$RecoveryImage} else {Join-Path $repo 'out/setup-5.1
 & (Join-Path $buildPython 'python.exe') (Join-Path $source 'prepare-firmware.py') --openwrt $image --oem (Join-Path $PSScriptRoot '../vendor/tl-mr3020-eu-v3.30-250625.zip') --out (Join-Path $source 'embedded-firmware')
 if ($LASTEXITCODE) {throw 'Embedded firmware preparation failed'}
 Copy-Item (Join-Path $PSScriptRoot '../vendor/photos/v3.30/tl-mr3020-3.jpg') (Join-Path $source 'embedded-firmware/reset.jpg')
+$diagnostics = Join-Path $repo 'out/setup-gui-diagnostics'
+New-Item -ItemType Directory -Force $diagnostics | Out-Null
 $oldPath = $env:PATH
 try {
+ & (Join-Path $MsysRoot 'usr/bin/pacman.exe') -Q | Set-Content (Join-Path $diagnostics 'msys2-packages.txt')
+ if ($LASTEXITCODE) {throw 'Cannot record installed build dependencies'}
+
  $env:PATH = "$bin;$oldPath"
- & "$bin\cmake.exe" -S $source -B $build -G Ninja "-DCMAKE_PREFIX_PATH=$qt;$prefix" "-DCMAKE_C_COMPILER=$bin/gcc.exe" "-DCMAKE_CXX_COMPILER=$bin/g++.exe" "-DCMAKE_MAKE_PROGRAM=$bin/ninja.exe" -DCMAKE_BUILD_TYPE=Release
+ & "$bin\cmake.exe" -S $source -B $build -G Ninja "-DCMAKE_PREFIX_PATH=$qt;$prefix" "-DCMAKE_C_COMPILER=$bin/gcc.exe" "-DCMAKE_CXX_COMPILER=$bin/g++.exe" "-DCMAKE_MAKE_PROGRAM=$bin/ninja.exe" -DCMAKE_BUILD_TYPE=Release 2>&1 | Tee-Object -FilePath (Join-Path $diagnostics 'configure.log')
  if ($LASTEXITCODE) { throw 'CMake configuration failed' }
- & "$bin\cmake.exe" --build $build -j 4
+ & "$bin\cmake.exe" --build $build -j 4 --verbose 2>&1 | Tee-Object -FilePath (Join-Path $diagnostics 'build.log')
  if ($LASTEXITCODE) { throw 'Build failed' }
  & (Join-Path $build 'test-session-proof.exe')
  if ($LASTEXITCODE) { throw 'Session proof tests failed' }
@@ -82,4 +87,10 @@ try {
  $dlls | Set-Content (Join-Path $out 'imports.txt')
  Get-FileHash (Join-Path $out 'schoolbell-setup-wizard.exe') -Algorithm SHA256
  Write-Host "Built: $out\schoolbell-setup-wizard.exe"
-} finally { $env:PATH = $oldPath }
+} finally {
+ $env:PATH = $oldPath
+ foreach ($relative in @('CMakeCache.txt','build.ninja','CMakeFiles/CMakeConfigureLog.yaml')) {
+  $inputFile = Join-Path $build $relative
+  if (Test-Path -LiteralPath $inputFile) {Copy-Item -LiteralPath $inputFile -Destination (Join-Path $diagnostics ([IO.Path]::GetFileName($relative))) -Force}
+ }
+}
