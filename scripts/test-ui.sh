@@ -15,6 +15,7 @@ python3 tests/test_release_plan.py
 python3 tests/test_zip_install.py
 
 python3 tests/test_gui_zip.py
+python3 tests/test_gui_retry.py
 
 python3 tools/setup/gui/test-operation-protocol.py
 python3 tools/setup/gui/test-session-recovery.py

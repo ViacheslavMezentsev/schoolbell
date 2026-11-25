@@ -11,7 +11,7 @@ inline bool valid(const QJsonObject &o,const QString &id,const QString &session,
  if(seq<1 || seq>100000 || seq!=int(seq))return false;
  const auto kind=o.value("kind").toString(),value=o.value("value").toString();
  if(kind=="phase")return QStringList{"starting","validating-zip","preparing","backup","installing","verifying","archiving"}.contains(value);
- if(kind=="failed")return QStringList{"operation-failed","timeout","transport-failed","validation-failed"}.contains(value);
+ if(kind=="failed")return QStringList{"operation-failed","timeout","transport-failed","validation-failed","authentication-failed"}.contains(value);
  if(kind=="cancelled")return value=="cancelled" && action!="install" && action!="new-session" && action!="recover-session";
  const QMap<QString,QStringList> outcomes={{"inspect-zip",{"idle"}},{"prepare",{"ready","current"}},{"install",{"done"}},{"verify",{"done","not-applied"}},{"backup",{"backedup"}},{"new-session",{"idle"}},{"recover-session",{"uncertain","error"}}};
  return kind=="completed" && outcomes.value(action).contains(value);

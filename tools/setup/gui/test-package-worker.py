@@ -83,7 +83,7 @@ class WorkerTests(unittest.TestCase):
   with self.assertRaises(ValueError):w.run(self.args)
  def test_concurrent_operation_blocks(self):
   Path(self.args.session).mkdir();(Path(self.args.session)/'operation.lock').write_text('other')
-  with self.assertRaises(FileExistsError):w.run(self.args)
+  with self.assertRaises(ValueError):w.run(self.args)
  def test_reprepare_does_not_erase_write_evidence(self):
   w.run(self.args);(Path(self.args.session)/'write-started').write_text('unknown')
   with self.assertRaises(ValueError):w.run(self.args)
@@ -102,8 +102,8 @@ class WorkerTests(unittest.TestCase):
   self.sound='changed';self.args.action='verify'
   with self.assertRaises(subprocess.CalledProcessError):w.run(self.args)
   self.assertFalse((Path(self.args.session)/'verified.json').exists())
-  self.args.action='new-session'
-  with self.assertRaises(FileNotFoundError):w.run(self.args)
+  self.args.action='new-session';w.run(self.args)
+  self.assertTrue(list(Path(self.args.session).parent.glob('session-history/*/write-started')))
  def test_archive_verified_session_preserves_backup(self):
   w.run(self.args);self.args.action='install';w.run(self.args)
   folder=Path(self.args.session);before=(folder/'backup.tar').read_bytes()
@@ -114,17 +114,18 @@ class WorkerTests(unittest.TestCase):
   self.assertFalse((history[0]/'operation.lock').exists())
   self.assertEqual(list(folder.iterdir()),[])
   self.assertEqual(self.writes,1)
- def test_archive_unknown_write_refused(self):
+ def test_archive_unknown_write_preserved(self):
   w.run(self.args);folder=Path(self.args.session);(folder/'write-started').write_text('unknown')
   self.args.action='new-session'
-  with self.assertRaises((ValueError,FileNotFoundError)):w.run(self.args)
-  self.assertTrue((folder/'backup.tar').exists())
- def test_archive_stale_proof_refused(self):
+  w.run(self.args)
+  self.assertTrue(list(folder.parent.glob('session-history/*/backup.tar')))
+  self.assertEqual(next(folder.parent.glob('session-history/*/write-started')).read_text(),'unknown')
+ def test_archive_stale_proof_preserved(self):
   w.run(self.args);self.args.action='install';w.run(self.args)
   folder=Path(self.args.session);(folder/'write-started').write_text('another write')
   self.args.action='new-session'
-  with self.assertRaises(ValueError):w.run(self.args)
-  self.assertTrue((folder/'prepared.json').exists())
+  w.run(self.args)
+  self.assertTrue(list(folder.parent.glob('session-history/*/prepared.json')))
  def test_archive_prepared_session_without_writing(self):
   w.run(self.args);self.args.action='new-session';w.run(self.args)
   self.assertEqual(self.writes,0)
@@ -133,13 +134,13 @@ class WorkerTests(unittest.TestCase):
  def test_stable_guard_blocks_new_session(self):
   folder=Path(self.args.session);guard=folder.parent/(folder.name+'.guard');guard.write_text('busy')
   self.args.action='new-session'
-  with self.assertRaises(FileExistsError):w.run(self.args)
+  with self.assertRaises(ValueError):w.run(self.args)
   self.assertTrue(guard.exists())
- def test_archive_corrupt_backup_refused(self):
+ def test_archive_corrupt_backup_preserved(self):
   w.run(self.args);self.args.action='install';w.run(self.args)
   (Path(self.args.session)/'backup.tar').write_bytes(b'bad')
-  self.args.action='new-session'
-  with self.assertRaises(ValueError):w.run(self.args)
+  self.args.action='new-session';w.run(self.args)
+  self.assertEqual(next(Path(self.args.session).parent.glob('session-history/*/backup.tar')).read_bytes(),b'bad')
  def test_current_version_never_writes_or_prepares_install(self):
   self.version='5.1.127';w.run(self.args)
   self.assertEqual(self.writes,0)
@@ -150,4 +151,37 @@ class WorkerTests(unittest.TestCase):
   with self.assertRaises(subprocess.CalledProcessError):w.run(self.args)
   self.assertEqual(self.writes,0)
   self.assertFalse(any('ALREADY CURRENT.' in str(c) for c in w.emit.call_args_list))
+class InstallMessageTests(unittest.TestCase):
+ def test_success_has_url_without_error_warning(self):
+  from unittest.mock import patch
+  from types import SimpleNamespace
+  args=SimpleNamespace(session='/unused',action='install',zip='chosen.zip')
+  with patch.object(w,'run',return_value='done'),patch.object(w,'emit') as output:
+   self.assertEqual(w.dispatch(args),'done')
+   messages=[call.args[0] for call in output.call_args_list]
+   self.assertEqual(len(messages),1)
+   self.assertIn('http://192.168.1.1/cgi-bin/luci/admin/schoolbell',messages[0])
+ def test_failure_has_url_and_warning(self):
+  from unittest.mock import patch
+  from types import SimpleNamespace
+  args=SimpleNamespace(session='/unused',action='install',zip='chosen.zip')
+  with patch.object(w,'run',side_effect=ValueError('test failure')),patch.object(w,'emit') as output:
+   with self.assertRaises(ValueError):w.dispatch(args)
+   self.assertEqual(len(output.call_args_list),2)
+   self.assertIn('не подтверждена',output.call_args_list[-1].args[0])
+
+class AuthenticationTests(unittest.TestCase):
+ def test_password_rejection_has_specific_message(self):
+  from unittest.mock import patch
+  from operation_protocol import AuthenticationError
+  error=subprocess.CalledProcessError(255,['ssh'],stderr=b'root: Permission denied (publickey,password).')
+  with patch.object(w.subprocess,'run',side_effect=error):
+   with self.assertRaisesRegex(AuthenticationError,'Новый сеанс не нужен'):w.ssh_run(['ssh'])
+ def test_connection_and_remote_permissions_are_not_password_errors(self):
+  from unittest.mock import patch
+  for code,message in [(255,b'Connection timed out'),(255,b'Host key verification failed'),(1,b'Permission denied')]:
+   error=subprocess.CalledProcessError(code,['ssh'],stderr=message)
+   with patch.object(w.subprocess,'run',side_effect=error):
+    with self.assertRaises(subprocess.CalledProcessError):w.ssh_run(['ssh'])
+
 if __name__=='__main__':unittest.main()

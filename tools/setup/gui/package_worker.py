@@ -2,7 +2,7 @@
 import argparse, hashlib, json, os, re, subprocess, sys, tarfile, time, uuid
 from pathlib import Path
 from session_lock import lease, marker, recover
-from operation_protocol import Operation, Cancelled, checkpoint, phase
+from operation_protocol import Operation, Cancelled, AuthenticationError, checkpoint, phase
 
 CHECK = """set -eu
 . /etc/openwrt_release
@@ -34,6 +34,23 @@ def digest(path):
 def emit(message):
     print(message, flush=True)
 
+AUTH_MESSAGE = 'Не удалось войти как root. Проверьте пароль администратора OpenWrt (тот же, что для LuCI), исправьте его в поле и повторите действие. Новый сеанс не нужен.'
+
+def ssh_run(command, **kwargs):
+    """Only an SSH authentication rejection is a password error, not any exit 255."""
+    try:
+        result=subprocess.run(command,check=True,timeout=240,stderr=subprocess.PIPE,**kwargs)
+    except subprocess.CalledProcessError as error:
+        diagnostic=error.stderr or b''
+        if isinstance(diagnostic,bytes): diagnostic=diagnostic.decode('utf8',errors='replace')
+        if error.returncode==255 and 'permission denied' in diagnostic.lower():
+            raise AuthenticationError(AUTH_MESSAGE) from error
+        if diagnostic: emit(diagnostic[-32768:])
+        raise
+    diagnostic=getattr(result,'stderr',None)
+    if diagnostic: emit(diagnostic.decode('utf8',errors='replace') if isinstance(diagnostic,bytes) else diagnostic)
+    return result
+
 def route(source,index):
     import ipaddress
     ipaddress.IPv4Address(source)
@@ -54,7 +71,7 @@ def run_core(args):
     root=Path(__file__).resolve().parent
     if args.action!='backup' and (args.action=='inspect-zip' or getattr(args,'zip','') or (Path(args.session)/'zip-binding.json').exists() or (Path(args.session)/'zip-session').exists()):
         import zip_worker
-        return zip_worker.run_core(args,root)
+        return zip_worker.run_retry(args,root) if args.action in ('prepare','install','verify') else zip_worker.run_core(args,root)
     if args.action in ("verify","install"):
         (Path(args.session)/"verified.json").unlink(missing_ok=True)
     state=Path(args.session);state.mkdir(parents=True,exist_ok=True)
@@ -71,11 +88,13 @@ def run_core(args):
     def remote(command, **kw):
         checkpoint(args)
         route(args.source,args.index)
-        result=subprocess.run(ssh+[command],check=True,timeout=240,**kw)
+        result=ssh_run(ssh+[command],**kw)
         checkpoint(args)
         return result
     if args.action=='backup':
-        if (state/'write-started').exists() or (state/'zip-session/write-started').exists(): raise ValueError('Verify and archive the earlier write first')
+        import zip_worker
+        route(args.source,args.index)
+        zip_worker.ensure_host(args,state,emit)
         import device_backup
         snapshot="if test -f /usr/share/schoolbell-editor/lua/schoolbell/automatic_store.lua; then\n"+SNAPSHOT+"else echo no-schoolbell; fi\n"
         phase(args,"backup")
@@ -198,6 +217,7 @@ def archive_allowed(folder):
 def run(args):
     folder=Path(args.session)
     with lease(folder):
+        recover(folder)  # OS lease proves no live worker owns these GUI markers.
         if args.action=="recover-session":
             result=recover(folder)
             emit("Локальный сеанс восстановлен. Установка не повторялась; проверьте результат или начните новый сеанс.")
@@ -218,7 +238,6 @@ def run_locked(args):
         lock=candidate
         if args.action=='new-session':
             phase(args,'archiving')
-            archive_allowed(folder)
             archive=folder.parent/'session-history'
             archive.mkdir(exist_ok=True)
             destination=archive/(time.strftime('%Y%m%d-%H%M%S')+'-'+uuid.uuid4().hex[:12])
@@ -239,14 +258,23 @@ def dispatch(args):
     folder=Path(args.session)
     if args.action in ('prepare','install') and not (getattr(args,'zip','') or (folder/'zip-binding.json').exists()):
         raise ValueError('Select an external ZIP; embedded package installation is no longer supported')
-    return run(args)
+    succeeded=False
+    try:
+        result=run(args)
+        succeeded=result=='done'
+        return result
+    finally:
+        if args.action=='install':
+            emit('Интерфейс Школьника: http://192.168.1.1/cgi-bin/luci/admin/schoolbell')
+            if not succeeded:
+                emit('Установка не подтверждена; доступность интерфейса нужно проверить.')
 
 if __name__=='__main__':
     from worker_job import attach
     attach()
     p=argparse.ArgumentParser()
     p.add_argument('action',choices=['prepare','install','verify','new-session','backup','inspect-zip','recover-session']);p.add_argument('--source',required=True);p.add_argument('--index',required=True,type=int);p.add_argument('--session',required=True);p.add_argument('--zip',default='')
-    p.add_argument('--operation-id',default='');p.add_argument('--session-id',default='')
+    p.add_argument('--trusted-host-key',default='');p.add_argument('--operation-id',default='');p.add_argument('--session-id',default='')
     try:
         args=p.parse_args()
         if args.operation_id or args.session_id:

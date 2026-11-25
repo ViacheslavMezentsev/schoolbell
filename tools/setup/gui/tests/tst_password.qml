@@ -9,6 +9,8 @@ Item {
   property string sourceIP: "192.0.2.2"
   property int adapterIndex: 1
   property bool busy: false
+  property bool installationAttempted:false
+  property string hostKeyWarning:""
   property bool interrupted:false
   function recoverSession() {}
   property bool canCancel:false
@@ -38,6 +40,16 @@ Item {
  }
  QtObject {
   id:firmwareBackend
+  property string stage:"connection"
+  property string countdown:""
+  property string logSaved:""
+  property string flashBlockReason:""
+  property bool canOpenLog:false
+  property bool networkRestored:false
+  property bool needsNetworkRestore:false
+  function newSession(){message="";stage="connection"}
+  function selectAdapter(guid,label){clearResult()}
+  function modelChoice(checked){clearResult()}
   property bool canPrepare:false
   property bool canFlash:false
   property bool canConfirm:false
@@ -78,19 +90,38 @@ Item {
    let dialog=findChild(route,"firmware-confirm");verify(dialog.visible)
    dialog.rejected();dialog.close();compare(firmwareBackend.helperAction,"")
    button.clicked();dialog.accepted();dialog.close();compare(firmwareBackend.helperAction,"flash")
-   firmwareBackend.busy=true;verify(!button.enabled);window.navigate("home");compare(window.route,"openwrt")
+   firmwareBackend.busy=true;firmwareBackend.canFlash=false;verify(!button.enabled);window.navigate("home");compare(window.route,"openwrt")
    firmwareBackend.busy=false;firmwareBackend.canFlash=false;window.destroy()
   }
-  function test_interrupted_session_has_recovery_action() {
+  function test_old_state_never_blocks_install() {
    pane.visible=true;pane.helpVisible=false;realBackend.busy=false
-   realBackend.interrupted=true
-   verify(findChild(pane,"recover-session").visible)
-   verify(!findChild(pane,"prepare-button").enabled)
-   verify(!findChild(pane,"install-button").enabled)
-   verify(!findChild(pane,"new-session").enabled)
-   realBackend.busy=true;verify(!findChild(pane,"recover-session").visible)
-   realBackend.busy=false;realBackend.interrupted=false
-   verify(!findChild(pane,"recover-session").visible)
+   pane.selectedSource="192.0.2.2";pane.selectedIndex=1
+   realBackend.bundlePath="fixture.zip"
+   let field=findChild(pane,"router-password");field.text="test-only"
+   for(let state of ["idle","error","authentication-error","uncertain","done","current","not-applied"]){
+    realBackend.stage=state;realBackend.interrupted=true;realBackend.bundleLocked=true
+    verify(findChild(pane,"install-button").enabled)
+    verify(findChild(pane,"bundle-picker").enabled)
+    verify(findChild(pane,"new-session").enabled)
+   }
+   realBackend.busy=true;verify(!findChild(pane,"install-button").enabled)
+   realBackend.busy=false;realBackend.interrupted=false;realBackend.bundleLocked=false;field.clear()
+  }
+  function test_blue_indeterminate_progress() {
+   pane.visible=true;pane.helpVisible=false
+   let bar=findChild(pane,"package-progress"),segment=findChild(pane,"package-progress-segment")
+   realBackend.busy=false;verify(!bar.visible)
+   realBackend.busy=true;verify(bar.visible)
+   let scroll=findChild(pane,"work-scroll")
+   waitForRendering(scroll)
+   scroll.contentItem.contentY=Math.max(0,bar.mapToItem(scroll.contentItem,0,0).y-100)
+   waitForRendering(bar)
+   for(let mode of ["light","dark"]){
+    theme.mode=mode;compare(segment.color,theme.accent)
+    let before=segment.x;tryVerify(function(){return segment.x!==before},2000)
+    verify(segment.width>0);verify(segment.width<bar.width)
+   }
+   realBackend.busy=false;verify(!bar.visible)
   }
   function test_cancel_button_tracks_operation() {
    pane.visible=true;pane.helpVisible=false
@@ -155,21 +186,17 @@ Item {
    field.clear();pane.connectionSelected=false
   }
   function test_zip_selection_and_locking() {
-   realBackend.stage="idle";realBackend.bundleLocked=false;realBackend.bundleReady=true
-   pane.visible=true;pane.helpVisible=false
-   let field=findChild(pane,"router-password"), picker=findChild(pane,"bundle-picker")
-   field.text="test-secret";picker.currentIndex=0;picker.activated(0)
-   compare(field.text,"");compare(realBackend.bundlePath,"fixture.zip")
-   verify(!findChild(pane,"prepare-button").enabled)
-   realBackend.bundleVersion="5.2.3";realBackend.bundleReady=true
-   compare(findChild(pane,"install-button").text,"2. Установить 5.2.3")
-   realBackend.bundleLocked=true;realBackend.stage="ready";field.text="retained"
-   verify(!picker.enabled);verify(!findChild(pane,"prepare-button").enabled)
-   verify(findChild(pane,"install-button").enabled)
-   realBackend.stage="uncertain";verify(!findChild(pane,"install-button").enabled)
-   verify(!findChild(pane,"new-session").enabled)
-   realBackend.bundleLocked=false;realBackend.stage="idle";realBackend.selectBundle("")
-   realBackend.bundleVersion="5.1.127";field.clear()
+   realBackend.stage="idle";realBackend.busy=false
+   pane.visible=true;pane.helpVisible=false;pane.selectedSource="192.0.2.2"
+   let field=findChild(pane,"router-password"),picker=findChild(pane,"bundle-picker")
+   field.text="retained";picker.currentIndex=0;picker.activated(0)
+   compare(field.text,"retained");compare(realBackend.bundlePath,"fixture.zip")
+   realBackend.bundleVersion="5.2.3"
+   compare(findChild(pane,"install-button").text,"Установить Школьник 5.2.3")
+   realBackend.stage="uncertain";verify(findChild(pane,"install-button").enabled)
+   verify(findChild(pane,"new-session").enabled)
+   realBackend.busy=true;verify(!picker.enabled)
+   realBackend.busy=false;realBackend.stage="idle";realBackend.bundleVersion="5.1.127";field.clear()
   }
   function test_help_and_small_window() {
    pane.visible=true;pane.helpVisible=false;realBackend.stage="current"

@@ -46,8 +46,8 @@ class GuiZipTests(unittest.TestCase):
         self.assertEqual(self.tx.writes,1)
     def test_selection_and_prepare_locked(self):
         self.prepare()
-        for action in ('inspect-zip','prepare'):
-            with self.assertRaises(ValueError):self.run_action(action)
+        self.run_action('inspect-zip')
+        with self.assertRaises(ValueError):self.run_action('prepare')
     def test_failed_verify_invalidates_archive_permission(self):
         self.prepare();self.run_action('install');self.args.index=9
         with self.assertRaises(ValueError):self.run_action('verify')
@@ -68,7 +68,7 @@ class GuiZipTests(unittest.TestCase):
         with self.assertRaises(ValueError):gui.archive_allowed(self.folder)
     def test_legacy_session_not_reused(self):
         (self.folder/'prepared.json').write_text('{}')
-        with self.assertRaises(ValueError):self.run_action('inspect-zip')
+        self.run_action('inspect-zip')
         self.assertEqual(self.tx.calls,[])
 
 if __name__=='__main__':unittest.main()

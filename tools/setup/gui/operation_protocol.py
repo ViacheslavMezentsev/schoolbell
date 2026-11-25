@@ -10,6 +10,9 @@ RESULTS = {
     'install': {'done'}, 'verify': {'done', 'not-applied'},
     'backup': {'backedup'}, 'recover-session': {'uncertain','error'}, 'new-session': {'idle'},
 }
+class AuthenticationError(Exception):
+    pass
+
 class Cancelled(Exception):
     pass
 
@@ -57,7 +60,7 @@ class Operation:
             self.event('cancelled','cancelled')
             raise
         except Exception as error:
-            code='timeout' if isinstance(error,subprocess.TimeoutExpired) else 'transport-failed' if isinstance(error,subprocess.CalledProcessError) else 'validation-failed' if isinstance(error,ValueError) else 'operation-failed'
+            code='authentication-failed' if isinstance(error,AuthenticationError) else 'timeout' if isinstance(error,subprocess.TimeoutExpired) else 'transport-failed' if isinstance(error,subprocess.CalledProcessError) else 'validation-failed' if isinstance(error,ValueError) else 'operation-failed'
             self.event('failed',code)
             raise
 

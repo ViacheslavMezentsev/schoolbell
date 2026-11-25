@@ -31,6 +31,8 @@
 #endif
 class Backend : public QObject {
  Q_OBJECT
+ Q_PROPERTY(bool installationAttempted READ installationAttempted NOTIFY changed)
+ Q_PROPERTY(QString hostKeyWarning READ hostKeyWarning NOTIFY changed)
  Q_PROPERTY(bool interrupted READ interrupted NOTIFY changed)
  Q_PROPERTY(bool canCancel READ canCancel NOTIFY changed)
  Q_PROPERTY(QString operationMessage READ operationMessage NOTIFY changed)
@@ -59,7 +61,7 @@ class Backend : public QObject {
  QString activeOperation,activeAction,sessionToken,eventFile,eventPhase;
  QJsonObject lastEvent;
  QTimer eventTimer;
- bool cancelRequested=false,protocolInvalid=false;
+ bool cancelRequested=false,protocolInvalid=false,attempted=false;
 
  QString source; int index=0;
 public:
@@ -86,7 +88,7 @@ public:
   }
   else if(QFile::exists(folder+"/zip-session/session.json") || QFile::exists(folder+"/prepared.json")) state="ready";
   else if(bundleLocked())state="error";
-  zipReady=bundleLocked();
+  zipReady=!zipFile.isEmpty() && QFile::exists(zipFile);
   refreshBundles();
   eventTimer.setInterval(200);
   connect(&eventTimer,&QTimer::timeout,this,[this]{readEvent();emit changed();});
@@ -103,7 +105,7 @@ public:
     else state=result;
    } else {
     if(activeAction=="inspect-zip")zipReady=false;
-    state=writeStarted()?"uncertain":"error";
+    state=lastEvent.value("value").toString()=="authentication-failed"?"authentication-error":writeStarted()?"uncertain":"error";
     if(!protocolInvalid && code==2 && lastEvent.value("kind").toString()=="cancelled")output+="\nОтмена завершена. Сохранённые материалы остаются на ПК.\n";
     else if(code==0)output+="\nРезультат worker не подтверждён протоколом. Автоматическое повторение запрещено.\n";
    }
@@ -169,7 +171,8 @@ public:
  }
  QJsonObject readObject(const QString &path) const {QFile f(path);if(!f.open(QIODevice::ReadOnly))return {};return QJsonDocument::fromJson(f.readAll()).object();}
  bool writeStarted() const {return QFile::exists(folder+"/write-started") || QFile::exists(folder+"/zip-session/write-started");}
- bool bundleLocked() const {return QFile::exists(folder+"/prepared.json") || writeStarted() || QFile::exists(folder+"/zip-binding.json") || QDir(folder+"/zip-session").exists();}
+ bool bundleLocked() const {return busy();}
+ QString hostKeyWarning() const {return readObject(folder+"/pending-host.json").value("fingerprint").toString();}
  QVariantList bundleChoices() const {return bundles;}
  QString bundlePath() const {return zipFile;}
  QString bundleVersion() const {return zipVersion;}
@@ -185,7 +188,7 @@ public:
   emit changed();
  }
  Q_INVOKABLE void selectBundle(QString path) {
-  if(busy() || bundleLocked())return;
+  if(busy())return;
   zipFile=path;zipReady=false;zipVersion.clear();
   if(path.isEmpty()){QFile::remove(folder+"/zip-selection.json");state="idle";emit changed();return;}
   auto base=QCoreApplication::applicationDirPath();
@@ -231,7 +234,7 @@ public:
   emit changed();
  }
  Q_INVOKABLE void newSession() {
-  if(busy() || interrupted() || state=="uncertain")return;
+  if(busy())return;
   auto base=QCoreApplication::applicationDirPath();
   auto env=QProcessEnvironment::systemEnvironment();env.insert("PYTHONIOENCODING","utf-8");
   process.setProcessEnvironment(env);process.setWorkingDirectory(base);
@@ -239,6 +242,7 @@ public:
   launch({base+"/package_worker.py","new-session","--source",source,"--index",QString::number(index),"--session",folder});
   emit changed();
  }
+ bool installationAttempted() const {return attempted || writeStarted() || QDir(folder+"/attempts").exists();}
  bool fresh() const {QFile f(folder+(zipMode()?"/zip-session/prepared.json":"/prepared.json"));if(!f.open(QIODevice::ReadOnly))return false;return QJsonDocument::fromJson(f.readAll()).object().value("mode").toString()=="fresh";}
  QString sourceIP() const {return source;}
  int adapterIndex() const {return index;}
@@ -246,14 +250,11 @@ public:
  QString stage() const {return state;}
  QString report() const {return output;}
  QString session() const {return folder;}
- Q_INVOKABLE void start(QString action,QString ip,int adapter,QString secret) {
-  if(busy() || interrupted() || (action!="prepare" && action!="install" && action!="verify" && action!="backup")) return;
-  if(action=="backup" && (writeStarted() || bundleLocked()))return;
-  if(action=="prepare" && (!bundleReady() || (zipMode() && bundleLocked())))return;
-  if(action=="install" && (state!="ready" || !zipMode())) return;
-  if(action=="prepare" && writeStarted()) return;
-  if(action=="install" && (source!=ip || index!=adapter)) return;
+ Q_INVOKABLE void start(QString action,QString ip,int adapter,QString secret, bool trustHost=false) {
+  if(busy() || (action!="prepare" && action!="install" && action!="verify" && action!="backup")) return;
+  if(action!="backup" && zipFile.isEmpty())return;
   if(secret.isEmpty() || secret.contains('\n') || secret.contains('\r')) return;
+  if(action=="install")attempted=true;
   password=secret;secret.fill(QChar(0));
   passwordServer.close();
   auto pipe="schoolbell-"+QUuid::createUuid().toString(QUuid::WithoutBraces);
@@ -269,11 +270,12 @@ public:
   output+="\n--- "+action+" ---\n";state=action;
   QStringList workerArgs={base+"/package_worker.py",action,"--source",ip,"--index",QString::number(adapter),"--session",folder};
   if(zipMode() && action!="backup")workerArgs << "--zip" << zipFile;
+  if(trustHost)workerArgs << "--trusted-host-key" << hostKeyWarning();
   launch(workerArgs);
   emit changed();
  }
  Q_INVOKABLE void openHistory(){ QDesktopServices::openUrl(QUrl::fromLocalFile(QFileInfo(folder).absolutePath()+"/session-history")); }
  Q_INVOKABLE void openBackup(){ QDesktopServices::openUrl(QUrl::fromLocalFile(folder)); }
- Q_INVOKABLE void openDevice(){if(state=="done" || state=="current") QDesktopServices::openUrl(QUrl("http://192.168.1.1/cgi-bin/luci/admin/schoolbell"));}
+ Q_INVOKABLE void openDevice(){if(!busy()) QDesktopServices::openUrl(QUrl("http://192.168.1.1/cgi-bin/luci/admin/schoolbell"));}
  signals: void changed(); void sessionReset();
 };
