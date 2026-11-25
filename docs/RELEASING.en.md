@@ -73,3 +73,14 @@ MSYS2/Qt versions follow upstream packages: EXE reproducibility across toolchain
 versions is not claimed. ZIP packaging is deterministic for identical inputs.
 [MSYS2 Action](https://github.com/msys2/setup-msys2) ·
 [GitHub artifacts](https://github.com/actions/upload-artifact).
+
+### Windows build environment
+
+GitHub uses UCRT64 and `mingw-w64-ucrt-x86_64-qt6-static`. Pass
+`-MsysEnvironment UCRT64`: compiler, Qt and libraries use the same prefix.
+Existing local MINGW64 remains available explicitly. Static link dependencies are
+listed separately; qt6-static does not install all its build dependencies.
+The system-DLL-only check remains. Run 45612351368 passed packages but wizard failed
+before compilation: `target not found: mingw-w64-x86_64-qt6-static`.
+Rerunning that old run does not update its code; start a new workflow on main after landing.
+[UCRT64 package](https://packages.msys2.org/packages/mingw-w64-ucrt-x86_64-qt6-static).

@@ -131,3 +131,15 @@ MSYS2/Qt берутся из текущего репозитория пакет�
 разными версиями тулчейна не заявляется. ZIP при одинаковых входах детерминирован.
 [MSYS2 Action](https://github.com/msys2/setup-msys2) ·
 [GitHub artifacts](https://github.com/actions/upload-artifact).
+
+### Окружение Windows-сборки
+
+GitHub использует UCRT64 и пакет `mingw-w64-ucrt-x86_64-qt6-static`.
+Сборщик получает `-MsysEnvironment UCRT64`; Qt, компилятор и библиотеки берутся
+из одного prefix. Старое локальное окружение доступно через `-MsysEnvironment MINGW64`.
+Зависимости статической линковки указаны явно: qt6-static не устанавливает все
+библиотеки из своих build dependencies. Проверка DLL после сборки сохранена.
+Первый запуск 45612351368 завершил packages, но не начал компиляцию wizard:
+`target not found: mingw-w64-x86_64-qt6-static`. Повтор старого запуска код не обновит;
+после слияния исправления нужен новый Run workflow на main.
+[Пакет UCRT64](https://packages.msys2.org/packages/mingw-w64-ucrt-x86_64-qt6-static).

@@ -6,7 +6,8 @@
 
 - [x] Подготовлены явный упаковщик мастера, инструкции RU/EN и ручной workflow целевого MIPS/Windows выпуска без публикации. / Added allowlisted packager, RU/EN instructions and manual MIPS/Windows artifact workflow without publishing.
 - [x] Локально: make all, 7 тестов упаковщика и 6 тестов пары, целевая MIPS-сборка, статическая сборка EXE, распаковка в путь с пробелами/кириллицей, --check-firmware и импорты вложенного Python — PASS. Не проверка чистой Windows или GitHub runner. / Local checks passed; not clean-host or remote-runner acceptance.
-- [ ] Первый запуск workflow после push и проверка точного HEAD. / First remote run after push, exact HEAD checks.
+- [x] Исправление окружения проверено локально: make all, статическая сборка MINGW64 и ZIP — PASS; все 18 UCRT64-пакетов найдены в актуальной базе MSYS2. Полная сборка UCRT64 на GitHub ещё не проверена. / Local checks passed; full UCRT64 GitHub build remains pending.
+- [ ] Повторить GitHub-сборку после перехода на UCRT64: запуск 45612351368 прошёл packages, но wizard остановился до компиляции (qt6-static отсутствует в MINGW64). / Repeat after UCRT64 fix: packages passed, wizard failed before compilation because MINGW64 qt6-static was unavailable.
 - [ ] Проверка распакованной пары на чистой Windows 11, подпись сумм и публикация владельцем. / Clean Windows 11 acceptance, checksum signing and owner publication.
 - [x] 25.11.2026: GUI возврат OEM, OpenWrt и свежая установка Школьника 5.1.127; DHCP восстановлен, пользователь подтвердил интерфейс. Смена SSH-ключа потребовала ручной помощи; OEM → OEM новым GUI отдельно не проверено. / Full cycle passed with manual host-key repair; OEM-to-OEM in this GUI remains untested.
 

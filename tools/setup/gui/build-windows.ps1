@@ -1,11 +1,17 @@
-param([string]$MsysRoot = 'C:\msys64', [string]$RecoveryImage = '')
+param([string]$MsysRoot = 'C:\msys64', [string]$RecoveryImage = '', [ValidateSet('MINGW64','UCRT64')][string]$MsysEnvironment = 'MINGW64')
 $ErrorActionPreference = 'Stop'
 & (Join-Path $PSScriptRoot 'test-network-helper.ps1')
 if (!$?) {throw 'Network helper mock tests failed'}
 & (Join-Path $PSScriptRoot 'test-flash-helper.ps1')
 if (!$?) {throw 'Flash helper mock tests failed'}
-$bin = Join-Path $MsysRoot 'mingw64\bin'
-$qt = Join-Path $MsysRoot 'mingw64\qt6-static'
+$prefix = Join-Path $MsysRoot $MsysEnvironment.ToLowerInvariant()
+$bin = Join-Path $prefix 'bin'
+$qt = Join-Path $prefix 'qt6-static'
+foreach ($required in @('bin/cmake.exe','bin/ninja.exe','bin/gcc.exe','bin/g++.exe','bin/strip.exe','bin/objdump.exe','qt6-static/lib/cmake/Qt6/Qt6Config.cmake')) {
+ if (!(Test-Path -LiteralPath (Join-Path $prefix $required))) {throw "Missing $MsysEnvironment toolchain file: $required"}
+}
+Write-Host "Static Qt toolchain: $MsysEnvironment"
+
 $work = Join-Path ([IO.Path]::GetTempPath()) ('router-gui-' + [guid]::NewGuid().ToString('N'))
 $source = Join-Path $work 'source'
 $build = Join-Path $work 'build'
@@ -25,7 +31,7 @@ Copy-Item (Join-Path $PSScriptRoot '../vendor/photos/v3.30/tl-mr3020-3.jpg') (Jo
 $oldPath = $env:PATH
 try {
  $env:PATH = "$bin;$oldPath"
- & "$bin\cmake.exe" -S $source -B $build -G Ninja "-DCMAKE_PREFIX_PATH=$qt" -DCMAKE_BUILD_TYPE=Release
+ & "$bin\cmake.exe" -S $source -B $build -G Ninja "-DCMAKE_PREFIX_PATH=$qt;$prefix" "-DCMAKE_C_COMPILER=$bin/gcc.exe" "-DCMAKE_CXX_COMPILER=$bin/g++.exe" "-DCMAKE_MAKE_PROGRAM=$bin/ninja.exe" -DCMAKE_BUILD_TYPE=Release
  if ($LASTEXITCODE) { throw 'CMake configuration failed' }
  & "$bin\cmake.exe" --build $build -j 4
  if ($LASTEXITCODE) { throw 'Build failed' }
@@ -71,7 +77,7 @@ try {
  New-Item -ItemType Directory -Force (Join-Path $out 'firmware') | Out-Null
  Copy-Item $image (Join-Path $out 'firmware/tp_recovery.bin') -Force
 
- $receipt = @{version=(Get-Content (Join-Path $PSScriptRoot 'wizard-version.txt') -Raw).Trim(); exe_sha256=(Get-FileHash (Join-Path $out 'schoolbell-setup-wizard.exe') -Algorithm SHA256).Hash.ToLower(); firmware_check='passed'; system_dlls_only=$true}
+ $receipt = @{msys_environment=$MsysEnvironment; version=(Get-Content (Join-Path $PSScriptRoot 'wizard-version.txt') -Raw).Trim(); exe_sha256=(Get-FileHash (Join-Path $out 'schoolbell-setup-wizard.exe') -Algorithm SHA256).Hash.ToLower(); firmware_check='passed'; system_dlls_only=$true}
  $receipt | ConvertTo-Json | Set-Content -Encoding utf8 (Join-Path $out 'build-receipt.json')
  $dlls | Set-Content (Join-Path $out 'imports.txt')
  Get-FileHash (Join-Path $out 'schoolbell-setup-wizard.exe') -Algorithm SHA256

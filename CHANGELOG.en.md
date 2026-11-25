@@ -4,6 +4,8 @@
 
 ## Unreleased — 2026-11-25
 
+- GitHub artifacts: use UCRT64 static Qt with matching compiler, CMake paths and dependencies; retain explicit local MINGW64 support.
+
 - Added manual GitHub artifact workflow and allowlisted portable wizard 0.3.0 packaging; publication stays separate. Fresh 5.1.127 installation passed after manual SSH host-key verification.
 
 - GUI: firmware flashing requires no backup or separate acknowledgement of its absence; one start confirmation remains. Completed ZIP sessions explain why a new full backup is unavailable.

@@ -46,13 +46,27 @@ jobs:
       - uses: msys2/setup-msys2@v2
         id: msys2
         with:
-          msystem: MINGW64
+          msystem: UCRT64
           update: true
           install: >-
-            mingw-w64-x86_64-qt6-static
-            mingw-w64-x86_64-gcc
-            mingw-w64-x86_64-cmake
-            mingw-w64-x86_64-ninja
+            mingw-w64-ucrt-x86_64-qt6-static
+            mingw-w64-ucrt-x86_64-gcc
+            mingw-w64-ucrt-x86_64-cmake
+            mingw-w64-ucrt-x86_64-ninja
+            mingw-w64-ucrt-x86_64-pkgconf
+            mingw-w64-ucrt-x86_64-brotli
+            mingw-w64-ucrt-x86_64-bzip2
+            mingw-w64-ucrt-x86_64-freetype
+            mingw-w64-ucrt-x86_64-graphite2
+            mingw-w64-ucrt-x86_64-harfbuzz
+            mingw-w64-ucrt-x86_64-libb2
+            mingw-w64-ucrt-x86_64-libjpeg-turbo
+            mingw-w64-ucrt-x86_64-libpng
+            mingw-w64-ucrt-x86_64-openssl
+            mingw-w64-ucrt-x86_64-pcre2
+            mingw-w64-ucrt-x86_64-vulkan-headers
+            mingw-w64-ucrt-x86_64-zlib
+            mingw-w64-ucrt-x86_64-zstd
       - name: Download pinned OpenWrt recovery image
         shell: pwsh
         run: |
@@ -63,7 +77,7 @@ jobs:
         shell: pwsh
         env:
           MSYS_ROOT: ${{ steps.msys2.outputs.msys2-location }}
-        run: ./tools/setup/gui/build-windows.ps1 -MsysRoot $env:MSYS_ROOT -RecoveryImage (Resolve-Path out/firmware/openwrt.bin)
+        run: ./tools/setup/gui/build-windows.ps1 -MsysRoot $env:MSYS_ROOT -MsysEnvironment UCRT64 -RecoveryImage (Resolve-Path out/firmware/openwrt.bin)
       - name: Package allowlisted portable files
         shell: pwsh
         run: |
