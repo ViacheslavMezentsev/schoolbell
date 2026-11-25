@@ -11,12 +11,12 @@ Rectangle {
   ColumnLayout {
    width:parent.width;spacing:14
    Label {text:"Что вы хотите сделать?";font.pixelSize:25;font.bold:true;color:pane.colors.text;Layout.fillWidth:true;wrapMode:Text.WordWrap}
-   Label {text:"Для всех маршрутов: роутер с питанием, отдельный USB–Ethernet-адаптер и сетевой кабель. Выберите задачу — мастер покажет дальнейшие шаги.";color:pane.colors.muted;Layout.fillWidth:true;wrapMode:Text.WordWrap}
+   Label {text:"Для всех операций: роутер с питанием, отдельный USB–Ethernet-адаптер и сетевой кабель. Выберите задачу — мастер покажет дальнейшие шаги.";color:pane.colors.muted;Layout.fillWidth:true;wrapMode:Text.WordWrap}
    Repeater {
     model:[
-     {route:"openwrt",title:"Установить OpenWrt",body:"На новый роутер с заводской прошивкой. Сначала устанавливается OpenWrt, затем можно перейти к комплекту Школьника.",status:"Подготовка и инструкция · запуск прошивки пока через консольный комплект"},
+     {route:"openwrt",title:"Установить OpenWrt",body:"На новый роутер с заводской прошивкой. Сначала устанавливается OpenWrt, затем можно перейти к комплекту Школьника.",status:"Встроенная OpenWrt · реальная передача через GUI · пилот"},
      {route:"packages",title:"Установить Школьник",body:"На роутер, где уже работает OpenWrt. Выберите ZIP-архив комплекта рядом с мастером, сохраните копию и установите пакеты.",status:"Установка из ZIP доступна в мастере"},
-     {route:"recovery",title:"Восстановить роутер",body:"Вернуть заводскую прошивку TP-Link через Reset. OpenWrt и Школьник будут удалены; настройки и пароль TP-Link могут сохраниться.",status:"Подготовка и инструкция · запуск восстановления пока через консольный комплект"}
+     {route:"recovery",title:"Восстановить роутер",body:"Вернуть заводскую прошивку TP-Link через Reset. OpenWrt и Школьник будут удалены; настройки и пароль TP-Link могут сохраниться.",status:"Встроенная Build250625 · реальная передача через GUI · пилот"}
     ]
     delegate:Button {
      id:card;required property var modelData

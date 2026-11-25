@@ -242,6 +242,8 @@ def dispatch(args):
     return run(args)
 
 if __name__=='__main__':
+    from worker_job import attach
+    attach()
     p=argparse.ArgumentParser()
     p.add_argument('action',choices=['prepare','install','verify','new-session','backup','inspect-zip','recover-session']);p.add_argument('--source',required=True);p.add_argument('--index',required=True,type=int);p.add_argument('--session',required=True);p.add_argument('--zip',default='')
     p.add_argument('--operation-id',default='');p.add_argument('--session-id',default='')

@@ -10,22 +10,24 @@ def valid_rrq(data):
             and len(fields) >= 3 and (len(fields)-3) % 2 == 0
             and fields[0] == b'tp_recovery.bin' and fields[1].lower() == b'octet')
 
-def transfer(sock, peer, payload, timeout=1.0, retries=6):
+def transfer(sock, peer, payload, timeout=1.0, retries=6, progress=None, cancelled=lambda:False):
     acknowledged = 0
     for offset in range(0, len(payload)+1, 512):
         chunk = payload[offset:offset+512]
         block = offset//512+1
         packet = struct.pack('!HH', 3, block) + chunk
         for attempt in range(retries):
+            if cancelled():raise InterruptedError('Transfer stopped by user')
             sock.sendto(packet, peer)
             if block == 1 or attempt or block % 1024 == 0 or len(chunk)<512:
                 logging.info('DATA block=%s bytes=%s attempt=%s local=%s peer=%s', block,len(chunk),attempt+1,sock.getsockname(),peer)
             deadline = time.monotonic()+timeout
             accepted = False
             while time.monotonic()<deadline:
-                sock.settimeout(max(0.001,deadline-time.monotonic()))
+                if cancelled():raise InterruptedError('Transfer stopped by user')
+                sock.settimeout(min(0.2,max(0.001,deadline-time.monotonic())))
                 try: reply, source = sock.recvfrom(2048)
-                except socket.timeout: break
+                except socket.timeout: continue
                 if source != peer:
                     logging.warning('Ignored other peer %s',source)
                     continue
@@ -39,11 +41,36 @@ def transfer(sock, peer, payload, timeout=1.0, retries=6):
             logging.warning('ACK TIMEOUT block=%s attempt=%s',block,attempt+1)
         else: raise TimeoutError('No ACK for block '+str(block))
         acknowledged += len(chunk)
+        if progress and (block==1 or block%128==0 or len(chunk)<512): progress(acknowledged)
         if block==1 or block%1024==0 or len(chunk)<512:
             logging.info('ACK block=%s acknowledged_bytes=%s',block,acknowledged)
             print(f'ACK: {acknowledged}/{len(payload)} bytes ({100*acknowledged/max(1,len(payload)):.1f}%)', flush=True)
         if len(chunk)<512: break
     return acknowledged
+
+
+def serve(payload, event=lambda phase,count: None, wait_seconds=600,
+          bind='192.168.0.225', client='192.168.0.2', port=69, data_port=1069, cancelled=lambda:False):
+    """One recovery request; callbacks are durable before first DATA. No RRQ replay.
+
+    Alternate endpoints exist only for loopback tests; product callers use fixed defaults.
+    """
+    with socket.socket(socket.AF_INET,socket.SOCK_DGRAM) as listener, socket.socket(socket.AF_INET,socket.SOCK_DGRAM) as sender:
+        listener.bind((bind,port));sender.bind((bind,data_port));listener.settimeout(0.5)
+        event('ready',0)
+        expires=time.monotonic()+wait_seconds
+        while time.monotonic()<expires:
+            if cancelled():raise InterruptedError('Waiting stopped by user')
+            try: request,peer=listener.recvfrom(2048)
+            except socket.timeout:continue
+            if peer[0]!=client or not valid_rrq(request):continue
+            if cancelled():raise InterruptedError('Waiting stopped by user')
+            event('transferring',0)  # Write-ahead marker: failure here sends no bytes.
+            count=transfer(sender,peer,payload,progress=lambda n:event('transferring',n),cancelled=cancelled)
+            event('transferred',count)
+            return count
+        event('not-started',0)
+        raise TimeoutError('No recovery request within time limit')
 
 def self_test():
     import threading
@@ -88,27 +115,9 @@ def main():
     logfile=ROOT/('tftp-'+args.profile+'.log')
     logging.basicConfig(filename=logfile,level=logging.INFO,format='%(asctime)s %(levelname)s %(message)s')
     logging.info('START %s size=%s sha256=%s no OACK, read-only, client=192.168.0.2',label,len(payload),digest)
-    with socket.socket(socket.AF_INET,socket.SOCK_DGRAM) as listener:
-        listener.bind(('192.168.0.225',69)); listener.settimeout(1)
-        print(f'READY 192.168.0.225:69; {label}; SHA256 {digest}. Waiting for router.',flush=True)
-        expires=time.monotonic()+600
-        while time.monotonic()<expires:
-            try: request,peer=listener.recvfrom(2048)
-            except socket.timeout: continue
-            logging.info('RRQ peer=%s hex=%s',peer,request.hex())
-            if peer[0]!='192.168.0.2' or not valid_rrq(request):
-                logging.warning('REJECT request'); continue
-            try:
-                with socket.socket(socket.AF_INET,socket.SOCK_DGRAM) as sender:
-                    sender.bind(('192.168.0.225',1069))
-                    count=transfer(sender,peer,payload)
-                logging.info('TRANSFER COMPLETE acknowledged=%s; flash write NOT verified',count)
-                print('TRANSFER COMPLETE. Keep router powered. Flash write not yet verified.',flush=True)
-                return
-            except (OSError,RuntimeError) as exc:
-                logging.exception('TRANSFER FAILED %s',exc)
-                print(f'TRANSFER FAILED; see {logfile.name}',flush=True)
-                raise SystemExit(1)  # no queued RRQ replay
-        raise TimeoutError('No recovery request within 10 minutes')
+    def report(phase,count):
+        if phase=='ready':print(f'READY 192.168.0.225:69; {label}; SHA256 {digest}. Waiting for router.',flush=True)
+        if phase=='transferred':print('TRANSFER COMPLETE. Keep router powered. Flash write not yet verified.',flush=True)
+    serve(payload,report)
 
 if __name__=='__main__': main()

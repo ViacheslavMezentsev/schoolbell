@@ -13,6 +13,7 @@ function Read-NetworkState($Path) {
  if ($file.Length -gt 8192 -or ($file.Attributes -band [IO.FileAttributes]::ReparsePoint)) {throw 'Invalid network state file'}
  $s=Get-Content -Raw -LiteralPath $Path | ConvertFrom-Json
  if ($s.schema -ne 1 -or $s.address -ne '192.168.0.225' -or $s.prefix -ne 24 -or $s.dhcp -ne $true -or $s.phase -notin @('prepared','address-added','configured','restoring')) {throw 'Invalid network state'}
+ if ($s.PSObject.Properties.Name -contains 'rule' -and $s.rule -notmatch '^SchoolbellGUI-TFTP-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$') {throw 'Invalid firewall ownership'}
  $guid=[guid]$s.guid
  if ($guid -eq [guid]::Empty) {throw 'Invalid adapter GUID'}
  return $s
@@ -26,7 +27,11 @@ function Restore-NetworkState($Path) {
  $s=Read-NetworkState $Path
  if (!$s) {return 'no-state'}
  $adapter=Get-SavedAdapter $s.guid
- $owned=@(Get-NetIPAddress -InterfaceIndex $adapter.ifIndex -AddressFamily IPv4 | Where-Object IPAddress -eq $s.address)
+ if ($s.PSObject.Properties.Name -contains 'rule') {
+  Get-NetFirewallRule -Name $s.rule -ErrorAction SilentlyContinue | Remove-NetFirewallRule -ErrorAction Stop
+  if (Get-NetFirewallRule -Name $s.rule -ErrorAction SilentlyContinue) {throw 'Temporary firewall rule remains'}
+ }
+ $owned=@(Get-NetIPAddress -AddressFamily IPv4 | Where-Object InterfaceIndex -eq $adapter.ifIndex | Where-Object IPAddress -eq $s.address)
  if ($s.phase -eq 'prepared' -and $owned.Count) {throw 'Address ownership uncertain; manual inspection required'}
  $s.phase='restoring';Write-NetworkState $Path $s
  if ($owned | Where-Object PrefixLength -ne 24) {throw 'Owned address changed; manual inspection required'}
@@ -34,8 +39,20 @@ function Restore-NetworkState($Path) {
  Set-NetIPInterface -InterfaceIndex $adapter.ifIndex -AddressFamily IPv4 -Dhcp Enabled -ErrorAction Stop
  $config=@(Get-NetIPInterface -InterfaceIndex $adapter.ifIndex -AddressFamily IPv4)
  if ($config.Count -ne 1 -or $config[0].Dhcp -ne 'Enabled') {throw 'DHCP restoration not confirmed'}
- if (@(Get-NetIPAddress -InterfaceIndex $adapter.ifIndex -AddressFamily IPv4 | Where-Object IPAddress -eq $s.address).Count) {throw 'Temporary address remains'}
- # Configuration is restored independently from the presence of a DHCP server.
+ if (@(Get-NetIPAddress -AddressFamily IPv4 | Where-Object InterfaceIndex -eq $adapter.ifIndex | Where-Object IPAddress -eq $s.address).Count) {throw 'Temporary address remains'}
+ # Read all addresses then filter: a temporarily addressless interface is normal.
+ $lease=@(Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.InterfaceIndex -eq $adapter.ifIndex -and $_.PrefixOrigin -eq 'Dhcp' -and $_.AddressState -eq 'Preferred' -and $_.IPAddress -notlike '169.254.*' -and $_.IPAddress -ne '0.0.0.0' })
+ if (!$lease.Count) {
+  $configs=@(Get-CimInstance -ClassName Win32_NetworkAdapterConfiguration -Filter "InterfaceIndex = $($adapter.ifIndex)")
+  if ($configs.Count -ne 1) {throw 'Ambiguous DHCP adapter'}
+  try {Invoke-CimMethod -InputObject $configs[0] -MethodName RenewDHCPLease -OperationTimeoutSec 30 -ErrorAction Stop | Out-Null} catch { }
+  for($i=0;$i -lt 30;$i++) {
+   $lease=@(Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.InterfaceIndex -eq $adapter.ifIndex -and $_.PrefixOrigin -eq 'Dhcp' -and $_.AddressState -eq 'Preferred' -and $_.IPAddress -notlike '169.254.*' -and $_.IPAddress -ne '0.0.0.0' })
+   if ($lease.Count) {break}
+   Start-Sleep -Seconds 1
+  }
+ }
+ if (!$lease.Count) {throw 'DHCP enabled but lease not received; reconnect router and retry restoration'}
  Remove-Item -LiteralPath $Path -ErrorAction Stop
  return 'restored'
 }
@@ -53,7 +70,7 @@ function Prepare-NetworkState($Path,$Guid,$Profile,$Preflight) {
   $state.phase='address-added';Write-NetworkState $Path $state
   $preferred=$false
   for($i=0;$i -lt 10;$i++) {
-   $ips=@(Get-NetIPAddress -InterfaceIndex $adapter.ifIndex -AddressFamily IPv4 | Where-Object IPAddress -eq $state.address)
+   $ips=@(Get-NetIPAddress -AddressFamily IPv4 | Where-Object InterfaceIndex -eq $adapter.ifIndex | Where-Object IPAddress -eq $state.address)
    if ($ips.Count -eq 1 -and $ips[0].AddressState -eq 'Preferred') {$preferred=$true;break}
    if ($ips | Where-Object AddressState -eq 'Duplicate') {throw 'Duplicate recovery address'}
    Start-Sleep -Seconds 1

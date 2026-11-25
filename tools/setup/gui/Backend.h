@@ -142,6 +142,12 @@ public:
   if(!file.open(QIODevice::WriteOnly|QIODevice::NewOnly)){output+="\nНе удалось передать запрос отмены.\n";emit changed();return;}
   file.write("cancel\n");file.close();cancelRequested=true;emit changed();
  }
+ Q_INVOKABLE void requestStop() {
+  if(!busy())return;
+  protocolInvalid=true;cancelRequested=true;
+  output+="\nОстановка подтверждена пользователем. Связь прекращена; это не откат. Если запись уже началась, проверьте результат перед новым сеансом.\n";
+  process.kill();emit changed();
+ }
  void launch(QStringList args) {
   activeAction=state;activeOperation=QUuid::createUuid().toString(QUuid::Id128);
   sessionToken=QString::fromLatin1(QCryptographicHash::hash(QDir(folder).canonicalPath().toUtf8(),QCryptographicHash::Sha256).toHex());

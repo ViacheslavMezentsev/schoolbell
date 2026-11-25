@@ -14,6 +14,7 @@ Item {
   property bool canCancel:false
   property string operationMessage:"Выполняется проверка"
   function requestCancel(){canCancel=false}
+  function requestStop(){canCancel=false;report="stop-requested"}
   property bool fresh: false
   property string stage: "idle"
   property string report: ""
@@ -38,6 +39,14 @@ Item {
  QtObject {
   id:firmwareBackend
   property bool canPrepare:false
+  property bool canFlash:false
+  property bool canConfirm:false
+  property bool imagesAvailable:true
+  property real progress:0
+  property string receiptLabel:"OpenWrt 19.07.9"
+  function flash(){helperAction="flash"}
+  function requestStop(){helperAction="stop"}
+  function confirmResult(){helperAction="confirm"}
   property string helperAction:""
   function changeNetwork(restore) {helperAction=restore?"restore":"prepare"}
   property bool busy:false
@@ -52,6 +61,26 @@ Item {
  RealPane {id:pane;anchors.fill:parent;colors:theme}
  TestCase {
   name: "PasswordLifecycle"; when: windowShown
+  function test_header_stop_requires_confirmation() {
+   let window=windowFactory.createObject(root);window.navigate("openwrt")
+   let stop=findChild(window,"stop-route"),dialog=findChild(window,"stop-route-confirm")
+   firmwareBackend.helperAction="";firmwareBackend.busy=true;stop.clicked();verify(dialog.visible);compare(firmwareBackend.helperAction,"")
+   dialog.close();compare(firmwareBackend.helperAction,"")
+   stop.clicked();findChild(window,"stop-route-accept").clicked();compare(firmwareBackend.helperAction,"stop")
+   firmwareBackend.busy=false;stop.clicked();findChild(window,"stop-route-accept").clicked();compare(window.route,"home");window.destroy()
+  }
+  function test_flash_requires_confirmation_without_backup_gate() {
+   let window=windowFactory.createObject(root);window.navigate("openwrt")
+   let route=findChild(window,"firmware-route"),button=findChild(route,"firmware-start")
+   firmwareBackend.canFlash=false;verify(!button.enabled)
+   firmwareBackend.canFlash=true;firmwareBackend.helperAction="";verify(button.enabled)
+   button.clicked();compare(firmwareBackend.helperAction,"")
+   let dialog=findChild(route,"firmware-confirm");verify(dialog.visible)
+   dialog.rejected();dialog.close();compare(firmwareBackend.helperAction,"")
+   button.clicked();dialog.accepted();dialog.close();compare(firmwareBackend.helperAction,"flash")
+   firmwareBackend.busy=true;verify(!button.enabled);window.navigate("home");compare(window.route,"openwrt")
+   firmwareBackend.busy=false;firmwareBackend.canFlash=false;window.destroy()
+  }
   function test_interrupted_session_has_recovery_action() {
    pane.visible=true;pane.helpVisible=false;realBackend.busy=false
    realBackend.interrupted=true

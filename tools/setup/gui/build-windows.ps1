@@ -2,6 +2,8 @@ param([string]$MsysRoot = 'C:\msys64', [string]$RecoveryImage = '')
 $ErrorActionPreference = 'Stop'
 & (Join-Path $PSScriptRoot 'test-network-helper.ps1')
 if (!$?) {throw 'Network helper mock tests failed'}
+& (Join-Path $PSScriptRoot 'test-flash-helper.ps1')
+if (!$?) {throw 'Flash helper mock tests failed'}
 $bin = Join-Path $MsysRoot 'mingw64\bin'
 $qt = Join-Path $MsysRoot 'mingw64\qt6-static'
 $work = Join-Path ([IO.Path]::GetTempPath()) ('router-gui-' + [guid]::NewGuid().ToString('N'))
@@ -9,6 +11,17 @@ $source = Join-Path $work 'source'
 $build = Join-Path $work 'build'
 New-Item -ItemType Directory -Path $source -Force | Out-Null
 Copy-Item -Path "$PSScriptRoot\*" -Destination $source -Recurse
+$repo = (Resolve-Path "$PSScriptRoot\..\..\..").ProviderPath
+$runtime = Join-Path $PSScriptRoot '..\vendor\python-3.11.9-embed-amd64.zip'
+if ((Get-FileHash $runtime -Algorithm SHA256).Hash.ToLower() -ne '009d6bf7e3b2ddca3d784fa09f90fe54336d5b60f0e0f305c37f400bf83cfd3b') {throw 'Python archive checksum mismatch'}
+$buildPython=Join-Path $work 'python'
+Expand-Archive -LiteralPath $runtime -DestinationPath $buildPython
+Copy-Item (Join-Path $PSScriptRoot '../firmware.py') $work
+Add-Content (Join-Path $buildPython 'python311._pth') '..'
+$image=if ($RecoveryImage) {$RecoveryImage} else {Join-Path $repo 'out/setup-5.1.123-inputs/openwrt-recovery.bin'}
+& (Join-Path $buildPython 'python.exe') (Join-Path $source 'prepare-firmware.py') --openwrt $image --oem (Join-Path $PSScriptRoot '../vendor/tl-mr3020-eu-v3.30-250625.zip') --out (Join-Path $source 'embedded-firmware')
+if ($LASTEXITCODE) {throw 'Embedded firmware preparation failed'}
+Copy-Item (Join-Path $PSScriptRoot '../vendor/photos/v3.30/tl-mr3020-3.jpg') (Join-Path $source 'embedded-firmware/reset.jpg')
 $oldPath = $env:PATH
 try {
  $env:PATH = "$bin;$oldPath"
@@ -23,12 +36,14 @@ try {
  $exe = Join-Path $build 'schoolbell-setup-wizard.exe'
  & "$bin\strip.exe" $exe
  if ($LASTEXITCODE) { throw 'Strip failed' }
+ $imageCheck=Start-Process -FilePath $exe -ArgumentList '--check-firmware' -WindowStyle Hidden -Wait -PassThru
+ if ($imageCheck.ExitCode -ne 0) {throw 'Embedded firmware verification failed'}
  $imports = & "$bin\objdump.exe" -p $exe
  if ($LASTEXITCODE) { throw 'Import inspection failed' }
  $dlls = @($imports | Select-String 'DLL Name:' | ForEach-Object { ($_.Line -split 'DLL Name:')[1].Trim() })
  $external = @($dlls | Where-Object { $_ -notmatch "^(api-ms-win-|ext-ms-win-)" -and -not (Test-Path (Join-Path "$env:WINDIR\System32" $_)) })
  if ($external.Count) { throw "Non-system DLL dependencies: $($external -join ', ')" }
- $repo = (Resolve-Path "$PSScriptRoot\..\..\..").Path
+ $repo = (Resolve-Path "$PSScriptRoot\..\..\..").ProviderPath
  $out = Join-Path $repo 'out\setup-gui-external'
  New-Item -ItemType Directory -Path $out -Force | Out-Null
  Copy-Item $exe (Join-Path $out 'schoolbell-setup-wizard.exe') -Force
@@ -36,8 +51,8 @@ try {
  $runtime = Join-Path $PSScriptRoot '..\vendor\python-3.11.9-embed-amd64.zip'
  if ((Get-FileHash $runtime -Algorithm SHA256).Hash.ToLower() -ne '009d6bf7e3b2ddca3d784fa09f90fe54336d5b60f0e0f305c37f400bf83cfd3b') {throw 'Python archive checksum mismatch'}
  Expand-Archive -LiteralPath $runtime -DestinationPath (Join-Path $out 'python') -Force
- foreach ($file in @('network_worker.py','network_snapshot.ps1','network_helper.ps1','NetworkHelperCore.ps1','network_elevate.py')) {Copy-Item (Join-Path $PSScriptRoot $file) $out -Force}
- foreach ($file in @('network_plan.py','firmware.py')) {Copy-Item (Join-Path $PSScriptRoot ('../'+$file)) $out -Force}
+ foreach ($file in @('network_worker.py','network_snapshot.ps1','network_helper.ps1','NetworkHelperCore.ps1','network_elevate.py','flash_worker.py','FlashHelperCore.ps1','HelperJob.cs','worker_job.py')) {Copy-Item (Join-Path $PSScriptRoot $file) $out -Force}
+ foreach ($file in @('network_plan.py','firmware.py','tftp_server.py')) {Copy-Item (Join-Path $PSScriptRoot ('../'+$file)) $out -Force}
  Copy-Item (Join-Path $PSScriptRoot 'package_worker.py') $out -Force
  Copy-Item (Join-Path $PSScriptRoot 'session_lock.py') $out -Force
  Copy-Item (Join-Path $PSScriptRoot 'operation_protocol.py') $out -Force
@@ -56,6 +71,8 @@ try {
  New-Item -ItemType Directory -Force (Join-Path $out 'firmware') | Out-Null
  Copy-Item $image (Join-Path $out 'firmware/tp_recovery.bin') -Force
 
+ $receipt = @{version=(Get-Content (Join-Path $PSScriptRoot 'wizard-version.txt') -Raw).Trim(); exe_sha256=(Get-FileHash (Join-Path $out 'schoolbell-setup-wizard.exe') -Algorithm SHA256).Hash.ToLower(); firmware_check='passed'; system_dlls_only=$true}
+ $receipt | ConvertTo-Json | Set-Content -Encoding utf8 (Join-Path $out 'build-receipt.json')
  $dlls | Set-Content (Join-Path $out 'imports.txt')
  Get-FileHash (Join-Path $out 'schoolbell-setup-wizard.exe') -Algorithm SHA256
  Write-Host "Built: $out\schoolbell-setup-wizard.exe"

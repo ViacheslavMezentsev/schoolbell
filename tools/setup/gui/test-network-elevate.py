@@ -8,6 +8,10 @@ class BridgeTests(unittest.TestCase):
  def test_fixed_arguments(self):
   args=arguments('prepare','11111111-1111-4111-8111-111111111111','factory',Path('fixed helper.ps1'))
   self.assertIn('fixed helper.ps1',args);self.assertEqual(args[-1],'11111111-1111-4111-8111-111111111111')
+ def test_flash_requires_operation_and_adapter(self):
+  with self.assertRaises(ValueError):arguments('flash','11111111-1111-4111-8111-111111111111','factory',Path('fixed.ps1'))
+  args=arguments('flash','11111111-1111-4111-8111-111111111111','factory',Path('fixed.ps1'),'22222222-2222-4222-8222-222222222222')
+  self.assertIn('-Operation',args)
  def test_reject_code_and_unknown_actions(self):
   for action,guid,profile in [('run','','openwrt'),('prepare','x;whoami','openwrt'),('restore','','unknown')]:
    with self.assertRaises(ValueError):arguments(action,guid,profile,Path('fixed.ps1'))

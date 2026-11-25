@@ -54,6 +54,13 @@ ApplicationWindow {
     onClicked:app.navigate("home")
    }
    ActionButton {
+    objectName:"stop-route";text:"■";implicitWidth:48;leftPadding:0;rightPadding:0;font.pixelSize:26
+    enabled:app.route!=="home" || app.operationBusy
+    Accessible.name:"Остановить текущие операции";ToolTip.visible:hovered;ToolTip.text:Accessible.name
+    contentItem:Text {text:"■";font:parent.font;color:theme.danger;horizontalAlignment:Text.AlignHCenter;verticalAlignment:Text.AlignVCenter}
+    onClicked:stopConfirm.open()
+   }
+   ActionButton {
     text:preferences.themeMode==="system"?"◐":preferences.themeMode==="dark"?"☾":"☀"
     implicitWidth:48;leftPadding:0;rightPadding:0;font.pixelSize:24
     Accessible.name:"Тема: "+app.themeLabel;ToolTip.visible:hovered;ToolTip.text:Accessible.name
@@ -63,6 +70,21 @@ ApplicationWindow {
   RouteChooser {objectName:"route-chooser";visible:app.route==="home";Layout.fillWidth:true;Layout.fillHeight:true;colors:theme;onSelected:function(next){app.navigate(next)}}
   RealPane {objectName:"package-route";visible:app.route==="packages";Layout.fillWidth:true;Layout.fillHeight:true;colors:theme}
   FirmwareRoute {objectName:"firmware-route";visible:app.route==="openwrt" || app.route==="recovery";recovery:app.route==="recovery";Layout.fillWidth:true;Layout.fillHeight:true;colors:theme;onPackagesRequested:app.navigate("packages")}
+ }
+ Dialog {
+  id:stopConfirm;objectName:"stop-route-confirm";anchors.centerIn:parent;width:620;modal:true;title:"Остановить текущие операции?"
+  contentItem:Label {text:app.operationBusy?"Ожидание или передача будут остановлены. Уже начавшуюся запись на роутере отменить нельзя. Мастер завершит восстановление сети; при неизвестном результате потребуется проверка перед новым запуском. Питание не отключайте.":"Вернуться к выбору задачи? Копии, журнал и признаки незавершённой установки сохранятся. Это не удаление сеанса и не откат.";wrapMode:Text.WordWrap;color:theme.text}
+  background:Rectangle {color:theme.panel;border.color:theme.border;radius:10}
+  footer:Item {
+   implicitHeight:76
+   RowLayout {anchors.fill:parent;anchors.margins:16;spacing:12
+    Item {Layout.fillWidth:true}
+    ActionButton {text:"Продолжить работу";onClicked:stopConfirm.close()}
+    ActionButton {objectName:"stop-route-accept";text:"Остановить";contentItem:Text{text:parent.text;font:parent.font;color:theme.danger;horizontalAlignment:Text.AlignHCenter;verticalAlignment:Text.AlignVCenter}
+     onClicked:{stopConfirm.close();if(firmwareBackend.busy)firmwareBackend.requestStop();else if(realBackend.busy)realBackend.requestStop();else app.navigate("home")}
+    }
+   }
+  }
  }
  Dialog {
   id:interruption;objectName:"close-confirmation";anchors.centerIn:parent;width:620;modal:true;title:"Закрытие мастера"
