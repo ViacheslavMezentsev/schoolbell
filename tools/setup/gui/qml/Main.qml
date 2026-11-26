@@ -49,8 +49,9 @@ ApplicationWindow {
     Label {text:"Мастер установки";font.pixelSize:28;font.bold:true;Layout.fillWidth:true;wrapMode:Text.WordWrap}
     Label {text:"v"+Qt.application.version+" · OpenWrt · Комплекты · Восстановление";color:theme.muted}
    }
-   ActionButton {
-    objectName:"route-home";text:"К выбору задачи";visible:app.route!=="home";enabled:!app.operationBusy
+   IconButton {
+    colors:theme;symbol:"list";label:"К выбору задачи"
+    objectName:"route-home";visible:app.route!=="home";enabled:!app.operationBusy
     onClicked:app.navigate("home")
    }
    ActionButton {
@@ -65,6 +66,11 @@ ApplicationWindow {
     implicitWidth:48;leftPadding:0;rightPadding:0;font.pixelSize:24
     Accessible.name:"Тема: "+app.themeLabel;ToolTip.visible:hovered;ToolTip.text:Accessible.name
     onClicked:preferences.themeMode=preferences.themeMode==="system"?"dark":preferences.themeMode==="dark"?"light":"system"
+   }
+   IconButton {
+    objectName:"exit-wizard";colors:theme;symbol:"exit"
+    label:app.operationBusy?"Дождитесь завершения или остановите текущие операции":"Выйти из мастера"
+    enabled:!app.operationBusy;onClicked:app.close()
    }
   }
   RouteChooser {objectName:"route-chooser";visible:app.route==="home";Layout.fillWidth:true;Layout.fillHeight:true;colors:theme;onSelected:function(next){app.navigate(next)}}

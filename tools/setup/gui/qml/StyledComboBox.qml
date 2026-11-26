@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 ComboBox {
  id:control
+ property bool wrapOptions:false
  property var colors
  implicitHeight:48
     font.pixelSize:18
@@ -16,9 +17,9 @@ ComboBox {
     }
     delegate:ItemDelegate {
      id:option;required property int index;required property var modelData
-     width:control.width-2;implicitHeight:48;leftPadding:16;rightPadding:16
+     width:control.width-2;implicitHeight:control.wrapOptions?Math.max(48,contentItem.implicitHeight+24):48;leftPadding:16;rightPadding:16
      highlighted:control.highlightedIndex===index
-     contentItem:Text {text:typeof option.modelData === "string" ? option.modelData : option.modelData[control.textRole];font:control.font;color:option.highlighted?colors.accentText:colors.text;verticalAlignment:Text.AlignVCenter;elide:Text.ElideRight}
+     contentItem:Text {text:typeof option.modelData === "string" ? option.modelData : option.modelData[control.textRole];font:control.font;color:option.highlighted?colors.accentText:colors.text;verticalAlignment:Text.AlignVCenter;wrapMode:control.wrapOptions?Text.WrapAnywhere:Text.NoWrap;elide:control.wrapOptions?Text.ElideNone:Text.ElideRight;textFormat:Text.PlainText}
      background:Rectangle {color:option.highlighted?colors.accent:colors.panel}
     }
     popup:Popup {

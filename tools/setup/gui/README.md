@@ -191,3 +191,13 @@ OEM recovery and OpenWrt plus fresh Schoolbell passed on a separate device with
 manual verified SSH-key replacement before ZIP installation. Earlier no-TFTP notes
 above describe previous stages. The new portable ZIP and clean Windows still need
 separate acceptance. See [release procedure](../../../docs/RELEASING.en.md).
+
+### Источник ZIP / ZIP source
+
+Кнопка «Выбрать файл…» открывает ZIP из любого каталога; отмена не меняет выбор. Под списком показан полный путь выбранного архива. Строки списка содержат имя и каталог; сохранённый внешний архив остаётся в списке, даже если рядом с EXE есть одноимённый ZIP. Обновление списка не меняет выбор. Отсутствующий файл отмечен в списке.
+
+“Выбрать файл…” opens a ZIP from any directory; cancellation preserves the selection. The full selected archive path appears below the picker. Rows include the name and directory; a restored external archive remains listed alongside same-named local ZIPs. Refresh preserves the selection; missing files are marked.
+
+Кнопка со списком из трёх строк возвращает к выбору задачи; открытая папка выбирает ZIP. Справа вверху — выход с подтверждением. Во время операции сначала дождитесь завершения или используйте остановку. Все значки имеют подсказки.
+
+The three-row list returns to task selection; the open folder selects a ZIP. Top-right exit asks for confirmation. During an operation, wait for completion or use Stop first. All icons have tooltips.

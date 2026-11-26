@@ -1,9 +1,17 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Dialogs
 Rectangle {
  id: pane
  Component.onCompleted:{realBackend.refreshConnections();realBackend.refreshBundles()}
+ FileDialog {
+  id:bundleDialog;objectName:"bundle-file-dialog"
+  title:"Выберите ZIP-комплект Школьника"
+  fileMode:FileDialog.OpenFile
+  nameFilters:["ZIP-комплекты (*.zip)"]
+  onAccepted:realBackend.selectBundleUrl(selectedFile)
+ }
  property string pendingAction:"install"
  function run(action,trustHost=false) {
   pendingAction=action;
@@ -43,17 +51,27 @@ Rectangle {
    Layout.fillWidth:true
    Label {text:"Комплект:"}
    StyledComboBox {colors:pane.colors;id:bundlePicker;objectName:"bundle-picker";Layout.fillWidth:true;implicitHeight:48;font.pixelSize:18
-    model:realBackend.bundleChoices;textRole:"label"
+    model:realBackend.bundleChoices;textRole:"label";wrapOptions:true
+    property string selectedPath:realBackend.bundlePath
+    function syncSelection(){let rows=realBackend.bundleChoices;currentIndex=-1;for(let i=0;i<rows.length;i++)if(rows[i].path===selectedPath){currentIndex=i;break}}
+    onSelectedPathChanged:Qt.callLater(syncSelection)
+    onModelChanged:Qt.callLater(syncSelection)
+    Component.onCompleted:syncSelection()
     displayText:realBackend.zipMode ? realBackend.bundlePath.split(/[\\/]/).pop() : "Выберите ZIP-комплект"
     enabled:!realBackend.busy
-    onActivated:{realBackend.selectBundle(realBackend.bundleChoices[currentIndex].path)}
+    onActivated:function(index){realBackend.selectBundle(realBackend.bundleChoices[index].path)}
    }
+   IconButton {objectName:"choose-bundle-file";colors:pane.colors;symbol:"folder";label:"Выбрать файл…";enabled:!realBackend.busy;onClicked:bundleDialog.open()}
    RealButton {text:"↻";font.pixelSize:28;implicitWidth:48;leftPadding:0;rightPadding:0
     enabled:bundlePicker.enabled;Accessible.name:"Найти ZIP рядом с мастером";ToolTip.visible:hovered;ToolTip.text:Accessible.name
     onClicked:realBackend.refreshBundles()}
   }
+  Label {objectName:"bundle-source";Layout.fillWidth:true;wrapMode:Text.WrapAnywhere;color:colors.muted
+   text:realBackend.bundlePath.length ? "Выбранный архив: "+realBackend.bundlePath : "Архив не выбран"
+   textFormat:Text.PlainText
+  }
   Label {objectName:"bundle-status";Layout.fillWidth:true;wrapMode:Text.WordWrap;color:colors.muted
-   text:realBackend.zipMode ? "Комплект: Школьник "+realBackend.bundleVersion+". Первая установка, обновление и повторная установка." : "Положите ZIP рядом с EXE и выберите его из списка."}
+   text:realBackend.zipMode ? "Комплект: Школьник "+realBackend.bundleVersion+". Первая установка, обновление и повторная установка." : "Выберите ZIP рядом с мастером из списка или нажмите «Выбрать файл…»."}
 
   RowLayout {
    Layout.fillWidth:true

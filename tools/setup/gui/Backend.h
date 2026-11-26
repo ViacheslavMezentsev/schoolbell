@@ -183,13 +183,23 @@ public:
   bundles.clear();
   QDir base(QCoreApplication::applicationDirPath());
   for(const auto &file:base.entryList({"schoolbell-v*-openwrt-*.zip"},QDir::Files,QDir::Name)){
-   QVariantMap row;row["label"]=file;row["path"]=QFileInfo(base.filePath(file)).canonicalFilePath();bundles.append(row);
+   QVariantMap row;row["label"]=file+" — "+QDir::toNativeSeparators(base.absolutePath());row["path"]=QFileInfo(base.filePath(file)).canonicalFilePath();bundles.append(row);
+  }
+  if(!zipFile.isEmpty()) {
+   bool found=false;
+   for(auto &item:bundles){auto row=item.toMap();if(sameFile(row.value("path").toString(),zipFile)){row["path"]=zipFile;item=row;found=true;break;}}
+   if(!found){QVariantMap row;row["label"]=QFileInfo(zipFile).fileName()+" — "+QDir::toNativeSeparators(QFileInfo(zipFile).absolutePath())+(QFile::exists(zipFile)?"":" (файл не найден)");row["path"]=zipFile;bundles.prepend(row);}
   }
   emit changed();
+ }
+ Q_INVOKABLE void selectBundleUrl(const QUrl &url) {
+  if(busy() || !url.isLocalFile())return;
+  selectBundle(QFileInfo(url.toLocalFile()).absoluteFilePath());
  }
  Q_INVOKABLE void selectBundle(QString path) {
   if(busy())return;
   zipFile=path;zipReady=false;zipVersion.clear();
+  refreshBundles();
   if(path.isEmpty()){QFile::remove(folder+"/zip-selection.json");state="idle";emit changed();return;}
   auto base=QCoreApplication::applicationDirPath();
   auto env=QProcessEnvironment::systemEnvironment();env.insert("PYTHONIOENCODING","utf-8");

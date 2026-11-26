@@ -27,6 +27,8 @@ Item {
   property bool zipMode:false
   property bool bundleReady:false
   property bool bundleLocked:false
+  property string selectedUrl:""
+  function selectBundleUrl(url){selectedUrl=url.toString()}
   function refreshBundles() {}
   function selectBundle(path){bundlePath=path;zipMode=path.length>0;bundleReady=false}
 
@@ -73,6 +75,43 @@ Item {
  RealPane {id:pane;anchors.fill:parent;colors:theme}
  TestCase {
   name: "PasswordLifecycle"; when: windowShown
+  function test_header_icons_and_exit() {
+   let window=windowFactory.createObject(root);window.navigate("packages")
+   let home=findChild(window,"route-home"),exit=findChild(window,"exit-wizard")
+   compare(home.symbol,"list");compare(home.label,"К выбору задачи")
+   compare(findChild(pane,"choose-bundle-file").symbol,"folder")
+   compare(exit.symbol,"exit");verify(exit.enabled)
+   exit.clicked();verify(findChild(window,"close-confirmation").visible)
+   findChild(window,"close-confirmation").close();verify(window.visible)
+   realBackend.busy=true;verify(!exit.enabled)
+   realBackend.busy=false;home.clicked();compare(window.route,"home");window.destroy()
+  }
+  function test_bundle_file_dialog_accept_cancel_busy() {
+   let dialog=findChild(pane,"bundle-file-dialog"),button=findChild(pane,"choose-bundle-file")
+   realBackend.selectedUrl="";realBackend.busy=false
+   verify(button.enabled)
+   let fixture=Qt.resolvedUrl("tst_password.qml").toString()
+   dialog.selectedFile=fixture
+   dialog.rejected();compare(realBackend.selectedUrl,"")
+   dialog.accepted();compare(realBackend.selectedUrl,fixture)
+   realBackend.busy=true;verify(!button.enabled)
+   realBackend.busy=false;realBackend.selectedUrl=""
+  }
+  function test_bundle_source_and_restored_selection() {
+   let picker=findChild(pane,"bundle-picker"),source=findChild(pane,"bundle-source")
+   let beforePath=realBackend.bundlePath,beforeRows=realBackend.bundleChoices,beforeMode=realBackend.zipMode
+   let old="C:/Архив старый/schoolbell-v5.1.127-openwrt-test.zip",local="C:/Новая сборка/schoolbell-v5.1.127-openwrt-test.zip"
+   realBackend.bundleChoices=[{label:"same — old",path:old},{label:"same — new",path:local}]
+   realBackend.bundlePath=old;realBackend.zipMode=true
+   tryCompare(picker,"currentIndex",0);compare(source.text,"Выбранный архив: "+old)
+   realBackend.bundleChoices=[{label:"same — new",path:local},{label:"same — old",path:old}]
+   tryCompare(picker,"currentIndex",1);compare(source.text,"Выбранный архив: "+old)
+   picker.activated(0)
+   compare(realBackend.bundlePath,local);compare(source.text,"Выбранный архив: "+local)
+   realBackend.bundlePath="";realBackend.zipMode=false
+   compare(source.text,"Архив не выбран")
+   realBackend.bundleChoices=beforeRows;realBackend.bundlePath=beforePath;realBackend.zipMode=beforeMode
+  }
   function test_header_stop_requires_confirmation() {
    let window=windowFactory.createObject(root);window.navigate("openwrt")
    let stop=findChild(window,"stop-route"),dialog=findChild(window,"stop-route-confirm")
@@ -189,7 +228,7 @@ Item {
    realBackend.stage="idle";realBackend.busy=false
    pane.visible=true;pane.helpVisible=false;pane.selectedSource="192.0.2.2"
    let field=findChild(pane,"router-password"),picker=findChild(pane,"bundle-picker")
-   field.text="retained";picker.currentIndex=0;picker.activated(0)
+   field.text="retained";picker.activated(0)
    compare(field.text,"retained");compare(realBackend.bundlePath,"fixture.zip")
    realBackend.bundleVersion="5.2.3"
    compare(findChild(pane,"install-button").text,"Установить Школьник 5.2.3")
