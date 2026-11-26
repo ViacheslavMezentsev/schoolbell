@@ -1,5 +1,8 @@
 # Changelog
 
+- Downloaded 0.3.2 / 5.1.127 artifacts from run 45802082597 passed local provenance, checksum, EXE/firmware and runtime checks; downloaded sums were signed and verified. No new device acceptance or publication.
+
+
 ## Unreleased — Setup wizard 0.3.2
 
 - External ZIP chooser, full source path and restored selection; shared task/folder/exit icons.
