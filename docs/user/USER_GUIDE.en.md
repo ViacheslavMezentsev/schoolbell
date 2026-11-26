@@ -1,5 +1,7 @@
 # Schoolbell user guide
 
+[Metrics and simulator](#metrics-resources-and-the-pages-simulator) · [Installation from a release](../GETTING_STARTED.en.md)
+
 In 5.1.27, Media → Add melody creates an entry; selecting an existing entry replaces its file while preserving references. New MP3 files are limited to 64 KiB. Free space appears in the header and Media. From 5.1.31, the journal is bounded only by 32 KiB; age and clock changes do not remove entries.
 
 
@@ -308,3 +310,13 @@ Audio, Internet and NTP are simulated states, not equipment or network checks. N
 Keep the page open. Reopening leaves automatic bells off and time paused; settings and history remain local to this browser. A prolonged browser stall also pauses time without catching up the missed interval. Simulate reboot exercises this behavior without accessing a router. Local-data reset and migration of an eligible legacy draft are at the bottom of the simulator. Guide and Training links remain above the tabs.
 
 Expanded Metrics → Resources groups device model, Internet/NTP and switch/IP above the CPU, Flash and audio meters. The model is reported by the system without guessing a hardware subrevision. If only a board identifier is available, it is labeled as a board; missing information is shown explicitly. Pages identifies the simulator.
+
+## Metrics, resources and the Pages simulator
+
+Resources show independent Internet and NTP states. Settings → Interface lets you disable the Internet probe for offline operation or change its target. An unconfirmed result means no reply from that target, not proof of an outage. NTP requires an explicit stratum event from the current service within 15 minutes. Periodic notifications do not renew confirmation. No fresh confirmation does not imply incorrect time: BusyBox does not report every successful exchange, so a stable stratum can leave synchronization unconfirmed even when it works. These indicators do not control automatic bells. Probe settings are separate from portable .sbb backups.
+
+Below Flash, saved volume is on the left and the default `/dev/dsp` controller/card name is on the right, followed by the volume bar. Missing output is explicit; other cards are not selected automatically. Volume steps from 0 to 100 % in increments of 10 map to the nearest supported gain, not measured loudness. Flash uses MiB (1024² bytes), with blue fill up to 75 %.
+
+Pages includes a Device simulator below Metrics. Apply a saved plan in Settings, enable ▶, then use Next bell or accelerated time. Silent simulated events appear in the journal and activity map; audio, Internet and NTP are modeled. Reopening the page disables automation. This does not test hardware.
+
+Collapsed Metrics shows free flash, saved volume and Internet status on the right. The summary reuses the expanded panel’s cached readings without extra network probes.

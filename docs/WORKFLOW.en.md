@@ -43,3 +43,7 @@ reintroduce this gate without a new owner decision. Document open items without
 claiming completion. Integrity and compatibility checks remain. Push, tags and
 publication stay with the owner unless explicitly delegated; as-is authorization
 does not trigger automatic artifact uploads.
+
+## Developer memo
+
+Maintain [TODO](../TODO.md) using its memo rules: one current summary, stable task IDs, status and a verifiable completion criterion. After landing, move necessary history to a new dated section in [TODO_ARCHIVE](archive/TODO_ARCHIVE.md); do not edit previous archive sections.

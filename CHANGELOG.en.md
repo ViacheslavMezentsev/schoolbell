@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased — documentation
+
+- Simplified the project overview; added release download and tested-equipment guides, with OHCI guidance and explicit EHCI limits. Moved resource/simulator explanations to the user guide.
+- Consolidated the developer memo into stable-ID task tables; preserved the previous memo in an append-only archive. Updated installation evidence and collapsed English release notes. No runtime or firmware changes.
+
+
+- Wizard: task-list and open-folder icons replace labels; top-right exit uses the existing close confirmation.
+
+- Wizard: file chooser for external ZIPs with local validation; discovery beside the EXE remains.
+
+- Wizard: show the selected ZIP path and directory in the list, align restored selection; reconcile duplicate and obsolete TODO items.
+
 - The downloaded wizard 0.3.1 / Schoolbell 5.1.127 pair passed hash checks, same-version reinstall and the OpenWrt → OEM → OpenWrt → fresh Schoolbell installation cycle. DHCP recovered automatically and the final UI was verified. Clean Windows and exact-build OEM-to-OEM remain separate checks.
 
 ## Unreleased — Setup wizard 0.3.1

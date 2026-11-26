@@ -1,61 +1,41 @@
 # Shkolnik
 
-[Installation: GUI or console](docs/INSTALLATION.en.md) · [Preparing releases](docs/RELEASING.en.md)
+[Русский](README.md) · [Start installation](docs/GETTING_STARTED.en.md) · [User guide](docs/user/USER_GUIDE.en.md)
 
-[![CI](https://img.shields.io/github/actions/workflow/status/ViacheslavMezentsev/schoolbell/ci.yml?branch=main&label=CI&style=flat-square)](https://github.com/ViacheslavMezentsev/schoolbell/actions/workflows/ci.yml)
+**Shkolnik is a musical school bell running on a small router.** It plays melodies according to schedules and a calendar plan. Manage it in a computer or phone browser; the browser does not need to remain open for bells to run.
 
-[Русский](README.md)
+Set regular days and holidays, pre-bells and custom melodies, ring manually or mute the output. Once configured, bells can run without Internet access; check the device clock before enabling them.
 
-**Shkolnik is a configurable musical school bell for OpenWrt, managed in a browser.**
-Schedules and calendar plans run on the device without an open browser page.
+## What the project includes
 
-## Features
+- **Shkolnik** — browser-based schedules, calendar, melodies and bell journal.
+- **Setup Wizard for Windows** — install OpenWrt, install a Shkolnik bundle or restore stock firmware.
+- **Installation bundle** — a separate ZIP containing Shkolnik, required packages and instructions.
+- **Demo and guides** — explore the interface and assemble your system.
 
-- Named date-range plans, calendar painting and preview.
-- Built-in and user MP3 melodies, pre-bells, manual ringing and muting.
-- Clock comparison and setting, event journal, `.sbb` backups and `.sbp` plan transfer.
+## What you need
 
-## Build and test
+| Equipment | Recommendation |
+| --- | --- |
+| Router and power supply | Tested wizard profile: **TP-Link TL-MR3020 (EU) Ver. 3.30**. This revision has USB Type-C power; check the label for the exact revision. |
+| USB audio adapter | Tested devices identify as **AB13X USB Audio** and **C-Media USB PnP Sound Device**. |
+| USB hub, if needed | For now use a connection where the audio adapter shows **OHCI** under Metrics → Resources. The tested hub/EHCI combination had playback startup failures. |
+| Speakers | Powered speakers, or an amplifier and speakers, with a cable to the audio adapter. |
+| Installation equipment | Windows 11 x64 PC, dedicated **USB–Ethernet adapter**, Ethernet cable and router power supply. |
 
-After preparing the [host dependencies](docs/BUILD.en.md):
+OHCI identifies the connection controller, not a hub brand. The label alone does not guarantee compatibility: check audible scheduled bells before use. [Tested connections and limits](docs/HARDWARE.en.md).
 
-```sh
-make all
-```
+## Get started
 
-Builds the IPK and runs host tests without accessing a device.
-The [offline dependency bundle](docs/PACKAGING.en.md) is prepared separately.
+1. Prepare the equipment above.
+2. Follow [the release download guide](docs/GETTING_STARTED.en.md) to choose the files and wizard scenario.
+3. Configure the calendar, schedule and sound using the [user guide](docs/user/USER_GUIDE.en.md).
 
-## Status
+[Releases and installers](https://github.com/ViacheslavMezentsev/schoolbell/releases) · [Interface demo](https://viacheslavmezentsev.github.io/schoolbell/)
 
-Package **5.1.127** targets OpenWrt 19.07.9 on the TL-MR3020 v3.
+## For contributors
 
-Resources show independent Internet and NTP states. Settings → Interface lets you disable the Internet probe for offline operation or change its target. An unconfirmed result means no reply from that target, not proof of an outage. NTP requires an explicit stratum event from the current service within 15 minutes. Periodic notifications do not renew confirmation. No fresh confirmation does not imply incorrect time: BusyBox does not report every successful exchange, so a stable stratum can leave synchronization unconfirmed even when it works. These indicators do not control automatic bells. Probe settings are separate from portable .sbb backups.
-
-## Documentation
-
-[Document map](docs/README.en.md) · [User guide](docs/user/USER_GUIDE.en.md) ·
-[Specification (Russian)](docs/requirements/TECHNICAL_SPECIFICATION.md) · [Acceptance](docs/acceptance/ACCEPTANCE.en.md) ·
-[TODO](TODO.md) · [Changelog](CHANGELOG.en.md) · [Workflow](docs/WORKFLOW.en.md)
+[Documentation](docs/README.en.md) · [Build](docs/BUILD.en.md) · [Developer memo](TODO.md) · [Changelog](CHANGELOG.en.md)
 
 Author: Viacheslav Mezentsev. Modern implementation co-author: Codex (OpenAI).
-[Project rules](AGENTS.md) · [Schoolbell-4 historical archive](docs/archive/schoolbell-4/README.en.md).
-
-[License and provenance audit](docs/LICENSE_AUDIT.en.md)
-
-## License
-
-Own code and documentation: [MIT](LICENSE). Audio, historical archive and
-third-party components are excluded; see [scope](docs/LICENSING.en.md) and [NOTICE](NOTICE).
-
-Below Flash, saved volume is on the left and the default `/dev/dsp` controller/card name is on the right, followed by the volume bar. Missing output is explicit; other cards are not selected automatically. Volume steps from 0 to 100 % in increments of 10 map to the nearest supported gain, not measured loudness. Flash uses MiB (1024² bytes), with blue fill up to 75 %.
-
-[btop for MR3020](tools/btop/README.md) · [Offline Windows 11 setup](tools/setup/README.md)
-
-Pages includes a Device simulator below Metrics. Apply a saved plan in Settings, enable ▶, then use Next bell or accelerated time. Silent simulated events appear in the journal and activity map; audio, Internet and NTP are modeled. Reopening the page disables automation. This does not test hardware.
-
-Collapsed Metrics shows free flash, saved volume and Internet status on the right. The summary reuses the expanded panel’s cached readings without extra network probes.
-
-[Offline stock recovery and supported revisions](tools/setup/RECOVERY.md) · [archived vendor summary](tools/setup/vendor/support.en.md).
-
-Resources report the system model, fall back to the board identifier, or show unavailable. No hardware subrevision is inferred; Pages shows its simulator. The upper group contains model, Internet/NTP and switch/IP; CPU, Flash and audio follow below. Deployments 5.1.122–5.1.123 were verified; the owner accepted the model and layout.
+Own code and documentation: [MIT](LICENSE); audio and third-party components have separate terms: [licensing](docs/LICENSING.en.md), [NOTICE](NOTICE).

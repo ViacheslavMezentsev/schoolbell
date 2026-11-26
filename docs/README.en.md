@@ -4,13 +4,7 @@
 
 [Русский](README.md) · [Project](../README.en.md) · [Migration](MIGRATION.md)
 
-## Current state
-
-The standalone candidate is **5.1.28**. Sources and 81 documents were transferred
-from pinned 5.1.27. Host checks and the target MIPS bundle passed; a bench upgrade to 5.1.28
-was verified. Published Pages acceptance, actual downgrade and fresh hardware
-acceptance remain pending. The future Pages root opens
-the bell interface directly.
+Start with the [release guide](GETTING_STARTED.en.md) and [equipment list](HARDWARE.en.md). Current work is in [TODO](../TODO.md); product history is in [CHANGELOG](../CHANGELOG.en.md).
 
 ## Find a document
 
@@ -43,8 +37,7 @@ material not yet transferred point at the pinned source commit.
 
 A new run needs its own protocol with actual versions, SHA-256 hashes, target and
 results. Do not count historical checks as newly passed. Backups, keys and hardware
-logs must not enter Git. The Pages installation guide and training will be migrated
-separately; this branch neither publishes the site nor changes devices.
+logs must not enter Git. Pages publication is separate; documentation edits do not change devices.
 
 ## Complete transferred document catalogue
 

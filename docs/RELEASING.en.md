@@ -51,9 +51,7 @@ or broad workspace globs. Retain old compatible versions for recovery.
 
 ## GitHub Actions artifact preparation — current status
 
-Wizard 0.3.0 embeds both pinned images. On 2026-11-25 OEM recovery and OpenWrt plus
-fresh Schoolbell installation passed; SSH host-key rotation required manual repair.
-This supersedes earlier pending-transfer statements, not clean-host acceptance.
+The downloaded 0.3.1 / 5.1.127 pair passed the three core routes and reinstall; see the acceptance report below. Later ZIP-picker/icon changes need a new wizard version before release. No version bump has been made yet. User entry point: [release guide](GETTING_STARTED.en.md).
 
 Run **Schoolbell release artifacts** (`release-artifacts.yml`) manually on the intended
 branch. It runs make all, builds the actual MIPS clock and 35 IPKs, static Windows GUI,
@@ -65,10 +63,10 @@ Attach the contained wizard ZIP, package ZIP, application IPK, target-build.json
 release-pair.json and SHA256SUMS to the Release. Actions retention is 30 days;
 Releases are the distribution channel. No tags/releases are created, contents:write
 is absent, and no signing key is used. Sign checksums separately with the existing
-key. The first remote workflow run remains unverified until push.
+key. Remote assembly and downloaded pair 0.3.1 passed; a new version needs its own run and HEAD verification.
 
 Local GUI packaging: `python3 scripts/build-wizard-release.py --build out/setup-gui-external --out out/wizard-preview`.
-After push: `gh workflow run release-artifacts.yml --ref codex/setup-network-acceptance`.
+After push: `gh workflow run release-artifacts.yml --ref main`.
 MSYS2/Qt versions follow upstream packages: EXE reproducibility across toolchain
 versions is not claimed. ZIP packaging is deterministic for identical inputs.
 [MSYS2 Action](https://github.com/msys2/setup-msys2) ·
@@ -128,3 +126,9 @@ acceptance; this does not impose a publication block on the owner.
 ## Downloaded pair check — 2026-11-26
 
 The downloaded wizard 0.3.1 / Schoolbell 5.1.127 pair passed hash checks, same-version reinstall and the OpenWrt → OEM → OpenWrt → fresh Schoolbell installation cycle. DHCP recovered automatically and the final UI was verified. Clean Windows and exact-build OEM-to-OEM remain separate checks. [Протокол / Report](acceptance/wizard-0.3.1-github.md).
+
+## Next release group
+
+Accept the current GUI/docs changes and assign the next wizard version; unchanged Shkolnik package bytes do not require a version bump. Build the accepted HEAD, download and check the exact archives, and record acceptance limits. Sign the common SHA256SUMS with the existing key; supply the public key, fingerprint and verification commands for that signature format, never the private key. This is separate from Authenticode.
+
+Keep Russian release notes visible and all English text inside `<details>`. Replace filename placeholders and convert relative document links to full URLs pinned to the release tag before copying notes to GitHub. The owner publishes the prerelease; in-app release downloading follows separately.
