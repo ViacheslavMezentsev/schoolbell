@@ -8,6 +8,12 @@ has authorized as-is publication on 2026-11-25: incomplete distribution material
 do not block packaging or publication. Integrity and compatibility checks remain.
 Audit status stays separate from permission to publish; no script uploads automatically.
 
+## Public release: four assets
+
+The public preview contains only the wizard ZIP, package ZIP, SHA256SUMS and SHA256SUMS.sig. The standalone IPK is already inside the package ZIP. Build/pair JSON files remain in Actions and local verification evidence, not in the public asset list. Link the public key, allowed-signers and VERIFY.md to the pinned repository revision from the release description.
+
+Actions still produces the complete technical set described below. Before publication, copy only the two ZIPs into a new staging directory, generate SHA256SUMS for those ZIPs and sign that new list. Do not reuse the eight-file Actions checksum list after removing files. Do not rebuild the ZIPs or silently replace published assets. Draft simplification is permitted before publication; retain the original download as evidence. See [signing](RELEASE_SIGNATURES.en.md).
+
 ## Assets
 
 - `schoolbell-setup-wizard-v0.3.2-windows-x86_64.zip`: portable GUI with both pinned images.
@@ -36,15 +42,24 @@ from GitHub is not implemented; users download both ZIPs manually.
 
 Example only after completing the checks and ensuring the tag is unused:
 
-```sh
-git switch main
-git pull --ff-only origin main
-git status --short
-git tag -s v5.1.127 -m "Schoolbell v5.1.127 preview"
-git verify-tag v5.1.127
-git push origin v5.1.127
-gh release create v5.1.127 --verify-tag --draft --prerelease --latest=false --title "Schoolbell 5.1.127 preview" --notes-file docs/releases/v5.1.127.md
+Run **Windows PowerShell 7 / Windows Git** from the repository directory for signing: this project uses the existing SSH key, not WSL GPG. The per-command safe.directory trusts only that checkout. Confirm `ssh` and the configured public key first; replace the tag and build SHA placeholders. If signing fails, stop; never disable signing. **v5.1.127 already exists: do not recreate it.**
+
+```powershell
+$releaseRepo = (Get-Item .).FullName.Replace('\', '/')
+$releaseTag = 'vX.Y.Z'
+$releaseCommit = '<full-build-commit-SHA>'
+$releaseGitArgs = @('-c', "safe.directory=$releaseRepo", '-C', $releaseRepo)
+git @releaseGitArgs config --get gpg.format
+git @releaseGitArgs config --get user.signingkey
+git @releaseGitArgs tag -s $releaseTag $releaseCommit -m "Schoolbell $releaseTag preview"
+if ($LASTEXITCODE) { throw 'Tag signing failed' }
+git @releaseGitArgs verify-tag $releaseTag
+if ($LASTEXITCODE) { throw 'Tag verification failed' }
+git @releaseGitArgs rev-list -n 1 $releaseTag
 ```
+
+After successful verification, WSL can push the tag and create a draft with `gh release create --verify-tag --draft --prerelease --latest=false`. Upload the four public assets, review the draft, then publish with `gh release edit TAG --draft=false --prerelease --latest=false`. Check public access without authentication. An `untagged-…` draft URL is not proof of publication; inspect `draft` and `tag_name`.
+
 
 Upload exact filenames through the Release UI or `gh release upload`; no --clobber
 or broad workspace globs. Retain old compatible versions for recovery.

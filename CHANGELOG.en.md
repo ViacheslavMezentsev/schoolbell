@@ -1,5 +1,8 @@
 # Changelog
 
+- Simplified the draft release description and public asset set to two unchanged ZIPs and a signed checksum list; re-downloaded all four draft assets and verified their signature/hashes. No publication or device operations.
+
+
 - Downloaded 0.3.2 / 5.1.127 artifacts from run 45802082597 passed local provenance, checksum, EXE/firmware and runtime checks; downloaded sums were signed and verified. No new device acceptance or publication.
 
 

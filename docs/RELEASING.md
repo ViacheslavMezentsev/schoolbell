@@ -2,6 +2,12 @@
 
 [English](RELEASING.en.md) · [Выбор способа установки](INSTALLATION.md) · [Формат комплекта](formats/release-bundle-v1.md) · [Заметки выпусков](releases/README.md)
 
+## Публичный выпуск: четыре файла
+
+В публичном предварительном выпуске оставляются только ZIP мастера, ZIP Школьника, SHA256SUMS и SHA256SUMS.sig. Отдельный IPK уже находится внутри комплекта. JSON сборки/пары остаются в Actions и материалах проверки, а не в публичных вложениях. Публичный ключ, allowed-signers и VERIFY.md доступны по ссылкам на закреплённую ревизию репозитория в описании выпуска.
+
+Actions пока выдаёт полный технический набор, перечисленный ниже. Перед публикацией скопируйте только два ZIP в новый каталог, сформируйте SHA256SUMS для этих ZIP и подпишите новый список. После удаления файлов нельзя оставлять восьмифайловый список сумм Actions. ZIP не пересобираются; опубликованные файлы не подменяются. Состав черновика можно сократить до публикации, сохранив исходное скачивание как свидетельство. [Подпись](RELEASE_SIGNATURES.md).
+
 ## Можно ли выпустить незавершённую версию
 
 Да: используйте GitHub **Pre-release** с точным перечнем работающих функций и
@@ -70,15 +76,24 @@ GitHub Source code ZIP/TAR не заменяет готовые установо
 что тег ещё не существует и main указывает на принятый commit. Уже опубликованный
 тег и файлы не заменяются: исправление выпуска получает новый номер.
 
-```sh
-git switch main
-git pull --ff-only origin main
-git status --short
-git tag -s v5.1.127 -m "Schoolbell v5.1.127 preview"
-git verify-tag v5.1.127
-git push origin v5.1.127
-gh release create v5.1.127 --verify-tag --draft --prerelease --latest=false --title "Школьник 5.1.127 — предварительный выпуск" --notes-file docs/releases/v5.1.127.md
+Для подписи используйте **Windows PowerShell 7 / Windows Git** из каталога репозитория: проект подписывается существующим SSH-ключом, не GPG в WSL. Параметр safe.directory действует только для указанного каталога и команды. Сначала убедитесь, что показаны `ssh` и настроенный публичный ключ; замените шаблоны тега и SHA сборки. При ошибке остановитесь, не отключайте подпись. **v5.1.127 уже существует: повторно его создавать не нужно.**
+
+```powershell
+$releaseRepo = (Get-Item .).FullName.Replace('\', '/')
+$releaseTag = 'vX.Y.Z'
+$releaseCommit = '<full-build-commit-SHA>'
+$releaseGitArgs = @('-c', "safe.directory=$releaseRepo", '-C', $releaseRepo)
+git @releaseGitArgs config --get gpg.format
+git @releaseGitArgs config --get user.signingkey
+git @releaseGitArgs tag -s $releaseTag $releaseCommit -m "Schoolbell $releaseTag preview"
+if ($LASTEXITCODE) { throw 'Tag signing failed' }
+git @releaseGitArgs verify-tag $releaseTag
+if ($LASTEXITCODE) { throw 'Tag verification failed' }
+git @releaseGitArgs rev-list -n 1 $releaseTag
 ```
+
+После успешной проверки можно продолжить в WSL: отправить тег и создать черновик через `gh release create --verify-tag --draft --prerelease --latest=false`. Приложите четыре публичных файла, проверьте черновик, затем опубликуйте через `gh release edit TAG --draft=false --prerelease --latest=false`. Проверяйте публичный доступ без авторизации. Ссылка черновика `untagged-…` не подтверждает публикацию: сверяйте `draft` и `tag_name`.
+
 
 Добавьте отдельными файлами проверенные assets через GitHub Release UI или
 `gh release upload v5.1.127 <точные-пути-к-проверенным-файлам>`. Не используйте
