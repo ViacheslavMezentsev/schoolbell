@@ -28,7 +28,12 @@ class Pair(unittest.TestCase):
                 z.writestr('root/SHA256SUMS',(sha if not corrupt else '0'*64)+'  manifest.json\n')
     def test_success(self):
         m.finalize(self.p);self.assertFalse(json.loads((self.p/'release-pair.json').read_text())['hardware_validated'])
-        self.assertEqual(len((self.p/'SHA256SUMS').read_text().splitlines()),5)
+        pair=json.loads((self.p/'release-pair.json').read_text())
+        self.assertEqual(pair['wizard_version'],self.w['version'])
+        self.assertEqual(pair['package_version'],self.b['version'])
+        self.assertEqual(len((self.p/'SHA256SUMS').read_text().splitlines()),8)
+        for name in m.VERIFICATION:
+            self.assertEqual((self.p/name).read_bytes(),(ROOT/'packaging/release'/name).read_bytes())
     def test_wrong_commit(self):
         self.w['source_commit']='b'*40;self.write()
         with self.assertRaisesRegex(ValueError,'commits'):m.finalize(self.p)

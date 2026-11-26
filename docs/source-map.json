@@ -1301,8 +1301,8 @@
       "source": "scripts/test-schoolbell.sh",
       "destination": "scripts/test-schoolbell.sh",
       "source_sha256": "5abd8849062bc51e53907344210cb487f9e115458e196f3667753f29553ed282",
-      "changes": "adapted; review destination against pinned source; standalone target migration: deterministic native gzip / pinned-input tests; default audio status and blue Flash (5.1.29); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); 5.1.40 initial page-load performance; pinned setup recovery profile and packaging host tests",
-      "destination_sha256": "f231fbc7e50b6dc523816675ddebb2ed6a7f5e625b4794c59501d490ebdc6f7a"
+      "changes": "adapted; review destination against pinned source; standalone target migration: deterministic native gzip / pinned-input tests; default audio status and blue Flash (5.1.29); confirmed system actions, resumable settings reset preserving media/journal, compact deletion UI (1.80); 5.1.40 initial page-load performance; pinned setup recovery profile and packaging host tests; release checksum signature checks",
+      "destination_sha256": "03f441111b345ab613f72a33309ec3efe9e9ced8da2c4a456f39a0a57e4c8f11"
     },
     {
       "source": "scripts/test-site-demo.js",

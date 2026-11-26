@@ -89,6 +89,7 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
       - name: Package allowlisted portable files
+        id: packaged
         shell: pwsh
         run: |
           python scripts/build-wizard-release.py --build out/setup-gui-external --out out/release-wizard
@@ -96,6 +97,8 @@ jobs:
           Copy-Item out/release-wizard/*.zip out/release-pair/
           python scripts/finalize-release-artifacts.py --directory out/release-pair
           if ($LASTEXITCODE) {throw 'Artifact checks failed'}
+          $pair = Get-Content out/release-pair/release-pair.json -Raw | ConvertFrom-Json
+          "artifact_name=schoolbell-v$($pair.package_version)-wizard-v$($pair.wizard_version)-windows-x86_64" >> $env:GITHUB_OUTPUT
       - name: Extracted portable smoke test (no network or router)
         shell: pwsh
         run: |
@@ -108,7 +111,7 @@ jobs:
           if ($LASTEXITCODE) {throw 'Portable runtime imports failed'}
       - uses: actions/upload-artifact@v4
         with:
-          name: schoolbell-windows-preview-${{ github.sha }}
+          name: ${{ steps.packaged.outputs.artifact_name }}
           path: out/release-pair/
           if-no-files-found: error
           retention-days: 30

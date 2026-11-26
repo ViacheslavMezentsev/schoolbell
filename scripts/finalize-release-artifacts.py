@@ -6,6 +6,9 @@ import json
 from pathlib import Path
 import zipfile
 
+ROOT = Path(__file__).resolve().parents[1]
+VERIFICATION = ('signing-key.pub', 'allowed-signers', 'VERIFY.md')
+
 def manifest(path):
     with zipfile.ZipFile(path) as archive:
         names=[n for n in archive.namelist() if n.count('/')==1 and n.endswith('/manifest.json')]
@@ -51,10 +54,17 @@ def finalize(directory):
     paths=wizards+packages+[directory/ipk, directory/'target-build.json']
     if any(not f.is_file() or f.is_symlink() for f in paths):
         raise ValueError('Missing or linked artifact')
-    expected={p.name for p in paths}|{'SHA256SUMS','release-pair.json'}
+    expected={p.name for p in paths}|{'SHA256SUMS','release-pair.json'}|set(VERIFICATION)
     if {p.name for p in directory.iterdir()}-expected:
         raise ValueError('Unexpected release directory contents')
+    for name in VERIFICATION:
+        target = directory/name
+        if target.is_symlink():
+            raise ValueError('Linked verification material')
+        target.write_bytes((ROOT/'packaging/release'/name).read_bytes())
+        paths.append(target)
     pair={'format':1,'status':'prerelease','commit':wizard['source_commit'],
+          'wizard_version':wizard['version'],'package_version':package['version'],
           'wizard':wizards[0].name,'packages':packages[0].name,
           'compatibility':'format checked; exact pair requires acceptance',
           'hardware_validated':False,'published':False}
