@@ -269,3 +269,7 @@ Snapshot before consolidation; unfinished work remains in the root TODO.
 - [x] Локально: 20 Qt-проверок, 24 проверки worker, 23 сценария ZIP с подменённым транспортом; ТЗ 1.26 без замечаний. / Local Qt, worker, injected ZIP transport and specification checks passed.
 - [x] 26.11.2026: скачана пара 0.3.1/5.1.127 из GitHub run 45686516264, HEAD 0df760f; суммы, запуск, встроенные образы и установка поверх 5.1.127 проверены. В интерфейсе автозвонки выключены, громкость 100 %. [Протокол и границы](../../docs/acceptance/wizard-0.3.1-github.md). / Downloaded pair checks and same-version reinstall passed; automatic bells off, volume 100%.
 - [x] 26.11.2026: скачанный мастер прошёл OpenWrt → OEM (Build250625), OEM → OpenWrt 19.07.9 и свежую установку 5.1.127; DHCP восстановлен автоматически в обоих маршрутах. Итоговый UI: автозвонки выключены, громкость 100 %, C-Media, AP. / Downloaded wizard firmware round trip and fresh installation passed; DHCP restored automatically, final UI verified.
+
+## 2026-11-26 — приняты R1/R2 / R1/R2 accepted
+
+R1: короткий README, оборудование, руководство по релизу и свёрнутый EN приняты в main. R2: источник ZIP, выбор файла, иконки и выход приняты в main; make all, 23 Qt-теста и статическая сборка прошли. Подробности продукта — в CHANGELOG. / Beginner documentation and ZIP/navigation GUI changes landed; local checks passed. Release preparation continues in R3/R4.

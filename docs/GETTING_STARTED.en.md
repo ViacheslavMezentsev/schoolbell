@@ -55,3 +55,5 @@ The old TP-Link administrator password may survive. It is neither the OpenWrt ro
 Read the operation status and open the action log. Keep power on during flash writing: stopping the wizard cannot cancel a write already started by the router. Do not run multiple wizards on the same adapter. Use offered network recovery if temporary network settings remain. Report the result without passwords or backups.
 
 [Other installation methods](INSTALLATION.en.md) · [Wizard reference](../tools/setup/gui/README.md) · [Tested 0.3.1 / 5.1.127 pair](acceptance/wizard-0.3.1-github.md)
+
+[How to verify the signature and all files](../packaging/release/VERIFY.md).

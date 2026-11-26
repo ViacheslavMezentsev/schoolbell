@@ -6,14 +6,9 @@
 
 ## Русский
 
-Текущая версия мастера — **0.2.1**, независимо от версии пакета Школьника.
-Стартовый экран предлагает три маршрута: установить OpenWrt на новый роутер,
-установить комплект Школьника из внешнего ZIP, восстановить заводскую прошивку.
-Реальная запись из GUI доступна только для комплекта; два маршрута прошивки
-показывают подготовку и инструкции к консольному комплекту, без запуска сервера. Макет, имитация
-прошивки, тестовые исходы и переключение простого/экспертного макета удалены.
-Прошивка OpenWrt и возврат OEM через GUI пока не реализованы; используйте отдельно
-документированный [консольный комплект](../README.md).
+Текущая версия мастера — **0.3.2**, независимо от версии Школьника. Все три маршрута выполняют реальные операции: установка OpenWrt, установка внешнего ZIP и восстановление заводской прошивки. Встроены OpenWrt 19.07.9 и OEM Build250625 для TL-MR3020 EU v3.30. Выбор внешнего ZIP показывает полный путь; кнопки списка задач, папки и выхода снабжены подсказками. [Начать с релиза](../../../docs/GETTING_STARTED.md).
+
+Скачанная пара 0.3.1 / 5.1.127 проверена на устройстве; 0.3.2 требует проверки своих окончательных артефактов. Исторические записи ниже сохраняют границы прежних этапов и не отменяют текущую поддержку трёх маршрутов.
 
 ### Что понадобится
 
@@ -101,11 +96,9 @@ Qt6 static; альтернативный путь задаётся `-MsysRoot`. 
 
 ## English
 
-Wizard **0.2.1** starts with three routes: OpenWrt installation, a Schoolbell ZIP
-bundle, and factory recovery. Firmware routes currently provide preparation and
-console-kit instructions; only the package route performs real GUI operations. Prototype
-routes, simulated outcomes and mock simple/expert modes have been removed. GUI
-firmware/OEM flashing is not implemented; use the separately documented console kit.
+Wizard **0.3.2** performs all three real routes: OpenWrt, an external Schoolbell ZIP and OEM recovery. OpenWrt 19.07.9 / OEM Build250625 are embedded for TL-MR3020 EU v3.30. The ZIP selection shows its full path; task, folder and exit icons have tooltips. [Start with a release](../../../docs/GETTING_STARTED.en.md).
+
+Downloaded pair 0.3.1 / 5.1.127 passed hardware checks; final 0.3.2 artifacts need their own verification. Historical entries below describe earlier stages, not current route availability.
 
 Requires Windows 11, dedicated USB–Ethernet/RJ45, router power and root password.
 The pilot targets MR3020 v3 / OpenWrt 19.07.9 only, with automatic bells off.

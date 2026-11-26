@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — Setup wizard 0.3.2
+
+- External ZIP chooser, full source path and restored selection; shared task/folder/exit icons.
+- Prerelease preparation with the unchanged Schoolbell 5.1.127 package; SSH-signed checksums using the existing project key, public key and verification instructions.
+- Actions download filenames use package/wizard versions, without a commit hash suffix. Commit provenance remains inside release metadata.
+
+
 ## Unreleased — documentation
 
 - Simplified the project overview; added release download and tested-equipment guides, with OHCI guidance and explicit EHCI limits. Moved resource/simulator explanations to the user guide.

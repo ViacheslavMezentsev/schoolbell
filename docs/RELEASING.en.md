@@ -10,7 +10,7 @@ Audit status stays separate from permission to publish; no script uploads automa
 
 ## Assets
 
-- `schoolbell-setup-wizard-v0.3.1-windows-x86_64.zip`: portable GUI with both pinned images.
+- `schoolbell-setup-wizard-v0.3.2-windows-x86_64.zip`: portable GUI with both pinned images.
 - `schoolbell-v5.1.127-openwrt-19.07.9-ramips-mt76x8-mipsel_24kc.zip`: application and dependencies.
 - `modbus-schoolbell_5.1.127_all.ipk`: expert application-only asset.
 - `target-build.json`, `release-pair.json`, `SHA256SUMS`: provenance, format pairing and hashes.
@@ -51,14 +51,14 @@ or broad workspace globs. Retain old compatible versions for recovery.
 
 ## GitHub Actions artifact preparation — current status
 
-The downloaded 0.3.1 / 5.1.127 pair passed the three core routes and reinstall; see the acceptance report below. Later ZIP-picker/icon changes need a new wizard version before release. No version bump has been made yet. User entry point: [release guide](GETTING_STARTED.en.md).
+The downloaded 0.3.1 / 5.1.127 pair passed the three core routes and reinstall; see the acceptance report below. Later ZIP-picker/icon changes need a new wizard version before release. Preparation version is 0.3.2; final files still require verification. User entry point: [release guide](GETTING_STARTED.en.md).
 
 Run **Schoolbell release artifacts** (`release-artifacts.yml`) manually on the intended
 branch. It runs make all, builds the actual MIPS clock and 35 IPKs, static Windows GUI,
 checks embedded images and the extracted executable in a path with a space. The
 Windows runner is Server 2022, not Windows 11 hardware acceptance.
 
-Download `schoolbell-windows-preview-<commit>` and extract its outer Actions ZIP.
+Download `schoolbell-v5.1.127-wizard-v0.3.2-windows-x86_64` and extract its outer Actions ZIP.
 Attach the contained wizard ZIP, package ZIP, application IPK, target-build.json,
 release-pair.json and SHA256SUMS to the Release. Actions retention is 30 days;
 Releases are the distribution channel. No tags/releases are created, contents:write
@@ -112,7 +112,7 @@ Post-fix local checks passed: make all, static MINGW64 build, both C++ tests, em
 ## Updated artifact acceptance: 0.3.1 / 5.1.127
 
 After push/CI/land, the owner dispatches `release-artifacts.yml` on main. Match the
-run headSha to the accepted HEAD, download `schoolbell-windows-preview-<SHA>`, and
+run headSha to the accepted HEAD, download `schoolbell-v5.1.127-wizard-v0.3.2-windows-x86_64`, and
 verify SHA256SUMS and release-pair.json. Extract the wizard into a new folder and
 place bundle 5.1.127 beside it; do not mix in locally built workers.
 
@@ -132,3 +132,5 @@ The downloaded wizard 0.3.1 / Schoolbell 5.1.127 pair passed hash checks, same-v
 Accept the current GUI/docs changes and assign the next wizard version; unchanged Shkolnik package bytes do not require a version bump. Build the accepted HEAD, download and check the exact archives, and record acceptance limits. Sign the common SHA256SUMS with the existing key; supply the public key, fingerprint and verification commands for that signature format, never the private key. This is separate from Authenticode.
 
 Keep Russian release notes visible and all English text inside `<details>`. Replace filename placeholders and convert relative document links to full URLs pinned to the release tag before copying notes to GitHub. The owner publishes the prerelease; in-app release downloading follows separately.
+
+[Checksum signing and verification](RELEASE_SIGNATURES.en.md). Artifact filenames contain versions, while full commit provenance stays in `release-pair.json` and manifests.
