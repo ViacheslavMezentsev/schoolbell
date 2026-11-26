@@ -1,12 +1,15 @@
 # Changelog
 
+- Published preview v5.1.127 (wizard 0.3.2): all four assets downloaded without authentication; HTTP 200, GitHub digests, SSH signature and ZIP checksums passed. No device operations.
+
+
 - Simplified the draft release description and public asset set to two unchanged ZIPs and a signed checksum list; re-downloaded all four draft assets and verified their signature/hashes. No publication or device operations.
 
 
 - Downloaded 0.3.2 / 5.1.127 artifacts from run 45802082597 passed local provenance, checksum, EXE/firmware and runtime checks; downloaded sums were signed and verified. No new device acceptance or publication.
 
 
-## Unreleased — Setup wizard 0.3.2
+## Setup wizard 0.3.2 — preview, 2026-11-26
 
 - External ZIP chooser, full source path and restored selection; shared task/folder/exit icons.
 - Prerelease preparation with the unchanged Schoolbell 5.1.127 package; SSH-signed checksums using the existing project key, public key and verification instructions.

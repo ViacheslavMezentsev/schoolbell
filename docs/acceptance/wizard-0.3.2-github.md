@@ -47,3 +47,26 @@ The downloaded pair from successful run 45802082597, commit 9aa047b5003e67445c24
 The original downloaded SHA256SUMS was signed using the existing project Ed25519 key; signature and every listed file were verified. Windows CRLF bytes were preserved. Hashes are listed above. This is not hardware or clean-Windows acceptance of 0.3.2; prior three-route hardware evidence remains scoped to 0.3.1. No router operations, tag or publication took place.
 
 </details>
+
+## Проверка вложений черновика и сокращение набора
+
+26.11.2026: GitHub Release ID 459320346 содержит тег v5.1.127, но остаётся draft=true; публичной публикации не было. Аннотированный тег указывает на коммит сборки 9aa047b. Все десять исходных вложений скачаны через авторизованный API, их digest и подпись совпали.
+
+По запросу владельца описание сокращено, состав уменьшен до двух исходных ZIP и нового SHA256SUMS с подписью. IPK и JSON не удалялись из самих архивов; ключ и инструкции доступны по ссылкам на коммит. После изменения все четыре файла повторно скачаны из Release, подпись и суммы — PASS. SHA256SUMS публичного набора: `fc7ccf8cd46a5b1ae51bb60706194c4cb265a9e267e49813b5bb28cc2497b1a6`; подпись: `9ade499929afa4a1adca5170526b7c72053ce90367f389bdd70f5564860c355d`. Хеши ZIP выше не изменились. Это проверка доступных владельцу вложений черновика, не публичного скачивания. Стенды не затрагивались.
+
+Release ID 459320346 remains a draft for tag v5.1.127. The ten original assets were downloaded and verified. At the owner's request the draft was simplified to two unchanged ZIPs and a newly signed checksum list; all four assets were downloaded again and verified. Public-key/instruction links point to the build revision. No public-download or new hardware acceptance is claimed.
+
+## Публичное скачивание после публикации — 26.11.2026
+
+[Release v5.1.127](https://github.com/ViacheslavMezentsev/schoolbell/releases/tag/v5.1.127) проверен отдельными HTTP-запросами без токена и без авторизации GitHub CLI. API: draft=false, prerelease=true, tag_name=v5.1.127; публичная страница — HTTP 200. Четыре вложения заново скачаны по публичным browser_download_url в новый локальный каталог.
+
+| Файл | SHA-256 публичного скачивания |
+| --- | --- |
+| schoolbell-setup-wizard-v0.3.2-windows-x86_64.zip | `73126e4d977f3bee371ba5f2f3b27676f80b7f94c24f1d7a1283f6b5256409fd` |
+| schoolbell-v5.1.127-openwrt-19.07.9-ramips-mt76x8-mipsel_24kc.zip | `8b0805b0da2af7f6a8df579a055eaa61a9bf87761358f4afd4dea3574a85d05d` |
+| SHA256SUMS | `fc7ccf8cd46a5b1ae51bb60706194c4cb265a9e267e49813b5bb28cc2497b1a6` |
+| SHA256SUMS.sig | `9ade499929afa4a1adca5170526b7c72053ce90367f389bdd70f5564860c355d` |
+
+Все четыре хеша совпали с digest GitHub. SSH-подпись скачанного списка проверена по доверенному ключу репозитория, namespace schoolbell-release; обе суммы ZIP совпали. Итог — **PASS публичной доставки**. Байты ZIP совпадают с ранее проверенной парой. Это не новый запуск сценариев на роутере; стенды не затрагивались. Исторические результаты черновика выше сохранены как этап до публикации.
+
+Public verification used unauthenticated HTTP requests, without a token or authenticated CLI. The release returned draft=false/prerelease=true, its page returned HTTP 200, and all four assets were downloaded afresh. Their SHA-256 digests matched GitHub; the checksum signature matched the trusted project key and both ZIP checksums passed. The bytes match the previously checked pair. **Public delivery PASS**, not new hardware acceptance; no router access.
